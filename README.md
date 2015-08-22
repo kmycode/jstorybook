@@ -26,4 +26,4 @@ JavaとNetBeansを使いました。<br>
 そのうち(´・ω・｀)
 
 ###既知のバグなど
-暫定的に、src\problems.txtにメモしています。
+暫定的に、problems.txtにメモしています。
