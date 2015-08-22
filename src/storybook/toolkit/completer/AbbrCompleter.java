@@ -19,66 +19,128 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.toolkit.completer;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 
 /**
+ * 複数の文字列を組み合わせて１つの文字列を作る
+ *
  * @author martin
  *
  */
 public class AbbrCompleter extends AbstractCompleter {
 
-	private JTextComponent sourceComp1;
-	private JTextComponent sourceComp2;
-	private String compName1;
-	private String compName2;
+	private ArrayList<JTextComponent> sourceCompList = new ArrayList<JTextComponent>();
+	private ArrayList<String> compNameList = new ArrayList<String>();
+	private ArrayList<Integer> compNameSizeList = new ArrayList<Integer>();
 
-	public AbbrCompleter(String compName1, String compName2) {
-		this.compName1 = compName1;
-		this.compName2 = compName2;
+	public AbbrCompleter (String firstName, String... names) {
+		this.compNameList.add(firstName);
+		for (String name : names) {
+			this.compNameList.add(name);
+		}
 	}
 
 	@Override
 	public String getCompletedText() {
 		try {
-			String fn = "";
-			String ln = "";
-			if (sourceComp1.getText().length() > 1) {
-				fn = sourceComp1.getText(0, 2);
+			int compListSize = this.sourceCompList.size();
+			int sizeListSize = this.compNameSizeList.size();
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < compListSize; i ++) {
+				JTextComponent sourceComp = this.sourceCompList.get(i);
+
+				if (sourceComp.getText().length() >= 1) {
+					int strlen = 2;			// フォークした時に 2 と書かれていたので、これが初期値
+					if (i < sizeListSize) {
+						strlen = this.compNameSizeList.get(i);
+					}
+					if (strlen > 0 && strlen <= sourceComp.getText().length()) {
+						builder.append(sourceComp.getText(0, strlen));
+					} else {
+						builder.append(sourceComp.getText());
+					}
+				}
 			}
-			if (sourceComp2.getText().length() > 1) {
-				ln = sourceComp2.getText(0, 2);
-			}
-			return fn + ln;
+			return builder.toString();
 		} catch (BadLocationException e) {
 			// ignore
 		}
 		return "";
 	}
 
-	public JTextComponent getSourceComp1() {
-		return sourceComp1;
+	@Deprecated
+	public JTextComponent getSourceComp1 () {
+		this.compArrayCheck();
+		return this.sourceCompList.get(0);
 	}
 
+	@Deprecated
 	public void setSourceComp1(JTextComponent sourceComp1) {
-		this.sourceComp1 = sourceComp1;
+		this.compArrayCheck();
+		this.sourceCompList.set(0, sourceComp1);
 	}
 
+	@Deprecated
 	public JTextComponent getSourceComp2() {
-		return sourceComp2;
+		this.compArrayCheck();
+		return this.sourceCompList.get(1);
 	}
 
+	@Deprecated
 	public void setSourceComp2(JTextComponent sourceComp2) {
-		this.sourceComp2 = sourceComp2;
+		this.compArrayCheck();
+		this.sourceCompList.set(1, sourceComp2);
 	}
 
-	public String getCompName1() {
-		return compName1;
+	public void setCompNameSize (int firstSize, int... sizes) {
+		if (sizes.length + 1 != this.compNameList.size()) {
+			throw new IllegalArgumentException(
+					"storybook.toolkit.completer.AbbrCompleter#setCompNameSize(int, int...)");
+		}
+		this.compNameSizeList.add(firstSize);
+		for (int size : sizes) {
+			this.compNameSizeList.add(size);
+		}
 	}
 
+	public void setSourceComp (JTextComponent firstComponent, JTextComponent... components) {
+		if (components.length + 1 != this.compNameList.size()) {
+			throw new IllegalArgumentException(
+					"storybook.toolkit.completer.AbbrCompleter#setSourceComp(JTextComponent, JTextComponent...)");
+		}
+		this.sourceCompList.add(firstComponent);
+		for (JTextComponent component : components) {
+			this.sourceCompList.add(component);
+		}
+	}
+
+	private void compArrayCheck () {
+		int sourceCompSize = this.sourceCompList.size();
+		for (int i = 0; i < 2 - sourceCompSize; i ++) {
+			this.sourceCompList.add(null);
+		}
+	}
+
+	private void nameArrayCheck () {
+		int compNameSize = this.compNameList.size();
+		for (int i = 0; i < 2 - compNameSize; i ++) {
+			this.compNameList.add(null);
+		}
+	}
+
+	@Deprecated
+	public String getCompName1 () {
+		this.nameArrayCheck();
+		return this.compNameList.get(0);
+	}
+
+	@Deprecated
 	public String getCompName2() {
-		return compName2;
+		this.nameArrayCheck();
+		return this.compNameList.get(1);
 	}
 
 	@Override

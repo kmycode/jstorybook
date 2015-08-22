@@ -123,6 +123,15 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 		return age;
 	}
 
+	public String getFullName () {
+		return getLastname() + " " + getFirstname();
+	}
+
+	public String getFullNameAbbr () {
+		return getLastname() + " " + getFirstname() + " [" + getAbbreviation()
+				+ "]";
+	}
+
 	// -------------------------------------------------------
 	// ここまでロジック
 	// -------------------------------------------------------
@@ -175,15 +184,6 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
-	}
-
-	public String getFullName() {
-		return getFirstname() + " " + getLastname();
-	}
-
-	public String getFullNameAbbr() {
-		return getFirstname() + " " + getLastname() + " [" + getAbbreviation()
-				+ "]";
 	}
 
 	/**

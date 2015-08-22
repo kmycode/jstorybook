@@ -297,7 +297,13 @@ public class SbColumnFactory {
 		Vector<SbColumn> columns = new Vector<SbColumn>();
 		columns.add(getIdColumn());
 
-		SbColumn col = new SbColumn(i++, "Firstname", "msg.dlg.person.firstname");
+		SbColumn col = new SbColumn(i ++, "Lastname", "msg.dlg.person.lastname");
+		col.setMaxLength(255);
+		col.setVerifier(new LengthVerifier(col.getMaxLength()));
+		col.setGrowX(true);
+		columns.add(col);
+
+		col = new SbColumn(i++, "Firstname", "msg.dlg.person.firstname");
 		col.setMaxLength(255);
 		col.setGrowX(true);
 		VerifierGroup group = new VerifierGroup();
@@ -307,19 +313,13 @@ public class SbColumnFactory {
 		col.setDefaultSort(true);
 		columns.add(col);
 
-		col = new SbColumn(i++, "Lastname", "msg.dlg.person.lastname");
-		col.setMaxLength(255);
-		col.setVerifier(new LengthVerifier(col.getMaxLength()));
-		col.setGrowX(true);
-		columns.add(col);
-
 		col = new SbColumn(i++, "Abbreviation", "msg.dlg.person.abbr");
 		col.setMaxLength(255);
 		VerifierGroup group2 = new VerifierGroup();
 		group2.addVerifier(new NotEmptyVerifier());
 		group2.addVerifier(new LengthVerifier(col.getMaxLength()));
 		col.setVerifier(group2);
-		AbbrCompleter abbrCompleter = new AbbrCompleter("Firstname", "Lastname");
+		AbbrCompleter abbrCompleter = new AbbrCompleter("Lastname", "Firstname");
 		col.setCompleter(abbrCompleter);
 		columns.add(col);
 
