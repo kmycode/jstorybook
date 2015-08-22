@@ -1,0 +1,51 @@
+●内部
+
+	○検討の余地あり
+		・controller.BookControllerクラスが冗長。複数のクラスに分割できるか検討する
+		・controller.BookControllerクラスにある大量のenumには、テキストやtoStringのオーバーライドがある。インタフェースを検討する
+		・model.AbstractModelクラスにあるロジックを使えば、簡単にBinding用のコードが書けそう
+
+	○非推奨のコード
+		・controller.AbstractController.setModelProperty(String, Object)で、リフレクションを使っている
+
+	○細かいミス
+		・action.SbActionManager(MainFrame, boolean)コンストラクタで、booleanが無視されている
+		・controller.AbstractController.setModelProperty(String)で、try-catchのcatchが空
+
+	○設計上のミス
+		・すべてのActionがactionパッケージにまとめられていない。全てのメニューの動作内容はactionにまとめるべきでは
+		・Actionのロジックが基本的にaction.ActionHeaderクラスにまとめられており、
+				これがユーティリティクラス化し、肥大化してしまっている
+		・action.ActionHeaderを使わず、自分のクラスの中に直接ロジックを書いているActionクラスが混在している
+		・条件分岐でinstanceofを多用しており、OOPの多態性を殺しにかかっている
+		・controller.BookControllerで、enumをそのままではなくtoStringしてから渡している。インタフェースなどを検討するべき
+		・シングルトンにできそうなクラスがたくさん転がっている
+		・model.DbFileクラスは、Sqlite以外のデータベースを使うことになった時に備えて、DB操作そのものを抽象化すべき
+		・ユーティリティクラスの濫用
+
+	○大規模開発にありそうなミス
+		・action.SbActionManagerクラスの大半がコメントアウトされており、なんのクラスか分かりづらい
+		・controller.PreferenceControllerクラスが全く使われていないように見える
+
+	○クラス名、メソッド名のミス
+		・Abstractという名前を濫用している。「抽象的な」という意味なのに、ユーティリティクラスみたいになっている
+		・export.ExportBookクラスは、書式に関する処理がメイン。名前にFormatつけるべき
+
+
+
+●外部
+
+	○細かいバグ
+		・編が１つしかないとき、編メニューで編を選択した時、何か操作するまでマウスカーソルがくるくるのままになる
+
+	○放置はまあわからなくもない
+		・何かのはずみでルックアンドフィールがいきなり変わって、何かのはずみで元に戻る
+		・日本語に設定した時、画面の一部が文字化けする　→一部修正
+
+	○なぜ放置した
+		・上書き保存が保存していない、おそらくリアルタイムで保存している
+		・エディタで、「新規」と「保存」のボタンの違いがわかりづらい
+		・Translate modeを有効にした時のlanguage toolが、全く動かない
+
+
+

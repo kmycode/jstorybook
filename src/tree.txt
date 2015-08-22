@@ -1,0 +1,828 @@
+シーン　章　編　構想線
+
+
+C:.
+│  tree.txt												このファイル
+│  
+└─storybook												Storybook本体のソースフォルダ
+    │  SbApp.java											エントリーポイント
+    │  SbConstants.java									コンストラクト（ENUM）定義群
+    │  
+    ├─action												swingでは、メニューにアクションオブジェクトを設定することで、メニュー実行時の動作を指定する
+    │      AbstractEntityAction.java						アプリで使うアクションは、基本的にこれを継承する
+    │      ActionHandler.java								アクションのロジック部分。以下のアクションは、ここのメソッドを呼び出す
+    │      ChangePartAction.java							編を変更する（編のメニューから）
+    │      ChapterOrderByTimestampAction.java				章リスト右クリック→時間で並べ替え
+    │      ChapterReSortAction.java						章リスト右クリック→再ソート
+    │      ClearRecentFilesAction.java						ファイルメニューの履歴を削除
+    │      DeleteEntityAction.java							エンティティを削除
+    │      DisposeDialogAction.java						ファイル保存中ダイアログを閉じる
+    │      EditEntityAction.java							時系列表示などのビューで、エンティティを編集する操作をする
+    │      EditSceneLOAction.java							時系列表示などのビューで、シーンを右クリックして、Libera Officeで編集する操作
+    │      LangToolAction.java								言語ツールを表示する（日本語は関係ない）
+    │      LoadDockingLayoutAction.java					レイアウトを読み込みメニュー
+    │      NewEntityAction.java							リストの右クリックメニューから新しいエンティティを作るとき
+    │      OpenFileAction.java								ファイルを開く
+    │      RunAttesoroAction.java							不明（おそらくTranslation Tool）
+    │      SbActionManager.java							おそらく昔メニューを作ってた残骸。現在は最近使ったファイル、章を選択するメニューなど、動的に項目が変化するメニューを作る役目
+    │      ScrollToEntityAction.java						シーンなどの編集でエンティティリストからビューにとぶとき、ビューを適切な一までスクロールする
+    │      ScrollToStrandDateAction.java					上に似てる
+    │      ShowInBookViewAction.java						ブックビューを表示する
+    │      ShowInChronoViewAction.java						Chronoを表示する
+    │      ShowInfoAction.java								エンティティをリストやビューから右クリック、ブックで表示
+    │      ShowInGoogleMapsAction.java						場所のリストを右クリック、グーグルマップで表示
+    │      ShowInManageViewAction.java						シーンなどをリストから右クリック、章とシーンの管理ビューで表示
+    │      ShowInMemoriaAction.java						体系図を表示する
+    │      
+    ├─controller
+    │      AbstractController.java							抽象的なコントローラ。ビューとモデルを関連付ける
+    │      BookController.java								ブックに対する操作。エンティティの追加や削除などの処理を、モデルをリフレクションで呼び出すことで行う
+    │      PreferenceController.java						不明（おそらく将来必要になると思って作ったけど存在自体忘れられている）
+    │      
+    ├─export
+    │      AbstractExporter.java							エクスポート全般
+    │      BookExporter.java								本のエクスポートで共通する出力処理をまとめている
+    │      DlgExport.form									エクスポートダイアログのビュー部分
+    │      DlgExport.java									エクスポートダイアログ
+    │      DlgExportOptions.form							エクスポートオプション設定ダイアログのビュー部分
+    │      DlgExportOptions.java							エクスポートオプション設定
+    │      Export.java										エクスポートの形式を見て、それぞれの形式に合わせたメソッドを呼び出す
+    │      ExportBook.java									シーンや章を、エクスポートの形式に合わせて書式化している
+    │      ExportBookSummary.java							ブックの概要の書式化
+    │      ExportChapters.java								章の書式化
+    │      ExportCsv.java									エクスポート先のCSVファイルを扱う
+    │      ExportData.java									任意の名前とキー（値）を結びつけた、１つのデータを扱う
+    │      ExportHeader.java								名前とサイズのみを扱う
+    │      ExportHtml.java									エクスポート先のHTMLファイルを扱う
+    │      ExportIdeas.java								アイデアの書式化
+    │      ExportItems.java								アイテムの書式化
+    │      ExportLocations.java							場所の書式化
+    │      ExportOdf.java									エクスポート先のODF（Open Document Format）ファイルを扱う
+    │      ExportParts.java								編の書式化
+    │      ExportPDF.java									エクスポート先のPDFファイルを扱う
+    │      ExportPersons.java								人物の書式化
+    │      ExportScenes.java								シーンの書式化
+    │      ExportTags.java									タグの書式化
+    │      ExportToClipboard.java							クリップボードへエクスポートする
+    │      ExportTxt.java									エクスポート先のテキストファイルを扱う
+    │      ExportXml.java									エクスポート先のXMLファイルを扱う
+    │      InfoExporter.java
+    │      ParamExport.java								エクスポートの設定を格納
+    │      Printing.java									印刷
+    │      
+    ├─model
+    │  │  AbstractModel.java								抽象的なモデル。プロパティの変更に対してリスナーをつけるなど
+    │  │  BlankModel.java									空のモデル
+    │  │  BookModel.java									ブックモデル。ブックに対して、エンティティの追加・更新・削除処理などをおこなう。BookControllerからリフレクションによって呼ばれる
+    │  │  DbFile.java										データベースファイル
+    │  │  EntityUtil.java									エンティティの操作の一部をロジック化したもの。エンティティの種類に合わせたインスタンスの取得も含む
+    │  │  NullConverter.java								値がNULLでなければ値を、そうでなければ新しく作成したインスタンスを返す、NULLモデルのコンバータ版
+    │  │  PreferenceModel.java							設定ファイルのモデル
+    │  │  
+    │  ├─handler											DAOを新規作成するためのハンドラ
+    │  │      AbstractEntityHandler.java
+    │  │      AttributeEntityHandler.java
+    │  │      CategoryEntityHandler.java
+    │  │      ChapterEntityHandler.java
+    │  │      GenderEntityHandler.java
+    │  │      IdeaEntityHandler.java
+    │  │      InternalEntityHandler.java
+    │  │      ItemEntityHandler.java
+    │  │      ItemLinkEntityHandler.java
+    │  │      LocationEntityHandler.java
+    │  │      PartEntityHandler.java
+    │  │      PersonEntityHandler.java
+    │  │      RelationshipEntityHandler.java
+    │  │      SceneEntityHandler.java
+    │  │      StrandEntityHandler.java
+    │  │      TagEntityHandler.java
+    │  │      TagLinkEntityHandler.java
+    │  │      TimeEventEntityHandler.java
+    │  │      
+    │  ├─hbn
+    │  │  │  SbSessionFactory.java						org.hybernateを初期化など
+    │  │  │  
+    │  │  ├─dao											org.hybernateによって扱われる、データにアクセスするためのオブジェクト（モデル本体ではない）
+    │  │  │      AttributeDAO.java
+    │  │  │      AttributeDAOImpl.java
+    │  │  │      CategoryDAO.java
+    │  │  │      CategoryDAOImpl.java
+    │  │  │      ChapterDAO.java
+    │  │  │      ChapterDAOImpl.java
+    │  │  │      GenderDAO.java
+    │  │  │      GenderDAOImpl.java
+    │  │  │      IdeaDAO.java
+    │  │  │      IdeaDAOImpl.java
+    │  │  │      InternalDAO.java
+    │  │  │      InternalDAOImpl.java
+    │  │  │      ItemDAO.java
+    │  │  │      ItemDAOImpl.java
+    │  │  │      ItemLinkDAO.java
+    │  │  │      ItemLinkDAOImpl.java
+    │  │  │      LocationDAO.java
+    │  │  │      LocationDAOImpl.java
+    │  │  │      PartDAO.java
+    │  │  │      PartDAOImpl.java
+    │  │  │      PersonDAO.java
+    │  │  │      PersonDAOImpl.java
+    │  │  │      PreferenceDAO.java
+    │  │  │      PreferenceDAOImpl.java
+    │  │  │      RelationshipDAO.java
+    │  │  │      RelationshipDAOImpl.java
+    │  │  │      SbGenericDAOImpl.java
+    │  │  │      SceneDAO.java
+    │  │  │      SceneDAOImpl.java
+    │  │  │      StrandDAO.java
+    │  │  │      StrandDAOImpl.java
+    │  │  │      TagDAO.java
+    │  │  │      TagDAOImpl.java
+    │  │  │      TagLinkDAO.java
+    │  │  │      TagLinkDAOImpl.java
+    │  │  │      TimeEventDAO.java
+    │  │  │      TimeEventDAOImpl.java
+    │  │  │      
+    │  │  └─entity										DAOをbean化したもの。ドメインモデル
+    │  │          AbstractEntity.java
+    │  │          AbstractTag.hbm.xml
+    │  │          AbstractTag.java
+    │  │          AbstractTagLink.hbm.xml
+    │  │          AbstractTagLink.java
+    │  │          Attribute.hbm.xml
+    │  │          Attribute.java
+    │  │          Category.hbm.xml
+    │  │          Category.java
+    │  │          Chapter.hbm.xml
+    │  │          Chapter.java
+    │  │          Gender.hbm.xml
+    │  │          Gender.java
+    │  │          Idea.hbm.xml
+    │  │          Idea.java
+    │  │          Internal.hbm.xml
+    │  │          Internal.java
+    │  │          Item.java
+    │  │          ItemLink.java
+    │  │          Location.hbm.xml
+    │  │          Location.java
+    │  │          Part.hbm.xml
+    │  │          Part.java
+    │  │          Person.hbm.xml
+    │  │          Person.java
+    │  │          Preference.hbm.xml
+    │  │          Preference.java
+    │  │          Relationship.hbm.xml
+    │  │          Relationship.java
+    │  │          Scene.hbm.xml
+    │  │          Scene.java
+    │  │          Strand.hbm.xml
+    │  │          Strand.java
+    │  │          Tag.java
+    │  │          TagLink.java
+    │  │          TimeEvent.hbm.xml
+    │  │          TimeEvent.java
+    │  │          
+    │  ├─oldModel										互換性を保つために残されたか
+    │  │      DbTable.java
+    │  │      Internal.java
+    │  │      InternalPeer.java
+    │  │      MigrationConstants.java
+    │  │      ModelMigration.java							これはなぜか他のとこから呼び出されてる
+    │  │		
+    │  ├─state											画面に表示するためのデータを取得する。名前、アイコン、ツールチップ文字列など
+    │  │      AbstractState.java
+    │  │      AbstractStateModel.java
+    │  │      IdeaState.java
+    │  │      IdeaStateModel.java
+    │  │      SceneState.java
+    │  │      SceneStateModel.java
+    │  │      TimeStepState.java
+    │  │      TimeStepStateModel.java
+    │  │      
+    │  └─stringcategory									エンティティの編集で、一度入力したら、コンボから選択できるようになるアレ
+    │          AbstractStringCategory.java
+    │          CityCategory.java
+    │          CountryCategory.java
+    │          ItemCategory.java
+    │          TagCategory.java
+    │          
+    ├─msg													外国語翻訳メッセージ
+    │      messages.properties
+    │      messages_cs.properties
+    │      messages_da.properties
+    │      messages_de.properties
+    │      messages_el.properties
+    │      messages_en.properties
+    │      messages_es.properties
+    │      messages_fi.properties
+    │      messages_fr.properties
+    │      messages_hu.properties
+    │      messages_it.properties
+    │      messages_iw.properties
+    │      messages_ja.properties
+    │      messages_nl.properties
+    │      messages_pl.properties
+    │      messages_pt.properties
+    │      messages_ru.properties
+    │      messages_sv.properties
+    │      messages_zh_CN.properties
+    │      messages_zh_HK.properties
+    │      
+    ├─resources											リソース
+    │  │  Book.ott
+    │  │  Empty.odt
+    │  │  Exemple.odt
+    │  │  log4j.properties
+    │  │  Simple.odt
+    │  │  
+    │  └─icons
+    │      │  icon.png
+    │      │  icons.properties
+    │      │  logo250.png
+    │      │  logo500.bmp
+    │      │  logo500.png
+    │      │  logo500_blurred.png
+    │      │  options.png
+    │      │  splash.png
+    │      │  
+    │      ├─12x12
+    │      │      export.png
+    │      │      options.png
+    │      │      print.png
+    │      │      refresh.png
+    │      │      
+    │      ├─16x16
+    │      │      add.png
+    │      │      all.png
+    │      │      arrowdown.png
+    │      │      arrowleft.png
+    │      │      arrowright.png
+    │      │      arrowup.png
+    │      │      book_view.png
+    │      │      bulb.png
+    │      │      calc.png
+    │      │      cancel.png
+    │      │      category.png
+    │      │      chapter.png
+    │      │      chapter_new.png
+    │      │      chart.png
+    │      │      chrono_view.png
+    │      │      clear.png
+    │      │      close.png
+    │      │      collapse.png
+    │      │      columns.png
+    │      │      compass.png
+    │      │      datediff.png
+    │      │      delete.png
+    │      │      edit-copy.png
+    │      │      edit-cut.png
+    │      │      edit-paste.png
+    │      │      edit.png
+    │      │      empty.png
+    │      │      error.png
+    │      │      exit.png
+    │      │      expand.png
+    │      │      export.png
+    │      │      file-new.png
+    │      │      file-open.png
+    │      │      file-save-as.png
+    │      │      file-save.png
+    │      │      first.png
+    │      │      gantt.png
+    │      │      gender.png
+    │      │      hammer.png
+    │      │      hide_infos.png
+    │      │      idea.png
+    │      │      info.png
+    │      │      item.png
+    │      │      langtool.png
+    │      │      last.png
+    │      │      link.png
+    │      │      location.png
+    │      │      lock.png
+    │      │      man.png
+    │      │      manage.png
+    │      │      manage_view.png
+    │      │      map.png
+    │      │      memoria.png
+    │      │      minus.png
+    │      │      new.png
+    │      │      next.png
+    │      │      none.png
+    │      │      note.png
+    │      │      ok.png
+    │      │      open.png
+    │      │      palette.png
+    │      │      part.png
+    │      │      person.png
+    │      │      plan.png
+    │      │      plus.png
+    │      │      pov_view.png
+    │      │      preferences.png
+    │      │      previous.png
+    │      │      print.png
+    │      │      reading.png
+    │      │      refresh.png
+    │      │      remove.png
+    │      │      rename.png
+    │      │      scene.png
+    │      │      search.png
+    │      │      show_infos.png
+    │      │      size.png
+    │      │      size_large.png
+    │      │      size_medium.png
+    │      │      size_small.png
+    │      │      sort.png
+    │      │      specchar.png
+    │      │      status_done.png
+    │      │      status_draft.png
+    │      │      status_edit1.png
+    │      │      status_edit2.png
+    │      │      status_inprogress.png
+    │      │      status_outline.png
+    │      │      strand.png
+    │      │      switch.png
+    │      │      tag.png
+    │      │      tasklist.png
+    │      │      time_16.png
+    │      │      tree.png
+    │      │      unlink.png
+    │      │      unlock.png
+    │      │      warning.png
+    │      │      woman.png
+    │      │      world.png
+    │      │      zoom_in.png
+    │      │      zoom_out.png
+    │      │      
+    │      ├─16x32
+    │      │      manage_categories.png
+    │      │      manage_chapters.png
+    │      │      manage_genders.png
+    │      │      manage_ideas.png
+    │      │      manage_items.png
+    │      │      manage_item_links.png
+    │      │      manage_locations.png
+    │      │      manage_parts.png
+    │      │      manage_persons.png
+    │      │      manage_relationship.png
+    │      │      manage_scenes.png
+    │      │      manage_strands.png
+    │      │      manage_tags.png
+    │      │      manage_tag_links.png
+    │      │      new_item.png
+    │      │      new_location.png
+    │      │      new_part.png
+    │      │      new_person.png
+    │      │      new_strand.png
+    │      │      new_tag.png
+    │      │      person_location.png
+    │      │      
+    │      ├─32x32
+    │      │      datediff.png
+    │      │      gantt.png
+    │      │      item.png
+    │      │      location.png
+    │      │      man.png
+    │      │      memoria.png
+    │      │      person.png
+    │      │      plus.png
+    │      │      scene.png
+    │      │      tag.png
+    │      │      target.png
+    │      │      woman.png
+    │      │      
+    │      └─64x64
+    │              alien.png
+    │              car.png
+    │              clock.png
+    │              document.png
+    │              export.png
+    │              gantt.png
+    │              gun.png
+    │              hammer.png
+    │              hourglass.png
+    │              item.png
+    │              location.png
+    │              love.png
+    │              man.png
+    │              memoria.png
+    │              murder_mystery.png
+    │              open.png
+    │              person.png
+    │              relationship.png
+    │              rename.png
+    │              scene.png
+    │              shirt.png
+    │              smile.png
+    │              snow_white.png
+    │              tag.png
+    │              weather.png
+    │              woman.png
+    │              
+    ├─test												単体・結合テスト用？
+    │  ├─langtool
+    │  │      TestLangTool.java
+    │  │      
+    │  ├─model
+    │  │      Test01.java
+    │  │      TestThread.java
+    │  │      
+    │  └─ui
+    │          DnDTest01.java
+    │          IdwTest01.java
+    │          IdwTest02.java
+    │          IdwTest03.java
+    │          JXTableTest01.java
+    │          ShefTest01.java
+    │          TestComponentFactory.java
+    │          UiTestTemplate.java
+    │          
+    ├─toolkit												？　多分commonの間違い
+    │  │  BookUtil.java
+    │  │  CommonTools.java								ファイル名やディレクトリ名を取得するだけ
+    │  │  DateUtil.java									日付と文字列の変換
+    │  │  DockingWindowUtil.java							レイアウトのセーブやロード
+    │  │  EnvUtil.java									ホームディレクトリの取得
+    │  │  I18N.java										メッセージ（msg/messages_*.properties）
+    │  │  IOUtil.java										ファイル操作
+    │  │  LangUtil.java									格付け
+    │  │  Period.java
+    │  │  PrefUtil.java
+    │  │  SpellCheckerUtil.java
+    │  │  StringCategoryUtil.java
+    │  │  TextUtil.java
+    │  │  ViewUtil.java
+    │  │  
+    │  ├─comparator										２つのインスタンスを比較する
+    │  │      CategoryComparator.java
+    │  │      ChapterComparator.java
+    │  │      DateComparator.java
+    │  │      ObjectComparator.java
+    │  │      SafeCategoryComparator.java
+    │  │      SafeChapterComparator.java
+    │  │      SafeDateComparator.java
+    │  │      StringIntegerComparator.java
+    │  │      
+    │  ├─completer
+    │  │      AbbrCompleter.java
+    │  │      AbstractCompleter.java
+    │  │      
+    │  ├─filefilter										ファイル選択ダイアログでのフィルタ
+    │  │      H2FileFilter.java
+    │  │      HtmlFileFilter.java
+    │  │      OdtFileFilter.java
+    │  │      PngFileFilter.java
+    │  │      StdFileFilter.java
+    │  │      TextFileFilter.java
+    │  │      
+    │  ├─html
+    │  │      HtmlBodyWriter.java
+    │  │      HtmlSelection.java
+    │  │      HtmlUtil.java
+    │  │      
+    │  ├─langtool
+    │  │      AboutDialog.java
+    │  │      Configuration.java
+    │  │      ConfigurationDialog.java
+    │  │      I18nLanguage.java
+    │  │      LangToolMain.java
+    │  │      LanguageComboBox.java
+    │  │      LanguageManagerDialog.java
+    │  │      MainMenuBar.java
+    │  │      Messages.java
+    │  │      ResourceBundleWithFallback.java
+    │  │      Tools.java
+    │  │      
+    │  ├─net
+    │  │      ClientHttpRequest.java
+    │  │      HttpFileDownloader.java
+    │  │      NetUtil.java
+    │  │      Updater.java
+    │  │      
+    │  ├─odt
+    │  │      ODTUtils.java
+    │  │      
+    │  └─swing											Swingコンポーネントを扱うための独自ライブラリ
+    │      │  AutoCompleteComboBox.java
+    │      │  AutoscrollSupport.java
+    │      │  CircleProgressBar.java
+    │      │  CleverColorChooser.java
+    │      │  ColorIcon.java
+    │      │  ColorUtil.java
+    │      │  DotBorder.java
+    │      │  FlashThread.java
+    │      │  FontUtil.java
+    │      │  IconButton.java
+    │      │  IconUtil.java
+    │      │  PrintUtil.java
+    │      │  ProgressCircleUI.java
+    │      │  ReadOnlyTable.java
+    │      │  ScreenImage.java
+    │      │  SwingUtil.java
+    │      │  ToggleIconButton.java
+    │      │  TreeUtil.java
+    │      │  
+    │      ├─htmleditor
+    │      │      HtmlEditor.java
+    │      │      OpenUrlAction.java
+    │      │      SbHTMLEditorKit.java
+    │      │      SbHTMLImageAction.java
+    │      │      SbImageDialog.java
+    │      │      
+    │      ├─label
+    │      │      CleverLabel.java
+    │      │      DateLabel.java
+    │      │      GradientLabel.java
+    │      │      VerticalLabelUI.java
+    │      │      
+    │      ├─panel
+    │      │      BackgroundPanel.java
+    │      │      DateChooser.java
+    │      │      DebugInfoPanel.java
+    │      │      GradientPanel.java
+    │      │      JBookPanel.java
+    │      │      MemoryMonitorPanel.java
+    │      │      PlainTextEditor.java
+    │      │      ViewsRadioButtonPanel.java
+    │      │      
+    │      ├─splash
+    │      │      HourglassSplash.java
+    │      │      SplashDialog.java
+    │      │      
+    │      ├─table
+    │      │      ColorTableCellRenderer.java
+    │      │      FixedColumnScrollPane.java
+    │      │      HeaderTableCellRenderer.java
+    │      │      StandardTableCellRenderer.java
+    │      │      ToolTipHeader.java
+    │      │      
+    │      ├─undo
+    │      │      RedoAction.java
+    │      │      SbUndoManager.java
+    │      │      UndoableComponent.java
+    │      │      UndoableTextArea.java
+    │      │      UndoableTextField.java
+    │      │      UndoAction.java
+    │      │      
+    │      └─verifier
+    │              AbstractInputVerifier.java
+    │              DateVerifier.java
+    │              DocumentSizeFilter.java
+    │              IntegerVerifier.java
+    │              LengthVerifier.java
+    │              MultipleNumberVerifier.java
+    │              NotEmptyVerifier.java
+    │              VerifierGroup.java
+    │              
+    └─ui
+        │  MainFrame.java
+        │  MainMenu.form
+        │  MainMenu.java
+        │  RadioButtonGroup.java
+        │  SbView.java
+        │  StatusBarPanel.java
+        │  ViewFactory.java
+        │  
+        ├─chart
+        │  │  AbstractChartPanel.java
+        │  │  AbstractPersonsChart.java
+        │  │  GanttChart.java
+        │  │  OccurrenceOfLocationsChart.java
+        │  │  OccurrenceOfPersonsChart.java
+        │  │  PersonsByDateChart.java
+        │  │  PersonsBySceneChart.java
+        │  │  StrandsByDateChart.java
+        │  │  WiWWChart.java
+        │  │  WiWWContainer.java
+        │  │  WiWWPanel.java
+        │  │  WiWWTableCellRenderer.java
+        │  │  
+        │  ├─jfreechart
+        │  │      ChartUtil.java
+        │  │      ColorXYDataItem.java
+        │  │      DbTableCategoryItemLabelGenerator.java
+        │  │      
+        │  └─legend
+        │          AbstractLegendPanel.java
+        │          ChapterLegendPanel.java
+        │          PersonsLegendPanel.java
+        │          StrandsLegendPanel.java
+        │          
+        ├─combo
+        │      AttributeListCellRenderer.java
+        │      CityComboModel.java
+        │      CommonBox.java
+        │      EntityTypeListCellRenderer.java
+        │      GenderListCellRenderer.java
+        │      IdeaStateComboModel.java
+        │      IRefreshableComboModel.java
+        │      ItemListCellRenderer.java
+        │      LocationListCellRenderer.java
+        │      PersonListCellRenderer.java
+        │      RelativeSceneComboModel.java
+        │      SceneListCellRenderer.java
+        │      SceneStateComboModel.java
+        │      SceneStateListCellRenderer.java
+        │      StrandListCellRenderer.java
+        │      TimeEventFormatComboModel.java
+        │      TimeEventFormatListCellRenderer.java
+        │      
+        ├─dialog												ダイアログ
+        │  │  AboutDialog.java
+        │  │  AbstractDialog.java
+        │  │  BookPropertiesDialog.java
+        │  │  CreateChaptersDialog.java
+        │  │  dlgConfirmDelete.form
+        │  │  dlgConfirmDelete.java
+        │  │  ExceptionDialog.java
+        │  │  FirstStartDialog.java
+        │  │  FoiDialog.java
+        │  │  FontChooserDialog.java
+        │  │  GetNewSpellingDlg.form
+        │  │  GetNewSpellingDlg.java
+        │  │  ManageLayoutsDialog.java
+        │  │  PostModelUpdateDialog.java
+        │  │  PreferencesDialog.java
+        │  │  SplashDialog.java
+        │  │  WaitDialog.java									読み込みや保存の時に使う、砂時計のアレ
+        │  │  
+        │  ├─chooser											チューザ
+        │  │      DateFixed.form
+        │  │      DateFixed.java
+        │  │      DateRelative.form
+        │  │      DateRelative.java
+        │  │      DlgColorChooser.form
+        │  │      DlgColorChooser.java
+        │  │      
+        │  ├─file											ファイル選択ダイアログ
+        │  │      AbstractFileDialog.java
+        │  │      NewFileDialog.java
+        │  │      RenameFileDialog.java
+        │  │      SaveAsFileDialog.java
+        │  │      
+        │  ├─rename											名前の一括変更ダイアログ
+        │  │      AbstractRenameDialog.java
+        │  │      RenameCityDialog.java
+        │  │      RenameCountryDialog.java
+        │  │      RenameItemCategoryDialog.java
+        │  │      RenameTagCategoryDialog.java
+        │  │      
+        │  └─unicodlg
+        │          UnicodeDialog.java
+        │          UnicodeDialogButton.java
+        │          UnicodeDialogListener.java
+        │          
+        ├─edit												エディタ
+        │      CbPanelDecorator.java
+        │      CheckBoxPanel.java
+        │      EntityEditor.java								エンティティの編集
+        │      ItemCbPanelDecorator.java
+        │      LocationCbPanelDecorator.java
+        │      PersonCbPanelDecorator.java
+        │      RadioButtonGroupPanel.java
+        │      StrandCbPanelDecorator.java
+        │      TitlePanel.java
+        │      
+        ├─interfaces
+        │      IPaintable.java
+        │      IRefreshable.java
+        │      
+        ├─label
+        │      SceneStateLabel.java
+        │      StrandLabel.java
+        │      TimeEventFormatLabel.java
+        │      
+        ├─memoria
+        │      DateSlider.java
+        │      EntityTransformer.java
+        │      EntityTypeCbItem.java
+        │      MemoriaGraphMouse.java
+        │      MemoriaPanel.java
+        │      MemoriaPanelScene.java
+        │      
+        ├─net
+        │      BrowserDialog.java
+        │      BrowserPanel.java
+        │      
+        ├─options
+        │      AbstractOptionsDialog.java
+        │      BookOptionsDialog.java
+        │      ChronoOptionsDialog.java
+        │      ManageOptionsDialog.java
+        │      MemoriaOptionsDialog.java
+        │      ReadingOptionsDialog.java
+        │      
+        ├─panel
+        │  │  AbstractGradientPanel.java
+        │  │  AbstractPanel.java
+        │  │  AbstractScenePanel.java
+        │  │  AbstractScrollPanel.java
+        │  │  BlankPanel.java
+        │  │  
+        │  ├─attributes
+        │  │      AttributePanel.java
+        │  │      AttributesPanel.java
+        │  │      AttributesViewPanel.java
+        │  │      
+        │  ├─book
+        │  │      BookInfoPanel.java
+        │  │      BookPanel.java
+        │  │      BookScenePanel.java
+        │  │      BookTextPanel.java
+        │  │      
+        │  ├─chrono
+        │  │      AbstractStrandDatePanel.java
+        │  │      ChronoPanel.java
+        │  │      ChronoScenePanel.java
+        │  │      ColumnPanel.java
+        │  │      DateDiffLabel.java
+        │  │      DateLabel.java
+        │  │      RowPanel.java
+        │  │      SpacePanel.java
+        │  │      StrandDateLabel.java
+        │  │      
+        │  ├─info
+        │  │      InfoPanel.java
+        │  │      
+        │  ├─linkspanel
+        │  │      ItemLinksPanel.java
+        │  │      LocationLinksPanel.java
+        │  │      PersonLinksPanel.java
+        │  │      StrandLinksPanel.java
+        │  │      
+        │  ├─manage
+        │  │  │  ChapterPanel.java
+        │  │  │  ManagePanel.java
+        │  │  │  
+        │  │  └─dnd
+        │  │          DTScenePanel.java
+        │  │          ScenePanel.java
+        │  │          SceneTransferHandler.java
+        │  │          
+        │  ├─navigation
+        │  │      FindChapterPanel.java
+        │  │      FindDatePanel.java
+        │  │      NavigationPanel.java
+        │  │      
+        │  ├─reading
+        │  │      ReadingPanel.java
+        │  │      StrandPanel.java
+        │  │      
+        │  └─tree
+        │          EntityNode.java
+        │          EntityTreeCellRenderer.java
+        │          TreePanel.java
+        │          
+        ├─plan
+        │      PlanPanel.java
+        │      SizedElement.java
+        │      SizeTreeCellRenderer.java
+        │      
+        └─table												エンティティの選択リスト
+            │  AbstractTable.java
+            │  AttributeTable.java
+            │  CategoryTable.java
+            │  ChapterTable.java
+            │  GenderTable.java
+            │  IdeaTable.java
+            │  InternalTable.java
+            │  ItemLinkTable.java
+            │  ItemTable.java
+            │  LocationTable.java
+            │  PartTable.java
+            │  PersonTable.java
+            │  RelationshipTable.java
+            │  SbColumn.java									エンティティで、エディタで編集できる項目の名前と編集の種類（文字列か日付かなど）を表す
+            │  SbColumnFactory.java
+            │  SceneTable.java
+            │  StrandTable.java
+            │  TagLinkTable.java
+            │  TagTable.java
+            │  TimeEventTable.java
+            │  
+            ├─column
+            │      ColorHighlighter.java
+            │      CustomColumnFactory.java
+            │      DateHighlighter.java
+            │      IdeaStatusHighlighter.java
+            │      SceneStatusHighlighter.java
+            │      
+            └─renderer
+                    AttributesTableCellRenderer.java
+                    BooleanTableCellRenderer.java
+                    CategoryTableCellRenderer.java
+                    ChapterTableCellRenderer.java
+                    ColorTableCellRenderer.java
+                    DateTableCellRenderer.java
+                    GenderTableCellRenderer.java
+                    HtmlTableCellRenderer.java
+                    IconTableCellRenderer.java
+                    ItemsTableCellRenderer.java
+                    LocationsTableCellRenderer.java
+                    PartTableCellRenderer.java
+                    PersonsTableCellRenderer.java
+                    PersonTableCellRenderer.java
+                    SceneIdTableCellRenderer.java
+                    SceneStateTableCellRenderer.java
+                    StrandsTableCellRenderer.java
+                    StrandTableCellRenderer.java
+                    TimeEventFormatTableCellRenderer.java
+                    
