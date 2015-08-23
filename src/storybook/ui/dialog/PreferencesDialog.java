@@ -67,6 +67,7 @@ public class PreferencesDialog extends AbstractDialog implements
 
 	private JComboBox languageCombo;
 	private JComboBox dateFormatCombo;
+	private JComboBox timeFormatCombo;
 	private JComboBox spellingCombo;
 	private JCheckBox cbLoadFileOnStart;
 	private JCheckBox cbConfirmExit;
@@ -133,8 +134,11 @@ public class PreferencesDialog extends AbstractDialog implements
 		Language lang = Language.values()[i];
 		Locale locale = lang.getLocale();
 		PrefUtil.set(PreferenceKey.LANG, I18N.getCountryLanguage(locale));
-		PrefUtil.set(PreferenceKey.DATEFORMAT, dateFormatCombo.getSelectedItem());
 		I18N.initResourceBundles(locale);
+
+		// Date and Time
+		PrefUtil.set(PreferenceKey.DATEFORMAT, dateFormatCombo.getSelectedItem());
+		PrefUtil.set(PreferenceKey.TIMEFORMAT, timeFormatCombo.getSelectedItem());
 
 		// spell checker
 		String ix = (String) spellingCombo.getSelectedItem();
@@ -146,9 +150,9 @@ public class PreferencesDialog extends AbstractDialog implements
 		SpellCheckerUtil.registerDictionaries();
 
 		// look and feel
-		i = lafCombo.getSelectedIndex();
-		LookAndFeel laf = LookAndFeel.values()[i];
-		SwingUtil.setLookAndFeel(laf);
+		//i = lafCombo.getSelectedIndex();
+		//LookAndFeel laf = LookAndFeel.values()[i];
+		//SwingUtil.setLookAndFeel(laf);
 
 		// default font
 		app.setDefaultFont(font);
@@ -158,7 +162,7 @@ public class PreferencesDialog extends AbstractDialog implements
 		NetUtil.setGoogleMapUrl(tfGoogleMapsUrl.getText());
 
 		// translator mode
-		PrefUtil.set(PreferenceKey.TRANSLATOR_MODE, cbTranslatorMode.isSelected());
+		// PrefUtil.set(PreferenceKey.TRANSLATOR_MODE, cbTranslatorMode.isSelected());
 
 		// refresh
 		app.refresh();
@@ -177,15 +181,31 @@ public class PreferencesDialog extends AbstractDialog implements
 		String currentLangStr = I18N.getCountryLanguage(Locale.getDefault());
 		Language lang = Language.valueOf(currentLangStr);
 		languageCombo.setSelectedIndex(lang.ordinal());
+
 		// date format
 		JLabel lbDateFormat = new JLabel(I18N.getMsgColon("msg.common.dateformatlabel"));
 		dateFormatCombo = SwingUtil.createDateFormat();
-		Preference prefDateFormat = PrefUtil.get(PreferenceKey.DATEFORMAT, "MM-dd-yyyy");
+		Preference prefDateFormat = PrefUtil.get(PreferenceKey.DATEFORMAT);
+		for (int i = 0; i < dateFormatCombo.getItemCount(); i ++) {
+			if (dateFormatCombo.getItemAt(i).equals(prefDateFormat.getStringValue())) {
+				dateFormatCombo.setSelectedIndex(i);
+			}
+		}
+
+		// time format
+		JLabel lbTimeFormat = new JLabel(I18N.getMsgColon("msg.common.timeformatlabel"));
+		timeFormatCombo = SwingUtil.createTimeFormat();
+		Preference prefTimeFormat = PrefUtil.get(PreferenceKey.TIMEFORMAT);
+		for (int i = 0; i < timeFormatCombo.getItemCount(); i ++) {
+			if (timeFormatCombo.getItemAt(i).equals(prefTimeFormat.getStringValue())) {
+				timeFormatCombo.setSelectedIndex(i);
+			}
+		}
 
 		// spelling
 		JLabel lbSpelling = new JLabel(I18N.getMsgColon("msg.pref.spelling"));
 		spellingCombo = SwingUtil.createSpellingCombo();
-		Preference pref = PrefUtil.get(PreferenceKey.SPELLING, Spelling.none.toString());
+		Preference pref = PrefUtil.get(PreferenceKey.SPELLING);
 		Spelling spelling = Spelling.valueOf(pref.getStringValue());
 		spellingCombo.setSelectedItem(pref.getStringValue());
 		JLabel lbAddSpelling = new JLabel(" ");
@@ -206,12 +226,20 @@ public class PreferencesDialog extends AbstractDialog implements
 		cbConfirmExit.setSelected(pref.getBooleanValue());
 
 		// layout
-		panel.add(lbLanguage); panel.add(languageCombo);
-		panel.add(lbDateFormat); panel.add(dateFormatCombo);
-		panel.add(lbSpelling); panel.add(spellingCombo);
-		panel.add(lbAddSpelling); panel.add(addSpelling);
-		panel.add(lbStart); panel.add(cbLoadFileOnStart);
-		panel.add(lbConfirmExit); panel.add(cbConfirmExit);
+		panel.add(lbLanguage);
+		panel.add(languageCombo);
+		panel.add(lbDateFormat);
+		panel.add(dateFormatCombo);
+		panel.add(lbTimeFormat);
+		panel.add(timeFormatCombo);
+		panel.add(lbSpelling);
+		panel.add(spellingCombo);
+		panel.add(lbAddSpelling);
+		panel.add(addSpelling);
+		panel.add(lbStart);
+		panel.add(cbLoadFileOnStart);
+		panel.add(lbConfirmExit);
+		panel.add(cbConfirmExit);
 
 		return panel;
 	}
@@ -230,11 +258,13 @@ public class PreferencesDialog extends AbstractDialog implements
 		lbShowFont.setText(SwingUtil.getNiceFontName(font));
 		JLabel lbCurrentFont = new JLabel(I18N.getMsgColon("msg.pref.font.standard.current"));
 		// look and feel
+		/*
 		JLabel lbLaf = new JLabel(I18N.getMsg("msg.pref.laf") + ": ");
 		DefaultComboBoxModel lafModel = new DefaultComboBoxModel();
 		for (SbConstants.LookAndFeel laf : SbConstants.LookAndFeel.values()) {
 			lafModel.addElement(laf.getI18N());
 		}
+		*/
 		/*
 		UIManager.LookAndFeelInfo[] info = UIManager.getInstalledLookAndFeels();
 		Map map = new TreeMap();
@@ -244,18 +274,18 @@ public class PreferencesDialog extends AbstractDialog implements
 			//map.put(nomLF,nomClasse); 
 			lafModel.addElement(nomLF);
 		}
-		*/
 		lafCombo = new JComboBox(lafModel);
 		Preference pref = PrefUtil.get(PreferenceKey.LAF, LookAndFeel.cross.name());
 		LookAndFeel laf = LookAndFeel.valueOf(pref.getStringValue());
 		lafCombo.setSelectedIndex(laf.ordinal());
+		*/
 		// layout
 		panel.add(lbCurrentFont);
 		panel.add(lbShowFont);
 		panel.add(lbFont);
 		panel.add(btFont, "gap bottom 16");
-		panel.add(lbLaf);
-		panel.add(lafCombo);
+		//panel.add(lbLaf);
+		//panel.add(lafCombo);
 		return panel;
 	}
 

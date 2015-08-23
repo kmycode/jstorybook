@@ -873,6 +873,18 @@ public class SwingUtil {
 		model.addElement("dd-MM-yyyy");
 		model.addElement("MM-dd-yyyy");
 		model.addElement("dd/MM/yyyy");
+		model.addElement("yyyy-MM-dd");
+		model.addElement("yyyy/MM/dd");
+		model.addElement("yyyy年MM月dd日");
+		return new JComboBox(model);
+	}
+
+	@SuppressWarnings ("unchecked")
+	public static JComboBox createTimeFormat () {
+		DefaultComboBoxModel model = new DefaultComboBoxModel();
+		model.addElement("HH:mm:ss");
+		model.addElement("HH-mm-ss");
+		model.addElement("HH時mm分ss秒");
 		return new JComboBox(model);
 	}
 }

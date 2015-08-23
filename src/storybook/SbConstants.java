@@ -31,9 +31,9 @@ import net.infonode.docking.View;
 public class SbConstants {
 	/* default values */
 
-	public final static String DEFAULT_LANG = "en_US";
-	public final static String DEFAULT_FONT_NAME = "Dialog";
-	public final static int DEFAULT_FONT_SIZE = 12;
+	public final static String DEFAULT_LANG = "ja_JP";
+	public final static String DEFAULT_FONT_NAME = (String) PreferenceKey.DEFAULT_FONT_NAME.getDefaultValue();
+	public final static int DEFAULT_FONT_SIZE = (int) PreferenceKey.DEFAULT_FONT_SIZE.getDefaultValue();
 	public final static int DEFAULT_FONT_STYLE = 0;
 	public final static int DEFAULT_CHRONO_ZOOM = 40;
 	public final static int MIN_CHRONO_ZOOM = 20;
@@ -130,24 +130,25 @@ public class SbConstants {
 
 	public static enum Language {
 		en_US, //USA english
-		de_DE, //German
-		es_ES, //Spanish
-		da_DK, //Danish
-		pt_BR, //Brazilian Portuguese
-		it_IT, //Italian
+		//de_DE, //German
+		//es_ES, //Spanish
+		//da_DK, //Danish
+		//pt_BR, //Brazilian Portuguese
+		//it_IT, //Italian
 		fr_FR, //French
-		nl_NL, //Ducth
-		hu_HU, //Hungarian
-		iw_IL, //Hebrew
-		fi_FI, //Finnish
-		sv_SE, //Swedish
-		el_GR, //Greek
+		//nl_NL, //Ducth
+		//hu_HU, //Hungarian
+		//iw_IL, //Hebrew
+		//fi_FI, //Finnish
+		//sv_SE, //Swedish
+		//el_GR, //Greek
 		ja_JP, //Japanese
-		zh_HK, //Traditional Chinese (Hong Kong)
-		ru_RU, //Russian
-		cs_CZ, //Czech
-		zh_CN, //Simplified Chinese
-		pl_PL; //Polish
+		//zh_HK, //Traditional Chinese (Hong Kong)
+		//ru_RU, //Russian
+		//cs_CZ, //Czech
+		//zh_CN, //Simplified Chinese
+		//pl_PL, //Polish
+		;
 		public String getI18N() {
 			return I18N.getMsg("msg.common.language." + name());
 		}
@@ -156,8 +157,9 @@ public class SbConstants {
 			switch (this) {
 				case en_US:
 					locale = Locale.US;
-					break;
-				case de_DE:
+				break;
+			/*
+						case de_DE:
 					locale = Locale.GERMANY;
 					break;
 				case es_ES:
@@ -172,10 +174,12 @@ public class SbConstants {
 				case it_IT:
 					locale = new Locale("it", "IT");
 					break;
+			 * */
 				case fr_FR:
 					locale = new Locale("fr", "FR");
-					break;
-				case nl_NL:
+				break;
+			/*
+						case nl_NL:
 					locale = new Locale("nl", "NL");
 					break;
 				case iw_IL:
@@ -193,10 +197,12 @@ public class SbConstants {
 				case el_GR:
 					locale = new Locale("el", "GR");
 					break;
+			 * */
 				case ja_JP:
 					locale = new Locale("ja", "JP");
-					break;
-				case zh_HK:
+				break;
+			/*
+						case zh_HK:
 					locale = new Locale("zh", "HK");
 					break;
 				case ru_RU:
@@ -211,6 +217,7 @@ public class SbConstants {
 				case pl_PL:
 					locale = new Locale("pl", "PL");
 					break;
+			 * */
 				default:
 					locale = Locale.US;
 			}
@@ -400,8 +407,8 @@ public class SbConstants {
 	public enum PreferenceKey {
 		STORYBOOK_VERSION("StorybookVersion"),
 		LAST_OPEN_DIR("LastOpenDir"),
-		LAST_OPEN_FILE("LastOpenFile"),
-		OPEN_LAST_FILE("OpenLastFile"),
+		LAST_OPEN_FILE("LastOpenFile", ""),
+		OPEN_LAST_FILE("OpenLastFile", false),
 		RECENT_FILES("RecentFiles"),
 		CONFIRM_EXIT("ConfirmExit"),
 		GOOGLE_MAPS_URL("GoogleMapsURL"),
@@ -409,26 +416,40 @@ public class SbConstants {
 		SIZE_HEIGHT("SizeHeight"),
 		POS_X("PosX"),
 		POS_Y("PosY"),
-		MAXIMIZED("Maximized"),
+		MAXIMIZED("Maximized", false),
 		LANG("language"),
-		DATEFORMAT("dateFormat"),
-		SPELLING("Spelling"),
+		DATEFORMAT("dateFormat", "MM-dd-yyyy"),
+		TIMEFORMAT("timeFormat", "HH:mm:ss"),
+		SPELLING("Spelling", Spelling.none.toString()),
 		LAF("LookAndFeel"),
-		FIRST_START_4("FirstStart4"),
+		FIRST_START_4("FirstStart4", true),
 		DOCKING_LAYOUT("DockingLayout"),
-		DEFAULT_FONT_NAME("DefaultFontName"),
-		DEFAULT_FONT_SIZE("DefaultFontSize"),
+		DEFAULT_FONT_NAME("DefaultFontName", "Meiryo UI"),
+		DEFAULT_FONT_SIZE("DefaultFontSize", 12),
 		DEFAULT_FONT_STYLE("DefaultFontStyle"),
 		TRANSLATOR_MODE("TranslatorMode"),
 		EMAIL("Email"),
 		PASSWORD("Password");
 		final private String text;
+		final private Object defaultValue;
+
+		@Deprecated
 		private PreferenceKey(String text) {
 			this.text = text;
+			this.defaultValue = null;
+		}
+
+		private PreferenceKey (String text, Object defaultValue) {
+			this.text = text;
+			this.defaultValue = defaultValue;
 		}
 		@Override
 		public String toString() {
 			return text;
+		}
+
+		public Object getDefaultValue () {
+			return this.defaultValue;
 		}
 	}
 

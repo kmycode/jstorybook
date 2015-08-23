@@ -545,6 +545,10 @@ public class MainFrame extends JFrame implements IPaintable {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 	}
 
+	public void unsetMaximized () {
+		setExtendedState(Frame.NORMAL);
+	}
+
 	public void close() {
 		if (!isBlank()) {
 			Preference pref = PrefUtil.get(PreferenceKey.CONFIRM_EXIT, true);
@@ -560,6 +564,9 @@ public class MainFrame extends JFrame implements IPaintable {
 			// save
 			// getSbActionManager().getActionHandler().handleFileSave();
 			// save dimension, location, maximized
+			if (isMaximized()) {
+				this.unsetMaximized();
+			}
 			Dimension dim = getSize();
 			PrefUtil.set(PreferenceKey.SIZE_WIDTH, dim.width);
 			PrefUtil.set(PreferenceKey.SIZE_HEIGHT, dim.height);
@@ -603,7 +610,7 @@ public class MainFrame extends JFrame implements IPaintable {
 		int x = PrefUtil.get(PreferenceKey.POS_X, SbConstants.DEFAULT_POS_X).getIntegerValue();
 		int y = PrefUtil.get(PreferenceKey.POS_Y, SbConstants.DEFAULT_POS_Y).getIntegerValue();
 		setLocation(x, y);
-		boolean maximized = PrefUtil.get(PreferenceKey.MAXIMIZED, false).getBooleanValue();
+		boolean maximized = PrefUtil.get(PreferenceKey.MAXIMIZED).getBooleanValue();
 		if (maximized) {
 			setMaximized();
 		}

@@ -61,6 +61,10 @@ public class FirstStartDialog extends AbstractDialog {
 	@Override
 	public void initUi() {
 		super.initUi();
+
+		// jStorybookなので日本語優先
+		I18N.initResourceBundles(new Locale("ja", "JP"));
+
 		MigLayout layout = new MigLayout("wrap,fill,ins 0");
 		setLayout(layout);
 		setTitle(I18N.getMsg("msg.first.start.title"));
@@ -74,6 +78,7 @@ public class FirstStartDialog extends AbstractDialog {
 		// language
 		JLabel lbLanguage = new JLabel(I18N.getMsgColon("msg.common.language"));
 		languageCombo = SwingUtil.createLanguageCombo();
+		languageCombo.setSelectedItem(Language.ja_JP.getI18N());
 		// spelling
 		JLabel lbSpelling = new JLabel(I18N.getMsgColon("msg.pref.spelling"));
 		spellingCombo = SwingUtil.createSpellingCombo();

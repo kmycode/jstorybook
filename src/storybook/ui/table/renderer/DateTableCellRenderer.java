@@ -42,13 +42,12 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer {
 		try {
 			if (value instanceof Date) {
 				Date date = (Date) value;
-				DateFormat formatter;
 				if (DateUtil.isZeroTimeDate(date)) {
-					formatter = I18N.getMediumDateFormatter();
-				} else {
-					formatter = I18N.getDateTimeFormatter();
+					setText(DateUtil.simpleDateToString(date));
 				}
-				setText(formatter.format(date));
+				else {
+					setText(DateUtil.simpleDateTimeToString(date));
+				}
 			} else {
 				setText("");
 			}

@@ -49,22 +49,32 @@ public class I18N {
 		return locale.equals(de);
 	}
 
+	public static boolean isJapan () {
+		Locale locale = Locale.getDefault();
+		Locale de = new Locale("ja", "JP");
+		return locale.equals(de);
+	}
+
 	public static String getCountryLanguage(Locale locale) {
 		return locale.getLanguage() + "_" + locale.getCountry();
 	}
 
+	@Deprecated
 	public static DateFormat getDateTimeFormatter() {
 		return DateFormat.getInstance();
 	}
 
+	@Deprecated
 	public static DateFormat getShortDateFormatter() {
 		return DateFormat.getDateInstance(DateFormat.SHORT);
 	}
 
+	@Deprecated
 	public static DateFormat getMediumDateFormatter() {
 		return DateFormat.getDateInstance(DateFormat.MEDIUM);
 	}
 
+	@Deprecated
 	public static DateFormat getLongDateFormatter() {
 		return DateFormat.getDateInstance(DateFormat.LONG);
 	}

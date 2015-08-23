@@ -64,6 +64,7 @@ import storybook.ui.table.renderer.StrandsTableCellRenderer;
 import storybook.ui.table.renderer.TimeEventFormatTableCellRenderer;
 
 import com.googlecode.genericdao.search.Search;
+import storybook.ui.table.renderer.DateTableCellRenderer;
 import storybook.ui.table.renderer.ImageTableCellRenderer;
 
 

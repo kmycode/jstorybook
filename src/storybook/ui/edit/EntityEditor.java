@@ -123,6 +123,7 @@ import storybook.model.state.IdeaState;
 import storybook.model.state.SceneState;
 import storybook.model.state.TimeStepState;
 import storybook.toolkit.BookUtil;
+import storybook.toolkit.DateUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.completer.AbbrCompleter;
 import storybook.toolkit.odt.ODTUtils;
@@ -572,14 +573,14 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 
 			btAddOrUpdate = new JButton(I18N.getMsg("msg.editor.update"));
 			btAddOrUpdate.setName(ComponentName.BT_ADD_OR_UPDATE.toString());
-			if (I18N.isEnglish()) {
+			if (I18N.isEnglish() || I18N.isJapan()) {
 				btAddOrUpdate.setIcon(I18N.getIcon("icon.small.refresh"));
 			}
 			btAddOrUpdate.addActionListener(this);
 
 			JButton btCancel = new JButton(I18N.getMsg("msg.common.cancel"));
 			btCancel.setName(ComponentName.BT_CANCEL.toString());
-			if (I18N.isEnglish()) {
+			if (I18N.isEnglish() || I18N.isJapan()) {
 				btCancel.setIcon(I18N.getIcon("icon.small.cancel"));
 			}
 			btCancel.addActionListener(this);
@@ -869,8 +870,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 									lb.setIcon((Icon) ret);
 								} else if (ret instanceof Timestamp) {
 									Timestamp stamp = (Timestamp) ret;
-									SimpleDateFormat dateFormat = new SimpleDateFormat(I18N.getMsg("msg.common.dateformat"));
-									lb.setText(dateFormat.format(stamp));
+									lb.setText(DateUtil.simpleDateToString(stamp));
 								} else {
 									lb.setText(ret.toString());
 								}

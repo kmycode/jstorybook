@@ -38,7 +38,19 @@ import storybook.model.entity.Preference;
  */
 public class PrefUtil {
 
-	public static Preference get(PreferenceKey prefKey, Object defaultVal) {
+	/**
+	 * @deprecated
+	 * 1. SbConstants.java の enum PreferenceKey で、初期値を設定する
+	 * 2. PrefUtil#get(PreferenceKey) を使う
+	 * ※現在、暫定的に、enum PreferenceKey で初期値が設定されていればそれを優先して使うようにしています
+	 */
+	@Deprecated
+	public static Preference get (PreferenceKey prefKey, Object defaultVal) {
+
+		if (prefKey.getDefaultValue() != null) {
+			defaultVal = prefKey.getDefaultValue();
+		}
+
 		String key = prefKey.toString();
 		PreferenceModel model = SbApp.getInstance().getPreferenceModel();
 		Session session = model.beginTransaction();
@@ -57,6 +69,15 @@ public class PrefUtil {
 		return pref;
 	}
 
+	public static Preference get (PreferenceKey prefKey) {
+		return get(prefKey, prefKey.getDefaultValue());
+	}
+
+	/**
+	 * @deprecated
+	 * 1. get(PreferenceKey) を使う（Stringではなくenumを）
+	 */
+	@Deprecated
 	public static Preference get(String strPrefKey, Object defaultVal) {
 		PreferenceModel model = SbApp.getInstance().getPreferenceModel();
 		Session session = model.beginTransaction();

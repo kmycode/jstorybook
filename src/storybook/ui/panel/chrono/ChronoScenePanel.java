@@ -106,9 +106,8 @@ public class ChronoScenePanel extends AbstractScenePanel implements FocusListene
 			tcText.setText(scene.getSummary());
 			tcText.setCaretPosition(0);
 			if (scene.hasSceneTs()) {
-				if (!DateUtil.isZeroTimeDate(scene.getSceneTs())) {
-					DateFormat formatter = I18N.getDateTimeFormatter();
-					lbTime.setText(formatter.format(scene.getSceneTs()));
+				if ( ! DateUtil.isZeroTimeDate(scene.getSceneTs())) {
+					lbTime.setText(DateUtil.simpleDateTimeToString(this.scene.getSceneTs()));
 				} else {
 					lbTime.setText("");
 				}
@@ -210,8 +209,7 @@ public class ChronoScenePanel extends AbstractScenePanel implements FocusListene
 		lbTime = new JLabel();
 		if (scene.hasSceneTs()) {
 			if (!DateUtil.isZeroTimeDate(scene.getSceneTs())) {
-				DateFormat formatter = I18N.getDateTimeFormatter();
-				lbTime.setText(formatter.format(scene.getSceneTs()));
+				lbTime.setText(DateUtil.simpleDateTimeToString(this.scene.getSceneTs()));
 			}
 		}
 

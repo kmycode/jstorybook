@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JLabel;
+import storybook.toolkit.DateUtil;
 
 /**
  * @author martin
@@ -42,7 +43,7 @@ public class DateLabel extends JLabel {
 		this.date = date;
 		DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT,
 				Locale.getDefault());
-		setText(formatter.format(this.date));
+		setText(DateUtil.simpleDateToString(this.date));
 		setOpaque(true);
 	}
 

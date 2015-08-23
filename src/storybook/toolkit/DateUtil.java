@@ -188,8 +188,22 @@ public class DateUtil {
 	return(formatter.format(date));
     }
     public static String simpleDateToString(Date date) {
-		Preference prefDateFormat = PrefUtil.get(PreferenceKey.DATEFORMAT, "MM-dd-yyyy");
+		Preference prefDateFormat = PrefUtil.get(PreferenceKey.DATEFORMAT);
 	SimpleDateFormat formatter = new SimpleDateFormat(prefDateFormat.getStringValue());
 	return(formatter.format(date));
-    }
+	}
+
+	public static String simpleTimeToString (Date date) {
+		Preference prefDateFormat = PrefUtil.get(PreferenceKey.TIMEFORMAT);
+		SimpleDateFormat formatter = new SimpleDateFormat(prefDateFormat.getStringValue());
+		return (formatter.format(date));
+	}
+
+	public static String simpleDateTimeToString (Date date) {
+		Preference prefDateFormat = PrefUtil.get(PreferenceKey.DATEFORMAT);
+		Preference prefTimeFormat = PrefUtil.get(PreferenceKey.TIMEFORMAT);
+		SimpleDateFormat formatter = new SimpleDateFormat(prefDateFormat.getStringValue() + " " + prefTimeFormat.
+				getStringValue());
+		return (formatter.format(date));
+	}
 }

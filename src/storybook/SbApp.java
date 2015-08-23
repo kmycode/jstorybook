@@ -51,6 +51,7 @@ import storybook.model.PreferenceModel;
 import storybook.model.entity.Preference;
 import storybook.model.oldModel.ModelMigration;
 import storybook.toolkit.BookUtil;
+import storybook.toolkit.DateUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.PrefUtil;
 import storybook.toolkit.net.Updater;
@@ -81,7 +82,7 @@ public class SbApp extends Component {
 
 	private void init() {
 		trace("SbApp.init()");
-		SplashDialog dlgStart=new SplashDialog("oStorybook init");
+		SplashDialog dlgStart = new SplashDialog("jStorybook init");
 		try {
 			MainFrame mainFrame = new MainFrame();
 			// preference model and controller
@@ -99,17 +100,18 @@ public class SbApp extends Component {
 			SwingUtil.setLookAndFeel();
 			restoreDefaultFont();
 			// first start dialog
-			Preference prefFirstStart = PrefUtil.get(PreferenceKey.FIRST_START_4, true);
+			Preference prefFirstStart = PrefUtil.get(PreferenceKey.FIRST_START_4);
 			if (prefFirstStart.getBooleanValue()) {
+				dlgStart.dispose();
 				FirstStartDialog dlg = new FirstStartDialog();
 				SwingUtil.showModalDialog(dlg, null);
 				PrefUtil.set(PreferenceKey.FIRST_START_4, false);
 			}
 
-			Preference pref = PrefUtil.get(PreferenceKey.OPEN_LAST_FILE, false);
+			Preference pref = PrefUtil.get(PreferenceKey.OPEN_LAST_FILE);
 			boolean fileHasBeenOpened = false;
 			if (pref.getBooleanValue()) {
-				Preference pref2 = PrefUtil.get(PreferenceKey.LAST_OPEN_FILE, "");
+				Preference pref2 = PrefUtil.get(PreferenceKey.LAST_OPEN_FILE);
 				DbFile dbFile = new DbFile(pref2.getStringValue());
 				trace("SbApp.init(): loading... " + dbFile);
 				fileHasBeenOpened = openFile(dbFile);
@@ -216,7 +218,7 @@ public class SbApp extends Component {
 			BookUtil.store(newMainFrame, BookKey.USE_HTML_SCENES, dlg.getUseHtmlScenes());
 			BookUtil.store(newMainFrame, BookKey.USE_HTML_DESCR, dlg.getUseHtmlDescr());
 			BookUtil.store(newMainFrame, BookKey.BOOK_CREATION_DATE,
-					new SimpleDateFormat("dd/MM/yy").format(new Date()));
+						   DateUtil.simpleDateToString(new Date()));
 			newMainFrame.initUi();
 			newMainFrame.getBookController().fireAgain();
 			addMainFrame(newMainFrame);
@@ -421,7 +423,7 @@ public class SbApp extends Component {
 	}
 
 	public void restoreDefaultFont() {
-		Preference pref = PrefUtil.get(PreferenceKey.DEFAULT_FONT_NAME, SbConstants.DEFAULT_FONT_NAME);
+		Preference pref = PrefUtil.get(PreferenceKey.DEFAULT_FONT_NAME);
 		String name = SbConstants.DEFAULT_FONT_NAME;
 		if (pref != null && !pref.getStringValue().isEmpty()) {
 			name = pref.getStringValue();
@@ -431,7 +433,7 @@ public class SbApp extends Component {
 		if (pref != null) {
 			style = pref.getIntegerValue();
 		}
-		pref = PrefUtil.get(PreferenceKey.DEFAULT_FONT_SIZE, SbConstants.DEFAULT_FONT_SIZE);
+		pref = PrefUtil.get(PreferenceKey.DEFAULT_FONT_SIZE);
 		int size = 0;
 		if (pref != null) {
 			size = pref.getIntegerValue();

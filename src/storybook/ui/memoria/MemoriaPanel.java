@@ -89,6 +89,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.hibernate.Session;
 import org.jdesktop.swingx.icon.EmptyIcon;
+import storybook.toolkit.DateUtil;
 
 public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefreshable {
 
@@ -130,6 +131,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 	private JComboBox entityCombo;
 	private Date chosenDate;
 	private JComboBox dateCombo;
+	private ArrayList<Date> dateComboList = new ArrayList<Date>();
 	private JCheckBox cbAutoRefresh;
 	//icons
 	private final Icon womanIconMedium = I18N.getIcon("icon.medium.woman");
@@ -309,19 +311,22 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 			entityComboSelected = entityCombo.getSelectedItem();
 		}
 		Object dateComboSelected = null;
-		if (dateCombo != null) {
-			dateComboSelected = dateCombo.getSelectedItem();
+		if (dateCombo != null && dateCombo.getSelectedIndex() >= 0 && dateCombo.getSelectedIndex() < dateComboList.
+				size()) {
+			dateComboSelected = this.dateComboList.get(dateCombo.getSelectedIndex());
 		}
 		dateCombo = new JComboBox();
 		dateCombo.setPreferredSize(new Dimension(100, 20));
 		dateCombo.addItem(null);
+		this.dateComboList.clear();
 		for (Date onedate : dates) {
-			dateCombo.addItem(onedate);
+			dateCombo.addItem(DateUtil.simpleDateToString(onedate));
+			this.dateComboList.add(onedate);
 		}
 		dateCombo.setName(SbConstants.ComponentName.COMBO_DATES.toString());
 		dateCombo.setMaximumRowCount(15);
 		if (dateComboSelected != null) {
-			dateCombo.setSelectedItem(dateComboSelected);
+			dateCombo.setSelectedIndex(this.dateComboList.indexOf(dateComboSelected));
 		}
 		datePanel = new JPanel(new MigLayout("flowx,ins 0"));
 		datePanel.setOpaque(false);
@@ -1399,7 +1404,12 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 			refreshEntityCombo(eCombo.getType());
 			return;
 		}
-		chosenDate = ((Date) dateCombo.getSelectedItem());
+		if (dateCombo.getSelectedIndex() >= 0 && dateCombo.getSelectedIndex() < dateComboList.size()) {
+			chosenDate = ((Date) this.dateComboList.get(dateCombo.getSelectedIndex()));
+		}
+		else {
+			chosenDate = null;
+		}
 		refresh((AbstractEntity) entityCombo.getSelectedItem());
 	}
 

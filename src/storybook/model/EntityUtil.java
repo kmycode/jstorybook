@@ -1223,17 +1223,15 @@ public class EntityUtil {
 						str = HtmlUtil.getColorSpan(clr);
 					} else if (ret instanceof Date) {
 						Date date = (Date) ret;
-						DateFormat formatter;
 						if (DateUtil.isZeroTimeDate(date)) {
-							formatter = I18N.getLongDateFormatter();
-							date = DateUtil.getZeroTimeDate(date);
+							str = DateUtil.simpleDateToString(date);
 						} else
 							if (entity instanceof TimeEvent) {
-								formatter = new SimpleDateFormat(((TimeEvent)entity).getStepFormat());
-							} else {
-							    formatter = I18N.getDateTimeFormatter();
+								str = new SimpleDateFormat(((TimeEvent) entity).getStepFormat()).format(date);
 							}
-						str = formatter.format(date);
+							else {
+								str = DateUtil.simpleDateTimeToString(date);
+							}
 					}
 					else if (ret instanceof String && col.getInputType() == SbColumn.InputType.IMAGE) {
 						//str = HtmlUtil.getImg(Person.getImageIconPath(mainFrame.getDbFile()) + (String) ret);

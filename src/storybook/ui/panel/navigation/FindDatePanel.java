@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import storybook.model.EntityUtil;
 import storybook.model.handler.StrandEntityHandler;
 import storybook.model.dao.SceneDAOImpl;
 import storybook.model.entity.Strand;
+import storybook.toolkit.DateUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.IconButton;
 import storybook.toolkit.swing.SwingUtil;
@@ -61,6 +63,7 @@ public class FindDatePanel extends AbstractPanel implements ItemListener {
 
 	private JComboBox strandCombo;
 	private JComboBox dateCombo;
+	private ArrayList<Date> dateItemList = new ArrayList<Date>();
 	private ViewsRadioButtonPanel viewsRbPanel;
 	private JLabel lbWarning;
 
@@ -132,8 +135,10 @@ public class FindDatePanel extends AbstractPanel implements ItemListener {
 		List<Date> dates = dao.findDistinctDatesByStrand(strand);
 		model.commit();
 		dateCombo.removeAllItems();
+		this.dateItemList.clear();
 		for (Date date : dates) {
-			dateCombo.addItem(date);
+			dateCombo.addItem(DateUtil.simpleDateToString(date));
+			this.dateItemList.add(date);
 		}
 	}
 
@@ -175,7 +180,7 @@ public class FindDatePanel extends AbstractPanel implements ItemListener {
 
 	private void scrollToStrandDate() {
 		Strand strand = (Strand) strandCombo.getSelectedItem();
-		Date date = (Date) dateCombo.getSelectedItem();
+		Date date = (Date) this.dateItemList.get(dateCombo.getSelectedIndex());
 		SbView view = null;
 		boolean chrono = viewsRbPanel.isChronoSelected();
 		boolean book = viewsRbPanel.isBookSelected();
