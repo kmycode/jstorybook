@@ -144,6 +144,7 @@ public class MainMenu extends javax.swing.JFrame {
         menuEdit = new javax.swing.JMenu();
         editCopyBook = new javax.swing.JMenuItem();
         editCopyBlurb = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         windowPreferences = new javax.swing.JMenuItem();
         menuNewEntity = new javax.swing.JMenu();
         newScene = new javax.swing.JMenuItem();
@@ -165,7 +166,6 @@ public class MainMenu extends javax.swing.JFrame {
         newItemLink = new javax.swing.JMenuItem();
         newFOI = new javax.swing.JMenuItem();
         newIdea = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JPopupMenu.Separator();
         menuPrimaryObjects = new javax.swing.JMenu();
         tabScene = new javax.swing.JMenuItem();
         tabChapter = new javax.swing.JMenuItem();
@@ -722,6 +722,7 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
         menuEdit.add(editCopyBlurb);
+        menuEdit.add(jSeparator1);
 
         windowPreferences.setText(bundle.getString("msg.dlg.preference.title")); // NOI18N
         windowPreferences.setName("preferences-command"); // NOI18N
@@ -889,7 +890,6 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
         menuNewEntity.add(newIdea);
-        menuNewEntity.add(jSeparator8);
 
         menuBar.add(menuNewEntity);
 
@@ -2146,6 +2146,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem helpHome;
     private javax.swing.JMenuItem helpReportBug;
     private javax.swing.JCheckBoxMenuItem helpTrace;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator11;
     private javax.swing.JPopupMenu.Separator jSeparator12;
@@ -2163,7 +2164,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
-    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     public javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCharts;

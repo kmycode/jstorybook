@@ -1234,8 +1234,7 @@ public class EntityUtil {
 							}
 					}
 					else if (ret instanceof String && col.getInputType() == SbColumn.InputType.IMAGE) {
-						//str = HtmlUtil.getImg(Person.getImageIconPath(mainFrame.getDbFile()) + (String) ret);
-						str = (String) ret;
+						str = HtmlUtil.getImg(Person.getImageIconPath(mainFrame.getDbFile()) + (String) ret);
 					} else {
 						str = ret.toString();
 						if (methodName.endsWith("Notes")

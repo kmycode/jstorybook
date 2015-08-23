@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package storybook.ui.panel.info;
 
+import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.JScrollPane;
@@ -39,6 +40,7 @@ import storybook.model.entity.Internal;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.net.NetUtil;
+import storybook.toolkit.swing.FontManager;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.ui.panel.AbstractPanel;
 import storybook.ui.MainFrame;
@@ -154,7 +156,7 @@ public class InfoPanel extends AbstractPanel implements HyperlinkListener {
 		}
 	}
 
-	private void refreshInfo() {
+	private void refreshInfo () {
 		infoPane.setText(EntityUtil.getInfo(mainFrame, entity));
 		infoPane.setCaretPosition(0);
 		infoPane.setComponentPopupMenu(EntityUtil.createPopupMenu(mainFrame, entity));

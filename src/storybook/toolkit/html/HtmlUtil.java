@@ -18,6 +18,7 @@ import org.jsoup.Jsoup;
 import storybook.SbApp;
 import storybook.toolkit.TextUtil;
 import storybook.toolkit.swing.ColorUtil;
+import storybook.toolkit.swing.FontManager;
 
 public class HtmlUtil {
 
@@ -207,7 +208,7 @@ public class HtmlUtil {
 	}
 
 	public static String getImg (String imagePath) {
-		String buf = "<img src='" + imagePath.replace('\\', '/') + "' style='max-height:100px'>";
+		String buf = "<img src='file:///" + imagePath.replace('\\', '/') + "' style='max-height:100px'>";
 		return (buf);
 	}
 
@@ -233,8 +234,9 @@ public class HtmlUtil {
 		String buf = "<head>" + "<style type='text/css'><!--\n";
 		// body
 		buf+="body {"
-			+ "font-family:Arial,sans-serif;"
-			+ "font-size:" + fontSize + "px;"
+				+ "font-family:" + (FontManager.getInstance().fontProperty().get().getFamily())
+				+ ";"
+				+ "font-size:" + fontSize + "px;"
 			+ "padding-left:2px;"
 			+ "padding-right:2px;"
 			+ "}\n";

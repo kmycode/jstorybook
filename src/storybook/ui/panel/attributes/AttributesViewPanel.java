@@ -30,6 +30,7 @@ import storybook.model.entity.Internal;
 import storybook.model.entity.Person;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
+import storybook.toolkit.swing.FontManager;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.ui.MainFrame;
 import storybook.ui.panel.AbstractPanel;
@@ -98,7 +99,8 @@ public class AttributesViewPanel extends AbstractScrollPanel implements Printabl
 		// pourrait se faire sous forme HTML?
 		// pas de bouton nécessaire
 	private String getAttributes() {
-		String html="<html><body><h1>"+I18N.getMsg("msg.attribute.list")+"</h1>\n";
+		String html = "<html><body style='font-family:" + (FontManager.getInstance().fontProperty().get().getFamily())
+				+ "'><h1>" + I18N.getMsg("msg.attribute.list") + "</h1>\n";
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		AttributeDAOImpl dao = new AttributeDAOImpl(session);
