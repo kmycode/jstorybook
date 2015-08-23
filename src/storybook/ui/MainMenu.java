@@ -195,6 +195,7 @@ public class MainMenu extends javax.swing.JFrame {
         vueReading = new javax.swing.JMenuItem();
         vueManageScene = new javax.swing.JMenuItem();
         vueMemoria = new javax.swing.JMenuItem();
+        chartsAttributes = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         vueEditor = new javax.swing.JMenuItem();
         vueTree = new javax.swing.JMenuItem();
@@ -204,7 +205,6 @@ public class MainMenu extends javax.swing.JFrame {
         partPrevious = new javax.swing.JMenuItem();
         partNext = new javax.swing.JMenuItem();
         menuCharts = new javax.swing.JMenu();
-        chartsAttributes = new javax.swing.JMenuItem();
         chartPersonsByDate = new javax.swing.JMenuItem();
         chartPersonsByScene = new javax.swing.JMenuItem();
         chartWIWW = new javax.swing.JMenuItem();
@@ -1130,6 +1130,15 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
         menuView.add(vueMemoria);
+
+        chartsAttributes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/storybook/resources/icons/16x16/columns.png"))); // NOI18N
+        chartsAttributes.setText(bundle.getString("msg.attribute.list")); // NOI18N
+        chartsAttributes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chartsAttributesActionPerformed(evt);
+            }
+        });
+        menuView.add(chartsAttributes);
         menuView.add(jSeparator12);
 
         vueEditor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/storybook/resources/icons/16x16/edit.png"))); // NOI18N
@@ -1197,15 +1206,6 @@ public class MainMenu extends javax.swing.JFrame {
         menuCharts.setMnemonic(java.util.ResourceBundle.getBundle("storybook/msg/messages").getString("msg.menu.charts.mnemonic").charAt(0));
         menuCharts.setText(bundle.getString("msg.menu.charts")); // NOI18N
         menuCharts.setName("charts-menu-command"); // NOI18N
-
-        chartsAttributes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/storybook/resources/icons/16x16/columns.png"))); // NOI18N
-        chartsAttributes.setText(bundle.getString("msg.attribute.list")); // NOI18N
-        chartsAttributes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chartsAttributesActionPerformed(evt);
-            }
-        });
-        menuCharts.add(chartsAttributes);
 
         chartPersonsByDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/storybook/resources/icons/16x16/chart.png"))); // NOI18N
         chartPersonsByDate.setText(bundle.getString("msg.menu.tools.charts.overall.character.date")); // NOI18N

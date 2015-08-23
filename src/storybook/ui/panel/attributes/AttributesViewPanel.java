@@ -107,8 +107,10 @@ public class AttributesViewPanel extends AbstractScrollPanel implements Printabl
 		List<String> attributes = dao.findKeys();
 
 		for (String attribute : attributes) {
-			html+="<p><b>"+attribute+" : </b><br>\n";
-			html+=getValues(attribute)+"</p>";
+			html += "<p><b>" + attribute + " : </b><br>\n";
+			html += "<table>";
+			html += getValues(attribute);
+			html += "</table></p>";
 		}
 		html+="</body><html>";
 		return(html);
@@ -134,7 +136,7 @@ public class AttributesViewPanel extends AbstractScrollPanel implements Printabl
 		// finalisation de la liste
 		for (String v : values) {
 			int i=0;
-			html+="- "+v+" : ";
+			html += "<tr><td>" + v + "</td><td>: ";
 			for (Person person : persons) {
 				for (Attribute attr : person.getAttributes()) {
 					if (!person.getAttributes().isEmpty()) {
@@ -148,7 +150,7 @@ public class AttributesViewPanel extends AbstractScrollPanel implements Printabl
 					}
 				}
 			}
-			html+="<br>\n";
+			html += "</td></tr>\n";
 		}
 		model.commit();
 		return(html);
