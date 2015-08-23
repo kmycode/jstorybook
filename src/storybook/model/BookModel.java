@@ -21,6 +21,7 @@ package storybook.model;
 import java.awt.Component;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -108,7 +109,14 @@ public class BookModel extends AbstractModel {
 		chapter.setTitle(I18N.getMsg("msg.common.chapter") + " 1");
 		chapter.setDescription("");
 		chapter.setNotes("");
-		chapter.setCreationTime(new Timestamp(new Date().getTime()));
+		{
+			Calendar today = Calendar.getInstance();
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			today.set(Calendar.MINUTE, 0);
+			today.set(Calendar.SECOND, 0);
+			today.set(Calendar.MILLISECOND, 0);
+			chapter.setCreationTime(new Timestamp(today.getTime().getTime()));
+		}
 		chapter.setObjectiveTime(null);
 		chapter.setDoneTime(null);
 		session.save(chapter);

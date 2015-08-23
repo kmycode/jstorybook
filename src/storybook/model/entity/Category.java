@@ -78,7 +78,10 @@ public class Category extends AbstractEntity implements Comparable<Category> {
 	/**
 	 * @hibernate.property
 	 */
-    public Category getSup() {
+	public Category getSup () {
+		if (this.equals(this.sup)) {
+			return null;
+		}
         return this.sup;
     }
 
@@ -100,10 +103,17 @@ public class Category extends AbstractEntity implements Comparable<Category> {
 		if (!super.equals(obj)) {
 			return false;
 		}
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
 		Category test = (Category) obj;
 		boolean ret = true;
 		ret = ret && equalsIntegerNullValue(sort, test.getSort());
 		ret = ret && equalsStringNullValue(name, test.getName());
+		ret = ret && equalsObjectNullValue(sup, test.getSup());
 		return ret;
 	}
 
@@ -112,6 +122,7 @@ public class Category extends AbstractEntity implements Comparable<Category> {
 		int hash = super.hashCode();
 		hash = hash * 31 + sort.hashCode();
 		hash = hash * 31 + name.hashCode();
+		hash = hash * 31 + (sup != null ? sup.hashCode() : 0);
 		return hash;
 	}
 

@@ -303,6 +303,7 @@ public class Location extends AbstractEntity implements Comparable<Location> {
 		hash = hash * 31 + (address != null ? address.hashCode() : 0);
 		hash = hash * 31 + (city != null ? city.hashCode() : 0);
 		hash = hash * 31 + (country != null ? country.hashCode() : 0);
+		hash = hash * 31 + (site != null ? site.hashCode() : 0);
 		hash = hash * 31 + (altitude != null ? altitude.hashCode() : 0);
 		hash = hash * 31 + (description != null ? description.hashCode() : 0);
 		hash = hash * 31 + (notes != null ? notes.hashCode() : 0);

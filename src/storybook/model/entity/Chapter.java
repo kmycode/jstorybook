@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.entity;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import storybook.toolkit.I18N;
 import storybook.toolkit.TextUtil;
@@ -41,7 +43,16 @@ public class Chapter extends AbstractEntity implements Comparable<Chapter> {
     private Timestamp doneTime;
     private Integer objectiveChars;
 
-	public Chapter() {
+	public Chapter () {
+		/*
+		 * Calendar today = Calendar.getInstance();
+		 * today.set(Calendar.HOUR_OF_DAY, 0);
+		 * today.set(Calendar.MINUTE, 0);
+		 * today.set(Calendar.SECOND, 0);
+		 * today.set(Calendar.MILLISECOND, 0);
+		 * this.creationTime = new Timestamp(today.getTime().getTime());
+		 */
+		this.creationTime = new Timestamp(new Date().getTime());
 	}
 
 	public Chapter(Part part, Integer chapterno, String title,
@@ -224,6 +235,10 @@ public class Chapter extends AbstractEntity implements Comparable<Chapter> {
 		ret = ret && equalsStringNullValue(title, test.getTitle());
 		ret = ret && equalsStringNullValue(description, test.getDescription());
 		ret = ret && equalsStringNullValue(notes, test.getNotes());
+		ret = ret && equalsTimestampNullValue(creationTime, test.getCreationTime());
+		ret = ret && equalsTimestampNullValue(objectiveTime, test.getObjectiveTime());
+		ret = ret && equalsTimestampNullValue(doneTime, test.getDoneTime());
+		ret = ret && equalsIntegerNullValue(objectiveChars, test.getObjectiveChars());
 		return ret;
 	}
 
@@ -235,6 +250,10 @@ public class Chapter extends AbstractEntity implements Comparable<Chapter> {
 		hash = hash * 31 + title.hashCode();
 		hash = hash * 31 + description.hashCode();
 		hash = hash * 31 + notes.hashCode();
+		hash = hash * 31 + (creationTime != null ? creationTime.hashCode() : 0);
+		hash = hash * 31 + (objectiveTime != null ? objectiveTime.hashCode() : 0);
+		hash = hash * 31 + (doneTime != null ? doneTime.hashCode() : 0);
+		hash = hash * 31 + (objectiveChars != null ? objectiveChars.hashCode() : 0);
 		return hash;
 	}
 

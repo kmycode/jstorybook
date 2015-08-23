@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.entity;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -40,7 +41,15 @@ public class Part extends AbstractEntity {
     private Timestamp doneTime;
     private Integer objectiveChars;
 
-	public Part() {
+	public Part () {
+		/*
+		 		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 0);
+		today.set(Calendar.MINUTE, 0);
+		today.set(Calendar.SECOND, 0);
+		today.set(Calendar.MILLISECOND, 0);
+		this.creationTime = new Timestamp(today.getTime().getTime());
+		 */
 		this.creationTime = new Timestamp(new Date().getTime());
 	}
 
@@ -109,7 +118,10 @@ public class Part extends AbstractEntity {
 	/**
 	 * @hibernate.property
 	 */
-    public Part getSuperpart() {
+	public Part getSuperpart () {
+		if (this.equals(this.superpart)) {
+			return null;
+		}
         return this.superpart;
     }
 
@@ -203,12 +215,22 @@ public class Part extends AbstractEntity {
 		if (!super.equals(obj)) {
 			return false;
 		}
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
 		Part test = (Part) obj;
 		boolean ret = true;
 		ret = ret && equalsIntegerNullValue(number, test.getNumber());
 		ret = ret && equalsStringNullValue(name, test.getName());
 		ret = ret && equalsStringNullValue(notes, test.getNotes());
 		ret = ret && equalsObjectNullValue(superpart, test.getSuperpart());
+		ret = ret && equalsTimestampNullValue(creationTime, test.getCreationTime());
+		ret = ret && equalsTimestampNullValue(objectiveTime, test.getObjectiveTime());
+		ret = ret && equalsTimestampNullValue(doneTime, test.getDoneTime());
+		ret = ret && equalsIntegerNullValue(objectiveChars, test.getObjectiveChars());
 		return ret;
 	}
 
@@ -219,6 +241,10 @@ public class Part extends AbstractEntity {
 		hash = hash * 31 + (name != null ? name.hashCode() : 0);
 		hash = hash * 31 + (notes != null ? notes.hashCode() : 0);
 		hash = hash * 31 + (superpart != null ? superpart.hashCode() : 0);
+		hash = hash * 31 + (creationTime != null ? creationTime.hashCode() : 0);
+		hash = hash * 31 + (objectiveTime != null ? objectiveTime.hashCode() : 0);
+		hash = hash * 31 + (doneTime != null ? doneTime.hashCode() : 0);
+		hash = hash * 31 + (objectiveChars != null ? objectiveChars.hashCode() : 0);
 		return hash;
 	}
 }

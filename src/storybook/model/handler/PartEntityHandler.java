@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package storybook.model.handler;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.dao.PartDAOImpl;
@@ -48,6 +50,17 @@ public class PartEntityHandler extends AbstractEntityHandler {
 		Part part = new Part();
 		part.setNumber(nextNumber);
 		part.setName(I18N.getMsg("msg.common.part") + " " + nextNumber);
+		{
+			Calendar today = Calendar.getInstance();
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			today.set(Calendar.MINUTE, 0);
+			today.set(Calendar.SECOND, 0);
+			today.set(Calendar.MILLISECOND, 0);
+			part.setCreationTime(new Timestamp(today.getTime().getTime()));
+		}
+		part.setObjectiveTime(null);
+		part.setDoneTime(null);
+		part.setObjectiveChars(0);
 		return part;
 	}
 

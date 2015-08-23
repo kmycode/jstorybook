@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.handler;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.hibernate.Session;
@@ -53,9 +54,17 @@ public class ChapterEntityHandler extends AbstractEntityHandler {
 		chapter.setChapterno(nextNumber);
 		chapter.setDescription("");
 		chapter.setNotes("");
-		chapter.setCreationTime(new Timestamp(new Date().getTime()));
+		{
+			Calendar today = Calendar.getInstance();
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			today.set(Calendar.MINUTE, 0);
+			today.set(Calendar.SECOND, 0);
+			today.set(Calendar.MILLISECOND, 0);
+			chapter.setCreationTime(new Timestamp(today.getTime().getTime()));
+		}
 		chapter.setObjectiveTime(null);
 		chapter.setDoneTime(null);
+		chapter.setObjectiveChars(0);
 		chapter.setTitle(I18N.getMsg("msg.common.chapter") + " " + nextNumber);
 		return chapter;
 	}
