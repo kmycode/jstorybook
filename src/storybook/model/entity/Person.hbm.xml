@@ -11,6 +11,7 @@
     <many-to-one cascade="none" class="storybook.model.entity.Gender" column="gender_id" insert="true" lazy="false" name="gender" outer-join="auto" update="true"/>
     <property column="firstname" insert="true" length="256" name="firstname" type="java.lang.String" update="true"/>
     <property column="lastname" insert="true" length="256" name="lastname" type="java.lang.String" update="true"/>
+    <property column="imagepath" insert="true" length="512" name="imagepath" type="java.lang.String" update="true"/>
     <property column="abbreviation" insert="true" length="256" name="abbreviation" type="java.lang.String" update="true"/>
     <property column="birthday" insert="true" name="birthday" type="java.util.Date" update="true"/>
     <property column="dayofdeath" insert="true" name="dayofdeath" type="java.util.Date" update="true"/>

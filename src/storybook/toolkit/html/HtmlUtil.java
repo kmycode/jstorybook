@@ -206,6 +206,11 @@ public class HtmlUtil {
 		return(buf);
 	}
 
+	public static String getImg (String imagePath) {
+		String buf = "<img src='" + imagePath.replace('\\', '/') + "' style='max-height:100px'>";
+		return (buf);
+	}
+
 	public static String getColoredTitle(Color clr, String title) {
 		String htmlClr = (clr == null ? "white" : ColorUtil.getHexName(clr));
 		String buf = "<div style='padding-top:2px;padding-bottom:2px;"

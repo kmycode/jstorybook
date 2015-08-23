@@ -19,6 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.entity;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -26,8 +33,11 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import storybook.SbApp;
+import storybook.model.DbFile;
 import static storybook.model.EntityUtil.isPersonAlive;
 import storybook.toolkit.swing.ColorUtil;
+import storybook.ui.MainFrame;
 
 /**
  * @hibernate.class
@@ -38,6 +48,7 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 	private Gender gender;
 	private String firstname;
 	private String lastname;
+	private String imagepath;
 	private String abbreviation;
 	private Date birthday;
 	private Date dayofdeath;
@@ -53,12 +64,13 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 	}
 
 	public Person(Gender gender, String firstname, String lastname,
-			String abbreviation, Date birthday, Date dayofdeath,
-			String occupation, String description, Integer color, String notes,
+				   String image, String abbreviation, Date birthday, Date dayofdeath,
+							String occupation, String description, Integer color, String notes,
 			Category category, List<Attribute> attributes) {
 		this.gender = gender;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.imagepath = image;
 		this.abbreviation = abbreviation;
 		this.birthday = birthday;
 		this.dayofdeath = dayofdeath;
@@ -132,6 +144,54 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 				+ "]";
 	}
 
+	public ImageIcon getImageIcon (String path) {
+		return this.getImageIcon(path, false);
+	}
+
+	// 画像のロードをする。エラーが発生したら、性別の画像を渡す
+	public ImageIcon getImageIcon (String path, boolean notGender) {
+		ImageIcon icon = null;
+		if ( ! this.imagepath.isEmpty()) {
+			icon = new ImageIcon(path + this.imagepath);
+		}
+		if (icon == null || icon.getImage() == null || icon.getImageLoadStatus() != MediaTracker.COMPLETE || icon.
+				getImage().getHeight(null) < 0) {
+			icon = null;
+			if ( ! notGender) {
+				icon = (ImageIcon) this.gender.getIcon();
+			}
+		}
+		return icon;
+	}
+
+	public ImageIcon getImageIcon (String path, int width, int height) {
+		return new ImageIcon(this.getImageIcon(path).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+	}
+
+	public ImageIcon getImageIcon (String path, boolean notGender, int width, int height) {
+		ImageIcon icon = this.getImageIcon(path, notGender);
+		if (icon != null) {
+			return new ImageIcon(icon.getImage().
+					getScaledInstance(width, height, Image.SCALE_SMOOTH));
+		}
+		else {
+			return null;
+		}
+	}
+
+	public ImageIcon getImageIcon (String path, Dimension size) {
+		return this.getImageIcon(path, (int) size.getWidth(), (int) size.getHeight());
+	}
+
+	public ImageIcon getImageIcon (String path, boolean notGender, Dimension size) {
+		return this.getImageIcon(path, notGender, (int) size.getWidth(), (int) size.getHeight());
+	}
+
+	public static String getImageIconPath (DbFile file) {
+		String path = file.getPath() + File.separator + file.getName();
+		return path + ".image" + File.separator;
+	}
+
 	// -------------------------------------------------------
 	// ここまでロジック
 	// -------------------------------------------------------
@@ -184,6 +244,17 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+
+	/**
+	 * @hibernate.property
+	 */
+	public String getImagepath () {
+		return this.imagepath;
+	}
+
+	public void setImagepath (String image) {
+		this.imagepath = image;
 	}
 
 	/**
@@ -338,6 +409,7 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 		ret = ret && equalsStringNullValue(firstname, test.getFirstname());
 		ret = ret && equalsStringNullValue(lastname, test.getLastname());
 		ret = ret && equalsObjectNullValue(gender, test.getGender());
+		ret = ret && equalsObjectNullValue(imagepath, test.getImagepath());
 		ret = ret && equalsDateNullValue(birthday, test.getBirthday());
 		ret = ret && equalsDateNullValue(dayofdeath, test.getDayofdeath());
 		ret = ret && equalsIntegerNullValue(color, test.getColor());
@@ -355,6 +427,7 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 		hash = hash * 31 + (firstname != null ? firstname.hashCode() : 0);
 		hash = hash * 31 + (lastname != null ? lastname.hashCode() : 0);
 		hash = hash * 31 + (gender != null ? gender.hashCode() : 0);
+		hash = hash * 31 + (imagepath != null ? imagepath.hashCode() : 0);
 		hash = hash * 31 + (birthday != null ? birthday.hashCode() : 0);
 		hash = hash * 31 + (dayofdeath != null ? dayofdeath.hashCode() : 0);
 		hash = hash * 31 + (color != null ? color.hashCode() : 0);

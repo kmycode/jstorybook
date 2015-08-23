@@ -64,6 +64,7 @@ import storybook.ui.table.renderer.StrandsTableCellRenderer;
 import storybook.ui.table.renderer.TimeEventFormatTableCellRenderer;
 
 import com.googlecode.genericdao.search.Search;
+import storybook.ui.table.renderer.ImageTableCellRenderer;
 
 
 /**
@@ -327,6 +328,10 @@ public class SbColumnFactory {
 		col.setTableCellRenderer(new GenderTableCellRenderer());
 		columns.add(col);
 
+		col = new SbColumn(i ++, "Imagepath", InputType.IMAGE, "msg.dlg.mng.persons.image");
+		col.setTableCellRenderer(new ImageTableCellRenderer());
+		columns.add(col);
+
 		col = new SbColumn(i++, "Category", InputType.COMBOBOX, "msg.dlg.mng.persons.category");
 		col.setTableCellRenderer(new CategoryTableCellRenderer());
 		col.setComparator(new SafeCategoryComparator());
@@ -419,8 +424,9 @@ public class SbColumnFactory {
 		Vector<SbColumn> columns = new Vector<SbColumn>();
 		columns.add(getIdColumn());
 
-		SbColumn col = new SbColumn(i++, "Icon", InputType.ICON, "msg.common.icon");
+		SbColumn col = new SbColumn(i ++, "Icon", InputType.ICON, "msg.common.icon");
 //		col.setReadOnly(true);
+		col.setEmptyComboItem(true);
 		col.setTableCellRenderer(new IconTableCellRenderer());
 		columns.add(col);
 

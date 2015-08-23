@@ -100,7 +100,8 @@ public class SbSessionFactory {
 			//} else {
 				config.addClass(storybook.model.entity.Part.class);
 				config.addClass(storybook.model.entity.Chapter.class);
-				config.addClass(storybook.model.entity.Scene.class);
+			config.addClass(storybook.model.entity.Scene.class);
+			config.addClass(storybook.model.entity.EntityImage.class);
 				config.addClass(storybook.model.entity.Gender.class);
 				config.addClass(storybook.model.entity.Person.class);
 				config.addClass(storybook.model.entity.Relationship.class);

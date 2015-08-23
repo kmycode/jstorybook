@@ -1234,6 +1234,10 @@ public class EntityUtil {
 							    formatter = I18N.getDateTimeFormatter();
 							}
 						str = formatter.format(date);
+					}
+					else if (ret instanceof String && col.getInputType() == SbColumn.InputType.IMAGE) {
+						//str = HtmlUtil.getImg(Person.getImageIconPath(mainFrame.getDbFile()) + (String) ret);
+						str = (String) ret;
 					} else {
 						str = ret.toString();
 						if (methodName.endsWith("Notes")

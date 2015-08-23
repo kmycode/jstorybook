@@ -51,9 +51,11 @@ public class ColorTableCellRenderer extends DefaultTableCellRenderer {
 			lbText.setIcon(null);
 			return lbText;
 		}
-		Color color = (Color) value;
-		ColorIcon icon = new ColorIcon(color, 10, 30);
-		lbText.setIcon(icon);
+		if (value instanceof Color) {
+			Color color = (Color) value;
+			ColorIcon icon = new ColorIcon(color, 10, 30);
+			lbText.setIcon(icon);
+		}
 		return lbText;
 	}
 }

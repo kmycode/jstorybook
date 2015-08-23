@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import storybook.SbApp;
 import storybook.model.hbn.SbSessionFactory;
 import storybook.model.entity.AbstractEntity;
+import storybook.model.entity.Person;
 import storybook.ui.MainFrame;
 
 public abstract class AbstractModel {
@@ -51,7 +52,7 @@ public abstract class AbstractModel {
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener l) {
-		SbApp.trace("AbstractModel.addPropertyChangeListener("+l.toString()+")");
+		SbApp.trace("AbstractModel.addPropertyChangeListener(" + l.toString() + ")");
 		propertyChangeSupport.addPropertyChangeListener(l);
 	}
 
@@ -60,7 +61,14 @@ public abstract class AbstractModel {
 	}
 
 	protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-		SbApp.trace("AbstractModel.firePropertyChange("+propertyName+","+"oldValue..."+","+"newValue..."+")");
+		SbApp.
+				trace("AbstractModel.firePropertyChange(" + propertyName + "," + "oldValue..." + "," + "newValue..."
+						+ ")");
+		if (oldValue instanceof Person) {
+			System.out.println(propertyName);
+			System.out.println(((Person) oldValue).getImagepath());
+			System.out.println(((Person) newValue).getImagepath());
+		}
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
 	}
 

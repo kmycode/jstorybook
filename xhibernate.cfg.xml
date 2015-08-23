@@ -35,6 +35,7 @@
 		<mapping resource="storybook/model/hbn/entity/Chapter.hbm.xml" />
 		<mapping resource="storybook/model/hbn/entity/Part.hbm.xml" />
 		<mapping resource="storybook/model/hbn/entity/Person.hbm.xml" />
+		<mapping resource="storybook/model/hbn/entity/EntityImage.hbm.xml" />
 		<mapping resource="storybook/model/hbn/entity/AbstractPersonLink.hbm.xml" />
 		<mapping resource="storybook/model/hbn/entity/Gender.hbm.xml" />
 		<mapping resource="storybook/model/hbn/entity/Location.hbm.xml" />

@@ -101,7 +101,7 @@ public class PreferencesDialog extends AbstractDialog implements
 		panel.add(createInternetPanel(), "growx");
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab(I18N.getMsg("msg.dlg.preference.global"), panel);
-		tabbedPane.addTab("Translators", createTranslatorsPanel());
+		// tabbedPane.addTab("Translators", createTranslatorsPanel());
 
 		// layout
 		add(tabbedPane, "grow");
@@ -262,10 +262,10 @@ public class PreferencesDialog extends AbstractDialog implements
 	private JPanel createInternetPanel() {
 		MigLayout layout = new MigLayout("wrap 2", "[][fill,grow]", "");
 		JPanel panel = new JPanel(layout);
-		panel.setBorder(BorderFactory.createTitledBorder("Internet"));
+		panel.setBorder(BorderFactory.createTitledBorder(I18N.getMsg("msg.dlg.preference.internet")));
 
 		// Google Maps URL
-		JLabel lbGoogleMapsUrl = new JLabel("Google Maps URL:");
+		JLabel lbGoogleMapsUrl = new JLabel(I18N.getMsg("msg.dlg.preference.googlemap"));
 		tfGoogleMapsUrl = new JTextField();
 		tfGoogleMapsUrl.setText(NetUtil.getGoogleMapsUrl());
 

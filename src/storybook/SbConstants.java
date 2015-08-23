@@ -72,12 +72,12 @@ public class SbConstants {
 	public final static String DEFAULT_GOOGLE_MAPS_URL = "http://maps.google.com";
 
 	public enum Storybook {
-		PRODUCT_NAME("oStorybook"),
-		PRODUCT_VERSION("4.10.0"),
+		PRODUCT_NAME("jStorybook"),
+		PRODUCT_VERSION("5.0.0 dev"),
 		PRODUCT_FULL_NAME(PRODUCT_NAME + " " + PRODUCT_VERSION),
 		PRODUCT_RELEASE_DATE("2015-04-21"),
-		COPYRIGHT_YEAR("2012-2013-2014-2015"),
-		COPYRIGHT_COMPANY("The Storybook Team"),
+		COPYRIGHT_YEAR("2012-2015"),
+		COPYRIGHT_COMPANY("The jStorybook Team"),
 		PREFERENCE_DB_NAME("preference"),
 		DB_VERSION("4.0"),
 		DB_FILE_EXT(".h2.db"),
@@ -96,12 +96,12 @@ public class SbConstants {
 	}
 
 	public enum URL {
-		HOMEPAGE("http://sourceforge.net/p/ostorybook/"),
-		CONTACT(HOMEPAGE + "discussion"),
+		HOMEPAGE("https://github.com/kmycode/jstorybook/"),
+		CONTACT(HOMEPAGE + "wiki/Home"),
 		DOC(HOMEPAGE + "wiki/Home"),
-		FAQ(HOMEPAGE + "wiki/faq"),
-		REPORTBUG(HOMEPAGE + "tickets"),
-		WEB("http://ostorybook.sourceforge.net/"),
+		FAQ(HOMEPAGE + "wiki/Home"),
+		REPORTBUG(HOMEPAGE + "issues"),
+		WEB("https://github.com/kmycode/jstorybook/wiki"),
 		VERSION(WEB + "Versions.txt"),
 		UPDATE(WEB + "Update.zip"),
 		DO_UPDATE("false");
@@ -492,7 +492,7 @@ public class SbConstants {
 		SMALL(new Dimension(16, 16)),
 		MEDIUM(new Dimension(32, 32)),
 		MEDIUM_WIDE(new Dimension(32, 16)),
-		LARGE(new Dimension(32, 32));
+		LARGE(new Dimension(64, 64));
 		final private Dimension dim;
 		private IconSize(Dimension text) {
 			this.dim = text;

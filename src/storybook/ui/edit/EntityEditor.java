@@ -56,6 +56,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -103,6 +104,7 @@ import storybook.model.entity.AbstractTag;
 import storybook.model.entity.Attribute;
 import storybook.model.entity.Category;
 import storybook.model.entity.Chapter;
+import storybook.model.entity.EntityImage;
 import storybook.model.entity.Gender;
 import storybook.model.entity.Idea;
 import storybook.model.entity.Internal;
@@ -129,6 +131,7 @@ import storybook.toolkit.swing.BottomBorder;
 import storybook.toolkit.swing.CleverColorChooser;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.toolkit.swing.FontManager;
+import storybook.toolkit.swing.ImageSelector;
 import storybook.toolkit.swing.IconUtil;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.toolkit.swing.htmleditor.HtmlEditor;
@@ -258,6 +261,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 		origEntity = entityHandler.createNewEntity();
 		EntityUtil.copyEntityProperties(mainFrame, entity, origEntity);
 
+		// 編集画面を自動的に生成する
 		initUi();
 
 		// set entity and DAO on input components
@@ -440,15 +444,25 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 				} else if (inputType == InputType.ATTRIBUTES) {
 					comp = new AttributesPanel(mainFrame);
 				}
+				else if (inputType == InputType.IMAGE) {
+					comp = new ImageSelector(this.mainFrame, I18N.getMsg("msg.dlg.strand.choose.image"));
+				}
 
+				// 共通の処理
 				comp.setName(col.getMethodName());
 				comp.putClientProperty(ClientPropertyName.DOCUMENT_MODEL.toString(), mainFrame.getBookModel());
+
+				// 編集不可
 				if (col.isReadOnly()) {
 					comp.setEnabled(false);
 				}
+
+				// 値チェックがあるか
 				if (col.hasVerifier()) {
 					comp.setInputVerifier(col.getVerifier());
 				}
+
+				// テキストエリア、または属性
 				if (inputType == InputType.TEXTAREA || inputType == InputType.ATTRIBUTES) {
 					if (comp instanceof JTextArea || comp instanceof AttributesPanel) {
 						JScrollPane scroller = new JScrollPane(comp);
@@ -464,7 +478,9 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 							container.add(comp, "grow,id " + comp.getName());
 						}
 					}
-				} else if (inputType == InputType.LIST) {
+				}
+				// リスト
+				else if (inputType == InputType.LIST) {
 					JScrollPane scroller = new JScrollPane(comp);
 					SwingUtil.setUnitIncrement(scroller);
 					SwingUtil.setMaxPreferredSize(scroller);
@@ -475,12 +491,18 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 					bt.addActionListener(this);
 					container.add(new JLabel());
 					container.add(bt, "grow,id " + comp.getName());
-				} else if (inputType == InputType.SEPARATOR) {
+				}
+				// セパレータ
+				else if (inputType == InputType.SEPARATOR) {
 					container.add(comp, "grow, span");
-				} else {
+				}
+				else {
+					// ラジオボタン
 					if (col.hasRadioButtonGroup()) {
 						btgPanel.getSubPanel(col.getRadioButtonIndex()).add(comp, "id " + comp.getName());
-					} else {
+					}
+					// それ以外
+					else {
 						String growx = "";
 						if (col.isGrowX()) {
 							growx = "growx";
@@ -495,9 +517,9 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 				inputComponents.add(comp);
 			}
 
-			// handle completer
 			for (SbColumn column : entityHandler.getColumns()) {
 				if (column.hasCompleter()) {
+					// 登場人物の略称の設定
 					if (column.getCompleter() instanceof AbbrCompleter) {
 						AbbrCompleter abbrCompleter = (AbbrCompleter) column.getCompleter();
 						for (JComponent comp : inputComponents) {
@@ -745,11 +767,15 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 			try {
 				Object ret = "";
 				Method method = null;
+
+				// 値を取得
 				if (!col.getMethodName().isEmpty()) {
 					String methodName = "get" + col.getMethodName();
 					method = entity.getClass().getMethod(methodName);
 					ret = method.invoke(entity);
 				}
+
+				// コントロールの初期値を設定
 				for (JComponent comp : inputComponents) {
 					if (col.getMethodName().equals(comp.getName())) {
 						if (comp instanceof JTextComponent) {
@@ -829,6 +855,12 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 							if (ret != null) {
 								CleverColorChooser colorChooser = (CleverColorChooser) comp;
 								colorChooser.setColor((Color) ret);
+							}
+						}
+						else if (comp instanceof ImageSelector) {
+							if (ret != null) {
+								ImageSelector iconSelector = (ImageSelector) comp;
+								iconSelector.setImgName((String) ret);
 							}
 						} else if (comp instanceof JLabel) {
 							if (ret != null) {
@@ -926,6 +958,13 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 						CleverColorChooser colorChooser = (CleverColorChooser) comp;
 						if (colorChooser.getColor() != null) {
 							objVal = colorChooser.getColor();
+						}
+						break;
+					}
+					if (comp instanceof ImageSelector) {
+						ImageSelector imageSelector = (ImageSelector) comp;
+						if (imageSelector.getPath() != null) {
+							objVal = imageSelector.getNameWithCopy();
 						}
 						break;
 					}

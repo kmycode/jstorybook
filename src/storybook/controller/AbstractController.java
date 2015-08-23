@@ -187,7 +187,7 @@ public abstract class AbstractController implements PropertyChangeListener {
 									+ "\nmethod:"
 									+ method.getName()
 									+ "\nclasses:"
-									+ classes.getClass().toString());
+									+ model.getClass().toString());
 				}
 			}
 		}

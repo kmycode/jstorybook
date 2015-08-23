@@ -18,7 +18,18 @@ import storybook.ui.RadioButtonGroup;
 public class SbColumn {
 
 	public enum InputType {
-		TEXTFIELD, TEXTAREA, COMBOBOX, CHECKBOX, DATE, COLOR, LIST, ICON, ATTRIBUTES, NONE, SEPARATOR
+		TEXTFIELD,
+		TEXTAREA,
+		COMBOBOX,
+		CHECKBOX,
+		DATE,
+		COLOR,
+		LIST,
+		ICON,
+		ATTRIBUTES,
+		NONE,
+		SEPARATOR,
+		IMAGE,
 	}
 
 	private final int colId;

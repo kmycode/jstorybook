@@ -142,7 +142,7 @@ public class Gender extends AbstractEntity {
 		return I18N.getIcon("icon.small.person");
 	}
 
-	public void setIcon(Icon icon) {
+	public void setIcon (Icon icon) {
 		// ulterieur Gender.setIcon
 	}
 

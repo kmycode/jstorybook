@@ -1269,26 +1269,41 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		graph.addEdge(graphIndex++, entity, locationVertex);
 	}
 
-	private Icon getPersonIcon(Person person, SbConstants.IconSize sizeIcon) {
+	private Icon getPersonIcon (Person person, SbConstants.IconSize sizeIcon) {
+		Icon icon = emptyIcon;
 		if (sizeIcon == SbConstants.IconSize.MEDIUM) {
-			if (person.getGender().isMale()) {
-				return manIconMedium;
+			/*
+			 */
+			icon = person.getImageIcon(Person.getImageIconPath(this.mainFrame.getDbFile()), true,
+									   SbConstants.IconSize.MEDIUM.getDimension());
+			if (icon == null) {
+				if (person.getGender().isMale()) {
+					icon = manIconMedium;
+				}
+				else if (person.getGender().isFemale()) {
+					icon = womanIconMedium;
+				}
+				else {
+					icon = personIconMedium;
+				}
 			}
-			if (person.getGender().isFemale()) {
-				return womanIconMedium;
-			}
-			return personIconMedium;
 		}
 		if (sizeIcon == SbConstants.IconSize.LARGE) {
-			if (person.getGender().isMale()) {
-				return manIconLarge;
+			icon = person.getImageIcon(Person.getImageIconPath(this.mainFrame.getDbFile()), true,
+									   SbConstants.IconSize.LARGE.getDimension());
+			if (icon == null) {
+				if (person.getGender().isMale()) {
+					icon = manIconLarge;
+				}
+				else if (person.getGender().isFemale()) {
+					icon = womanIconLarge;
+				}
+				else {
+					icon = personIconLarge;
+				}
 			}
-			if (person.getGender().isFemale()) {
-				return womanIconLarge;
-			}
-			return personIconLarge;
 		}
-		return emptyIcon;
+		return icon;
 	}
 
 	public void refresh(AbstractEntity entity) {

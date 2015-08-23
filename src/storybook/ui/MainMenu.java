@@ -1463,7 +1463,6 @@ public class MainMenu extends javax.swing.JFrame {
 
         helpReportBug.setMnemonic('B');
         helpReportBug.setText(bundle.getString("msg.menu.help.bug")); // NOI18N
-        helpReportBug.setEnabled(false);
         helpReportBug.setName("report-bug-command"); // NOI18N
         helpReportBug.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1485,6 +1484,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         helpCheckUpdates.setMnemonic('U');
         helpCheckUpdates.setText(bundle.getString("msg.menu.help.update")); // NOI18N
+        helpCheckUpdates.setEnabled(false);
         helpCheckUpdates.setName("check-update-command"); // NOI18N
         helpCheckUpdates.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
