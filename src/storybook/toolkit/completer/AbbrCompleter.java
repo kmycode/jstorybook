@@ -145,7 +145,6 @@ public class AbbrCompleter extends AbstractCompleter {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		comp.setText(getCompletedText());
 	}
 
 	@Override
@@ -153,7 +152,8 @@ public class AbbrCompleter extends AbstractCompleter {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased (KeyEvent e) {
+		comp.setText(getCompletedText());
 	}
 
 }
