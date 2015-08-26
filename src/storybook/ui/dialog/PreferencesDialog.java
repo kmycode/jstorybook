@@ -71,6 +71,7 @@ public class PreferencesDialog extends AbstractDialog implements
 	private JComboBox spellingCombo;
 	private JCheckBox cbLoadFileOnStart;
 	private JCheckBox cbConfirmExit;
+	private JCheckBox cbPersonNameReverse;
 	private JLabel lbShowFont;
 	private Font font;
 	private JComboBox lafCombo;
@@ -102,6 +103,10 @@ public class PreferencesDialog extends AbstractDialog implements
 		panel.add(createInternetPanel(), "growx");
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab(I18N.getMsg("msg.dlg.preference.global"), panel);
+
+		panel = new JPanel(new MigLayout("flowy,fill"));
+		panel.add(createLanguagePanel(), "growx");
+		tabbedPane.addTab(I18N.getMsg("msg.common.language"), panel);
 		// tabbedPane.addTab("Translators", createTranslatorsPanel());
 
 		// layout
@@ -161,6 +166,9 @@ public class PreferencesDialog extends AbstractDialog implements
 		PrefUtil.set(PreferenceKey.GOOGLE_MAPS_URL, tfGoogleMapsUrl.getText());
 		NetUtil.setGoogleMapUrl(tfGoogleMapsUrl.getText());
 
+		// 姓名を逆にする
+		PrefUtil.set(PreferenceKey.PERSON_NAME_REVERSE, this.cbPersonNameReverse.isSelected());
+
 		// translator mode
 		// PrefUtil.set(PreferenceKey.TRANSLATOR_MODE, cbTranslatorMode.isSelected());
 
@@ -170,10 +178,10 @@ public class PreferencesDialog extends AbstractDialog implements
 		SwingUtil.setDefaultCursor(this);
 	}
 
-	private JPanel createCommonPanel() {
+	private JPanel createLanguagePanel () {
 		MigLayout layout = new MigLayout("wrap 2", "", "[]10");
 		JPanel panel = new JPanel(layout);
-		panel.setBorder(BorderFactory.createTitledBorder(I18N.getMsg("msg.common")));
+		panel.setBorder(BorderFactory.createTitledBorder(I18N.getMsg("msg.common.language")));
 
 		// language
 		JLabel lbLanguage = new JLabel(I18N.getMsgColon("msg.common.language"));
@@ -208,10 +216,33 @@ public class PreferencesDialog extends AbstractDialog implements
 		Preference pref = PrefUtil.get(PreferenceKey.SPELLING);
 		Spelling spelling = Spelling.valueOf(pref.getStringValue());
 		spellingCombo.setSelectedItem(pref.getStringValue());
-		JLabel lbAddSpelling = new JLabel(" ");
-		JButton addSpelling=new JButton();
-		addSpelling.setAction(getSpellingAction());
-		addSpelling.setText(I18N.getMsgDot("msg.pref.spelling.download"));
+
+		// 人物の名前を逆にする
+		JLabel lbPersonNameReverse = new JLabel(I18N.getMsg("msg.common.person"));
+		this.cbPersonNameReverse = new JCheckBox(I18N.getMsg("msg.pref.person.name.reverse"));
+		pref = PrefUtil.get(PreferenceKey.PERSON_NAME_REVERSE);
+		this.cbPersonNameReverse.setSelected(pref.getBooleanValue());
+
+		// レイアウト
+		panel.add(lbLanguage);
+		panel.add(languageCombo);
+		panel.add(lbDateFormat);
+		panel.add(dateFormatCombo);
+		panel.add(lbTimeFormat);
+		panel.add(timeFormatCombo);
+		panel.add(lbSpelling);
+		panel.add(spellingCombo);
+		panel.add(lbPersonNameReverse);
+		panel.add(this.cbPersonNameReverse);
+
+		return panel;
+	}
+
+	private JPanel createCommonPanel () {
+		MigLayout layout = new MigLayout("wrap 2", "", "[]10");
+		JPanel panel = new JPanel(layout);
+		panel.setBorder(BorderFactory.createTitledBorder(I18N.getMsg("msg.common")));
+		Preference pref;
 
 		// start options
 		JLabel lbStart = new JLabel(I18N.getMsg("msg.pref.start"));
@@ -226,16 +257,6 @@ public class PreferencesDialog extends AbstractDialog implements
 		cbConfirmExit.setSelected(pref.getBooleanValue());
 
 		// layout
-		panel.add(lbLanguage);
-		panel.add(languageCombo);
-		panel.add(lbDateFormat);
-		panel.add(dateFormatCombo);
-		panel.add(lbTimeFormat);
-		panel.add(timeFormatCombo);
-		panel.add(lbSpelling);
-		panel.add(spellingCombo);
-		panel.add(lbAddSpelling);
-		panel.add(addSpelling);
 		panel.add(lbStart);
 		panel.add(cbLoadFileOnStart);
 		panel.add(lbConfirmExit);
@@ -340,17 +361,6 @@ public class PreferencesDialog extends AbstractDialog implements
 		return fontChooserAction;
 	}
 
-	public AbstractAction getSpellingAction() {
-		if (addSpellingAction == null)
-			addSpellingAction = new AbstractAction() {
-				@Override
-				public void actionPerformed(ActionEvent evt) {
-					GetNewSpellingDlg newSpelling = new GetNewSpellingDlg();
-					newSpelling.setVisible(true);
-				}
-			};
-		return addSpellingAction;
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 

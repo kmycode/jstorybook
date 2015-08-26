@@ -405,31 +405,31 @@ public class SbConstants {
 	}
 
 	public enum PreferenceKey {
-		STORYBOOK_VERSION("StorybookVersion"),
-		LAST_OPEN_DIR("LastOpenDir"),
-		LAST_OPEN_FILE("LastOpenFile", ""),
-		OPEN_LAST_FILE("OpenLastFile", false),
-		RECENT_FILES("RecentFiles"),
-		CONFIRM_EXIT("ConfirmExit"),
-		GOOGLE_MAPS_URL("GoogleMapsURL"),
-		SIZE_WIDTH("SizeWidth"),
-		SIZE_HEIGHT("SizeHeight"),
-		POS_X("PosX"),
-		POS_Y("PosY"),
-		MAXIMIZED("Maximized", false),
-		LANG("language"),
+
+		CONFIRM_EXIT("ConfirmExit", true),
 		DATEFORMAT("dateFormat", "MM-dd-yyyy"),
-		TIMEFORMAT("timeFormat", "HH:mm:ss"),
-		SPELLING("Spelling", Spelling.none.toString()),
-		LAF("LookAndFeel"),
-		FIRST_START_4("FirstStart4", true),
-		DOCKING_LAYOUT("DockingLayout"),
 		DEFAULT_FONT_NAME("DefaultFontName", "Meiryo UI"),
 		DEFAULT_FONT_SIZE("DefaultFontSize", 12),
 		DEFAULT_FONT_STYLE("DefaultFontStyle"),
+		DOCKING_LAYOUT("DockingLayout"),
+		FIRST_START_4("FirstStart4", true),
+		GOOGLE_MAPS_URL("GoogleMapsURL"),
+		LAF("LookAndFeel"),
+		LANG("language"),
+		LAST_OPEN_DIR("LastOpenDir"),
+		LAST_OPEN_FILE("LastOpenFile", ""),
+		MAXIMIZED("Maximized", false),
+		OPEN_LAST_FILE("OpenLastFile", false),
+		PERSON_NAME_REVERSE("PersonNameReverse", true),
+		POS_X("PosX"),
+		POS_Y("PosY"),
+		RECENT_FILES("RecentFiles"),
+		SIZE_WIDTH("SizeWidth"),
+		SIZE_HEIGHT("SizeHeight"),
+		SPELLING("Spelling", Spelling.none.toString()),
+		STORYBOOK_VERSION("StorybookVersion"),
 		TRANSLATOR_MODE("TranslatorMode"),
-		EMAIL("Email"),
-		PASSWORD("Password");
+		TIMEFORMAT("timeFormat", "HH:mm:ss"),;
 		final private String text;
 		final private Object defaultValue;
 

@@ -64,6 +64,8 @@ import storybook.ui.table.renderer.StrandsTableCellRenderer;
 import storybook.ui.table.renderer.TimeEventFormatTableCellRenderer;
 
 import com.googlecode.genericdao.search.Search;
+import storybook.SbConstants;
+import storybook.toolkit.PrefUtil;
 import storybook.ui.table.renderer.DateTableCellRenderer;
 import storybook.ui.table.renderer.ImageTableCellRenderer;
 
@@ -299,11 +301,15 @@ public class SbColumnFactory {
 		Vector<SbColumn> columns = new Vector<SbColumn>();
 		columns.add(getIdColumn());
 
-		SbColumn col = new SbColumn(i ++, "Lastname", "msg.dlg.person.lastname");
-		col.setMaxLength(255);
-		col.setVerifier(new LengthVerifier(col.getMaxLength()));
-		col.setGrowX(true);
-		columns.add(col);
+		SbColumn col;
+
+		if (PrefUtil.get(SbConstants.PreferenceKey.PERSON_NAME_REVERSE).getBooleanValue()) {
+			col = new SbColumn(i ++, "Lastname", "msg.dlg.person.lastname");
+			col.setMaxLength(255);
+			col.setVerifier(new LengthVerifier(col.getMaxLength()));
+			col.setGrowX(true);
+			columns.add(col);
+		}
 
 		col = new SbColumn(i++, "Firstname", "msg.dlg.person.firstname");
 		col.setMaxLength(255);
@@ -315,13 +321,23 @@ public class SbColumnFactory {
 		col.setDefaultSort(true);
 		columns.add(col);
 
+		if ( ! PrefUtil.get(SbConstants.PreferenceKey.PERSON_NAME_REVERSE).getBooleanValue()) {
+			col = new SbColumn(i ++, "Lastname", "msg.dlg.person.lastname");
+			col.setMaxLength(255);
+			col.setVerifier(new LengthVerifier(col.getMaxLength()));
+			col.setGrowX(true);
+			columns.add(col);
+		}
+
 		col = new SbColumn(i++, "Abbreviation", "msg.dlg.person.abbr");
 		col.setMaxLength(255);
 		VerifierGroup group2 = new VerifierGroup();
 		group2.addVerifier(new NotEmptyVerifier());
 		group2.addVerifier(new LengthVerifier(col.getMaxLength()));
 		col.setVerifier(group2);
-		AbbrCompleter abbrCompleter = new AbbrCompleter("Lastname", "Firstname");
+		AbbrCompleter abbrCompleter = (PrefUtil.get(SbConstants.PreferenceKey.PERSON_NAME_REVERSE).getBooleanValue())
+									  ? new AbbrCompleter("Lastname", "Firstname") : new AbbrCompleter("Firstname",
+																									   "Lastname");
 		col.setCompleter(abbrCompleter);
 		columns.add(col);
 

@@ -34,8 +34,10 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import storybook.SbApp;
+import storybook.SbConstants;
 import storybook.model.DbFile;
 import static storybook.model.EntityUtil.isPersonAlive;
+import storybook.toolkit.PrefUtil;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.ui.MainFrame;
 
@@ -136,11 +138,16 @@ public class Person extends AbstractEntity implements Comparable<Person> {
 	}
 
 	public String getFullName () {
-		return getLastname() + " " + getFirstname();
+		if (PrefUtil.get(SbConstants.PreferenceKey.PERSON_NAME_REVERSE).getBooleanValue())
+			return getLastname() + " " + getFirstname();
+		return getFirstname() + " " + getLastname();
 	}
 
 	public String getFullNameAbbr () {
-		return getLastname() + " " + getFirstname() + " [" + getAbbreviation()
+		if (PrefUtil.get(SbConstants.PreferenceKey.PERSON_NAME_REVERSE).getBooleanValue())
+			return getLastname() + " " + getFirstname() + " [" + getAbbreviation()
+					+ "]";
+		return getFirstname() + " " + getLastname() + " [" + getAbbreviation()
 				+ "]";
 	}
 
