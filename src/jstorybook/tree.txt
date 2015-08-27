@@ -1,0 +1,13 @@
+jstorybook
+
+	model
+		entity
+
+	toolkit
+		converter
+		completer
+		message
+
+	ui
+		pane
+		dialog

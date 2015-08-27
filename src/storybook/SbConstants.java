@@ -73,11 +73,11 @@ public class SbConstants {
 
 	public enum Storybook {
 		PRODUCT_NAME("jStorybook"),
-		PRODUCT_VERSION("5.0.0 dev"),
+		PRODUCT_VERSION("5.0.0"),
 		PRODUCT_FULL_NAME(PRODUCT_NAME + " " + PRODUCT_VERSION),
-		PRODUCT_RELEASE_DATE("2015-04-21"),
+		PRODUCT_RELEASE_DATE("2015-08-27"),
 		COPYRIGHT_YEAR("2012-2015"),
-		COPYRIGHT_COMPANY("The jStorybook Team"),
+		COPYRIGHT_COMPANY("The Storybook Team"),
 		PREFERENCE_DB_NAME("preference"),
 		DB_VERSION("4.0"),
 		DB_FILE_EXT(".h2.db"),
