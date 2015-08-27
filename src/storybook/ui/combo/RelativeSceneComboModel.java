@@ -25,7 +25,7 @@ import javax.swing.DefaultComboBoxModel;
 import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 import storybook.ui.MainFrame;
 
 /**

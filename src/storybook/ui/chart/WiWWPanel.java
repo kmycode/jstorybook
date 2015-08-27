@@ -15,7 +15,7 @@
  */
 package storybook.ui.chart;
 
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.toolkit.swing.label.CleverLabel;

@@ -75,10 +75,10 @@ import storybook.model.BlankModel;
 import storybook.model.BookModel;
 import storybook.model.DbFile;
 import storybook.model.dao.PartDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Part;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Preference;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.DockingWindowUtil;
 import storybook.toolkit.I18N;
@@ -719,7 +719,7 @@ public class MainFrame extends JFrame implements IPaintable {
 		return mainToolBar;
 	}
 
-	public void showEditorAsDialog(AbstractEntity entity) {
+	public void showEditorAsDialog(Entity entity) {
 		JDialog dlg = new JDialog((Frame) this, true);
 		if (EditorModless) dlg.setModalityType(Dialog.ModalityType.MODELESS);
 		EntityEditor editor = new EntityEditor(this, entity, dlg);

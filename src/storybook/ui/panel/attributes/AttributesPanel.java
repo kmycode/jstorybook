@@ -31,7 +31,7 @@ import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.dao.AttributeDAOImpl;
-import storybook.model.entity.Attribute;
+import jstorybook.model.entity.Attribute;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.IconButton;
 import storybook.ui.panel.AbstractPanel;

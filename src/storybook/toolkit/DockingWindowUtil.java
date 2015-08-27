@@ -39,7 +39,7 @@ import storybook.SbApp;
 import storybook.SbConstants.PreferenceKey;
 import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 import storybook.ui.panel.AbstractPanel;
 import storybook.ui.MainFrame;
 import storybook.ui.SbView;

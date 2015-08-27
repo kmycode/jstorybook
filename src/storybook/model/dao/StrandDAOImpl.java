@@ -31,9 +31,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
 
 public class StrandDAOImpl extends SbGenericDAOImpl<Strand, Long> implements
 		StrandDAO {
@@ -138,7 +138,7 @@ public class StrandDAOImpl extends SbGenericDAOImpl<Strand, Long> implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean checkIfNumberExists(AbstractEntity entity) {
+	public boolean checkIfNumberExists(Entity entity) {
 		try {
 			Strand newStrand = (Strand) entity;
 			Integer newSort = newStrand.getSort();

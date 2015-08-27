@@ -20,7 +20,7 @@ package storybook.toolkit;
 
 import java.io.File;
 import java.sql.Timestamp;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 
 import storybook.ui.MainFrame;
 

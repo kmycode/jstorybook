@@ -22,7 +22,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 
 import com.googlecode.genericdao.dao.hibernate.GenericDAOImpl;
 import com.mchange.v2.log.MLevel;
@@ -96,24 +96,24 @@ public class SbSessionFactory {
 			config.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.HashtableCacheProvider");
 			config.setProperty("hibernate.current_session_context_class", "thread");
 			//if (configFile.contains("preference")) {
-				config.addClass(storybook.model.entity.Preference.class);
+				config.addClass(jstorybook.model.entity.Preference.class);
 			//} else {
-				config.addClass(storybook.model.entity.Part.class);
-				config.addClass(storybook.model.entity.Chapter.class);
-			config.addClass(storybook.model.entity.Scene.class);
-			config.addClass(storybook.model.entity.EntityImage.class);
-				config.addClass(storybook.model.entity.Gender.class);
-				config.addClass(storybook.model.entity.Person.class);
-				config.addClass(storybook.model.entity.Relationship.class);
-				config.addClass(storybook.model.entity.Location.class);
-				config.addClass(storybook.model.entity.Strand.class);
-				config.addClass(storybook.model.entity.AbstractTag.class);
-				config.addClass(storybook.model.entity.AbstractTagLink.class);
-				config.addClass(storybook.model.entity.Idea.class);
-				config.addClass(storybook.model.entity.Internal.class);
-				config.addClass(storybook.model.entity.Category.class);
-				config.addClass(storybook.model.entity.Attribute.class);
-				config.addClass(storybook.model.entity.TimeEvent.class);
+				config.addClass(jstorybook.model.entity.Part.class);
+				config.addClass(jstorybook.model.entity.Chapter.class);
+			config.addClass(jstorybook.model.entity.Scene.class);
+			config.addClass(jstorybook.model.entity.EntityImage.class);
+				config.addClass(jstorybook.model.entity.Gender.class);
+				config.addClass(jstorybook.model.entity.Person.class);
+				config.addClass(jstorybook.model.entity.Relationship.class);
+				config.addClass(jstorybook.model.entity.Location.class);
+				config.addClass(jstorybook.model.entity.Strand.class);
+				config.addClass(jstorybook.model.entity.AbstractTag.class);
+				config.addClass(jstorybook.model.entity.AbstractTagLink.class);
+				config.addClass(jstorybook.model.entity.Idea.class);
+				config.addClass(jstorybook.model.entity.Internal.class);
+				config.addClass(jstorybook.model.entity.Category.class);
+				config.addClass(jstorybook.model.entity.Attribute.class);
+				config.addClass(jstorybook.model.entity.TimeEvent.class);
 			//}
 			sessionFactory = config.buildSessionFactory();
 		} catch (SecurityException | HibernateException ex) {
@@ -125,12 +125,12 @@ public class SbSessionFactory {
 		}
 	}
 
-	public void query(GenericDAOImpl<? extends AbstractEntity, ?> dao) {
+	public void query(GenericDAOImpl<? extends Entity, ?> dao) {
 		if (SbApp.getTrace()) {
 			System.out.println("SbSessionFactory.query(): "
 				+ dao.getClass().getSimpleName());
-			List<? extends AbstractEntity> entities = dao.findAll();
-			for (AbstractEntity entity : entities) {
+			List<? extends Entity> entities = dao.findAll();
+			for (Entity entity : entities) {
 				String name = entity.getClass().getSimpleName();
 				//System.out.println("  " + name + ": " + entity.toString());
 			}

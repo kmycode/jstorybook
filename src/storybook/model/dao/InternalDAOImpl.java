@@ -21,7 +21,7 @@ package storybook.model.dao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Internal;
 
 public class InternalDAOImpl extends SbGenericDAOImpl<Internal, Long> implements
 		InternalDAO {

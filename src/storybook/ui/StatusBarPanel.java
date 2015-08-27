@@ -35,9 +35,9 @@ import storybook.model.BookModel;
 import storybook.model.dao.ChapterDAOImpl;
 import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.panel.MemoryMonitorPanel;
 

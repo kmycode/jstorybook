@@ -8,8 +8,8 @@ package storybook.model.handler;
 
 import javax.swing.ListCellRenderer;
 import storybook.model.dao.AttributeDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Attribute;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Attribute;
 import storybook.ui.MainFrame;
 import storybook.ui.combo.AttributeListCellRenderer;
 import storybook.ui.table.SbColumnFactory;
@@ -31,7 +31,7 @@ public class AttributeEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Attribute attribute=new Attribute();
 		return(attribute);
 	}

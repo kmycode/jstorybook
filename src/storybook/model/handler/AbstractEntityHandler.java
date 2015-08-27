@@ -23,7 +23,7 @@ import java.util.Vector;
 import javax.swing.ListCellRenderer;
 
 import storybook.model.dao.SbGenericDAOImpl;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumn;
 
@@ -43,9 +43,9 @@ public abstract class AbstractEntityHandler {
 
 	public abstract <T> Class<T> getEntityClass();
 
-	public abstract AbstractEntity createNewEntity();
+	public abstract Entity createNewEntity();
 
-	public AbstractEntity newEntity(AbstractEntity entity) {
+	public Entity newEntity(Entity entity) {
 		return createNewEntity();
 	}
 

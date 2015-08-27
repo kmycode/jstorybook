@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.swing.JTextField;
 
-import storybook.model.entity.Attribute;
+import jstorybook.model.entity.Attribute;
 import storybook.toolkit.swing.AutoCompleteComboBox;
 import storybook.ui.panel.AbstractPanel;
 

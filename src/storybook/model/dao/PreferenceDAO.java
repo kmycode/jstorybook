@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package storybook.model.dao;
 
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 
 import com.googlecode.genericdao.dao.hibernate.GenericDAO;
 

@@ -43,10 +43,10 @@ import storybook.model.EntityUtil;
 import storybook.model.dao.ChapterDAOImpl;
 import storybook.model.dao.PartDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Part;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Scene;
 import storybook.model.stringcategory.AbstractStringCategory;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
@@ -471,8 +471,8 @@ public class PlanPanel extends AbstractPanel implements MouseListener {
 			AbstractStringCategory cat = (AbstractStringCategory) userObj;
 			menu = StringCategoryUtil.createPopupMenu(mainFrame, cat);
 		}
-		if (userObj instanceof AbstractEntity) {
-			AbstractEntity entity = (AbstractEntity) userObj;
+		if (userObj instanceof Entity) {
+			Entity entity = (Entity) userObj;
 			menu = EntityUtil.createPopupMenu(mainFrame, entity);
 		}
 		if (menu == null) {

@@ -30,7 +30,7 @@ import org.hibernate.LazyInitializationException;
 import org.hibernate.Session;
 import storybook.SbConstants.ClientPropertyName;
 import storybook.model.BookModel;
-import storybook.model.entity.Location;
+import jstorybook.model.entity.Location;
 import storybook.ui.MainFrame;
 
 @SuppressWarnings("serial")

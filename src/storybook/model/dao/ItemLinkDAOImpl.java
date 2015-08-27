@@ -24,11 +24,11 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
 
 public class ItemLinkDAOImpl extends SbGenericDAOImpl<ItemLink, Long> implements
 		ItemLinkDAO {

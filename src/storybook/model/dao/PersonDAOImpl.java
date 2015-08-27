@@ -24,8 +24,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Category;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Person;
 
 public class PersonDAOImpl extends SbGenericDAOImpl<Person, Long> implements PersonDAO {
 

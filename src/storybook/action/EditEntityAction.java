@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 import storybook.SbConstants.ViewName;
 import storybook.SbApp;
 import storybook.controller.BookController;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 
@@ -36,7 +36,7 @@ public class EditEntityAction extends AbstractEntityAction {
 
 	private boolean saveBeforeEdit;
 
-	public EditEntityAction(MainFrame mainFrame, AbstractEntity entity, boolean b) {
+	public EditEntityAction(MainFrame mainFrame, Entity entity, boolean b) {
 		super(mainFrame, entity, I18N.getMsg("msg.common.edit"), I18N.getIcon("icon.small.edit"));
 		saveBeforeEdit = b;
 		SbApp.trace("EditEntityAction("+mainFrame.getName()+","+entity.toString()+","+b+")");

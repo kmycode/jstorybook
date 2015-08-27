@@ -29,7 +29,7 @@ import org.hibernate.LazyInitializationException;
 import org.hibernate.Session;
 import storybook.SbConstants.ClientPropertyName;
 import storybook.model.BookModel;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.ui.MainFrame;
 import storybook.ui.label.StrandLabel;

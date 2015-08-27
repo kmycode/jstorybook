@@ -24,7 +24,7 @@ import org.hibernate.Session;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.TagDAOImpl;
-import storybook.model.entity.Tag;
+import jstorybook.model.entity.Tag;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 

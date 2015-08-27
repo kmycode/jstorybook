@@ -22,9 +22,9 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import storybook.model.dao.TimeEventDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.TimeEvent;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 
@@ -39,7 +39,7 @@ public class TimeEventEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		TimeEvent event = new TimeEvent();
 		event.setNotes("");
 		event.setEventTime(new Timestamp(new Date().getTime()));

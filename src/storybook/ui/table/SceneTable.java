@@ -37,12 +37,12 @@ import storybook.model.dao.LocationDAOImpl;
 import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
 import storybook.model.dao.StrandDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Item;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
 import storybook.model.state.SceneState;
 import storybook.model.state.SceneStateModel;
 import storybook.toolkit.I18N;
@@ -71,7 +71,7 @@ public class SceneTable extends AbstractTable {
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	protected List<AbstractEntity> getAllEntities() {
+	protected List<Entity> getAllEntities() {
 		SbApp.trace("getAllEntities()");
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
@@ -95,7 +95,7 @@ public class SceneTable extends AbstractTable {
 			}
 		}
 		model.commit();
-		return (List<AbstractEntity>) ret;
+		return (List<Entity>) ret;
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class SceneTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setSceneToEdit((Scene) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -235,7 +235,7 @@ public class SceneTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		SceneDAOImpl dao = new SceneDAOImpl(session);
@@ -245,7 +245,7 @@ public class SceneTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Scene();
 	}
 

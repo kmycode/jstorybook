@@ -19,7 +19,7 @@ import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.handler.AbstractEntityHandler;
 import storybook.model.dao.SbGenericDAOImpl;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.ui.MainFrame;
 import storybook.ui.interfaces.IRefreshable;
 import storybook.ui.panel.AbstractPanel;
@@ -30,16 +30,16 @@ import com.googlecode.genericdao.search.Search;
 public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 
 //	private MainFrame mainFrame;
-	private Map<AbstractEntity, JCheckBox> cbMap;
+	private Map<Entity, JCheckBox> cbMap;
 	private CbPanelDecorator decorator;
-	private AbstractEntity entity;
+	private Entity entity;
 	private AbstractEntityHandler entityHandler;
-	private List<AbstractEntity> entities;
+	private List<Entity> entities;
 	private Search search;
 
 	public CheckBoxPanel(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
-		cbMap = new TreeMap<AbstractEntity, JCheckBox>();
+		cbMap = new TreeMap<Entity, JCheckBox>();
 	}
 
 	@Override
@@ -55,23 +55,23 @@ public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 		Session session = model.beginTransaction();
 		SbGenericDAOImpl<?, ?> dao = entityHandler.createDAO();
 		dao.setSession(session);
-		List<AbstractEntity> allEntities = null;
+		List<Entity> allEntities = null;
 		if (search != null) {
 			allEntities = dao.search(search);
 		} else {
-			allEntities = (List<AbstractEntity>) dao.findAll();
+			allEntities = (List<Entity>) dao.findAll();
 		}
-		for (AbstractEntity entity2 : allEntities) {
+		for (Entity entity2 : allEntities) {
 			addEntity(session, entity2);
 		}
 		refresh();
 
 		// refresh entities, must be before selectEntity()
 		if (entities != null) {
-			for (AbstractEntity ent : entities) {
+			for (Entity ent : entities) {
 				session.refresh(ent);
 			}
-			for (AbstractEntity ent : entities) {
+			for (Entity ent : entities) {
 				selectEntity(session, ent);
 			}
 		}
@@ -90,10 +90,10 @@ public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 		removeAll();
 
 		decorator.decorateBeforeFirstEntity();
-		Iterator<Entry<AbstractEntity, JCheckBox>> it = cbMap.entrySet().iterator();
+		Iterator<Entry<Entity, JCheckBox>> it = cbMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry<AbstractEntity, JCheckBox> pairs = (Map.Entry<AbstractEntity, JCheckBox>) it.next();
-			AbstractEntity ent = pairs.getKey();
+			Map.Entry<Entity, JCheckBox> pairs = (Map.Entry<Entity, JCheckBox>) it.next();
+			Entity ent = pairs.getKey();
 			if (decorator != null) {
 				decorator.decorateBeforeEntity(ent);
 				decorator.decorateEntity(pairs.getValue(), ent);
@@ -110,18 +110,18 @@ public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 		repaint();
 	}
 
-	private void selectEntity(Session session, AbstractEntity ent) {
+	private void selectEntity(Session session, Entity ent) {
 		JCheckBox cb = cbMap.get(ent);
 		if (cb != null) {
 			cb.setSelected(true);
 		}
 	}
 
-	public List<AbstractEntity> getSelectedEntities() {
-		ArrayList<AbstractEntity> ret = new ArrayList<AbstractEntity>();
-		Iterator<Entry<AbstractEntity, JCheckBox>> it = cbMap.entrySet().iterator();
+	public List<Entity> getSelectedEntities() {
+		ArrayList<Entity> ret = new ArrayList<Entity>();
+		Iterator<Entry<Entity, JCheckBox>> it = cbMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry<AbstractEntity, JCheckBox> pairs = (Map.Entry<AbstractEntity, JCheckBox>) it.next();
+			Map.Entry<Entity, JCheckBox> pairs = (Map.Entry<Entity, JCheckBox>) it.next();
 			JCheckBox cb = pairs.getValue();
 			if (cb.isSelected()) {
 				ret.add(pairs.getKey());
@@ -130,7 +130,7 @@ public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 		return ret;
 	}
 
-	private void addEntity(Session session, AbstractEntity entity) {
+	private void addEntity(Session session, Entity entity) {
 		session.refresh(entity);
 		JCheckBox cb = new JCheckBox();
 		cb.setOpaque(false);
@@ -153,11 +153,11 @@ public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 		return mainFrame;
 	}
 
-	public AbstractEntity getEntity() {
+	public Entity getEntity() {
 		return entity;
 	}
 
-	public void setEntity(AbstractEntity entity) {
+	public void setEntity(Entity entity) {
 		this.entity = entity;
 	}
 
@@ -169,7 +169,7 @@ public class CheckBoxPanel extends AbstractPanel implements IRefreshable {
 		this.entityHandler = entityHandler;
 	}
 
-	public void setEntityList(List<AbstractEntity> entities) {
+	public void setEntityList(List<Entity> entities) {
 		this.entities = entities;
 	}
 

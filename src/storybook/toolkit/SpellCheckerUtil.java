@@ -30,7 +30,7 @@ import com.inet.jortho.SpellChecker;
 import storybook.SbConstants;
 import storybook.SbConstants.PreferenceKey;
 import storybook.SbConstants.Spelling;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 import storybook.SbApp;
 
 public class SpellCheckerUtil {

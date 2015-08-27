@@ -26,9 +26,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
 
 @SuppressWarnings("serial")
 class EntityTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -44,9 +44,9 @@ class EntityTreeCellRenderer extends DefaultTreeCellRenderer {
 			} else if (userObject instanceof Scene) {
 				Scene scene = (Scene) userObject;
 				setLeafIcon(scene.getSceneState().getIcon());
-			} else if (userObject instanceof AbstractEntity) {
+			} else if (userObject instanceof Entity) {
 				Icon icon = EntityUtil
-						.getEntityIcon((AbstractEntity) userObject);
+						.getEntityIcon((Entity) userObject);
 				setLeafIcon(icon);
 			} else {
 				setLeafIcon(null);
@@ -54,8 +54,8 @@ class EntityTreeCellRenderer extends DefaultTreeCellRenderer {
 		}
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
 				row, hasFocus);
-		if (!leaf && userObject instanceof AbstractEntity) {
-			Icon icon = EntityUtil.getEntityIcon((AbstractEntity) userObject);
+		if (!leaf && userObject instanceof Entity) {
+			Icon icon = EntityUtil.getEntityIcon((Entity) userObject);
 			setIcon(icon);
 		}
 		return this;

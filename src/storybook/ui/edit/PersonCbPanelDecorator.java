@@ -23,8 +23,8 @@ import javax.swing.JLabel;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.swing.FontUtil;
 
 /**
@@ -43,7 +43,7 @@ public class PersonCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateBeforeEntity(AbstractEntity entity) {
+	public void decorateBeforeEntity(Entity entity) {
 		Person p = (Person) entity;
 		String cat = WordUtils.capitalize(p.getCategory().getName());
 		if (!oldCat.equals(cat)) {
@@ -55,7 +55,7 @@ public class PersonCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateEntity(JCheckBox cb, AbstractEntity entity) {
+	public void decorateEntity(JCheckBox cb, Entity entity) {
 		Person p = (Person) entity;
 		JLabel lbIcon = new JLabel(p.getIcon());
 		lbIcon.setToolTipText(p.getGender().getName());
@@ -64,6 +64,6 @@ public class PersonCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateAfterEntity(AbstractEntity entity) {
+	public void decorateAfterEntity(Entity entity) {
 	}
 }

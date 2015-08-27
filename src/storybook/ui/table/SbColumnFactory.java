@@ -21,7 +21,7 @@ package storybook.ui.table;
 import java.util.List;
 import java.util.Vector;
 
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.I18N;
 import storybook.toolkit.comparator.SafeCategoryComparator;
 import storybook.toolkit.comparator.SafeChapterComparator;

@@ -27,7 +27,7 @@ import storybook.SbConstants.ViewName;
 import storybook.action.DeleteEntityAction;
 import storybook.action.EditEntityAction;
 import storybook.controller.BookController;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.toolkit.swing.IconButton;

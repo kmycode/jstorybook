@@ -19,7 +19,7 @@ package storybook.export;
  *
  * @author favdb
  */
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Internal;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.EnvUtil;
 import storybook.toolkit.I18N;

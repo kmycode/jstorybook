@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.TagDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Tag;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Tag;
 import storybook.ui.MainFrame;
 
 /**
@@ -75,7 +75,7 @@ public class TagTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setTagToEdit((Tag) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -97,7 +97,7 @@ public class TagTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		TagDAOImpl dao = new TagDAOImpl(session);
@@ -107,7 +107,7 @@ public class TagTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Tag();
 	}
 }

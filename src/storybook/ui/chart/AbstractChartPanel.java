@@ -34,7 +34,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.StandardChartTheme;
 import storybook.SbConstants;
 import storybook.controller.BookController;
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Internal;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.EnvUtil;
 import storybook.toolkit.I18N;

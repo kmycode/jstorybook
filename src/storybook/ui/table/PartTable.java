@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.PartDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Part;
 import storybook.ui.MainFrame;
 
 /**
@@ -75,7 +75,7 @@ public class PartTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setPartToEdit((Part) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -97,7 +97,7 @@ public class PartTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		PartDAOImpl dao = new PartDAOImpl(session);
@@ -107,7 +107,7 @@ public class PartTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Part();
 	}
 }

@@ -57,7 +57,7 @@ import storybook.model.dao.PartDAOImpl;
 import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
 import storybook.model.dao.TagDAOImpl;
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Internal;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.DateUtil;
 import storybook.toolkit.I18N;

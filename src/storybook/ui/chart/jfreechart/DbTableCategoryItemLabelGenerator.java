@@ -17,7 +17,7 @@ package storybook.ui.chart.jfreechart;
 
 import org.jfree.chart.labels.CategoryItemLabelGenerator;
 import org.jfree.data.category.CategoryDataset;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 
 public class DbTableCategoryItemLabelGenerator
   implements CategoryItemLabelGenerator
@@ -31,7 +31,7 @@ public class DbTableCategoryItemLabelGenerator
 	@Override
   public String generateLabel(CategoryDataset paramCategoryDataset, int paramInt1, int paramInt2)
   {
-    AbstractEntity localAbstractEntity = (AbstractEntity)paramCategoryDataset.getRowKey(paramInt1);
+    Entity localAbstractEntity = (Entity)paramCategoryDataset.getRowKey(paramInt1);
     return localAbstractEntity.toString();
   }
 

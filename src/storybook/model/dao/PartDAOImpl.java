@@ -31,9 +31,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Part;
 
 public class PartDAOImpl extends SbGenericDAOImpl<Part, Long> implements
 		PartDAO {
@@ -107,7 +107,7 @@ public class PartDAOImpl extends SbGenericDAOImpl<Part, Long> implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean checkIfNumberExists(AbstractEntity entity) {
+	public boolean checkIfNumberExists(Entity entity) {
 		try {
 			Part newPart = (Part) entity;
 			Integer newNumber = newPart.getNumber();
@@ -122,7 +122,7 @@ public class PartDAOImpl extends SbGenericDAOImpl<Part, Long> implements
 				List<Part> parts = (List<Part>) crit.list();
 				Vector<Integer> numbers = new Vector<Integer>();
 				for (Part part : parts) {
-					if (AbstractEntity.equalsObjectNullValue(part.getSuperpart(), newPart.getSuperpart())) {
+					if (Entity.equalsObjectNullValue(part.getSuperpart(), newPart.getSuperpart())) {
 					    numbers.add(part.getNumber());
 					}
 				}

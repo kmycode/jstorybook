@@ -22,7 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Date;
 
 import storybook.controller.BookController;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.ui.panel.AbstractPanel;
 import storybook.ui.MainFrame;
 

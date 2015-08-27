@@ -31,7 +31,7 @@ import javax.swing.JMenuBar;
 import storybook.SbApp;
 import storybook.model.AbstractModel;
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.ui.MainFrame;
 import storybook.ui.panel.AbstractPanel;
 
@@ -164,9 +164,9 @@ public abstract class AbstractController implements PropertyChangeListener {
 				Method method = null;
 				Class<?>[] classes = null;
 				try {
-					if (newValue instanceof AbstractEntity) {
+					if (newValue instanceof Entity) {
 						classes = new Class[] { EntityUtil
-								.getEntityClass((AbstractEntity) newValue) };
+								.getEntityClass((Entity) newValue) };
 					} else if (newValue != null) {
 						classes = new Class[] { newValue.getClass() };
 					}

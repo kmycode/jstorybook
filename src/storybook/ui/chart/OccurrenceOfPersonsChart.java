@@ -21,7 +21,7 @@ import org.jfree.ui.Layer;
 import storybook.model.BookModel;
 import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.ui.MainFrame;
 import storybook.ui.chart.jfreechart.ChartUtil;

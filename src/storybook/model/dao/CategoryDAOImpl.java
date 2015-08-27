@@ -29,9 +29,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import storybook.SbApp;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Category;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Person;
 
 public class CategoryDAOImpl extends SbGenericDAOImpl<Category, Long> implements
 		CategoryDAO {
@@ -131,7 +131,7 @@ public class CategoryDAOImpl extends SbGenericDAOImpl<Category, Long> implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean checkIfNumberExists(AbstractEntity entity) {
+	public boolean checkIfNumberExists(Entity entity) {
 		try {
 			Category newCategory = (Category) entity;
 			Integer newSort = newCategory.getSort();

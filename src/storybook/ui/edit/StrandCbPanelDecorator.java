@@ -21,8 +21,8 @@ package storybook.ui.edit;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Strand;
 
 /**
  * @author martin
@@ -38,17 +38,17 @@ public class StrandCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateBeforeEntity(AbstractEntity entity) {
+	public void decorateBeforeEntity(Entity entity) {
 	}
 
 	@Override
-	public void decorateEntity(JCheckBox cb, AbstractEntity entity) {
+	public void decorateEntity(JCheckBox cb, Entity entity) {
 		Strand strand = (Strand) entity;
 		panel.add(new JLabel(strand.getColorIcon()), "split 2");
 		panel.add(cb);
 	}
 
 	@Override
-	public void decorateAfterEntity(AbstractEntity entity) {
+	public void decorateAfterEntity(Entity entity) {
 	}
 }

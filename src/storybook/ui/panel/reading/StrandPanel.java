@@ -20,7 +20,7 @@ import org.hibernate.Session;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.StrandDAOImpl;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.ui.panel.AbstractPanel;

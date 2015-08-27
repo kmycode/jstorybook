@@ -16,12 +16,12 @@
 package storybook.ui.memoria;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Item;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Tag;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Tag;
 import javax.swing.Icon;
 
 public class EntityTypeCbItem {
@@ -44,7 +44,7 @@ public class EntityTypeCbItem {
 		return this.type;
 	}
 
-	private AbstractEntity getEntity() {
+	private Entity getEntity() {
 		if (this.type == Type.SCENE) {
 			return new Scene();
 		}

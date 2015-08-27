@@ -12,7 +12,7 @@ import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.EntityUtil;
 import storybook.model.dao.PartDAOImpl;
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Part;
 import storybook.toolkit.I18N;
 
 /**

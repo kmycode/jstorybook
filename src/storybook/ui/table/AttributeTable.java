@@ -15,8 +15,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.AttributeDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Attribute;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Attribute;
 import storybook.ui.MainFrame;
 
 /**
@@ -40,7 +40,7 @@ public class AttributeTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setAttributeToEdit((Attribute) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -84,7 +84,7 @@ public class AttributeTable extends AbstractTable {
 	}
 	
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		AttributeDAOImpl dao = new AttributeDAOImpl(session);
@@ -94,7 +94,7 @@ public class AttributeTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Attribute();
 	}
 }

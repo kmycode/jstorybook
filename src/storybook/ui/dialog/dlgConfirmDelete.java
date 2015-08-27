@@ -17,7 +17,7 @@ package storybook.ui.dialog;
 
 import java.util.List;
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 import storybook.toolkit.html.HtmlUtil;
 import storybook.ui.MainFrame;
@@ -48,7 +48,7 @@ public class dlgConfirmDelete extends javax.swing.JDialog {
 	 * @param parent
 	 * @param entity
 	 */
-	public dlgConfirmDelete(MainFrame parent, AbstractEntity entity) {
+	public dlgConfirmDelete(MainFrame parent, Entity entity) {
 		super(parent, true);
 		initComponents();
 		canceled = false;
@@ -57,7 +57,7 @@ public class dlgConfirmDelete extends javax.swing.JDialog {
 		tpEntity.setCaretPosition(0);
 	}
 
-	public dlgConfirmDelete(MainFrame parent, List<AbstractEntity> entities) {
+	public dlgConfirmDelete(MainFrame parent, List<Entity> entities) {
 		super(parent, true);
 		initComponents();
 		canceled = false;
@@ -65,7 +65,7 @@ public class dlgConfirmDelete extends javax.swing.JDialog {
 		jLabel1.setText(I18N.getMsg("msg.common.multi.delete.question"));
 		StringBuilder buf = new StringBuilder();
 		buf.append(HtmlUtil.getHeadWithCSS());
-		for (AbstractEntity entity : entities) {
+		for (Entity entity : entities) {
 			buf.append("<p style='margin-bottom:10px'>\n")
 				.append(EntityUtil.getEntityFullTitle(entity))
 				.append("</p>\n")

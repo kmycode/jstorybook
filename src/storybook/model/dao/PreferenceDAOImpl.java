@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.dao;
 
 import org.hibernate.Session;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;

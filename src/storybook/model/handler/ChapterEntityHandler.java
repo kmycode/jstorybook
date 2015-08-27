@@ -26,8 +26,8 @@ import org.hibernate.Session;
 
 import storybook.model.BookModel;
 import storybook.model.dao.ChapterDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
@@ -43,7 +43,7 @@ public class ChapterEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		ChapterDAOImpl dao = new ChapterDAOImpl(session);

@@ -38,7 +38,7 @@ import storybook.SbApp;
 import storybook.SbConstants.PreferenceKey;
 import storybook.model.PreferenceModel;
 import storybook.model.dao.PreferenceDAOImpl;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 import storybook.toolkit.DockingWindowUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.PrefUtil;

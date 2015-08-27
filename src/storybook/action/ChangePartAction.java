@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Part;
 
 /**
  * @author martin

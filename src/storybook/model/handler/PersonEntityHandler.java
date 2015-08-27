@@ -21,8 +21,8 @@ package storybook.model.handler;
 import javax.swing.ListCellRenderer;
 
 import storybook.model.dao.PersonDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Person;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 import storybook.ui.combo.PersonListCellRenderer;
@@ -43,7 +43,7 @@ public class PersonEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Person person = new Person();
 		return person;
 	}

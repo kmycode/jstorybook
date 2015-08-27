@@ -16,7 +16,7 @@
 package storybook.ui.memoria;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
@@ -51,7 +51,7 @@ public class MemoriaGraphMouse extends AbstractPopupGraphMousePlugin
 		Point point = evt.getPoint();
 		GraphElementAccessor accel = vv.getPickSupport();
 		if (accel != null) {
-			AbstractEntity entity = (AbstractEntity) accel.getVertex(vv.getGraphLayout(), point.getX(), point.getY());
+			Entity entity = (Entity) accel.getVertex(vv.getGraphLayout(), point.getX(), point.getY());
 			if (entity != null) {
 				JPopupMenu localJPopupMenu = EntityUtil.createPopupMenu(this.parent.getMainFrame(), entity);
 				localJPopupMenu.show(vv, evt.getX(), evt.getY());
@@ -67,7 +67,7 @@ public class MemoriaGraphMouse extends AbstractPopupGraphMousePlugin
 			Point localPoint = paramMouseEvent.getPoint();
 			GraphElementAccessor localGraphElementAccessor = localVisualizationViewer.getPickSupport();
 			if (localGraphElementAccessor != null) {
-				AbstractEntity localAbstractEntity = (AbstractEntity) localGraphElementAccessor.getVertex(localVisualizationViewer.getGraphLayout(), localPoint.getX(), localPoint.getY());
+				Entity localAbstractEntity = (Entity) localGraphElementAccessor.getVertex(localVisualizationViewer.getGraphLayout(), localPoint.getX(), localPoint.getY());
 				if (localAbstractEntity != null) {
 					this.parent.refresh(localAbstractEntity);
 				}

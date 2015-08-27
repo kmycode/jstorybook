@@ -20,7 +20,7 @@ package storybook.ui.label;
 
 import javax.swing.JLabel;
 
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.swing.ColorIcon;
 
 /**

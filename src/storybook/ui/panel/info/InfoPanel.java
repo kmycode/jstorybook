@@ -35,8 +35,8 @@ import storybook.controller.BookController;
 import storybook.model.DbFile;
 import storybook.model.BookModel;
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Internal;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.net.NetUtil;
@@ -52,7 +52,7 @@ import storybook.ui.MainFrame;
 @SuppressWarnings("serial")
 public class InfoPanel extends AbstractPanel implements HyperlinkListener {
 
-	private AbstractEntity entity;
+	private Entity entity;
 	private JTextPane infoPane;
 
 	public InfoPanel(MainFrame mainFrame) {
@@ -75,8 +75,8 @@ public class InfoPanel extends AbstractPanel implements HyperlinkListener {
 		}
 
 		if (BookController.CommonProps.SHOW_INFO.check(propName)) {
-			if (newValue instanceof AbstractEntity) {
-				entity = (AbstractEntity) newValue;
+			if (newValue instanceof Entity) {
+				entity = (Entity) newValue;
 				if (entity.isTransient()) {
 					return;
 				}
@@ -126,8 +126,8 @@ public class InfoPanel extends AbstractPanel implements HyperlinkListener {
 			}
 		}
 
-		if (entity != null && newValue instanceof AbstractEntity) {
-			AbstractEntity updatedEntity = (AbstractEntity) newValue;
+		if (entity != null && newValue instanceof Entity) {
+			Entity updatedEntity = (Entity) newValue;
 			if (updatedEntity.getId().equals(entity.getId())) {
 				refreshInfo();
 			}

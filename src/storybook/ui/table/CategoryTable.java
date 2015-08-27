@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.CategoryDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Category;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Category;
 import storybook.ui.MainFrame;
 import storybook.ui.SbView;
 
@@ -91,7 +91,7 @@ public class CategoryTable extends AbstractTable {
 
 	@Override
 	protected void orderUpEntity(PropertyChangeEvent evt) {
-		AbstractEntity entity = (AbstractEntity) evt.getNewValue();
+		Entity entity = (Entity) evt.getNewValue();
 		Category category = (Category)entity;
 
 		BookModel model = mainFrame.getBookModel();
@@ -114,7 +114,7 @@ public class CategoryTable extends AbstractTable {
 
 	@Override
 	protected void orderDownEntity(PropertyChangeEvent evt) {
-		AbstractEntity entity = (AbstractEntity) evt.getNewValue();
+		Entity entity = (Entity) evt.getNewValue();
 		Category category = (Category)entity;
 
 		BookModel model = mainFrame.getBookModel();
@@ -146,7 +146,7 @@ public class CategoryTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setCategoryToEdit((Category) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -168,7 +168,7 @@ public class CategoryTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		CategoryDAOImpl dao = new CategoryDAOImpl(session);
@@ -178,7 +178,7 @@ public class CategoryTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Category();
 	}
 }

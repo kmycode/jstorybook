@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 
 /**
  * @author martin
@@ -45,7 +45,7 @@ public class RadioButtonGroup {
 		return groupMap;
 	}
 
-	public void removeAttr(AbstractEntity entity, Integer key) {
+	public void removeAttr(Entity entity, Integer key) {
 		String attrName = getAttrName(key);
 		String methodName = "remove" + WordUtils.capitalize(attrName);
 		Method method;
@@ -60,7 +60,7 @@ public class RadioButtonGroup {
 		}
 	}
 
-	public Boolean hasAttr(AbstractEntity entity, Integer key) {
+	public Boolean hasAttr(Entity entity, Integer key) {
 		String attrName = getAttrName(key);
 		String methodName = "has" + WordUtils.capitalize(attrName);
 		Method method;

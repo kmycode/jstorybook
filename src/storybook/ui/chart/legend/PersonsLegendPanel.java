@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.toolkit.swing.label.CleverLabel;
 import storybook.ui.MainFrame;

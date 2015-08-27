@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import storybook.SbApp;
 
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.ui.MainFrame;
 
 /**
@@ -34,7 +34,7 @@ import storybook.ui.MainFrame;
  */
 public class IOUtil {
 
-	public static String getEntityFileNameForExport(MainFrame paramMainFrame, String paramString, AbstractEntity paramAbstractEntity) {
+	public static String getEntityFileNameForExport(MainFrame paramMainFrame, String paramString, Entity paramAbstractEntity) {
 		String str1 = "";
 		try {
 			String str2 = paramMainFrame.getDbFile().getName();

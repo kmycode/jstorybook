@@ -102,7 +102,7 @@ import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
 import storybook.SbConstants.PreferenceKey;
 import storybook.SbConstants.Spelling;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 import storybook.toolkit.I18N;
 import storybook.toolkit.PrefUtil;
 import storybook.toolkit.html.HtmlUtil;

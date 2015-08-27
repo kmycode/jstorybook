@@ -24,8 +24,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Person;
 
 public class GenderDAOImpl extends SbGenericDAOImpl<Gender, Long> implements
 		GenderDAO {

@@ -24,7 +24,7 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import storybook.SbApp;
 
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 import storybook.ui.MainFrame;
 
 @SuppressWarnings("serial")

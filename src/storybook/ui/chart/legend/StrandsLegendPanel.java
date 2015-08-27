@@ -21,7 +21,7 @@ import javax.swing.JLabel;
 import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.dao.StrandDAOImpl;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.ColorUtil;
 import storybook.toolkit.swing.label.CleverLabel;

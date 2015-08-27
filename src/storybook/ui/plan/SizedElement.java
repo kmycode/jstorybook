@@ -1,8 +1,8 @@
 package storybook.ui.plan;
 
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Part;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Scene;
 
 public class SizedElement {
 	Object element;

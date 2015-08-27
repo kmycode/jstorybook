@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.GenderDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Gender;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Gender;
 import storybook.ui.MainFrame;
 
 /**
@@ -74,7 +74,7 @@ public class GenderTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setGenderToEdit((Gender) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -96,7 +96,7 @@ public class GenderTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		GenderDAOImpl dao = new GenderDAOImpl(session);
@@ -106,7 +106,7 @@ public class GenderTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Gender();
 	}
 }

@@ -48,7 +48,7 @@ import storybook.action.OpenFileAction;
 import storybook.controller.PreferenceController;
 import storybook.model.DbFile;
 import storybook.model.PreferenceModel;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 import storybook.model.oldModel.ModelMigration;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.DateUtil;

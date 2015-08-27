@@ -29,8 +29,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.DateUtil;
 
 public class LocationDAOImpl extends SbGenericDAOImpl<Location, Long> implements

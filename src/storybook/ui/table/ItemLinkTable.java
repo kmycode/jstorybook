@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.ItemLinkDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.ItemLink;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.ItemLink;
 import storybook.ui.MainFrame;
 
 /**
@@ -74,7 +74,7 @@ public class ItemLinkTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setItemLinkToEdit((ItemLink) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -96,7 +96,7 @@ public class ItemLinkTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		ItemLinkDAOImpl dao = new ItemLinkDAOImpl(session);
@@ -106,7 +106,7 @@ public class ItemLinkTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new ItemLink();
 	}
 }

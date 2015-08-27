@@ -30,8 +30,8 @@ import javax.swing.JOptionPane;
 import org.jopendocument.dom.OOUtils;
 
 import storybook.SbApp;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Scene;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.odt.ODTUtils;
@@ -44,7 +44,7 @@ import storybook.ui.MainFrame;
 @SuppressWarnings("serial")
 public class EditSceneLOAction extends AbstractEntityAction {
 
-	public EditSceneLOAction(MainFrame mainFrame, AbstractEntity entity) {
+	public EditSceneLOAction(MainFrame mainFrame, Entity entity) {
 		super(mainFrame, entity, I18N.getMsg("msg.common.editlo"), I18N
 				.getIcon("icon.small.edit"));
 		SbApp.trace("EditSceneLOAction(" + mainFrame.getName() + ","

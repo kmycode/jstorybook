@@ -25,7 +25,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Item;
+import jstorybook.model.entity.Item;
 
 public class ItemDAOImpl extends SbGenericDAOImpl<Item, Long> implements
 		ItemDAO {

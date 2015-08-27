@@ -23,8 +23,8 @@ import java.util.Calendar;
 import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.dao.PartDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Part;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
@@ -40,7 +40,7 @@ public class PartEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		PartDAOImpl dao = new PartDAOImpl(session);

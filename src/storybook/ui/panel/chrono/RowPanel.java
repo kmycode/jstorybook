@@ -28,8 +28,8 @@ import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
 import storybook.model.BookModel;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
 import storybook.ui.MainFrame;
 
 @SuppressWarnings("serial")

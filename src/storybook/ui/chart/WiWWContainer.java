@@ -17,8 +17,8 @@ package storybook.ui.chart;
 
 import storybook.model.BookModel;
 import storybook.model.dao.LocationDAOImpl;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.DateUtil;
 import storybook.ui.MainFrame;
 import java.util.ArrayList;

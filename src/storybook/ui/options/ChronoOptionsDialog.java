@@ -26,7 +26,7 @@ import javax.swing.JLabel;
 
 import storybook.SbConstants;
 import storybook.SbConstants.BookKey;
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Internal;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;

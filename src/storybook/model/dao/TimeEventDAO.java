@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package storybook.model.dao;
 
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.TimeEvent;
 
 import com.googlecode.genericdao.dao.hibernate.GenericDAO;
 

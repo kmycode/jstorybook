@@ -68,20 +68,20 @@ import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.StrandDAOImpl;
 import storybook.model.dao.TagDAOImpl;
 import storybook.model.dao.TagLinkDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Idea;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Idea;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
 import storybook.model.state.AbstractState;
 import storybook.model.state.IdeaStateModel;
 import storybook.model.stringcategory.AbstractStringCategory;
@@ -152,28 +152,28 @@ public class TreePanel extends AbstractPanel implements TreeSelectionListener, M
 			return;
 		}
 
-		if (newValue instanceof AbstractEntity) {
-			boolean ret = refreshNode((AbstractEntity) newValue,
-					(AbstractEntity) oldValue);
+		if (newValue instanceof Entity) {
+			boolean ret = refreshNode((Entity) newValue,
+					(Entity) oldValue);
 			if (!ret) {
 				refreshTree();
 			}
 			return;
 		}
-		if (oldValue instanceof AbstractEntity) {
+		if (oldValue instanceof Entity) {
 			refreshTree();
 //			return;
 		}
 	}
 
-	private boolean refreshNode(AbstractEntity updEntity,AbstractEntity oldEntity) {
+	private boolean refreshNode(Entity updEntity,Entity oldEntity) {
 		TreePath[] paths = getPaths(tree, false);
 		for (TreePath path : paths) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 			if (node.isLeaf()) {
 				Object o = node.getUserObject();
-				if (o instanceof AbstractEntity) {
-					AbstractEntity entity = (AbstractEntity) o;
+				if (o instanceof Entity) {
+					Entity entity = (Entity) o;
 					if (entity.getId().equals(updEntity.getId())) {
 						if (EntityUtil.hasHierarchyChanged(oldEntity, updEntity)) {
 							return false;
@@ -655,12 +655,12 @@ public class TreePanel extends AbstractPanel implements TreeSelectionListener, M
 			BookController ctrl = mainFrame.getBookController();
 			ctrl.showInfo(mainFrame.getDbFile());
 		}
-		if (!(value instanceof AbstractEntity)) {
+		if (!(value instanceof Entity)) {
 			return;
 		}
 		SbView view = mainFrame.getView(ViewName.INFO);
 		view.cleverRestoreFocus();
-		AbstractEntity entity = (AbstractEntity) value;
+		Entity entity = (Entity) value;
 		BookController ctrl = mainFrame.getBookController();
 		ctrl.showInfo(entity);
 	}
@@ -819,7 +819,7 @@ public class TreePanel extends AbstractPanel implements TreeSelectionListener, M
 			return;
 		}
 		Object userObj = selectedNode.getUserObject();
-		if (!(userObj instanceof AbstractEntity
+		if (!(userObj instanceof Entity
 			|| userObj instanceof AbstractStringCategory)) {
 			return;
 		}
@@ -828,8 +828,8 @@ public class TreePanel extends AbstractPanel implements TreeSelectionListener, M
 			AbstractStringCategory cat = (AbstractStringCategory) userObj;
 			menu = StringCategoryUtil.createPopupMenu(mainFrame, cat);
 		}
-		if (userObj instanceof AbstractEntity) {
-			AbstractEntity entity = (AbstractEntity) userObj;
+		if (userObj instanceof Entity) {
+			Entity entity = (Entity) userObj;
 			menu = EntityUtil.createPopupMenu(mainFrame, entity);
 		}
 		if (menu == null) {
@@ -863,8 +863,8 @@ public class TreePanel extends AbstractPanel implements TreeSelectionListener, M
 		// tree.setSelectionPath(selectedPath);
 		if (selectedNode.isLeaf()) {
 			Object value = selectedNode.getUserObject();
-			if (value instanceof AbstractEntity) {
-				AbstractEntity entity = (AbstractEntity) value;
+			if (value instanceof Entity) {
+				Entity entity = (Entity) value;
 				EditEntityAction act = new EditEntityAction(mainFrame, entity,false);
 				act.actionPerformed(null);
 			}

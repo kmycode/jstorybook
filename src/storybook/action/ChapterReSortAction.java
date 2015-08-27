@@ -22,7 +22,7 @@ package storybook.action;
 import java.awt.event.ActionEvent;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.Chapter;
+import jstorybook.model.entity.Chapter;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 

@@ -21,8 +21,8 @@ package storybook.model.handler;
 import javax.swing.ListCellRenderer;
 
 import storybook.model.dao.LocationDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Location;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Location;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 import storybook.ui.combo.LocationListCellRenderer;
@@ -43,7 +43,7 @@ public class LocationEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Location location = new Location();
 		return location;
 	}

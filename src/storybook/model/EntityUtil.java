@@ -102,26 +102,26 @@ import storybook.model.dao.SceneDAOImpl;
 import storybook.model.dao.StrandDAOImpl;
 import storybook.model.dao.TagDAOImpl;
 import storybook.model.dao.TagLinkDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.AbstractTag;
-import storybook.model.entity.AbstractTagLink;
-import storybook.model.entity.Attribute;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Idea;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Relationship;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.AbstractTag;
+import jstorybook.model.entity.AbstractTagLink;
+import jstorybook.model.entity.Attribute;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Idea;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Relationship;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
+import jstorybook.model.entity.TimeEvent;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.DateUtil;
 import storybook.toolkit.I18N;
@@ -348,7 +348,7 @@ public class EntityUtil {
 
 	}
 
-	public static List<Long> getReadOnlyIds(AbstractEntity entity) {
+	public static List<Long> getReadOnlyIds(Entity entity) {
 		ArrayList<Long> ret = new ArrayList<>();
 		if (entity instanceof Category) {
 			ret.add(1L);
@@ -381,7 +381,7 @@ public class EntityUtil {
 		return date;
 	}
 
-	public static void printBeanProperties(AbstractEntity entity) {
+	public static void printBeanProperties(Entity entity) {
 		SbApp.trace("EntityUtil.printBeanProperties(" + entity.getClass().getName() + ")");
 		try {
 			BeanInfo bi = Introspector.getBeanInfo(entity.getClass());
@@ -399,7 +399,7 @@ public class EntityUtil {
 		}
 	}
 
-	public static void deleteTagAndItemLinks(BookModel model, AbstractEntity entity) {
+	public static void deleteTagAndItemLinks(BookModel model, Entity entity) {
 		Session session = model.beginTransaction();
 		TagLinkDAOImpl tagLinkDao = new TagLinkDAOImpl(session);
 		List<TagLink> tagLinks = null;
@@ -431,8 +431,8 @@ public class EntityUtil {
 
 	}
 
-	public static void copyEntityProperties(MainFrame mainFrame, AbstractEntity entity,
-			AbstractEntity newEntity) {
+	public static void copyEntityProperties(MainFrame mainFrame, Entity entity,
+			Entity newEntity) {
 		try {
 			ConvertUtils.register(new DateConverter(null), Date.class);
 			ConvertUtils.register(new SqlTimestampConverter(null), Timestamp.class);
@@ -444,26 +444,26 @@ public class EntityUtil {
 		}
 	}
 
-	public static AbstractEntity cloneEntity(MainFrame mainFrame, AbstractEntity entity) {
+	public static Entity cloneEntity(MainFrame mainFrame, Entity entity) {
 		try {
 			ConvertUtils.register(new DateConverter(null), Date.class);
 			ConvertUtils.register(new SqlTimestampConverter(null), Timestamp.class);
 			ConvertUtils.register(new NullConverter(), Integer.class);
-			return (AbstractEntity) BeanUtils.cloneBean(entity);
+			return (Entity) BeanUtils.cloneBean(entity);
 		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
 			System.err.println("EntityUtil.cloneEntityProperties() Exception : " + e.getMessage());
 		}
 		return null;
 	}
 
-	public static void copyEntity(MainFrame mainFrame, AbstractEntity entity) {
+	public static void copyEntity(MainFrame mainFrame, Entity entity) {
 		AbstractEntityHandler handler = getEntityHandler(mainFrame, entity);
-		AbstractEntity newEntity = handler.createNewEntity();
+		Entity newEntity = handler.createNewEntity();
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		session.refresh(entity);
 		copyEntityProperties(mainFrame, entity, newEntity);
-//		AbstractEntity newEntity = cloneEntity(mainFrame, entity);
+//		Entity newEntity = cloneEntity(mainFrame, entity);
 		markCopiedEntity(mainFrame, newEntity);
 
 		List<Person> persons = new ArrayList<>();
@@ -523,7 +523,7 @@ public class EntityUtil {
 
 	}
 
-	private static void markCopiedEntity(MainFrame mainFrame, AbstractEntity entity) {
+	private static void markCopiedEntity(MainFrame mainFrame, Entity entity) {
 		String copyStr = "(" + I18N.getMsg("msg.common.copy") + ") ";
 		if (entity instanceof Scene) {
 			Scene e = (Scene) entity;
@@ -585,7 +585,7 @@ public class EntityUtil {
 		}
 	}
 
-	public static boolean hasHierarchyChanged(AbstractEntity oldEntity, AbstractEntity updEntity) {
+	public static boolean hasHierarchyChanged(Entity oldEntity, Entity updEntity) {
 		if (oldEntity == null || updEntity == null)
 			return false;
 		if (oldEntity instanceof Idea) {
@@ -652,7 +652,7 @@ public class EntityUtil {
 		return false;
 	}
 
-	public static JPopupMenu createPopupMenu(MainFrame mainFrame, AbstractEntity entity) {
+	public static JPopupMenu createPopupMenu(MainFrame mainFrame, Entity entity) {
 		JPopupMenu menu = new JPopupMenu();
 		if (entity == null)
 			return null;
@@ -700,13 +700,13 @@ public class EntityUtil {
 		return menu;
 	}
 
-	public static boolean isAvailableInMemoria(AbstractEntity entity) {
+	public static boolean isAvailableInMemoria(Entity entity) {
 		return entity instanceof Person || entity instanceof Location
 				|| entity instanceof Scene || entity instanceof Tag
 				|| entity instanceof Item;
 	}
 
-	public static List<Attribute> getEntityAttributes(MainFrame mainFrame, AbstractEntity entity) {
+	public static List<Attribute> getEntityAttributes(MainFrame mainFrame, Entity entity) {
 		if (entity.isTransient())
 			return new ArrayList<>();
 		if (entity instanceof Person) {
@@ -721,7 +721,7 @@ public class EntityUtil {
 		return new ArrayList<>();
 	}
 
-	public static void setEntityAttributes(MainFrame mainFrame, AbstractEntity entity, List<Attribute> attributes) {
+	public static void setEntityAttributes(MainFrame mainFrame, Entity entity, List<Attribute> attributes) {
 		if (entity.isTransient())
 			return;
 		if (entity instanceof Person)
@@ -753,7 +753,7 @@ public class EntityUtil {
 	}
 
 	public static AbstractEntityHandler getEntityHandler(MainFrame mainFrame,
-			AbstractEntity entity) {
+			Entity entity) {
 		if (entity instanceof Scene)
 			return new SceneEntityHandler(mainFrame);
 		if (entity instanceof Chapter)
@@ -789,7 +789,7 @@ public class EntityUtil {
 		return null;
 	}
 
-	public static Class<?> getEntityClass(AbstractEntity entity) {
+	public static Class<?> getEntityClass(Entity entity) {
 		// note: hibernate sometimes returns
 		// "entity.Tag_$$_javassist_2", which matches to "instanceof Tag",
 		// but cannot be used as a class "Tag" parameter in reflection
@@ -921,7 +921,7 @@ public class EntityUtil {
 	}
 
 	public static void abandonEntityChanges(MainFrame mainFrame,
-			AbstractEntity entity) {
+			Entity entity) {
 		try {
 			if (entity.isTransient())
 				// nothing to do for a new entity
@@ -938,11 +938,11 @@ public class EntityUtil {
 		}
 	}
 
-	public static String getToolTip(AbstractEntity entity) {
+	public static String getToolTip(Entity entity) {
 		return getToolTip(entity, null);
 	}
 
-	public static String getToolTip(AbstractEntity entity, Date date) {
+	public static String getToolTip(Entity entity, Date date) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<html>");
 		buf.append("<table width='300'>");
@@ -1004,7 +1004,7 @@ public class EntityUtil {
 	}
 
 	public static String getDeleteInfo(MainFrame mainFrame,
-			AbstractEntity entity) {
+			Entity entity) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(HtmlUtil.getHeadWithCSS());
 		boolean warnings = addDeletionInfo(mainFrame, entity, buf);
@@ -1014,20 +1014,20 @@ public class EntityUtil {
 		return buf.toString();
 	}
 
-	public static String getInfo(MainFrame mainFrame, AbstractEntity entity) {
+	public static String getInfo(MainFrame mainFrame, Entity entity) {
 		StringBuilder buf = new StringBuilder();
 		buf.append(HtmlUtil.getHeadWithCSS());
 		buf.append(getInfo(mainFrame, entity, false));
 		return buf.toString();
 	}
 
-	private static String getInfo(MainFrame mainFrame, AbstractEntity entity, boolean truncate) {
+	private static String getInfo(MainFrame mainFrame, Entity entity, boolean truncate) {
 		StringBuffer buf = new StringBuffer();
 		addInfo(mainFrame, entity, buf, truncate);
 		return buf.toString();
 	}
 
-	private static boolean addDeletionInfo(MainFrame mainFrame, AbstractEntity entity, StringBuffer buf) {
+	private static boolean addDeletionInfo(MainFrame mainFrame, Entity entity, StringBuffer buf) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		boolean warnings = false;
@@ -1182,9 +1182,9 @@ public class EntityUtil {
 		return warnings;
 	}
 
-	private static void addInfo(MainFrame mainFrame, AbstractEntity entity, StringBuffer buf, boolean truncate) {
+	private static void addInfo(MainFrame mainFrame, Entity entity, StringBuffer buf, boolean truncate) {
 		AbstractEntityHandler entityHandler = getEntityHandler(mainFrame, entity);
-		Class<? extends AbstractEntity> clazz = entity.getClass();
+		Class<? extends Entity> clazz = entity.getClass();
 		for (SbColumn col : entityHandler.getColumns()) {
 			String methodName = "get" + col.getMethodName();
 			if (methodName.equals("getId") || methodName.equals("getIcon"))
@@ -1255,15 +1255,15 @@ public class EntityUtil {
 		}
 	}
 
-	public static AbstractEntity get(MainFrame mainFrame, Class<? extends AbstractEntity> c, Long entityId) {
+	public static Entity get(MainFrame mainFrame, Class<? extends Entity> c, Long entityId) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
-		AbstractEntity entity = (AbstractEntity) session.get(c, entityId);
+		Entity entity = (Entity) session.get(c, entityId);
 		model.commit();
 		return entity;
 	}
 
-	public static void refresh(MainFrame mainFrame, AbstractEntity entity) {
+	public static void refresh(MainFrame mainFrame, Entity entity) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		session.refresh(entity);
@@ -1271,7 +1271,7 @@ public class EntityUtil {
 	}
 
 	public static AbstractEntityHandler getEntityHandler(MainFrame mainFrame,
-			Object obj, Method method, AbstractEntity entity) {
+			Object obj, Method method, Entity entity) {
 		if (obj instanceof Scene || method.getReturnType() == Scene.class)
 			return new SceneEntityHandler(mainFrame);
 		if (obj instanceof Chapter || method.getReturnType() == Chapter.class)
@@ -1362,7 +1362,7 @@ public class EntityUtil {
 
 	@SuppressWarnings("unchecked")
 	public static void fillEntityCombo(MainFrame mainFrame, JComboBox combo,
-			AbstractEntityHandler entityHandler, AbstractEntity entity,
+			AbstractEntityHandler entityHandler, Entity entity,
 			boolean isNew, boolean addEmptyItem) {
 		combo.removeAllItems();
 		ListCellRenderer renderer = entityHandler.getListCellRenderer();
@@ -1377,8 +1377,8 @@ public class EntityUtil {
 		SbGenericDAOImpl<?, ?> dao = entityHandler.createDAO();
 		dao.setSession(session);
 		@SuppressWarnings("unchecked")
-		List<AbstractEntity> entities = (List<AbstractEntity>) dao.findAll();
-		for (AbstractEntity entity2 : entities) {
+		List<Entity> entities = (List<Entity>) dao.findAll();
+		for (Entity entity2 : entities) {
 			session.refresh(entity2);
 			combo.addItem(entity2);
 			if (entity != null)
@@ -1392,7 +1392,7 @@ public class EntityUtil {
 		model.commit();
 	}
 
-	public static JPanel getEntityTitlePanel(AbstractEntity entity) {
+	public static JPanel getEntityTitlePanel(Entity entity) {
 		// GradientPanel panel = new
 		// GradientPanel(GradientPanel.DIAGONAL_RIGHT);
 		// panel.setForeground(new Color(0x6495ED));
@@ -1411,7 +1411,7 @@ public class EntityUtil {
 		return panel;
 	}
 
-	public static String getEntityFullTitle(AbstractEntity entity) {
+	public static String getEntityFullTitle(Entity entity) {
 		StringBuilder buf = new StringBuilder();
 		buf.append("<span ")
 				.append(getCSSTitle1())
@@ -1428,11 +1428,11 @@ public class EntityUtil {
 		return buf.toString();
 	}
 
-	public static JLabel getEntityIconLabel(AbstractEntity entity) {
+	public static JLabel getEntityIconLabel(Entity entity) {
 		return new JLabel(getEntityIcon(entity));
 	}
 
-	public static Icon getEntityIcon(AbstractEntity entity) {
+	public static Icon getEntityIcon(Entity entity) {
 		if (entity instanceof Scene) return I18N.getIcon("icon.small.scene");
 		if (entity instanceof Chapter) return I18N.getIcon("icon.small.chapter");
 		if (entity instanceof Part) return I18N.getIcon("icon.small.part");
@@ -1470,11 +1470,11 @@ public class EntityUtil {
 		return "style='font-weight:bold;font-size:10px;" + styles + "'";
 	}
 
-	public static String getEntityTitle(AbstractEntity entity) {
+	public static String getEntityTitle(Entity entity) {
 		return getEntityTitle(entity, null);
 	}
 
-	public static String getEntityTitle(AbstractEntity entity,  Boolean setIsTransient) {
+	public static String getEntityTitle(Entity entity,  Boolean setIsTransient) {
 		boolean isTransient = entity.isTransient();
 		if (setIsTransient != null) isTransient = setIsTransient;
 		if (entity instanceof Scene) {

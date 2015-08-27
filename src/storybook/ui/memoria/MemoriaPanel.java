@@ -11,17 +11,17 @@ import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
 import storybook.model.dao.TagDAOImpl;
 import storybook.model.dao.TagLinkDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.AbstractTag;
-import storybook.model.entity.Attribute;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.AbstractTag;
+import jstorybook.model.entity.Attribute;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.EnvUtil;
 import storybook.toolkit.I18N;
@@ -93,16 +93,16 @@ import storybook.toolkit.DateUtil;
 
 public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefreshable {
 
-	DelegateForest<AbstractEntity, Long> graph;
-	private VisualizationViewer<AbstractEntity, Long> vv;
-	private TreeLayout<AbstractEntity, Long> treeLayout;
-	private BalloonLayout<AbstractEntity, Long> balloonLayout;
+	DelegateForest<Entity, Long> graph;
+	private VisualizationViewer<Entity, Long> vv;
+	private TreeLayout<Entity, Long> treeLayout;
+	private BalloonLayout<Entity, Long> balloonLayout;
 	private GraphZoomScrollPane graphPanel;
-	Map<AbstractEntity, String> labelMap;
-	Map<AbstractEntity, Icon> iconMap;
+	Map<Entity, String> labelMap;
+	Map<Entity, Icon> iconMap;
 	private String entitySourceName;
 	public long entityId;
-	private AbstractEntity shownEntity;
+	private Entity shownEntity;
 	public long graphIndex;
 	private ScalingControl scaler;
 	//scenes
@@ -172,7 +172,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 				return;
 			}
 			if (BookController.CommonProps.SHOW_IN_MEMORIA.check(str)) {
-				AbstractEntity entity = (AbstractEntity) evt.getNewValue();
+				Entity entity = (Entity) evt.getNewValue();
 				refresh(entity);
 				return;
 			}
@@ -399,7 +399,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 			Collection collections = graph.getRoots();
 			Iterator iCollection = collections.iterator();
 			while (iCollection.hasNext()) {
-				AbstractEntity entity = (AbstractEntity) iCollection.next();
+				Entity entity = (Entity) iCollection.next();
 				if (entity != null) {
 					graph.removeVertex(entity);
 				}
@@ -445,13 +445,13 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 	}
 
 	@SuppressWarnings("unchecked")
-	private void refreshCombo(AbstractEntity pEntity, List<? extends AbstractEntity> pList, boolean b) {
+	private void refreshCombo(Entity pEntity, List<? extends Entity> pList, boolean b) {
 		try {
 			processActionListener = false;
 			DefaultComboBoxModel combo = (DefaultComboBoxModel) entityCombo.getModel();
 			combo.removeAllElements();
 			combo.addElement(pEntity);
-			for (AbstractEntity entity : pList) {
+			for (Entity entity : pList) {
 				combo.addElement(entity);
 			}
 			processActionListener = true;
@@ -498,11 +498,11 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 	}
 
 	@SuppressWarnings("unchecked")
-	private void refreshGraph(AbstractEntity entity) {
+	private void refreshGraph(Entity entity) {
 		try {
 			clearGraph();
 			if (entity == null) {
-				entity = (AbstractEntity) entityCombo.getItemAt(0);
+				entity = (Entity) entityCombo.getItemAt(0);
 			}
 	    //if ((!(entity instanceof Scene)) && (chosenDate == null)) {
 			//	return;
@@ -1087,7 +1087,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		Collection collection = graph.getVertices();
 		Iterator iterator = collection.iterator();
 		while (iterator.hasNext()) {
-			AbstractEntity entity = (AbstractEntity) iterator.next();
+			Entity entity = (Entity) iterator.next();
 			if (((entity instanceof Tag)) && (entity.getId().equals(tag.getId()))) {
 				return true;
 			}
@@ -1102,7 +1102,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		Collection collection = graph.getVertices();
 		Iterator iterator = collection.iterator();
 		while (iterator.hasNext()) {
-			AbstractEntity entity = (AbstractEntity) iterator.next();
+			Entity entity = (Entity) iterator.next();
 			if (((entity instanceof Item)) && (entity.getId().equals(item.getId()))) {
 				return true;
 			}
@@ -1111,7 +1111,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 	}
 
 	@SuppressWarnings("unchecked")
-	void initVertices(AbstractEntity entity) {
+	void initVertices(Entity entity) {
 		initVertexScene(entity);
 		initVertexPerson(entity);
 		initVertexLocation(entity);
@@ -1133,7 +1133,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		showTagVertex = true;
 	}
 
-	private void initVertexTag(AbstractEntity entity) {
+	private void initVertexTag(Entity entity) {
 		tagVertex = new Tag();
 		tagVertex.setName(I18N.getMsg("msg.tags"));
 		graph.addVertex(tagVertex);
@@ -1142,7 +1142,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		graph.addEdge(graphIndex++, entity, tagVertex);
 	}
 
-	private void initVertexItem(AbstractEntity entity) {
+	private void initVertexItem(Entity entity) {
 		itemVertex = new Item();
 		itemVertex.setName(I18N.getMsg("msg.items"));
 		graph.addVertex(itemVertex);
@@ -1151,7 +1151,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		graph.addEdge(graphIndex++, entity, itemVertex);
 	}
 
-	private void initVertexInvoldedTag(AbstractEntity entity) {
+	private void initVertexInvoldedTag(Entity entity) {
 		involvedTagVertex = new Tag();
 		involvedTagVertex.setName(I18N.getMsg("msg.graph.involved.tags"));
 		graph.addVertex(involvedTagVertex);
@@ -1160,7 +1160,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		graph.addEdge(graphIndex++, entity, involvedTagVertex);
 	}
 
-	private void initVertexInvoldedItem(AbstractEntity entity) {
+	private void initVertexInvoldedItem(Entity entity) {
 		involvedItemVertex = new Item();
 		involvedItemVertex.setName(I18N.getMsg("msg.graph.involved.items"));
 		graph.addVertex(involvedItemVertex);
@@ -1239,7 +1239,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		}
 	}
 
-	void initVertexScene(AbstractEntity entity) {
+	void initVertexScene(Entity entity) {
 		sceneVertex = new Scene();
 		if (sceneVertexTitle != null) {
 			sceneVertex.setTitle(sceneVertexTitle);
@@ -1252,7 +1252,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		graph.addEdge(graphIndex++, entity, sceneVertex);
 	}
 
-	private void initVertexPerson(AbstractEntity entity) {
+	private void initVertexPerson(Entity entity) {
 		personVertex = new Person();
 		personVertex.setFirstname(I18N.getMsg("msg.common.persons"));
 		graph.addVertex(personVertex);
@@ -1261,7 +1261,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		graph.addEdge(graphIndex++, entity, personVertex);
 	}
 
-	private void initVertexLocation(AbstractEntity entity) {
+	private void initVertexLocation(Entity entity) {
 		locationVertex = new Location();
 		if (locationVertexTitle != null) {
 			locationVertex.setName(locationVertexTitle);
@@ -1311,7 +1311,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		return icon;
 	}
 
-	public void refresh(AbstractEntity entity) {
+	public void refresh(Entity entity) {
 		try {
 			if (entity == null) {
 				return;
@@ -1324,7 +1324,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		}
 	}
 
-	private void updateControlPanel(AbstractEntity pEntity) {
+	private void updateControlPanel(Entity pEntity) {
 		int i = 0;
 		EntityTypeCbItem tobj;
 		for (int j = 0; j < entityTypeCombo.getItemCount(); j++) {
@@ -1410,7 +1410,7 @@ public class MemoriaPanel extends AbstractPanel implements ActionListener, IRefr
 		else {
 			chosenDate = null;
 		}
-		refresh((AbstractEntity) entityCombo.getSelectedItem());
+		refresh((Entity) entityCombo.getSelectedItem());
 	}
 
 	@Override

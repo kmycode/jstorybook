@@ -23,24 +23,24 @@ import storybook.SbApp;
 import storybook.model.BlankModel;
 import storybook.model.BookModel;
 import storybook.model.DbFile;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Attribute;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Idea;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Relationship;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Attribute;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Idea;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Relationship;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
+import jstorybook.model.entity.TimeEvent;
 import storybook.model.state.SceneState;
 import storybook.model.state.SceneStateModel;
 import storybook.ui.MainFrame;
@@ -617,7 +617,7 @@ public class BookController extends AbstractController {
 		}
 	};
 
-	public void updateEntity(AbstractEntity entity) {
+	public void updateEntity(Entity entity) {
 		SbApp.trace("BookController.updateEntity("+entity.getClass().getName()+")");
 		try {
 			if (entity instanceof Chapter) {
@@ -690,7 +690,7 @@ public class BookController extends AbstractController {
 		}
 	}
 
-	public void deleteEntity(AbstractEntity entity) {
+	public void deleteEntity(Entity entity) {
 		SbApp.trace("BookController.deleteEntity("+entity.getClass().getName()+")");
 		try {
 			if (entity instanceof Chapter) {
@@ -764,7 +764,7 @@ public class BookController extends AbstractController {
 		}
 	}
 
-	public void newEntity(AbstractEntity entity) {
+	public void newEntity(Entity entity) {
 		SbApp.trace("BookController.newEntity("+entity.getClass().getName()+")");
 		try {
 			if (entity instanceof Chapter) {
@@ -837,7 +837,7 @@ public class BookController extends AbstractController {
 		}
 	}
 
-	public void setEntityToEdit(AbstractEntity entity) {
+	public void setEntityToEdit(Entity entity) {
 		SbApp.trace("BookController.setEntityToEdit("+entity.getClass().getName()+")");
 		try {
 			if (entity instanceof Chapter) {
@@ -927,7 +927,7 @@ public class BookController extends AbstractController {
 		setModelProperty(CommonProps.EXPORT.toString(), view);
 	}
 
-	public void showInfo(AbstractEntity entity) {
+	public void showInfo(Entity entity) {
 		setModelProperty(CommonProps.SHOW_INFO.toString(), entity);
 	}
 
@@ -935,7 +935,7 @@ public class BookController extends AbstractController {
 		setModelProperty(CommonProps.SHOW_INFO.toString(), dbFile);
 	}
 
-	public void showInMemoria(AbstractEntity entity) {
+	public void showInMemoria(Entity entity) {
 		setModelProperty(CommonProps.SHOW_IN_MEMORIA.toString(), entity);
 	}
 
@@ -962,7 +962,7 @@ public class BookController extends AbstractController {
 		setModelProperty(ChronoViewProps.SHOW_DATE_DIFFERENCE.toString(), val);
 	}
 
-	public void chronoShowEntity(AbstractEntity entity) {
+	public void chronoShowEntity(Entity entity) {
 		setModelProperty(ChronoViewProps.SHOW_ENTITY.toString(), entity);
 	}
 
@@ -975,7 +975,7 @@ public class BookController extends AbstractController {
 		setModelProperty(BookViewProps.HEIGHT_FACTOR.toString(), val);
 	}
 
-	public void bookShowEntity(AbstractEntity entity) {
+	public void bookShowEntity(Entity entity) {
 		setModelProperty(BookViewProps.SHOW_ENTITY.toString(), entity);
 	}
 
@@ -988,7 +988,7 @@ public class BookController extends AbstractController {
 		setModelProperty(ManageViewProps.COLUMNS.toString(), val);
 	}
 
-	public void manageShowEntity(AbstractEntity entity) {
+	public void manageShowEntity(Entity entity) {
 		setModelProperty(ManageViewProps.SHOW_ENTITY.toString(), entity);
 	}
 

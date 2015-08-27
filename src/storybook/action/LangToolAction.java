@@ -25,7 +25,7 @@ import javax.swing.SwingUtilities;
 
 import org.hibernate.Session;
 import storybook.model.BookModel;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 import storybook.toolkit.I18N;
 import storybook.toolkit.html.HtmlUtil;
 import storybook.toolkit.langtool.LangToolMain;

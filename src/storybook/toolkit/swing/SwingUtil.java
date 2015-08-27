@@ -90,7 +90,7 @@ import storybook.SbConstants.Language;
 import storybook.SbConstants.LookAndFeel;
 import storybook.SbConstants.PreferenceKey;
 import storybook.SbConstants.Spelling;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.PrefUtil;

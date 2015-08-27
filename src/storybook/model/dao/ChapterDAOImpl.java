@@ -32,11 +32,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Scene;
 import storybook.toolkit.DateUtil;
 import storybook.toolkit.LangUtil;
 import storybook.toolkit.comparator.DateComparator;
@@ -170,7 +170,7 @@ public class ChapterDAOImpl extends SbGenericDAOImpl<Chapter, Long> implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean checkIfNumberExists(AbstractEntity entity) {
+	public boolean checkIfNumberExists(Entity entity) {
 		try {
 			Chapter newChapter = (Chapter) entity;
 			Integer newChapterNo = newChapter.getChapterno();

@@ -24,9 +24,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Person;
-import storybook.model.entity.Relationship;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Relationship;
+import jstorybook.model.entity.Scene;
 
 public class RelationshipDAOImpl extends SbGenericDAOImpl<Relationship, Long> implements RelationshipDAO {
 

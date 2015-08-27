@@ -25,7 +25,7 @@ import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.I18N;
 import storybook.toolkit.ViewUtil;
 import storybook.ui.panel.AbstractPanel;

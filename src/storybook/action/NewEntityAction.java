@@ -25,7 +25,7 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.EntityUtil;
 import storybook.model.handler.AbstractEntityHandler;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 
@@ -35,7 +35,7 @@ import storybook.ui.MainFrame;
  */
 public class NewEntityAction extends AbstractEntityAction {
 
-	public NewEntityAction(MainFrame mainFrame, AbstractEntity entity) {
+	public NewEntityAction(MainFrame mainFrame, Entity entity) {
 		super(mainFrame, entity,
 			I18N.getMsg("msg.common.new") + " "
 				+ EntityUtil.getEntityTitle(entity),

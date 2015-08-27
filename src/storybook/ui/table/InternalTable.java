@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.InternalDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Internal;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Internal;
 import storybook.ui.MainFrame;
 
 /**
@@ -74,7 +74,7 @@ public class InternalTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setInternalToEdit((Internal) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -96,7 +96,7 @@ public class InternalTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		InternalDAOImpl dao = new InternalDAOImpl(session);
@@ -106,7 +106,7 @@ public class InternalTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Internal();
 	}
 }

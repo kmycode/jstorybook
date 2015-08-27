@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import storybook.SbConstants.PreferenceKey;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 
 public class DateUtil {
 

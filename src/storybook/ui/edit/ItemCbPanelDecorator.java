@@ -23,8 +23,8 @@ import javax.swing.JLabel;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Item;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Item;
 import storybook.toolkit.swing.FontUtil;
 
 /**
@@ -42,7 +42,7 @@ public class ItemCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateBeforeEntity(AbstractEntity entity) {
+	public void decorateBeforeEntity(Entity entity) {
 		Item p = (Item) entity;
 		String cat = WordUtils.capitalize(p.getCategory());
 		if (!oldCat.equals(cat)) {
@@ -54,7 +54,7 @@ public class ItemCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateEntity(JCheckBox cb, AbstractEntity entity) {
+	public void decorateEntity(JCheckBox cb, Entity entity) {
 		Item p = (Item) entity;
 		JLabel lbIcon = new JLabel(p.getIcon());
 		panel.add(lbIcon, "split 2");
@@ -62,6 +62,6 @@ public class ItemCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateAfterEntity(AbstractEntity entity) {
+	public void decorateAfterEntity(Entity entity) {
 	}
 }

@@ -23,7 +23,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JPanel;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 import storybook.ui.panel.AbstractScenePanel;
 import storybook.ui.MainFrame;
 

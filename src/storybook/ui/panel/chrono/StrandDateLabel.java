@@ -20,7 +20,7 @@ package storybook.ui.panel.chrono;
 
 import java.util.Date;
 
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.ui.interfaces.IRefreshable;
 
 @SuppressWarnings("serial")

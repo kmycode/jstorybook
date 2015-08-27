@@ -4,9 +4,9 @@ import storybook.model.BookModel;
 import storybook.model.dao.LocationDAOImpl;
 import storybook.model.dao.PersonDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.FontUtil;
 import storybook.toolkit.swing.ReadOnlyTable;
@@ -33,7 +33,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.Session;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Scene;
 
 public class WiWWChart extends AbstractPersonsChart
 	implements ChangeListener {

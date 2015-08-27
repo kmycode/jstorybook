@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 
 import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 
@@ -34,7 +34,7 @@ import storybook.ui.MainFrame;
  */
 public class ShowInfoAction extends AbstractEntityAction {
 
-	public ShowInfoAction(MainFrame mainFrame, AbstractEntity entity) {
+	public ShowInfoAction(MainFrame mainFrame, Entity entity) {
 		super(mainFrame, entity, I18N.getMsg("msg.show.in.info.view"), I18N
 				.getIcon("icon.small.info"));
 	}

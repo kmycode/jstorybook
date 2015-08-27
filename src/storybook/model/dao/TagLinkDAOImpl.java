@@ -24,11 +24,11 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
 
 public class TagLinkDAOImpl extends SbGenericDAOImpl<TagLink, Long> implements
 		TagLinkDAO {

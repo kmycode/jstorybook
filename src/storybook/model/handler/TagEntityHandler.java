@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.handler;
 
 import storybook.model.dao.TagDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Tag;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Tag;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 
@@ -35,7 +35,7 @@ public class TagEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Tag tag = new Tag();
 		return tag;
 	}

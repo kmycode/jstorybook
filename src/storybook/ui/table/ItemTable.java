@@ -26,8 +26,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.ItemDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Item;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Item;
 import storybook.ui.MainFrame;
 
 /**
@@ -74,7 +74,7 @@ public class ItemTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setItemToEdit((Item) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -96,7 +96,7 @@ public class ItemTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		ItemDAOImpl dao = new ItemDAOImpl(session);
@@ -106,7 +106,7 @@ public class ItemTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new Item();
 	}
 }

@@ -23,9 +23,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Scene;
 import storybook.toolkit.ViewUtil;
 import storybook.ui.panel.AbstractPanel;
 
@@ -38,10 +38,10 @@ public class ScrollToEntityAction implements ActionListener {
 	private boolean found = false;
 	private AbstractPanel container;
 	private JPanel panel;
-	private AbstractEntity entity;
+	private Entity entity;
 
 	public ScrollToEntityAction(AbstractPanel container, JPanel panel,
-			AbstractEntity entity) {
+			Entity entity) {
 		this.container = container;
 		this.panel = panel;
 		this.entity = entity;

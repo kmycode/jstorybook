@@ -47,23 +47,23 @@ import storybook.model.dao.StrandDAOImpl;
 import storybook.model.dao.TagDAOImpl;
 import storybook.model.dao.TagLinkDAOImpl;
 import storybook.model.dao.TimeEventDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Idea;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Relationship;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Idea;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Relationship;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
+import jstorybook.model.entity.TimeEvent;
 import storybook.model.state.SceneState;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.ColorUtil;
@@ -398,63 +398,63 @@ public class BookModel extends AbstractModel {
 	}
 
 	public void setShowInfo(Scene scene) {
-		setShowInfo((AbstractEntity)scene);
+		setShowInfo((Entity)scene);
 	}
 
 	public void setShowInfo(Chapter chapter) {
-		setShowInfo((AbstractEntity)chapter);
+		setShowInfo((Entity)chapter);
 	}
 
 	public void setShowInfo(Part part) {
-		setShowInfo((AbstractEntity)part);
+		setShowInfo((Entity)part);
 	}
 
 	public void setShowInfo(Person person) {
-		setShowInfo((AbstractEntity)person);
+		setShowInfo((Entity)person);
 	}
 
 	public void setShowInfo(Category category) {
-		setShowInfo((AbstractEntity)category);
+		setShowInfo((Entity)category);
 	}
 
 	public void setShowInfo(Gender gender) {
-		setShowInfo((AbstractEntity)gender);
+		setShowInfo((Entity)gender);
 	}
 
 	public void setShowInfo(Location location) {
-		setShowInfo((AbstractEntity)location);
+		setShowInfo((Entity)location);
 	}
 
 	public void setShowInfo(Tag tag) {
-		setShowInfo((AbstractEntity)tag);
+		setShowInfo((Entity)tag);
 	}
 
 	public void setShowInfo(TagLink tagLink) {
-		setShowInfo((AbstractEntity)tagLink);
+		setShowInfo((Entity)tagLink);
 	}
 
 	public void setShowInfo(Item item) {
-		setShowInfo((AbstractEntity)item);
+		setShowInfo((Entity)item);
 	}
 
 	public void setShowInfo(ItemLink itemLink) {
-		setShowInfo((AbstractEntity)itemLink);
+		setShowInfo((Entity)itemLink);
 	}
 
 	public void setShowInfo(Strand strand) {
-		setShowInfo((AbstractEntity) strand);
+		setShowInfo((Entity) strand);
 	}
 
 	public void setShowInfo(Idea idea) {
-		setShowInfo((AbstractEntity) idea);
+		setShowInfo((Entity) idea);
 	}
 
-	public void setShowInfo(AbstractEntity entity) {
+	public void setShowInfo(Entity entity) {
 		firePropertyChange(BookController.CommonProps.SHOW_INFO.toString(), null, entity);
 	}
 
 	public void setShowInfo(TimeEvent event) {
-		setShowInfo((AbstractEntity) event);
+		setShowInfo((Entity) event);
 	}
 
 	public void setShowInfo(DbFile dbFile) {
@@ -462,30 +462,30 @@ public class BookModel extends AbstractModel {
 	}
 
 	public void setShowInMemoria(Person person) {
-		setShowInMemoria((AbstractEntity) person);
+		setShowInMemoria((Entity) person);
 	}
 
 	public void setShowInMemoria(Relationship p) {
-		setShowInMemoria((AbstractEntity) p);
+		setShowInMemoria((Entity) p);
 	}
 
 	public void setShowInMemoria(Location location) {
-		setShowInMemoria((AbstractEntity) location);
+		setShowInMemoria((Entity) location);
 	}
 
 	public void setShowInMemoria(Scene scene) {
-		setShowInMemoria((AbstractEntity) scene);
+		setShowInMemoria((Entity) scene);
 	}
 
 	public void setShowInMemoria(Tag tag) {
-		setShowInMemoria((AbstractEntity) tag);
+		setShowInMemoria((Entity) tag);
 	}
 
 	public void setShowInMemoria(Item item) {
-		setShowInMemoria((AbstractEntity) item);
+		setShowInMemoria((Entity) item);
 	}
 
-	public void setShowInMemoria(AbstractEntity entity) {
+	public void setShowInMemoria(Entity entity) {
 		firePropertyChange(BookController.CommonProps.SHOW_IN_MEMORIA.toString(), null, entity);
 	}
 
@@ -581,7 +581,7 @@ public class BookModel extends AbstractModel {
 	// chapter
 	public void setEditChapter(Chapter entity) {
 		//firePropertyChange(BookController.ChapterProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateChapter(Chapter chapter) {
@@ -639,7 +639,7 @@ public class BookModel extends AbstractModel {
 	// part
 	public void setEditPart(Part entity) {
 		//firePropertyChange(BookController.PartProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdatePart(Part part) {
@@ -697,7 +697,7 @@ public class BookModel extends AbstractModel {
 	// location
 	public void setEditLocation(Location entity) {
 		//firePropertyChange(BookController.LocationProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateLocation(Location location) {
@@ -760,7 +760,7 @@ public class BookModel extends AbstractModel {
 	// person
 	public void setEditPerson(Person entity) {
 		//firePropertyChange(BookController.PersonProps.EDIT.toString(),null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdatePerson(Person person) {
@@ -823,7 +823,7 @@ public class BookModel extends AbstractModel {
 	// relationship
 	public void setEditRelationship(Relationship entity) {
 		//firePropertyChange(BookController.PersonProps.EDIT.toString(),null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateRelationship(Relationship relationship) {
@@ -873,7 +873,7 @@ public class BookModel extends AbstractModel {
 	// gender
 	public void setEditGender(Gender entity) {
 		//firePropertyChange(BookController.GenderProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateGender(Gender gender) {
@@ -939,7 +939,7 @@ public class BookModel extends AbstractModel {
 	// category
 	public void setEditCategory(Category entity) {
 		//firePropertyChange(BookController.CategoryProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateCategory(Category category) {
@@ -1013,7 +1013,7 @@ public class BookModel extends AbstractModel {
 	// strand
 	public void setEditStrand(Strand entity) {
 		//firePropertyChange(BookController.StrandProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateStrand(Strand strand) {
@@ -1096,7 +1096,7 @@ public class BookModel extends AbstractModel {
 	// idea
 	public void setEditIdea(Idea entity) {
 		//firePropertyChange(BookController.IdeaProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateIdea(Idea idea) {
@@ -1149,7 +1149,7 @@ public class BookModel extends AbstractModel {
 	// tags
 	public void setEditTag(Tag entity) {
 		//firePropertyChange(BookController.TagProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateTag(Tag tag) {
@@ -1205,7 +1205,7 @@ public class BookModel extends AbstractModel {
 	// items
 	public void setEditItem(Item entity) {
 		//firePropertyChange(BookController.ItemProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateItem(Item item) {
@@ -1261,7 +1261,7 @@ public class BookModel extends AbstractModel {
 	// tag links
 	public void setEditTagLink(TagLink entity) {
 		//firePropertyChange(BookController.TagLinkProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateTagLink(TagLink tagLink) {
@@ -1308,7 +1308,7 @@ public class BookModel extends AbstractModel {
 	// item links
 	public void setEditItemLink(ItemLink entity) {
 		//firePropertyChange(BookController.ItemLinkProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateItemLink(ItemLink itemLink) {
@@ -1356,7 +1356,7 @@ public class BookModel extends AbstractModel {
 	public void setEditScene(Scene entity) {
 		SbApp.trace("BookModel.setEditScene("+entity.toString()+")");
 		//firePropertyChange(BookController.SceneProps.EDIT.toString(), null, editScene);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateScene(Scene scene) {
@@ -1417,7 +1417,7 @@ public class BookModel extends AbstractModel {
 	// internals
 	public void setEditInternal(Internal entity) {
 		//firePropertyChange(BookController.InternalProps.EDIT.toString(), null, entity);
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateInternal(Internal internal) {
@@ -1463,7 +1463,7 @@ public class BookModel extends AbstractModel {
 
 	// chapter
 	public void setEditTimeEvent(TimeEvent entity) {
-		editEntity((AbstractEntity)entity);
+		editEntity((Entity)entity);
 	}
 
 	public synchronized void setUpdateTimeEvent(TimeEvent chapter) {

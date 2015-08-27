@@ -22,8 +22,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
 import org.apache.commons.lang3.text.WordUtils;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Location;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Location;
 
 /**
  * @author martin
@@ -45,7 +45,7 @@ public class LocationCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateBeforeEntity(AbstractEntity entity) {
+	public void decorateBeforeEntity(Entity entity) {
 		Location p = (Location) entity;
 		String country = WordUtils.capitalize(p.getCountry());
 		String city = WordUtils.capitalize(p.getCity());
@@ -86,7 +86,7 @@ public class LocationCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateEntity(JCheckBox cb, AbstractEntity entity) {
+	public void decorateEntity(JCheckBox cb, Entity entity) {
 		if (!oldCountry.isEmpty() || !oldCity.isEmpty()) {
 			panel.add(new JLabel("<html><p style='margin-left:5px'>&nbsp;"), "split 2");
 		}
@@ -94,6 +94,6 @@ public class LocationCbPanelDecorator extends CbPanelDecorator {
 	}
 
 	@Override
-	public void decorateAfterEntity(AbstractEntity entity) {
+	public void decorateAfterEntity(Entity entity) {
 	}
 }

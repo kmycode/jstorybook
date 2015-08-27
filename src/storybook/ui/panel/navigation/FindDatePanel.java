@@ -42,7 +42,7 @@ import storybook.model.BookModel;
 import storybook.model.EntityUtil;
 import storybook.model.handler.StrandEntityHandler;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.DateUtil;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.IconButton;

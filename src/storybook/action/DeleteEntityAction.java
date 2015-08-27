@@ -30,8 +30,8 @@ import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.EntityUtil;
 import storybook.model.dao.PartDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Part;
 import storybook.toolkit.I18N;
 import static storybook.toolkit.swing.SwingUtil.showModalDialog;
 import storybook.ui.MainFrame;
@@ -44,7 +44,7 @@ import storybook.ui.edit.EntityEditor;
  */
 public class DeleteEntityAction extends AbstractEntityAction {
 
-	public DeleteEntityAction(MainFrame mainFrame, AbstractEntity entity) {
+	public DeleteEntityAction(MainFrame mainFrame, Entity entity) {
 		super(mainFrame, entity, I18N.getMsg("msg.common.delete"), I18N
 				.getIcon("icon.small.delete"));
 		this.mainFrame = mainFrame;

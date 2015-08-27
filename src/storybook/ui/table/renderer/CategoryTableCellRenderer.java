@@ -30,7 +30,7 @@ import net.miginfocom.swing.MigLayout;
 import org.hibernate.Session;
 import storybook.SbConstants.ClientPropertyName;
 import storybook.model.BookModel;
-import storybook.model.entity.Category;
+import jstorybook.model.entity.Category;
 import storybook.ui.MainFrame;
 
 @SuppressWarnings("serial")

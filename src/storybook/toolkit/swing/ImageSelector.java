@@ -30,7 +30,7 @@ import storybook.ui.interfaces.IRefreshable;
 
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Person;
 import storybook.ui.MainFrame;
 
 @SuppressWarnings("serial")

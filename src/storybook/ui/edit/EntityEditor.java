@@ -99,26 +99,26 @@ import storybook.model.handler.StrandEntityHandler;
 import storybook.model.handler.TagEntityHandler;
 import storybook.model.handler.TagLinkEntityHandler;
 import storybook.model.handler.TimeEventEntityHandler;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.AbstractTag;
-import storybook.model.entity.Attribute;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.EntityImage;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Idea;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Relationship;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.AbstractTag;
+import jstorybook.model.entity.Attribute;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.EntityImage;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Idea;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Relationship;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
+import jstorybook.model.entity.TimeEvent;
 import storybook.model.state.IdeaState;
 import storybook.model.state.SceneState;
 import storybook.model.state.TimeStepState;
@@ -170,8 +170,8 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 	private boolean leaveOpen;
 	private AbstractEntityHandler entityHandler;
 	private final BookController ctrl;
-	private AbstractEntity entity;
-	private AbstractEntity origEntity;
+	private Entity entity;
+	private Entity origEntity;
 	private ErrorState errorState;
 	private JTabbedPane tabbedPane;
 	private TitlePanel titlePanel;
@@ -190,7 +190,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 		this.ctrl = mainFrame.getBookController();
 	}
 
-	public EntityEditor(MainFrame m, AbstractEntity e, JDialog dlg) {
+	public EntityEditor(MainFrame m, Entity e, JDialog dlg) {
 		super(m);
 		SbApp.trace("EntityEditor(mainFrame, " + e.getAbbr() + ")");
 		this.ctrl = m.getBookController();
@@ -670,7 +670,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 		SbApp.trace("EntityEditor.modelPropertyChange(evt)");
 		String propName = evt.getPropertyName();
 		if (propName.startsWith("Delete")) {
-			if (entity != null && entity.equals((AbstractEntity) evt.getOldValue())) {
+			if (entity != null && entity.equals((Entity) evt.getOldValue())) {
 				entityHandler = null;
 				initUi();
 			}
@@ -711,7 +711,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 		} else if (BookController.TimeEventProps.EDIT.check(propName)) {
 			entityHandler = new TimeEventEntityHandler(mainFrame);
 		}
-		entity = (AbstractEntity) evt.getNewValue();
+		entity = (Entity) evt.getNewValue();
 		if (entity.isTransient()) {
 			entity = entityHandler.newEntity(entity);
 		}
@@ -834,7 +834,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 								}
 							} else {
 								AbstractEntityHandler entityHandler2 = EntityUtil.getEntityHandler(mainFrame, ret, method, entity);
-								EntityUtil.fillEntityCombo(mainFrame, combo, entityHandler2, (AbstractEntity) ret, isNew, col.isEmptyComboItem());
+								EntityUtil.fillEntityCombo(mainFrame, combo, entityHandler2, (Entity) ret, isNew, col.isEmptyComboItem());
 							}
 						} else if (comp instanceof CheckBoxPanel) {
 							CheckBoxPanel cbPanel = (CheckBoxPanel) comp;
@@ -1278,7 +1278,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 		rbgPanels.clear();
 	}
 
-	public AbstractEntity getEntity() {
+	public Entity getEntity() {
 		return entity;
 	}
 
@@ -1338,7 +1338,7 @@ public class EntityEditor extends AbstractPanel implements ActionListener, ItemL
 	}
 
 	private void reloadUi(String focus) {
-		AbstractEntity saveEntity = entityHandler.createNewEntity();
+		Entity saveEntity = entityHandler.createNewEntity();
 		EntityUtil.copyEntityProperties(mainFrame, entity, saveEntity);
 		int c = tabbedPane.getSelectedIndex();
 		//addOrUpdateEntity();

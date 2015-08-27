@@ -30,7 +30,7 @@ import storybook.SbConstants.PreferenceKey;
 import storybook.model.DbFile;
 import storybook.model.PreferenceModel;
 import storybook.model.dao.PreferenceDAOImpl;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Preference;
 
 /**
  * @author martin

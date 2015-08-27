@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 
 import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 
@@ -34,7 +34,7 @@ import storybook.ui.MainFrame;
  */
 public class ShowInMemoriaAction extends AbstractEntityAction {
 
-	public ShowInMemoriaAction(MainFrame mainFrame, AbstractEntity entity) {
+	public ShowInMemoriaAction(MainFrame mainFrame, Entity entity) {
 		super(mainFrame, entity, I18N.getMsg("msg.show.in.memoria"), I18N
 				.getIcon("icon.small.memoria"));
 	}

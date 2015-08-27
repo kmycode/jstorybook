@@ -26,7 +26,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.TimeEvent;
 
 public class TimeEventDAOImpl extends SbGenericDAOImpl<TimeEvent, Long> implements
 		TimeEventDAO {

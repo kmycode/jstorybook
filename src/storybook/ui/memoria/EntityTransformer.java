@@ -16,14 +16,14 @@
 package storybook.ui.memoria;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import org.apache.commons.collections15.Transformer;
 
 public class EntityTransformer
-	implements Transformer<AbstractEntity, String> {
+	implements Transformer<Entity, String> {
 
 	@Override
-	public String transform(AbstractEntity p) {
+	public String transform(Entity p) {
 		return EntityUtil.getToolTip(p);
 	}
 }

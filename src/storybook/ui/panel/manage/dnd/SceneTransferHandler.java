@@ -33,8 +33,8 @@ import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.EntityUtil;
 import storybook.model.dao.ChapterDAOImpl;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Scene;
 import storybook.ui.MainFrame;
 import storybook.ui.panel.manage.ChapterPanel;
 

@@ -20,7 +20,7 @@ package storybook.ui.edit;
 
 import javax.swing.JCheckBox;
 
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 
 /**
  * @author martin
@@ -35,11 +35,11 @@ abstract public class CbPanelDecorator {
 	
 	abstract public void decorateBeforeFirstEntity();
 
-	abstract public void decorateBeforeEntity(AbstractEntity entity);
+	abstract public void decorateBeforeEntity(Entity entity);
 
-	abstract public void decorateEntity(JCheckBox cb, AbstractEntity entity);
+	abstract public void decorateEntity(JCheckBox cb, Entity entity);
 
-	abstract public void decorateAfterEntity(AbstractEntity entity);
+	abstract public void decorateAfterEntity(Entity entity);
 
 	public CheckBoxPanel getPanel() {
 		return panel;

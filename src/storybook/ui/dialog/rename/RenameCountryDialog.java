@@ -24,7 +24,7 @@ import org.hibernate.Session;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.LocationDAOImpl;
-import storybook.model.entity.Location;
+import jstorybook.model.entity.Location;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 

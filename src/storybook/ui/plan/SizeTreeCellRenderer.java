@@ -15,10 +15,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Part;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Scene;
 
 @SuppressWarnings("serial")
 public class SizeTreeCellRenderer extends JPanel implements TreeCellRenderer {
@@ -69,17 +69,17 @@ public class SizeTreeCellRenderer extends JPanel implements TreeCellRenderer {
 			if (obj instanceof Scene) {
 				Scene scene = (Scene) obj;
 				label.setIcon(scene.getSceneState().getIcon());
-			} else if ((leaf) && (obj instanceof AbstractEntity)) {
+			} else if ((leaf) && (obj instanceof Entity)) {
 				Icon icon = EntityUtil
-						.getEntityIcon((AbstractEntity) obj);
+						.getEntityIcon((Entity) obj);
 				label.setIcon(icon);
 			} else if (obj instanceof String) {
 				// default icon for title
 				label.setIcon(UIManager.getIcon("Tree.closedIcon"));
 				maxval = 100;
 			}
-			if (!leaf && obj instanceof AbstractEntity) {
-				Icon icon = EntityUtil.getEntityIcon((AbstractEntity) obj);
+			if (!leaf && obj instanceof Entity) {
+				Icon icon = EntityUtil.getEntityIcon((Entity) obj);
 				label.setIcon(icon);
 				if (obj instanceof Part) {
 					maxval = Math.max(currentval, ((Part)obj).getObjectiveChars());

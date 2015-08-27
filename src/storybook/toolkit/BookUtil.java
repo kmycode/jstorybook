@@ -34,8 +34,8 @@ import storybook.SbConstants.PreferenceKey;
 import storybook.model.DbFile;
 import storybook.model.BookModel;
 import storybook.model.dao.InternalDAOImpl;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Preference;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Preference;
 import storybook.toolkit.filefilter.H2FileFilter;
 import storybook.ui.MainFrame;
 

@@ -7,8 +7,8 @@ import java.beans.PropertyChangeEvent;
 import org.hibernate.Session;
 import storybook.SbApp;
 import storybook.model.hbn.SbSessionFactory;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Person;
 import storybook.ui.MainFrame;
 
 public abstract class AbstractModel {
@@ -76,7 +76,7 @@ public abstract class AbstractModel {
 		return sessionFactory;
 	}
 
-	public void editEntity(AbstractEntity entity) {
+	public void editEntity(Entity entity) {
 		mainFrame.showEditorAsDialog(entity);
 	}
 }

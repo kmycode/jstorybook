@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
 import storybook.SbApp;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.ui.MainFrame;
 
 /**
@@ -33,9 +33,9 @@ import storybook.ui.MainFrame;
 public abstract class AbstractEntityAction extends AbstractAction {
 
 	protected MainFrame mainFrame;
-	protected AbstractEntity entity;
+	protected Entity entity;
 
-	public AbstractEntityAction(MainFrame mainframe, AbstractEntity entity, String name, Icon icon) {
+	public AbstractEntityAction(MainFrame mainframe, Entity entity, String name, Icon icon) {
 		super(name, icon);
 		this.mainFrame = mainframe;
 		this.entity = entity;

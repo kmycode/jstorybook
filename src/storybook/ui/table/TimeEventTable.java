@@ -29,8 +29,8 @@ import storybook.SbConstants.ViewName;
 import storybook.controller.BookController;
 import storybook.model.BookModel;
 import storybook.model.dao.TimeEventDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.TimeEvent;
 import storybook.ui.MainFrame;
 
 /**
@@ -52,7 +52,7 @@ public class TimeEventTable extends AbstractTable {
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	protected List<AbstractEntity> getAllEntities() {
+	protected List<Entity> getAllEntities() {
 		SbApp.trace("getAllEntities()");
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
@@ -60,7 +60,7 @@ public class TimeEventTable extends AbstractTable {
 		List<?> ret;
 		ret = dao.findAll();
 		model.commit();
-		return (List<AbstractEntity>) ret;
+		return (List<Entity>) ret;
 	}
 	
 	protected void initTableModel(PropertyChangeEvent evt) {
@@ -72,9 +72,9 @@ public class TimeEventTable extends AbstractTable {
 		}
 		// fill in data
 		try {
-			List<AbstractEntity> entities = getAllEntities();
+			List<Entity> entities = getAllEntities();
 
-			for (AbstractEntity entity : entities) {
+			for (Entity entity : entities) {
 				List<Object> cols = getRow(entity);
 				tableModel.addRow(cols.toArray());
 			}
@@ -122,7 +122,7 @@ public class TimeEventTable extends AbstractTable {
 	}
 
 	@Override
-	protected void sendSetNewEntityToEdit(AbstractEntity entity) {
+	protected void sendSetNewEntityToEdit(Entity entity) {
 		ctrl.setTimeEventToEdit((TimeEvent) entity);
 		mainFrame.showView(ViewName.EDITOR);
 	}
@@ -142,7 +142,7 @@ public class TimeEventTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getEntity(Long id) {
+	protected Entity getEntity(Long id) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		TimeEventDAOImpl dao = new TimeEventDAOImpl(session);
@@ -152,7 +152,7 @@ public class TimeEventTable extends AbstractTable {
 	}
 
 	@Override
-	protected AbstractEntity getNewEntity() {
+	protected Entity getNewEntity() {
 		return new TimeEvent();
 	}
 }

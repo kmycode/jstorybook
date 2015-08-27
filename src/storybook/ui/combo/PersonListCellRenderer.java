@@ -24,7 +24,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import storybook.model.entity.Person;
+import jstorybook.model.entity.Person;
 
 /**
  * @author martin

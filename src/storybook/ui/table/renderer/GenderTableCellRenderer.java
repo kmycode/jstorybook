@@ -28,7 +28,7 @@ import org.hibernate.LazyInitializationException;
 import org.hibernate.Session;
 import storybook.SbConstants.ClientPropertyName;
 import storybook.model.BookModel;
-import storybook.model.entity.Gender;
+import jstorybook.model.entity.Gender;
 import storybook.ui.MainFrame;
 
 @SuppressWarnings("serial")

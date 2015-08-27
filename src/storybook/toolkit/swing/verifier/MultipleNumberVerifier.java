@@ -27,7 +27,7 @@ import org.hibernate.Session;
 import storybook.SbConstants.ClientPropertyName;
 import storybook.model.BookModel;
 import storybook.model.dao.SbGenericDAOImpl;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 
 public class MultipleNumberVerifier extends AbstractInputVerifier {
@@ -55,7 +55,7 @@ public class MultipleNumberVerifier extends AbstractInputVerifier {
 					throw new NullPointerException("documentModel is null");
 				}
 
-				AbstractEntity entity = (AbstractEntity) comp
+				Entity entity = (Entity) comp
 						.getClientProperty(ClientPropertyName.ENTITY.toString());
 				Session session = documentModel.beginTransaction();
 				SbGenericDAOImpl<?, ?> dao = (SbGenericDAOImpl<?, ?>) comp
@@ -64,7 +64,7 @@ public class MultipleNumberVerifier extends AbstractInputVerifier {
 				boolean ret = false;
 				try {
 					Method m = dao.getClass().getMethod("checkIfNumberExists",
-							AbstractEntity.class);
+							Entity.class);
 					ret = (Boolean) m.invoke(dao, entity);
 				} catch (NoSuchMethodException e2) {
 					e2.printStackTrace();

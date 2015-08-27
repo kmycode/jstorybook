@@ -31,21 +31,21 @@ import storybook.SbConstants.ViewName;
 import storybook.action.LangToolAction;
 import storybook.export.BookExporter;
 import storybook.export.DlgExport;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Idea;
-import storybook.model.entity.Internal;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Idea;
+import jstorybook.model.entity.Internal;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
 import storybook.toolkit.BookUtil;
 import storybook.toolkit.DockingWindowUtil;
 import storybook.toolkit.I18N;
@@ -2245,7 +2245,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem windowTagsAndItems;
     // End of variables declaration//GEN-END:variables
 
-	public void newEntity(AbstractEntity entity) {
+	public void newEntity(Entity entity) {
 		SbApp.trace("MainMenu.newEntity("+entity.getClass().getName()+")");
 		/*BookController ctrl = mainFrame.getBookController();
 		ctrl.setEntityToEdit(entity);

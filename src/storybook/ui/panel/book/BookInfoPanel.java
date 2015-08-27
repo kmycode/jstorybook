@@ -26,8 +26,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import storybook.controller.BookController;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
 import storybook.toolkit.I18N;
 import storybook.toolkit.swing.SwingUtil;
 import storybook.toolkit.swing.label.CleverLabel;

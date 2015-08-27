@@ -21,8 +21,8 @@ package storybook.model.handler;
 import javax.swing.ListCellRenderer;
 
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Scene;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Scene;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 import storybook.ui.combo.SceneListCellRenderer;
@@ -43,13 +43,13 @@ public class SceneEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Scene scene = new Scene();
 		return scene;
 	}
 
 	@Override
-	public AbstractEntity newEntity(AbstractEntity entity) {
+	public Entity newEntity(Entity entity) {
 		Scene scene = new Scene();
 		Scene orig = (Scene) entity;
 		if (orig.getStrand() != null) {

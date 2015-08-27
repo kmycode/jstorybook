@@ -20,21 +20,21 @@ package storybook.ui.panel.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.toolkit.I18N;
 
 @SuppressWarnings("serial")
 public class EntityNode extends DefaultMutableTreeNode {
 	private String text;
-	private AbstractEntity entity;
+	private Entity entity;
 
-	public EntityNode(String textKey, AbstractEntity entity) {
+	public EntityNode(String textKey, Entity entity) {
 		super();
 		this.text = I18N.getMsg(textKey);
 		this.entity = entity;
 	}
 
-	public AbstractEntity getDbTable() {
+	public Entity getDbTable() {
 		return entity;
 	}
 

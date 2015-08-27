@@ -12,7 +12,7 @@ import storybook.model.BookModel;
 import storybook.model.EntityUtil;
 import storybook.model.dao.LocationDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
-import storybook.model.entity.Location;
+import jstorybook.model.entity.Location;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 import storybook.ui.chart.jfreechart.ChartUtil;

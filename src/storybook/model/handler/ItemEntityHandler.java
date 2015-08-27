@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package storybook.model.handler;
 
 import storybook.model.dao.ItemDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Item;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Item;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 
@@ -35,7 +35,7 @@ public class ItemEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Item item = new Item();
 		return item;
 	}

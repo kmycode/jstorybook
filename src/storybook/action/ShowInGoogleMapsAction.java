@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import storybook.model.entity.Location;
+import jstorybook.model.entity.Location;
 import storybook.toolkit.I18N;
 import storybook.toolkit.net.NetUtil;
 

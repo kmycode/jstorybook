@@ -14,13 +14,13 @@ import storybook.model.BookModel;
 import storybook.model.dao.ItemLinkDAOImpl;
 import storybook.model.dao.SceneDAOImpl;
 import storybook.model.dao.TagLinkDAOImpl;
-import storybook.model.entity.Item;
-import storybook.model.entity.ItemLink;
-import storybook.model.entity.Location;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Tag;
-import storybook.model.entity.TagLink;
+import jstorybook.model.entity.Item;
+import jstorybook.model.entity.ItemLink;
+import jstorybook.model.entity.Location;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagLink;
 import storybook.toolkit.I18N;
 
 /**

@@ -20,7 +20,7 @@ package storybook.toolkit.comparator;
 
 import java.util.Comparator;
 
-import storybook.model.entity.Category;
+import jstorybook.model.entity.Category;
 
 /**
  * @author martin

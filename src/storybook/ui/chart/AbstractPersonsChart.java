@@ -23,7 +23,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import storybook.SbConstants;
 import storybook.model.EntityUtil;
-import storybook.model.entity.Category;
+import jstorybook.model.entity.Category;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 

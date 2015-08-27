@@ -30,8 +30,8 @@ import storybook.controller.BookController;
 import storybook.model.EntityUtil;
 import storybook.model.handler.ChapterEntityHandler;
 import storybook.model.handler.PartEntityHandler;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Part;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Part;
 import storybook.toolkit.I18N;
 import storybook.ui.MainFrame;
 

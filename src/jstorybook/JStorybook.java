@@ -40,6 +40,15 @@ public class JStorybook extends Application {
 		primaryStage.setTitle("Hello World!");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+		// 旧Storybookを起動
+		String[] argsArray = new String[this.getParameters().getRaw().size()];
+		int i = 0;
+		for (String arg : this.getParameters().getRaw()) {
+			argsArray[i ++] = arg;
+		}
+		SbApp.old_main(argsArray);
+
 		primaryStage.close();
 	}
 
@@ -48,7 +57,6 @@ public class JStorybook extends Application {
 	 */
 	public static void main (String[] args) {
 		launch(args);
-		SbApp.old_main(args);
 	}
 
 }

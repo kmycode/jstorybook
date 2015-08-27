@@ -23,7 +23,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JLabel;
 
 import storybook.model.EntityUtil;
-import storybook.model.entity.AbstractEntity;
+import jstorybook.model.entity.Entity;
 import storybook.ui.panel.AbstractPanel;
 
 import net.miginfocom.swing.MigLayout;
@@ -60,7 +60,7 @@ public class TitlePanel extends AbstractPanel {
 		add(lbTitle);
 	}
 
-	public void refresh(AbstractEntity entity) {
+	public void refresh(Entity entity) {
 		lbIcon.setIcon(EntityUtil.getEntityIcon(entity));
 		StringBuilder buf = new StringBuilder();
 		buf.append("<html>\n");

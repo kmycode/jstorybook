@@ -56,15 +56,15 @@ import storybook.model.BookModel;
 import storybook.model.EntityUtil;
 import storybook.model.handler.AbstractEntityHandler;
 import storybook.model.dao.SbGenericDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Category;
-import storybook.model.entity.Chapter;
-import storybook.model.entity.Gender;
-import storybook.model.entity.Part;
-import storybook.model.entity.Person;
-import storybook.model.entity.Scene;
-import storybook.model.entity.Strand;
-import storybook.model.entity.TimeEvent;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Category;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.Gender;
+import jstorybook.model.entity.Part;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.Strand;
+import jstorybook.model.entity.TimeEvent;
 import storybook.model.state.IdeaState;
 import storybook.model.state.SceneState;
 import storybook.model.state.TimeStepState;
@@ -105,13 +105,13 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 		ctrl = mainFrame.getBookController();
 	}
 
-	abstract protected AbstractEntity getNewEntity();
+	abstract protected Entity getNewEntity();
 
-	abstract protected AbstractEntity getEntity(Long id);
+	abstract protected Entity getEntity(Long id);
 
 	abstract protected void sendSetEntityToEdit(int row);
 
-	abstract protected void sendSetNewEntityToEdit(AbstractEntity entity);
+	abstract protected void sendSetNewEntityToEdit(Entity entity);
 
 	abstract protected void sendDeleteEntity(int row);
 
@@ -129,14 +129,14 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 	}
 
 	@SuppressWarnings("unchecked")
-	protected List<AbstractEntity> getAllEntities() {
+	protected List<Entity> getAllEntities() {
 		SbApp.trace("AbstractTable.getAllEntities()");
 		AbstractEntityHandler handler = EntityUtil.getEntityHandler(mainFrame, getNewEntity());
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		SbGenericDAOImpl<?, ?> dao = handler.createDAO();
 		dao.setSession(session);
-		List<AbstractEntity> ret = (List<AbstractEntity>) dao.findAll();
+		List<Entity> ret = (List<Entity>) dao.findAll();
 		model.commit();
 		return ret;
 	}
@@ -349,10 +349,10 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 		}
 		// fill in data
 		try {
-			List<AbstractEntity> entities = getAllEntities();
+			List<Entity> entities = getAllEntities();
 			Integer nbTotalObjectif=0;
 
-			for (AbstractEntity entity : entities) {
+			for (Entity entity : entities) {
 				// show only scenes from current part
 				if (entity instanceof Scene) {
 					Part currentPart = mainFrame.getCurrentPart();
@@ -400,7 +400,7 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 		return cols;
 	}
 
-	protected List<Object> getRow(AbstractEntity entity) {
+	protected List<Object> getRow(Entity entity) {
 		BookModel model = mainFrame.getBookModel();
 		Session session = model.beginTransaction();
 		session.refresh(entity);
@@ -440,7 +440,7 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 					cols.add(ret);
 				} else if (ret instanceof List) {
 					@SuppressWarnings("unchecked")
-					List<AbstractEntity> list = (List<AbstractEntity>) ret;
+					List<Entity> list = (List<Entity>) ret;
 					cols.add(list);
 				} else if (ret instanceof Long) {
 					if (col.hasTableCellRenderer()) {
@@ -460,7 +460,7 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 	}
 
 	protected void updateEntity(PropertyChangeEvent evt) {
-		AbstractEntity entity = (AbstractEntity) evt.getNewValue();
+		Entity entity = (Entity) evt.getNewValue();
 		for (int row = 0; row < tableModel.getRowCount(); ++row) {
 			Long id = Long.parseLong((String) tableModel.getValueAt(row, 0));
 			if (!id.equals(entity.getId())) {
@@ -490,14 +490,14 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 	}
 
 	protected void newEntity(PropertyChangeEvent evt) {
-		AbstractEntity entity = (AbstractEntity) evt.getNewValue();
+		Entity entity = (Entity) evt.getNewValue();
 		List<Object> cols = getRow(entity);
 		tableModel.addRow(cols.toArray());
 		tableModel.fireTableDataChanged();
 	}
 
 	protected synchronized void deleteEntity(PropertyChangeEvent evt) {
-		AbstractEntity entity = (AbstractEntity) evt.getOldValue();
+		Entity entity = (Entity) evt.getOldValue();
 		for (int row = 0; row < tableModel.getRowCount(); ++row) {
 			Long id = Long.parseLong((String) tableModel.getValueAt(row, 0));
 			if (id.equals(entity.getId())) {
@@ -508,7 +508,7 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 		tableModel.fireTableDataChanged();
 	}
 
-	protected synchronized AbstractEntity getEntityFromRow(int row) {
+	protected synchronized Entity getEntityFromRow(int row) {
 		if (row == -1) {
 			return null;
 		}
@@ -542,24 +542,24 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 			return;
 		}
 		if (ComponentName.BT_COPY.check(compName) || ActionCommand.COPY.check(actCmd)) {
-			AbstractEntity entity = (AbstractEntity) getEntityFromRow(row);
+			Entity entity = (Entity) getEntityFromRow(row);
 			EntityUtil.copyEntity(mainFrame, entity);
 			return;
 		}
 		if (ComponentName.BT_DELETE.check(compName) || ActionCommand.DELETE.check(actCmd)) {
 			if (table.getSelectedRowCount() == 1) {
 				// delete one entity
-				AbstractEntity entity = (AbstractEntity) getEntityFromRow(row);
+				Entity entity = (Entity) getEntityFromRow(row);
 				DeleteEntityAction act = new DeleteEntityAction(mainFrame, entity);
 				act.actionPerformed(null);
 				return;
 			}
 			if (table.getSelectedRowCount() > 1) {
 				// delete multiple entities
-				List<AbstractEntity> entities = new ArrayList<>();
+				List<Entity> entities = new ArrayList<>();
 				int[] rows = table.getSelectedRows();
 				for (int row2 : rows) {
-					AbstractEntity entity = getEntityFromRow(row2);
+					Entity entity = getEntityFromRow(row2);
 					List<Long> readOnlyIds = EntityUtil.getReadOnlyIds(entity);
 					if (!readOnlyIds.contains(entity.getId())) {
 						entities.add(entity);
@@ -597,7 +597,7 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 			return;
 		}
 		int row = selectionModel.getMinSelectionIndex();
-		AbstractEntity entity = getEntityFromRow(row);
+		Entity entity = getEntityFromRow(row);
 		boolean b=true;
 		if (entity == null) b=false;
 		btEdit.setEnabled(b);
@@ -650,7 +650,7 @@ public abstract class AbstractTable extends AbstractPanel implements ActionListe
 			if (!source.isRowSelected(row)) {
 				source.changeSelection(row, column, false, false);
 			}
-			AbstractEntity entity = getEntityFromRow(row);
+			Entity entity = getEntityFromRow(row);
 			if (entity != null) {
 				JPopupMenu popup = EntityUtil.createPopupMenu(mainFrame, entity);
 				popup.show(e.getComponent(), e.getX(), e.getY());

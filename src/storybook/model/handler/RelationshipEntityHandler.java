@@ -21,8 +21,8 @@ package storybook.model.handler;
 import javax.swing.ListCellRenderer;
 
 import storybook.model.dao.RelationshipDAOImpl;
-import storybook.model.entity.AbstractEntity;
-import storybook.model.entity.Relationship;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Relationship;
 import storybook.ui.MainFrame;
 import storybook.ui.table.SbColumnFactory;
 
@@ -37,7 +37,7 @@ public class RelationshipEntityHandler extends AbstractEntityHandler {
 	}
 
 	@Override
-	public AbstractEntity createNewEntity() {
+	public Entity createNewEntity() {
 		Relationship p = new Relationship();
 		return p;
 	}
