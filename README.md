@@ -9,6 +9,14 @@ jStorybookとは、Storybookを日本語化することを主な目的とし、o
 * [jStorybookって何？](https://github.com/kmycode/jstorybook/wiki/About)
 * [インストール手順](https://github.com/kmycode/jstorybook/wiki/Install)
 
+###gitのブランチについて
+
+|ブランチ名|説明|
+|---|---|
+|master|jStorybook 5.x系|
+|develop|jStorybook 6.x系（現在開発ちう）|
+|master-j|がらくた|
+
 ###Storybookとは？
 Storybookとは、小説や漫画といったストーリーの構想を練るのに特化したソフトです。<br>
 登場人物や場所などを登録し、それらの結びつきなどを図にして見ることができます。<br>
