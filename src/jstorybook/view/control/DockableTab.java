@@ -30,7 +30,7 @@ public class DockableTab extends Tab {
 			DockableTab.this.tabPane = (DockableTabPane) this.getTabPane();
 		});
 		this.setOnClosed((obj) -> {
-			DockableTab.this.tabPane.getParentPane().removeEmptyTabPane();
+			DockableTab.this.tabPane.getParentPane().getRootPane().removeEmptyTabPane();
 		});
 	}
 

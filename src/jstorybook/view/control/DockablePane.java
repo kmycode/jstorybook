@@ -16,6 +16,7 @@ package jstorybook.view.control;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Orientation;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 
@@ -32,16 +33,30 @@ public class DockablePane extends AnchorPane {
 	public DockablePane (Window parent) {
 		this.parent = parent;
 		this.rootGroup = new SimpleObjectProperty<>();
+		this.rootGroup.addListener((obj) -> {
+			DockablePane.this.getChildren().clear();
+			DockablePane.this.getChildren().add(this.rootGroup.get());
+		});
 		this.rootGroup.set(new DockableAreaGroupPane(this));
 		AnchorPane.setTopAnchor(rootGroup.get(), 0.0);
 		AnchorPane.setLeftAnchor(rootGroup.get(), 0.0);
 		AnchorPane.setRightAnchor(rootGroup.get(), 0.0);
 		AnchorPane.setBottomAnchor(rootGroup.get(), 0.0);
-		this.getChildren().add(this.rootGroup.get());
 	}
 
 	public ReadOnlyObjectProperty<DockableAreaGroupPane> rootGroupProperty () {
 		return this.rootGroup;
+	}
+
+	DockableAreaGroupPane wrapRootGroup (Orientation orientation) {
+		DockableAreaGroupPane newRootGroup = new DockableAreaGroupPane(this, orientation);
+		this.rootGroup.get().setParentPane(newRootGroup);
+		this.rootGroup.set(newRootGroup);
+		AnchorPane.setTopAnchor(rootGroup.get(), 0.0);
+		AnchorPane.setLeftAnchor(rootGroup.get(), 0.0);
+		AnchorPane.setRightAnchor(rootGroup.get(), 0.0);
+		AnchorPane.setBottomAnchor(rootGroup.get(), 0.0);
+		return newRootGroup;
 	}
 
 	public Window getWindow () {

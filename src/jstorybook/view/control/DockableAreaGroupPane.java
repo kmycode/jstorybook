@@ -47,48 +47,78 @@ enum DockingDirection {
  */
 public class DockableAreaGroupPane extends SplitPane {
 
-	private DockableAreaGroupPane parent;
+	private DockableAreaGroupPane parent = null;
 	private DockableAreaGroupPane rootPane = null;		// 取得時は必ずgetRootPaneを使用
 	private DockablePane rootParent;
 	private static DockingBorder dockingBorder;
 	private static DockingDirection dockingDirection = DockingDirection.NONE;
 	private static DockableTabPane overTabPane;
 
-	public DockableAreaGroupPane (DockableAreaGroupPane parent) {
+	DockableAreaGroupPane (DockableAreaGroupPane parent) {
 		this.parent = parent;
 		this.rootPane = parent.getRootPane();
-		this.setOrientation(Orientation.VERTICAL);
+		this.setOrientation(Orientation.HORIZONTAL);
 	}
 
 	public DockableAreaGroupPane (DockablePane parent) {
+		this(parent, Orientation.HORIZONTAL);
+	}
+
+	public DockableAreaGroupPane (DockablePane parent, Orientation orientation) {
 		this.rootParent = parent;
 		DockableAreaGroupPane.dockingBorder = new DockingBorder(parent.getWindow());
 		DockableAreaGroupPane.dockingBorder.setLocalPosition(0, 0);
 		DockableAreaGroupPane.dockingBorder.setSize(100, 100);
-		this.setOrientation(Orientation.VERTICAL);
+		this.setOrientation(orientation);
 	}
 
 	// コンストラクタ内でのthisリークを防ぐ
 	// rootPaneを利用するときは、必ずこのメソッドを経由すること
 	DockableAreaGroupPane getRootPane () {
-		if (this.rootPane == null) {
+		 if (this.rootPane == null) {
 			this.rootPane = this;
 		}
-		return this.rootPane;
+		 // 古いルートの上に、新しいルートが設定された場合を想定
+		else if (this.rootPane != this && this.rootPane.getRootPane() != this.rootPane) {
+			this.rootPane = this.rootPane.getRootPane();
+		}
+		//this.rootPane = this.parent != null ? this.parent.getRootPane() : this;
+		return this.rootParent.rootGroupProperty().get();
+	}
+
+	// 親パネルを設定
+	void setParentPane (DockableAreaGroupPane pane) {
+		this.parent = pane;
+		// 自分がルートならば、ルートを変更したことになる
+		if (this.getRootPane() == this) {
+			this.rootPane = pane;
+			this.rootPane.getItems().add(this);
+		}
 	}
 
 	// -------------------------------------------------------
-
+	// 指定したインデックス番号に、新しいタブパネルを追加する
 	public DockableTabPane add (int index) {
 		DockableTabPane pane = new DockableTabPane(this);
 		AnchorPane.setTopAnchor(pane, 10.0);
 		AnchorPane.setLeftAnchor(pane, 10.0);
 		AnchorPane.setRightAnchor(pane, 10.0);
 		AnchorPane.setBottomAnchor(pane, 10.0);
-		this.getItems().add(index, pane);
+		this.add(index, pane);
 		return pane;
 	}
 
+	// 指定したインデックス番号に、指定したタブパネルを追加する
+	void add (int index, DockableTabPane pane) {
+		this.getItems().add(index, pane);
+	}
+
+	// 指定したタブパネルを末尾に追加する
+	void add (DockableTabPane pane) {
+		this.getItems().add(pane);
+	}
+
+	// 指定したタブを、指定した方向へ移動する。ドッキングになるか、他のタブパネルへの移動になるかはこのメソッドで決まる
 	void moveTab (DockingDirection direction, DockableTab tab) {
 		DockableTabPane pane = new DockableTabPane(this);
 		if (direction != DockingDirection.NONE && direction != DockingDirection.OVER) {
@@ -114,6 +144,7 @@ public class DockableAreaGroupPane extends SplitPane {
 		else if (direction == DockingDirection.OVER) {
 			this.getOverTabPane().getTabs().add(tab);
 		}
+		this.getRootPane().removeEmptyTabPane();
 	}
 
 	List<DockableTabPane> getTabPaneList () {
@@ -153,6 +184,7 @@ public class DockableAreaGroupPane extends SplitPane {
 			}
 			else if (node instanceof DockableAreaGroupPane) {
 				DockableAreaGroupPane groupPane = (DockableAreaGroupPane) node;
+				groupPane.removeEmptyTabPane();
 				if (groupPane.getItems().size() <= 0) {
 					removeNodeList.add(groupPane);
 				}
@@ -171,14 +203,17 @@ public class DockableAreaGroupPane extends SplitPane {
 		double windowY = this.rootParent.getWindow().getY();
 		double mouseX = ev.getScreenX();
 		double mouseY = ev.getScreenY();
-		double localMouseX = ev.getX();
-		double localMouseY = ev.getY();
 		Point2D position = this.getPosition();
 		Rectangle2D size = this.getSize();
 		double paneX = windowX + position.getX();
 		double paneY = windowY + position.getY();
 		double paneW = size.getWidth();
 		double paneH = size.getHeight();
+		Rectangle eventTabPaneRect = ((DockableTabPane) ev.getSource()).getLocalRectangle();
+		double localMouseX = ev.getX() + eventTabPaneRect.getX();
+		double localMouseY = ev.getY() + eventTabPaneRect.getY();
+		System.out.println("mouseX:" + localMouseX + "   mouseY:" + localMouseY + "   localX:" + eventTabPaneRect.getX()
+				+ "   localY:" + eventTabPaneRect.getY());
 
 		// Right
 		if (paneX + paneW - 60 < mouseX) {
@@ -193,11 +228,6 @@ public class DockableAreaGroupPane extends SplitPane {
 			DockableAreaGroupPane.dockingBorder.setSize(paneW, 50);
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.BOTTOM;
-			/*
-						System.out.println("x:" + paneX + "  y:" + paneY + "  w:" + paneW + "  h:" + paneH + "  mx:" + mouseX
-					+ "  my:"
-					+ mouseY);
-			 */
 		}
 		// Top
 		else if (paneY + 60 > mouseY) {
@@ -247,14 +277,19 @@ public class DockableAreaGroupPane extends SplitPane {
 	}
 
 	Point2D getPosition () {
+		return this.getPosition(this);
+	}
+
+	Point2D getPosition (Control target) {
 		int x = 0;
 		int y = 0;
-		DockableAreaGroupPane pane = this;
+		/*
+		 		DockableAreaGroupPane pane = this;
 		DockableAreaGroupPane parentPane = this.parent;
 		while (pane != pane.getRootPane()) {
 			for (Node node : parentPane.getItems()) {
 				if (node != this) {
-					if (node instanceof Control) {
+					if (node instanceof DockableAreaGroupPane) {
 						if (parentPane.getOrientation() == Orientation.VERTICAL) {
 							y += ((Control) node).getHeight();
 						}
@@ -267,8 +302,38 @@ public class DockableAreaGroupPane extends SplitPane {
 					break;
 				}
 			}
+			pane = parentPane;
+			parentPane = parentPane.parent;
 		}
-		return new Point2D(x, y);
+		 * */
+
+		if (this.parent != null) {
+			Point2D ppos = this.parent.getPosition(this);
+			x += ppos.getX();
+			y += ppos.getY();
+		}
+
+		if (this.parent != null) {
+			for (Node node : this.parent.getItems()) {
+				if (node != target) {
+					if (node instanceof Control) {
+						if (this.getOrientation() == Orientation.VERTICAL) {
+							y += ((Control) node).getHeight();
+						}
+						else {
+							x += ((Control) node).getWidth();
+						}
+					}
+				}
+				else {
+					break;
+				}
+			}
+			return new Point2D(x, y);
+		}
+		else {
+			return new Point2D(0, 0);
+		}
 	}
 
 	private Rectangle2D getSize () {
