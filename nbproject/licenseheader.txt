@@ -1,0 +1,17 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}jStorybook: すべての小説家・作者のためのオープンソース・ソフトウェア
+${licensePrefix}Copyright (C) 2008 - 2012 Martin Mustun
+${licensePrefix}  (このソースの製作者) KMY
+${licensePrefix}
+${licensePrefix}このプログラムはフリーソフトです。
+${licensePrefix}あなたは、自由に修正し、再配布することが出来ます。
+${licensePrefix}あなたの権利は、the Free Software Foundationによって発表されたGPL ver.2以降によって保護されています。
+${licensePrefix}
+${licensePrefix}このプログラムは、小説・ストーリーの制作がよりよくなるようにという願いを込めて再配布されています。
+${licensePrefix}あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
+${licensePrefix} <http://www.gnu.org/licenses/>.
+<#if licenseLast??>
+${licenseLast}
+</#if>

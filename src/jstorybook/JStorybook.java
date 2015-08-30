@@ -11,10 +11,16 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import jstorybook.common.manager.LocaleManager;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.view.control.DockableAreaGroupPane;
+import jstorybook.view.control.DockablePane;
+import jstorybook.view.control.DockableTab;
+import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.control.DockingBorder;
 import storybook.SbApp;
 import jstorybook.view.dialog.ExceptionDialog;
 
@@ -37,13 +43,6 @@ public class JStorybook extends Application {
 		});
 
 		StackPane root = new StackPane();
-		root.getChildren().add(btn);
-
-		Scene scene = new Scene(root, 300, 250);
-
-		primaryStage.setTitle("Hello World!");
-		primaryStage.setScene(scene);
-		primaryStage.show();
 
 		/*
 		 		// 旧Storybookを起動
@@ -54,9 +53,28 @@ public class JStorybook extends Application {
 		}
 		SbApp.old_main(argsArray);
 		 */
-		ExceptionDialog ed = new ExceptionDialog(new NullPointerException());
-		ed.showAndWait();
+		DockablePane pane = new DockablePane(primaryStage);
+		DockableAreaGroupPane group = pane.rootGroupProperty().get();
 
+		DockableTabPane tabPane = group.add(0);
+		tabPane.getTabs().add(new DockableTab("おはよう"));
+		tabPane.getTabs().add(new DockableTab("こんにちは"));
+		tabPane.getTabs().add(new DockableTab("こんばんは"));
+		tabPane.getTabs().add(new DockableTab("やまだくん"));
+		tabPane.getTabs().add(new DockableTab("かわむらさん"));
+		tabPane.getTabs().add(new DockableTab("さいとうくん"));
+
+		AnchorPane.setTopAnchor(pane, 10.0);
+		AnchorPane.setLeftAnchor(pane, 10.0);
+		AnchorPane.setRightAnchor(pane, 10.0);
+		AnchorPane.setBottomAnchor(pane, 10.0);
+		root.getChildren().add(pane);
+
+		Scene scene = new Scene(root, 300, 250);
+
+		primaryStage.setTitle("Hello World!");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	/**
