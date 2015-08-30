@@ -15,6 +15,7 @@ jStorybookとは、Storybookを日本語化することを主な目的とし、o
 |---|---|
 |master|jStorybook 5.x系|
 |develop|jStorybook 6.x系（現在開発ちう）|
+|develop-preloader|jStorybook 6.x系プレローダ（現在開発ちう）|
 |master-j|がらくた|
 
 ###Storybookとは？
