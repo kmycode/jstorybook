@@ -15,12 +15,16 @@ package jstorybook.view.dialog;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.viewmodel.ViewModel;
+import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.dialog.ExceptionDialogViewModel;
 
 /**
@@ -30,21 +34,21 @@ import jstorybook.viewmodel.dialog.ExceptionDialogViewModel;
  */
 public class ExceptionDialog extends Alert {
 
-	private ExceptionDialogViewModel viewModel;
+	private ViewModelList viewModelList;
 	private TextArea textArea;
 	private Label exceptionLabel;
 
 	public ExceptionDialog (AlertType alertType) {
 		super(alertType);
 
-		this.viewModel = new ExceptionDialogViewModel();
+		this.viewModelList = new ViewModelList(new ExceptionDialogViewModel());
 
 		this.setTitle(ResourceManager.getMessage("msg.exception"));
 		this.setHeaderText(ResourceManager.getMessage("msg.exception.occured"));
 		Label label = new Label(ResourceManager.getMessage("msg.exception.stacktrace"));
 
 		this.exceptionLabel = new Label();
-		this.exceptionLabel.textProperty().bind(this.viewModel.exceptionTitleProperty());
+		this.exceptionLabel.textProperty().bind(this.viewModelList.getProperty("exceptionTitle"));
 
 		this.textArea = new TextArea();
 		this.textArea.setEditable(false);
@@ -52,7 +56,7 @@ public class ExceptionDialog extends Alert {
 		this.textArea.setMinWidth(600.0);
 		this.textArea.setMaxWidth(Double.MAX_VALUE);
 		this.textArea.setMaxHeight(Double.MAX_VALUE);
-		this.textArea.textProperty().bind(this.viewModel.stackTraceProperty());
+		this.textArea.textProperty().bind(this.viewModelList.getProperty("stackTrace"));
 		GridPane.setVgrow(textArea, Priority.ALWAYS);
 		GridPane.setHgrow(textArea, Priority.ALWAYS);
 
@@ -87,7 +91,7 @@ public class ExceptionDialog extends Alert {
 	}
 
 	public void setException (Exception e) {
-		this.viewModel.exceptionProperty().set(e);
+		this.viewModelList.setProperty("exception", e);
 	}
 
 }

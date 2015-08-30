@@ -11,34 +11,41 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel.dialog;
+package jstorybook.viewmodel;
 
-import jstorybook.viewmodel.ViewModel;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import javafx.beans.property.ObjectProperty;
+import java.util.ArrayList;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import jstorybook.model.ExceptionModel;
+import javafx.beans.value.WritableObjectValue;
 
 /**
- * 内部エラーダイアログのビューモデル
+ * ビューモデルのリスト。ビューで、複数のビューモデルを一括管理するときに使う
  *
  * @author KMY
  */
-public class ExceptionDialogViewModel extends ViewModel {
+public class ViewModelList extends ArrayList<ViewModel> {
 
-	private ExceptionModel exceptionModel = new ExceptionModel();
-
-	public ExceptionDialogViewModel () {
-		this.storeProperty();
+	public ViewModelList (ViewModel... args) {
+		for (ViewModel vm : args) {
+			this.add(vm);
+		}
 	}
 
-	protected void storeProperty () {
-		this.applyProperty("exception", this.exceptionModel.exceptionProperty());
-		this.applyProperty("stackTrace", this.exceptionModel.stackTraceProperty());
-		this.applyProperty("exceptionTitle", this.exceptionModel.exceptionTitleProperty());
+	public Property getProperty (String propertyName) {
+		Property result = ViewModel.getNullProperty();
+		for (ViewModel vm : this) {
+			result = vm.getProperty(propertyName);
+			if (!ViewModel.isNullProperty(result)) {
+				break;
+			}
+		}
+		return result;
+	}
+
+	public void setProperty (String propertyName, Object value) {
+		for (ViewModel vm : this) {
+			vm.setProperty(propertyName, value);
+		}
 	}
 
 }

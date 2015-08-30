@@ -11,12 +11,12 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel.dialog;
+package jstorybook.view;
 
 /**
  *
  * @author KMY
  */
-public abstract class ViewModel {
+public class MainWindow {
 
 }

@@ -109,12 +109,12 @@ public class DockableAreaGroupPane extends SplitPane {
 	}
 
 	// 指定したインデックス番号に、指定したタブパネルを追加する
-	void add (int index, DockableTabPane pane) {
+	public void add (int index, DockableTabPane pane) {
 		this.getItems().add(index, pane);
 	}
 
 	// 指定したタブパネルを末尾に追加する
-	void add (DockableTabPane pane) {
+	public void add (DockableTabPane pane) {
 		this.getItems().add(pane);
 	}
 
