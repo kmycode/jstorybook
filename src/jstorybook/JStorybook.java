@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import jstorybook.common.manager.LocaleManager;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.view.MainWindow;
 import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
@@ -32,51 +33,11 @@ public class JStorybook extends Application {
 
 	@Override
 	public void start (Stage primaryStage) {
-		Button btn = new Button();
-		btn.setText("Say 'Hello World'");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
 
-			@Override
-			public void handle (ActionEvent event) {
-				System.out.println("Hello World!");
-			}
-		});
+		MainWindow mainWindow = new MainWindow(primaryStage);
+		mainWindow.show();
 
-		StackPane root = new StackPane();
-
-		/*
-		 		// 旧Storybookを起動
-					String[] argsArray = new String[this.getParameters().getRaw().size()];
-		int i = 0;
-		for (String arg : this.getParameters().getRaw()) {
-			argsArray[i ++] = arg;
-		}
-		SbApp.old_main(argsArray);
-		 */
-		DockablePane pane = new DockablePane(primaryStage);
-		DockableAreaGroupPane group = pane.rootGroupProperty().get();
-
-		DockableTabPane tabPane = group.add(0);
-		tabPane.getTabs().add(new DockableTab("おはよう"));
-		tabPane.getTabs().add(new DockableTab("こんにちは"));
-		tabPane.getTabs().add(new DockableTab("こんばんは"));
-		tabPane.getTabs().add(new DockableTab("やまだくん"));
-		tabPane.getTabs().add(new DockableTab("かわむらさん"));
-		tabPane.getTabs().add(new DockableTab("さいとうくん"));
-
-		AnchorPane.setTopAnchor(pane, 10.0);
-		AnchorPane.setLeftAnchor(pane, 10.0);
-		AnchorPane.setRightAnchor(pane, 10.0);
-		AnchorPane.setBottomAnchor(pane, 10.0);
-		root.getChildren().add(pane);
-
-		Scene scene = new Scene(root, 300, 250);
-
-		primaryStage.setTitle("Hello World!");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-
-		ExceptionDialog.showAndWait(new NullPointerException());
+		//ExceptionDialog.showAndWait(new NullPointerException());
 	}
 
 	/**

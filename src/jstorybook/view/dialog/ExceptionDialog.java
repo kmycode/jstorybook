@@ -77,11 +77,13 @@ public class ExceptionDialog extends Alert {
 		this.setException(e);
 	}
 
+	// べんり表示メソッド
 	public static void showAndWait (Exception e) {
 		ExceptionDialog dlg = new ExceptionDialog(e);
 		dlg.showAndWait();
 	}
 
+	// エラー画面表示に必要なリソースなどの読み込みがままならない時だけに臨時で使う
 	public static void showExpenditure (Exception e) {
 		e.printStackTrace();
 		Alert alert = new Alert(Alert.AlertType.ERROR);

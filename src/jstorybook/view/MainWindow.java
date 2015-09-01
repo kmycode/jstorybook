@@ -13,10 +13,126 @@
  */
 package jstorybook.view;
 
+import java.util.ArrayList;
+import java.util.List;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import jstorybook.common.contract.SystemKey;
+import jstorybook.common.contract.PreferenceKey;
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.view.control.DockableAreaGroupPane;
+import jstorybook.view.control.DockablePane;
+import jstorybook.view.control.DockableTab;
+import jstorybook.view.control.DockableTabPane;
+import storybook.SbConstants;
+
 /**
  *
  * @author KMY
  */
-public class MainWindow {
+public class MainWindow extends MyStage {
+
+	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
+	private final ObjectProperty<DockableAreaGroupPane> rootGroupPane = new SimpleObjectProperty<>();
+	private final ObjectProperty<TabPane> activeTabPane = new SimpleObjectProperty<>();
+	private final ObjectProperty<MenuBar> mainMenuBar = new SimpleObjectProperty<>();
+	private final ObjectProperty<ToolBar> mainToolBar = new SimpleObjectProperty<>();
+
+	public MainWindow (Stage parent) {
+		super(parent);
+
+		Pane root = new VBox();
+
+		// メインメニューを作成
+		this.modelingMainMenuBar();
+		root.getChildren().add(this.mainMenuBar.get());
+
+		// -------------------------------------------------------
+
+		// メインツールバーを作成
+		this.modelingMainToolBar();
+		root.getChildren().add(this.mainToolBar.get());
+
+		// -------------------------------------------------------
+
+		// メインパネルを作成・取得
+		this.mainPane.set(new DockablePane(this));
+		this.rootGroupPane.bind(this.mainPane.get().rootGroupProperty());
+
+		// メインパネルで、現在使用されているタブパネルが変わった時に通知
+		DockableTabPane tabPane = rootGroupPane.get().add(0);
+		tabPane.getTabs().add(new DockableTab("aaa"));
+		tabPane.getTabs().add(new DockableTab("bbb"));
+		tabPane.getTabs().add(new DockableTab("ccc"));
+		tabPane.setOnMouseClicked((obj) -> {
+			MainWindow.this.activeTabPane.set((TabPane) obj.getSource());
+		});
+
+		// メインパネルのマージンを設定
+		VBox.setVgrow(this.mainPane.get(), Priority.ALWAYS);
+		this.setAnchor(this.mainPane.get(), 0.0);
+		root.getChildren().add(this.mainPane.get());
+
+		// メインパネルを設定
+		this.setAnchor(root, 0.0);
+
+		// -------------------------------------------------------
+
+		// シーンを設定
+		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),
+								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
+		this.setTitle(SystemKey.SYSTEM_NAME.getValue().toString() + " " + SystemKey.SYSTEM_VERSION.getValue().						toString());
+		this.setScene(scene);
+	}
+
+	// メインメニューバーを作成
+	private void modelingMainMenuBar () {
+		MenuBar menuBar = new MenuBar();
+
+		// ファイルメニュー
+		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
+		{
+			MenuItem exitMenu = new MenuItem(ResourceManager.getMessage("msg.exit"));
+			fileMenu.getItems().addAll(exitMenu);
+		}
+
+		// 編集メニュー
+		Menu editMenu = new Menu(ResourceManager.getMessage("msg.edit"));
+		{
+			MenuItem preferenceMenu = new MenuItem(ResourceManager.getMessage("msg.preference"));
+			editMenu.getItems().addAll(preferenceMenu);
+		}
+
+		menuBar.getMenus().addAll(fileMenu, editMenu);
+		this.mainMenuBar.set(menuBar);
+	}
+
+	// メインツールバーを作成
+	private void modelingMainToolBar () {
+		ToolBar toolBar = new ToolBar();
+		List<Button> buttonList = new ArrayList<Button>();
+
+		buttonList.add(new Button("dummy"));
+
+		toolBar.getItems().addAll(buttonList);
+		this.mainToolBar.set(toolBar);
+	}
 
 }

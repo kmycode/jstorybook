@@ -120,7 +120,6 @@ public class DockableAreaGroupPane extends SplitPane {
 
 	// 指定したタブを、指定した方向へ移動する。ドッキングになるか、他のタブパネルへの移動になるかはこのメソッドで決まる
 	void moveTab (DockingDirection direction, DockableTab tab) {
-		DockableTabPane pane = new DockableTabPane(this);
 		if (direction != DockingDirection.NONE && direction != DockingDirection.OVER) {
 			DockableTabPane tabPane = new DockableTabPane(this);
 			tabPane.getTabs().add(tab);
@@ -177,6 +176,9 @@ public class DockableAreaGroupPane extends SplitPane {
 		List<Node> removeNodeList = new ArrayList<>();
 		for (Node node : this.getItems()) {
 			if (node instanceof DockableTabPane) {
+				if (this == this.getRootPane() && this.getItems().size() <= 1) {
+					continue;
+				}
 				DockableTabPane tabPane = (DockableTabPane) node;
 				if (tabPane.getTabs().size() <= 0) {
 					removeNodeList.add(tabPane);
@@ -212,33 +214,33 @@ public class DockableAreaGroupPane extends SplitPane {
 		Rectangle eventTabPaneRect = ((DockableTabPane) ev.getSource()).getLocalRectangle();
 		double localMouseX = ev.getX() + eventTabPaneRect.getX();
 		double localMouseY = ev.getY() + eventTabPaneRect.getY();
-		System.out.println("mouseX:" + localMouseX + "   mouseY:" + localMouseY + "   localX:" + eventTabPaneRect.getX()
-				+ "   localY:" + eventTabPaneRect.getY());
+
+		double tabPaneY = this.rootParent.getLayoutY();
 
 		// Right
 		if (paneX + paneW - 60 < mouseX) {
-			DockableAreaGroupPane.dockingBorder.setPosition(paneX + paneW - 50, paneY + 30);
+			DockableAreaGroupPane.dockingBorder.setPosition(paneX + paneW - 50, paneY + 30 + tabPaneY);
 			DockableAreaGroupPane.dockingBorder.setSize(50, paneH);
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.RIGHT;
 		}
 		// Bottom
 		else if (paneY + paneH - 60 < mouseY) {
-			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + paneH - 30);
+			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + paneH - 30 + tabPaneY);
 			DockableAreaGroupPane.dockingBorder.setSize(paneW, 50);
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.BOTTOM;
 		}
 		// Top
 		else if (paneY + 60 > mouseY) {
-			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30);
+			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30 + tabPaneY);
 			DockableAreaGroupPane.dockingBorder.setSize(paneW, 50);
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.TOP;
 		}
 		// Left
 		else if (paneX + 60 > mouseX) {
-			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30);
+			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30 + tabPaneY);
 			DockableAreaGroupPane.dockingBorder.setSize(50, paneH);
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.LEFT;
@@ -251,7 +253,8 @@ public class DockableAreaGroupPane extends SplitPane {
 				Rectangle rect = tabPane.getLocalRectangle();
 				if (localMouseX > rect.x && localMouseX < rect.x + rect.width && localMouseY > rect.y && localMouseY
 						< rect.y + rect.height) {
-					DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.y + windowY + 30);
+					DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.y + windowY + 30
+																	+ tabPaneY);
 					DockableAreaGroupPane.dockingBorder.setSize(rect.width, rect.height);
 					DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 					DockableAreaGroupPane.overTabPane = tabPane;

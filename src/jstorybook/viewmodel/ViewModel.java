@@ -13,13 +13,16 @@
  */
 package jstorybook.viewmodel;
 
+import com.sun.javafx.binding.ExpressionHelper;
 import java.util.HashMap;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WritableObjectValue;
 
 /**
@@ -29,7 +32,7 @@ import javafx.beans.value.WritableObjectValue;
 public abstract class ViewModel {
 
 	private HashMap<String, Property> propertyList = new HashMap<>();
-	private static ObjectProperty nullObject = new SimpleObjectProperty();
+	private static final ObjectProperty nullObject = new NullObjectProperty();
 
 	protected void applyProperty (String propertyName, Property property) {
 		this.propertyList.put(propertyName, property);
@@ -59,5 +62,37 @@ public abstract class ViewModel {
 	}
 
 	abstract protected void storeProperty ();
+
+	/*
+	 * NULLオブジェクトプロパティ
+	 * いくら設定しても状態が変化しない
+	 */
+	private static class NullObjectProperty extends SimpleObjectProperty<Object> {
+
+		public NullObjectProperty () {
+			super.set(new Object());
+		}
+
+		@Override
+		public void set (Object obj) {
+		}
+
+		@Override
+		public void addListener (InvalidationListener listener) {
+		}
+
+		@Override
+		public void removeListener (InvalidationListener listener) {
+		}
+
+		@Override
+		public void addListener (ChangeListener<? super Object> listener) {
+		}
+
+		@Override
+		public void removeListener (ChangeListener<? super Object> listener) {
+		}
+
+	}
 
 }
