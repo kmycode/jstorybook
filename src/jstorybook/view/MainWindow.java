@@ -41,6 +41,7 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.viewtool.action.QuitAction;
 import storybook.SbConstants;
 
 /**
@@ -109,7 +110,7 @@ public class MainWindow extends MyStage {
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		{
-			MenuItem exitMenu = new MenuItem(ResourceManager.getMessage("msg.exit"));
+			MenuItem exitMenu = new QuitAction(this).createMenuItem();
 			fileMenu.getItems().addAll(exitMenu);
 		}
 

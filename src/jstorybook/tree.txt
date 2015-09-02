@@ -1,0 +1,28 @@
+jstorybook
+
+	common							共通
+		util							ユーティリティクラスをまとめる
+		manager							シングルトン／インスタンス数が固定のクラスをまとめる
+
+	model							モデル
+		entity							エンティティモデル（ドメインモデル）
+		dao								エンティティのDAO
+		editor							エンティティの編集画面ごとに作成。SbColumnFactoryの後継
+
+	viewmodel						ビューモデル
+		dialog							ダイアログ用のビューモデル
+		pane							パネル用のビューモデル
+
+	viewtool						モデルをビューのように見せかけるためのクラス
+		converter						コンバータ
+		completer						コンプリータ
+		action							アクション（メニューやボタンをおした時の操作）
+			dialog						カスタムダイアログ用のアクション
+		message							メッセージ
+
+	view							画面表示部分
+		pane							パネル、エンティティリスト、ビューなど、全てのパネルを取り扱う
+		dialog							カスタムダイアログ
+		control							カスタムコントロール（MVCのコントローラではない）
+			edit							主にエンティティ編集画面に利用するカスタムコントロール
+
