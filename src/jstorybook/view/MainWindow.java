@@ -21,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Menu;
@@ -42,6 +43,8 @@ import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.viewtool.action.QuitAction;
+import jstorybook.viewtool.messenger.ApplicationQuitMessage;
+import jstorybook.viewtool.messenger.Messenger;
 import storybook.SbConstants;
 
 /**
@@ -95,6 +98,16 @@ public class MainWindow extends MyStage {
 		this.setAnchor(root, 0.0);
 
 		// -------------------------------------------------------
+		// プログラム終了時の処理を登録
+		this.setOnCloseRequest((ev) -> {
+			this.quitApplication();
+		});
+
+		// -------------------------------------------------------
+		// メッセンジャを設定
+		this.applyMessenger();
+
+		// -------------------------------------------------------
 
 		// シーンを設定
 		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),
@@ -110,7 +123,7 @@ public class MainWindow extends MyStage {
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		{
-			MenuItem exitMenu = new QuitAction(this).createMenuItem();
+			MenuItem exitMenu = new QuitAction().createMenuItem();
 			fileMenu.getItems().addAll(exitMenu);
 		}
 
@@ -134,6 +147,22 @@ public class MainWindow extends MyStage {
 
 		toolBar.getItems().addAll(buttonList);
 		this.mainToolBar.set(toolBar);
+	}
+
+	// メッセンジャを設定
+	private void applyMessenger () {
+		Messenger messenger = Messenger.getInstance();
+
+		messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
+			this.quitApplication();
+		});
+	}
+
+	// -------------------------------------------------------
+	// プログラムを終了
+	private void quitApplication () {
+		System.out.println("Quit");
+		this.close();
 	}
 
 }

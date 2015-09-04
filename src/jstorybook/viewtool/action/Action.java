@@ -60,6 +60,7 @@ public abstract class Action {
 		MenuItem item = new MenuItem();
 		item.textProperty().bind(this.name);
 		item.setOnAction((obj) -> this.onAction());
+		item.setGraphic(this.canvas);
 		return item;
 	}
 

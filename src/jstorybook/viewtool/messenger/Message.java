@@ -11,30 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.action;
-
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.stage.Stage;
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.viewtool.messenger.ApplicationQuitMessage;
-import jstorybook.viewtool.messenger.Messenger;
+package jstorybook.viewtool.messenger;
 
 /**
- * 全てのストーリーを閉じ、アプリを終了する
+ * メッセージの抽象クラス
  *
  * @author KMY
  */
-public class QuitAction extends Action {
-
-	public QuitAction () {
-		this.name.set(ResourceManager.getMessage("msg.exit"));
-	}
-
-	// TODO: ファイルモデルができたら、ロジックをそこへうつす
-	@Override
-	public void onAction () {
-		Messenger.getInstance().send(new ApplicationQuitMessage());
-	}
+public abstract class Message {
 
 }
