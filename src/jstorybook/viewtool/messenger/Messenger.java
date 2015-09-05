@@ -71,7 +71,7 @@ public class Messenger {
 	}
 
 	// -------------------------------------------------------
-
+	// メッセージの受信に必要な情報を取りまとめたイミュータブルなクラス
 	private static class MessageReceiver {
 
 		public final Class<? extends Message> messageType;

@@ -5,9 +5,10 @@ jstorybook
 		manager							シングルトン／インスタンス数が固定のクラスをまとめる
 
 	model							モデル
-		entity							エンティティモデル（ドメインモデル）
+		entity							エンティティモデル
+			column							エンティティを編集画面で編集するときなどのためのモデル
+			columnfactory					編集画面の項目のファクトリ
 		dao								エンティティのDAO
-		editor							編集画面のモデル
 
 	viewmodel						ビューモデル
 		dialog							ダイアログ用のビューモデル

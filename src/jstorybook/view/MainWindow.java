@@ -42,6 +42,7 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.pane.PersonListPane;
 import jstorybook.viewtool.action.QuitAction;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
@@ -82,9 +83,7 @@ public class MainWindow extends MyStage {
 
 		// メインパネルで、現在使用されているタブパネルが変わった時に通知
 		DockableTabPane tabPane = rootGroupPane.get().add(0);
-		tabPane.getTabs().add(new DockableTab("aaa"));
-		tabPane.getTabs().add(new DockableTab("bbb"));
-		tabPane.getTabs().add(new DockableTab("ccc"));
+		tabPane.getTabs().add(new PersonListPane());
 		tabPane.setOnMouseClicked((obj) -> {
 			MainWindow.this.activeTabPane.set((TabPane) obj.getSource());
 		});
