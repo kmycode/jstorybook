@@ -43,9 +43,12 @@ import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.PersonListPane;
+import jstorybook.viewmodel.MainWindowViewModel;
+import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.action.QuitAction;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import storybook.SbConstants;
 
 /**
@@ -54,6 +57,7 @@ import storybook.SbConstants;
  */
 public class MainWindow extends MyStage {
 
+	private final ViewModelList viewModelList = new ViewModelList(new MainWindowViewModel());
 	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<DockableAreaGroupPane> rootGroupPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<TabPane> activeTabPane = new SimpleObjectProperty<>();
@@ -111,26 +115,27 @@ public class MainWindow extends MyStage {
 		// シーンを設定
 		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
-		this.setTitle(SystemKey.SYSTEM_NAME.getValue().toString() + " " + SystemKey.SYSTEM_VERSION.getValue().						toString());
+		this.setTitle(SystemKey.SYSTEM_NAME.getValue().toString() + " " + SystemKey.SYSTEM_VERSION.getValue().toString());
 		this.setScene(scene);
 	}
 
 	// メインメニューバーを作成
 	private void modelingMainMenuBar () {
 		MenuBar menuBar = new MenuBar();
+		MenuItem menu;
 
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		{
-			MenuItem exitMenu = new QuitAction().createMenuItem();
-			fileMenu.getItems().addAll(exitMenu);
+			menu = new QuitAction().createMenuItem();
+			fileMenu.getItems().add(menu);
 		}
 
 		// 編集メニュー
 		Menu editMenu = new Menu(ResourceManager.getMessage("msg.edit"));
 		{
-			MenuItem preferenceMenu = new MenuItem(ResourceManager.getMessage("msg.preference"));
-			editMenu.getItems().addAll(preferenceMenu);
+			menu = new MenuItem(ResourceManager.getMessage("msg.preference"));
+			editMenu.getItems().add(menu);
 		}
 
 		menuBar.getMenus().addAll(fileMenu, editMenu);
@@ -153,11 +158,19 @@ public class MainWindow extends MyStage {
 		Messenger messenger = Messenger.getInstance();
 
 		messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
-			this.quitApplication();
+			MainWindow.this.quitApplication();
+		});
+		messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
+			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev.getSource());
 		});
 	}
 
 	// -------------------------------------------------------
+	// ストーリーモデルを返す
+	private void mountCurrentStoryModel (StoryModelCurrentGetMessage message) {
+		message.storyModelProperty().bind(this.viewModelList.getProperty("storyModel"));
+	}
+
 	// プログラムを終了
 	private void quitApplication () {
 		this.close();

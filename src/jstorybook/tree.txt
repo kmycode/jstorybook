@@ -8,6 +8,7 @@ jstorybook
 		entity							エンティティモデル
 			columnfactory					編集画面の項目のファクトリ
 		dao								エンティティのDAO
+		story							ストーリーそのものや、ストーリーが参照するファイルなどのモデル
 
 	viewmodel						ビューモデル
 		dialog							ダイアログ用のビューモデル
