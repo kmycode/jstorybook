@@ -15,7 +15,11 @@ package jstorybook.model.entity.columnfactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import jstorybook.model.entity.column.EditorColumn;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import jstorybook.viewtool.model.EditorColumn;
 
 /**
  * カラムファクトリを扱う抽象クラス
@@ -24,15 +28,23 @@ import jstorybook.model.entity.column.EditorColumn;
  */
 public abstract class ColumnFactory {
 
-	protected List<EditorColumn> editorColumnList = new ArrayList<EditorColumn>();
+	protected ObjectProperty<ArrayList<EditorColumn>> editorColumnList = new SimpleObjectProperty<>(
+			new ArrayList<EditorColumn>());
 	private boolean editorColumnCreated = false;
 
+	// columnListProperty を推奨
+	@Deprecated
 	public List<EditorColumn> getColumnList () {
 		if (!this.editorColumnCreated) {
-			this.editorColumnList.clear();
+			this.editorColumnList.get().clear();
 			this.createColumnList();
 			this.editorColumnCreated = true;
 		}
+		return this.editorColumnList.get();
+	}
+
+	public ObjectProperty<ArrayList<EditorColumn>> columnListProperty () {
+		this.getColumnList();
 		return this.editorColumnList;
 	}
 

@@ -11,31 +11,23 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel.dialog;
+package jstorybook.viewmodel.pane.list;
 
+import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.viewmodel.ViewModel;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import jstorybook.model.ExceptionModel;
 
 /**
- * 内部エラーダイアログのビューモデル
+ * エンティティリストのビューモデル
  *
  * @author KMY
  */
-public class ExceptionDialogViewModel extends ViewModel {
-
-	private ExceptionModel exceptionModel = new ExceptionModel();
+public abstract class EntityListViewModel extends ViewModel {
 
 	@Override
 	protected void storeProperty () {
-		this.applyProperty("exception", this.exceptionModel.exceptionProperty());
-		this.applyProperty("stackTrace", this.exceptionModel.stackTraceProperty());
-		this.applyProperty("exceptionTitle", this.exceptionModel.exceptionTitleProperty());
+		this.applyProperty("columnList", this.getColumnFactory().columnListProperty());
 	}
+
+	protected abstract ColumnFactory getColumnFactory ();
 
 }

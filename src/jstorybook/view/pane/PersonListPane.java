@@ -13,9 +13,16 @@
  */
 package jstorybook.view.pane;
 
+import java.util.ArrayList;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Person;
+import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
+import jstorybook.viewmodel.ViewModel;
+import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewmodel.pane.list.PersonListViewModel;
 
 /**
  * 登場人物のリスト
@@ -26,7 +33,12 @@ public class PersonListPane extends EntityListPane<Person> {
 
 	public PersonListPane () {
 		super(ResourceManager.getMessage("msg.person"));
-		this.setColumnFactory(PersonColumnFactory.getInstance());		// TODO: モデルとビューが密結合している
+		this.viewModelList.add(new PersonListViewModel());
+
+		Property<ArrayList> listp = this.viewModelList.getProperty("columnList", ArrayList.class);
+		if (!ViewModel.isNullProperty(listp)) {
+			this.setColumnList(listp.getValue());
+		}
 	}
 
 }

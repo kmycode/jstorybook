@@ -11,19 +11,21 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.model.entity.column;
+package jstorybook.viewmodel.pane.list;
+
+import jstorybook.model.entity.columnfactory.ColumnFactory;
+import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 
 /**
- * カラムの種類
+ * 登場人物リストのビューモデル
  *
  * @author KMY
  */
-public enum ColumnType {
+public class PersonListViewModel extends EntityListViewModel {
 
-	TEXT,
-	DATE,
-	DATETIME,
-	INTNUM,
-	FLOATNUM;
+	@Override
+	protected ColumnFactory getColumnFactory () {
+		return PersonColumnFactory.getInstance();
+	}
 
 }

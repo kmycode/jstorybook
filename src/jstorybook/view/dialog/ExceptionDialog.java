@@ -72,19 +72,19 @@ public class ExceptionDialog extends Alert {
 		this(AlertType.ERROR);
 	}
 
-	public ExceptionDialog (Exception e) {
+	public ExceptionDialog (Throwable e) {
 		this();
 		this.setException(e);
 	}
 
 	// べんり表示メソッド
-	public static void showAndWait (Exception e) {
+	public static void showAndWait (Throwable e) {
 		ExceptionDialog dlg = new ExceptionDialog(e);
 		dlg.showAndWait();
 	}
 
 	// エラー画面表示に必要なリソースなどの読み込みがままならない時だけに臨時で使う
-	public static void showExpenditure (Exception e) {
+	public static void showExpenditure (Throwable e) {
 		e.printStackTrace();
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setContentText(e.toString());
@@ -92,7 +92,7 @@ public class ExceptionDialog extends Alert {
 		alert.showAndWait();
 	}
 
-	public void setException (Exception e) {
+	public void setException (Throwable e) {
 		this.viewModelList.setProperty("exception", e);
 	}
 

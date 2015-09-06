@@ -14,8 +14,8 @@
 package jstorybook.model.entity.columnfactory;
 
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.column.EditorColumn;
-import jstorybook.model.entity.column.StringColumn;
+import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.StringColumn;
 
 /**
  * 登場人物リストのカラム
@@ -40,12 +40,12 @@ public class PersonColumnFactory extends ColumnFactory {
 		column = new StringColumn(ResourceManager.getMessage("msg.person.lastname"), "lastName");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.add(column);
+		this.editorColumnList.get().add(column);
 
 		column = new StringColumn(ResourceManager.getMessage("msg.person.firstname"), "firstName");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.add(column);
+		this.editorColumnList.get().add(column);
 	}
 
 }

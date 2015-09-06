@@ -14,7 +14,9 @@
 package jstorybook.viewmodel;
 
 import com.sun.javafx.binding.ExpressionHelper;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -24,6 +26,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WritableObjectValue;
+import jstorybook.view.dialog.ExceptionDialog;
+import org.jfree.ui.about.resources.AboutResources_pl;
 
 /**
  *
@@ -31,15 +35,37 @@ import javafx.beans.value.WritableObjectValue;
  */
 public abstract class ViewModel {
 
-	private HashMap<String, Property> propertyList = new HashMap<>();
+	private List<PropertyContainer> propertyList = new ArrayList<>();
 	private static final ObjectProperty nullObject = new NullObjectProperty();
+	private boolean isPropertyStored = false;
 
 	protected void applyProperty (String propertyName, Property property) {
-		this.propertyList.put(propertyName, property);
+		this.propertyList.add(new PropertyContainer(propertyName, property, property.getValue().getClass()));
+		this.isPropertyStored = true;
+	}
+
+	protected void applyEmptyProperty () {
+		this.isPropertyStored = true;
 	}
 
 	public Property getProperty (String propertyName) {
-		Property result = this.propertyList.get(propertyName);
+		return this.getProperty(propertyName, Object.class);
+	}
+
+	public <T> Property<T> getProperty (String propertyName, Class<T> propertyClass) {
+		// まだstorePropertyが実行されてない時は、実行する
+		if (!this.isPropertyStored) {
+			this.storeProperty();
+			this.isPropertyStored = true;
+		}
+		Property<T> result = null;
+		for (PropertyContainer pc : this.propertyList) {
+			if (pc.getName().equals(propertyName) && (propertyClass == Object.class || pc.getPropertyClass()
+					== propertyClass)) {
+				result = pc.getProperty();
+				break;
+			}
+		}
 		if (result == null) {
 			result = ViewModel.nullObject;
 		}
@@ -54,7 +80,7 @@ public abstract class ViewModel {
 		return ViewModel.nullObject;
 	}
 
-	public void setProperty (String propertyName, Object value) {
+	public <T> void setProperty (String propertyName, T value) {
 		Property property = this.getProperty(propertyName);
 		if (property != null && property instanceof WritableObjectValue) {
 			((WritableObjectValue) property).set(value);
@@ -62,6 +88,36 @@ public abstract class ViewModel {
 	}
 
 	abstract protected void storeProperty ();
+
+	/**
+	 * プロパティ情報を積み込むコンテナ
+	 */
+	private static class PropertyContainer<T> {
+		private final String propertyName;
+		private final Property<T> property;
+
+		public PropertyContainer (String name, Property<T> prop) {
+			this.propertyName = name;
+			this.property = prop;
+		}
+
+		public PropertyContainer (String name, Property<T> prop, Class<T> cl) {
+			this.propertyName = name;
+			this.property = prop;
+		}
+
+		public String getName () {
+			return this.propertyName;
+		}
+
+		public Property<T> getProperty () {
+			return this.property;
+		}
+
+		public Class getPropertyClass () {
+			return this.property.getValue().getClass();
+		}
+	}
 
 	/*
 	 * NULLオブジェクトプロパティ

@@ -20,4 +20,14 @@ package jstorybook.viewtool.messenger;
  */
 public abstract class Message {
 
+	private boolean isUsed = false;
+
+	public boolean isUsed () {
+		return this.isUsed;
+	}
+
+	public void setUsed () {
+		this.isUsed = true;
+	}
+
 }

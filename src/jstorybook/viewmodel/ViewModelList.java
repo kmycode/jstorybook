@@ -31,10 +31,15 @@ public class ViewModelList extends ArrayList<ViewModel> {
 		}
 	}
 
+	// 型安全性を重視するため、基本はgetProperty(String, Class<T>)を使うこと
 	public Property getProperty (String propertyName) {
-		Property result = ViewModel.getNullProperty();
+		return this.getProperty(propertyName, Object.class);
+	}
+
+	public <T> Property<T> getProperty (String propertyName, Class<T> propertyClass) {
+		Property<T> result = ViewModel.getNullProperty();
 		for (ViewModel vm : this) {
-			result = vm.getProperty(propertyName);
+			result = vm.getProperty(propertyName, propertyClass);
 			if (!ViewModel.isNullProperty(result)) {
 				break;
 			}

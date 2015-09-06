@@ -11,7 +11,7 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.model.entity.column;
+package jstorybook.viewtool.model;
 
 /**
  * 文字列を入力するカラム

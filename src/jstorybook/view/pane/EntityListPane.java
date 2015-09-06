@@ -19,8 +19,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import jstorybook.model.entity.Entity;
-import jstorybook.model.entity.column.EditorColumn;
+import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
+import jstorybook.viewmodel.ViewModelList;
 
 /**
  * エンティティのリストを表示するパネル
@@ -31,6 +32,7 @@ import jstorybook.model.entity.columnfactory.ColumnFactory;
 public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	private TableView<T> tableView;
+	protected ViewModelList viewModelList = new ViewModelList();
 
 	protected EntityListPane (String title) {
 		super(title);
@@ -39,9 +41,15 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.setContent(tableView);
 	}
 
+	// setColumnListで代用
+	@Deprecated
 	protected void setColumnFactory (ColumnFactory cf) {
 		this.tableView.getColumns().clear();
-		for (EditorColumn column : cf.getColumnList()) {
+		this.setColumnList(cf.columnListProperty().get());
+	}
+
+	protected void setColumnList (ArrayList<EditorColumn> cl) {
+		for (EditorColumn column : cl) {
 			this.addTableColumn(column);
 		}
 	}

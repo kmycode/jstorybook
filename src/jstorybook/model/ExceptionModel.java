@@ -27,23 +27,23 @@ import jstorybook.viewmodel.dialog.ExceptionDialogViewModel;
  */
 public class ExceptionModel {
 
-	private ObjectProperty<Exception> exception = new SimpleObjectProperty<>();
+	private ObjectProperty<Throwable> exception = new SimpleObjectProperty<>();
 	private StringProperty stackTrace = new SimpleStringProperty();
 	private StringProperty exceptionTitle = new SimpleStringProperty();
 
 	public ExceptionModel () {
 		this.exception.addListener((obj) -> {
-			Exception newObj = ((ObjectProperty<Exception>) obj).get();
+			Throwable newObj = ((ObjectProperty<Throwable>) obj).get();
 			ExceptionModel.this.stackTrace.set(ExceptionModel.this.getStackTrace());
 			ExceptionModel.this.exceptionTitle.set(ExceptionModel.this.getExceptionTitle());
 		});
 	}
 
-	public ExceptionModel (Exception e) {
+	public ExceptionModel (Throwable e) {
 		this.exception.set(e);
 	}
 
-	public ObjectProperty<Exception> exceptionProperty () {
+	public ObjectProperty<Throwable> exceptionProperty () {
 		return this.exception;
 	}
 

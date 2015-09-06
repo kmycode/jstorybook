@@ -160,7 +160,6 @@ public class MainWindow extends MyStage {
 	// -------------------------------------------------------
 	// プログラムを終了
 	private void quitApplication () {
-		System.out.println("Quit");
 		this.close();
 	}
 
