@@ -26,10 +26,7 @@ import java.util.List;
 public class Messenger {
 
 	private static final Messenger defaultInstance = new Messenger();
-	private List<MessageReceiver> receiverList = new ArrayList<>();
-
-	protected Messenger () {
-	}
+	private final List<MessageReceiver> receiverList = new ArrayList<>();
 
 	public static Messenger getInstance () {
 		return Messenger.defaultInstance;

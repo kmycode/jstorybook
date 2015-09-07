@@ -21,20 +21,23 @@ import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * 全てのストーリーを閉じ、アプリを終了する
+ * 現在開いているストーリーを閉じる
  *
  * @author KMY
  */
-public class QuitAction extends Action {
+public class ExitAction extends Action {
 
-	public QuitAction () {
+	private final Messenger messenger;
+
+	public ExitAction (Messenger messenger) {
 		this.name.set(ResourceManager.getMessage("msg.exit"));
+		this.messenger = messenger;
 	}
 
 	// TODO: ファイルモデルができたら、ロジックをそこへうつす
 	@Override
 	public void onAction () {
-		Messenger.getInstance().send(new ApplicationQuitMessage());
+		this.messenger.send(new ApplicationQuitMessage());
 	}
 
 }

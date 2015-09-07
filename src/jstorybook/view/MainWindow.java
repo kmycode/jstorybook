@@ -45,7 +45,7 @@ import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.PersonListPane;
 import jstorybook.viewmodel.MainWindowViewModel;
 import jstorybook.viewmodel.ViewModelList;
-import jstorybook.viewtool.action.QuitAction;
+import jstorybook.viewtool.action.ExitAction;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
@@ -56,6 +56,8 @@ import storybook.SbConstants;
  * @author KMY
  */
 public class MainWindow extends MyStage {
+
+	private final Messenger messenger = new Messenger();
 
 	private final ViewModelList viewModelList = new ViewModelList(new MainWindowViewModel());
 	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
@@ -127,7 +129,7 @@ public class MainWindow extends MyStage {
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		{
-			menu = new QuitAction().createMenuItem();
+			menu = new ExitAction(this.messenger).createMenuItem();
 			fileMenu.getItems().add(menu);
 		}
 
@@ -155,12 +157,10 @@ public class MainWindow extends MyStage {
 
 	// メッセンジャを設定
 	private void applyMessenger () {
-		Messenger messenger = Messenger.getInstance();
-
-		messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
+		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
 		});
-		messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
+		this.messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
 			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev.getSource());
 		});
 	}
