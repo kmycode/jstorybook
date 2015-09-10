@@ -14,6 +14,7 @@
 package jstorybook.viewtool.messenger;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.story.StoryModel;
 
@@ -23,10 +24,16 @@ import jstorybook.model.story.StoryModel;
  */
 public class StoryModelCurrentGetMessage extends Message {
 
-	private ObjectProperty<StoryModel> storyModel = new SimpleObjectProperty<>();
+	private ObjectProperty<StoryModel> storyModel = new SimpleObjectProperty<>(null);
 
 	public ObjectProperty<StoryModel> storyModelProperty () {
 		return this.storyModel;
+	}
+
+	public void setStoryModel (Property<?> storyModel) {
+		if (storyModel.getValue() != null && storyModel.getValue().getClass() == StoryModel.class) {
+			this.storyModel.set((StoryModel) storyModel.getValue());
+		}
 	}
 
 }

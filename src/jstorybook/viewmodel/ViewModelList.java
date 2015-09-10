@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.WritableObjectValue;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * ビューモデルのリスト。ビューで、複数のビューモデルを一括管理するときに使う
@@ -50,6 +51,12 @@ public class ViewModelList extends ArrayList<ViewModel> {
 	public void setProperty (String propertyName, Object value) {
 		for (ViewModel vm : this) {
 			vm.setProperty(propertyName, value);
+		}
+	}
+
+	public void storeMessenger (Messenger messenger) {
+		for (ViewModel vm : this) {
+			vm.storeMessenger(messenger);
 		}
 	}
 

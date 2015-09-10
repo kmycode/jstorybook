@@ -14,13 +14,8 @@
 package jstorybook.viewmodel.dialog;
 
 import jstorybook.viewmodel.ViewModel;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import jstorybook.model.ExceptionModel;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 内部エラーダイアログのビューモデル
@@ -36,6 +31,10 @@ public class ExceptionDialogViewModel extends ViewModel {
 		this.applyProperty("exception", this.exceptionModel.exceptionProperty());
 		this.applyProperty("stackTrace", this.exceptionModel.stackTraceProperty());
 		this.applyProperty("exceptionTitle", this.exceptionModel.exceptionTitleProperty());
+	}
+
+	@Override
+	public void storeMessenger (Messenger messenger) {
 	}
 
 }

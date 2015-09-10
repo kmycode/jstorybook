@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import jstorybook.view.dialog.ExceptionDialog;
 
 /**
  * メッセンジャ
@@ -28,11 +29,18 @@ public class Messenger {
 	private static final Messenger defaultInstance = new Messenger();
 	private final List<MessageReceiver> receiverList = new ArrayList<>();
 
+	public Messenger () {
+		// 全てのメッセンジャに共通してつける機能
+		this.apply(ExceptionMessage.class, this, (obj) -> {
+			ExceptionDialog.showAndWait((Throwable) obj.getSource());
+		});
+	}
+
 	public static Messenger getInstance () {
 		return Messenger.defaultInstance;
 	}
 
-	public void apply (Class<? extends Message> messageType, Object actionApplier, ActionListener listener) {
+	public final void apply (Class<? extends Message> messageType, Object actionApplier, ActionListener listener) {
 		this.receiverList.add(new MessageReceiver(messageType, actionApplier, listener));
 	}
 

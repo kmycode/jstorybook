@@ -15,6 +15,7 @@ package jstorybook.viewmodel.pane.list;
 
 import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 登場人物リストのビューモデル
@@ -26,6 +27,10 @@ public class PersonListViewModel extends EntityListViewModel {
 	@Override
 	protected ColumnFactory getColumnFactory () {
 		return PersonColumnFactory.getInstance();
+	}
+
+	@Override
+	public void storeMessenger (Messenger messenger) {
 	}
 
 }

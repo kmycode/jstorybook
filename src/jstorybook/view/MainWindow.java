@@ -49,6 +49,7 @@ import jstorybook.viewtool.action.ExitAction;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
+import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
 import storybook.SbConstants;
 
 /**
@@ -163,17 +164,31 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
 			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev.getSource());
 		});
+		this.messenger.apply(StoryFileModelFailedMessage.class, this, (ev) -> {
+			MainWindow.this.showErrorMessage(ResourceManager.getMessage("msg.storyfile.failed",
+																		((StoryFileModelFailedMessage) ev.getSource()).
+																		filePathProperty().get()));
+		});
 	}
 
 	// -------------------------------------------------------
 	// ストーリーモデルを返す
 	private void mountCurrentStoryModel (StoryModelCurrentGetMessage message) {
-		message.storyModelProperty().bind(this.viewModelList.getProperty("storyModel"));
+		message.setStoryModel(this.viewModelList.getProperty("storyModel"));
 	}
 
 	// プログラムを終了
 	private void quitApplication () {
 		this.close();
+	}
+
+	// 一般的なエラーメッセージを表示するダイアログ
+	private void showErrorMessage (String mes) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle(ResourceManager.getMessage("msg.error"));
+		alert.setHeaderText(ResourceManager.getMessage("msg.error.caption"));
+		alert.setContentText(mes);
+		alert.showAndWait();
 	}
 
 }

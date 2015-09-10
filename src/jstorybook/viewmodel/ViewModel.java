@@ -27,6 +27,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WritableObjectValue;
 import jstorybook.view.dialog.ExceptionDialog;
+import jstorybook.viewtool.messenger.Messenger;
 import org.jfree.ui.about.resources.AboutResources_pl;
 
 /**
@@ -88,6 +89,8 @@ public abstract class ViewModel {
 	}
 
 	abstract protected void storeProperty ();
+
+	abstract public void storeMessenger (Messenger messenger);
 
 	/**
 	 * プロパティ情報を積み込むコンテナ

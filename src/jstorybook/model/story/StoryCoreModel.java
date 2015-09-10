@@ -23,8 +23,8 @@ import javafx.beans.property.StringProperty;
  */
 public class StoryCoreModel {
 
-	private final StringProperty title = new SimpleStringProperty();
-	private final StringProperty author = new SimpleStringProperty();
+	private final StringProperty title = new SimpleStringProperty("");
+	private final StringProperty author = new SimpleStringProperty("");
 
 	public StringProperty titleProperty () {
 		return this.title;

@@ -16,6 +16,7 @@ package jstorybook.viewmodel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.story.StoryModel;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * メインウィンドウのビューモデル
@@ -30,7 +31,13 @@ public class MainWindowViewModel extends ViewModel {
 	protected void storeProperty () {
 		this.applyProperty("storyModel", this.storyModel);
 		this.applyProperty("storyTitle", this.storyModel.get().getCore().titleProperty());
+		this.applyProperty("storyFileName", this.storyModel.get().fileNameProperty());
 		this.applyProperty("authorName", this.storyModel.get().getCore().authorProperty());
+	}
+
+	@Override
+	public void storeMessenger (Messenger messenger) {
+		this.storyModel.get().setMessenger(messenger);
 	}
 
 }
