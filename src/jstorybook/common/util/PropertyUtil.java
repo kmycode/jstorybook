@@ -11,26 +11,34 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.messenger;
+package jstorybook.common.util;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 
 /**
- * 例外が発生した時に使うメッセージ
+ * プロパティを扱う上でのユーティリティクラス
  *
- * @author KMY
+  * @author KMY
  */
-public class ExceptionMessage extends Message {
+public class PropertyUtil {
 
-	private final ObjectProperty<Throwable> exception = new SimpleObjectProperty<>();
-
-	public ExceptionMessage (Throwable exception) {
-		this.exception.set(exception);
+	private PropertyUtil () {
 	}
 
-	public ObjectProperty<Throwable> exceptionProperty () {
-		return this.exception;
+	// 指定されたすべてのプロパティに、共通のリスナーを設定する
+	public static void addAllListener (ChangeListener<?> listener, Property<?>... args) {
+		for (Property p : args) {
+			p.addListener(listener);
+		}
+	}
+
+	// 指定されたすべてのプロパティに、共通のリスナーを設定する
+	public static void addAllListener (InvalidationListener listener, Property<?>... args) {
+		for (Property p : args) {
+			p.addListener(listener);
+		}
 	}
 
 }

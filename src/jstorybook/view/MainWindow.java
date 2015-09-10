@@ -17,22 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jstorybook.common.contract.SystemKey;
@@ -40,17 +34,16 @@ import jstorybook.common.contract.PreferenceKey;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
-import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.PersonListPane;
 import jstorybook.viewmodel.MainWindowViewModel;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.action.ExitAction;
+import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
-import storybook.SbConstants;
 
 /**
  *
@@ -59,6 +52,7 @@ import storybook.SbConstants;
 public class MainWindow extends MyStage {
 
 	private final Messenger messenger = new Messenger();
+	private final WindowTitleCompleter titleCompleter = new WindowTitleCompleter();
 
 	private final ViewModelList viewModelList = new ViewModelList(new MainWindowViewModel());
 	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
@@ -114,11 +108,16 @@ public class MainWindow extends MyStage {
 		this.applyMessenger();
 
 		// -------------------------------------------------------
+		// ウィンドウタイトルを設定
+		this.titleCompleter.appTitleProperty().set(SystemKey.SYSTEM_NAME.getValue().toString());
+		this.titleCompleter.versionProperty().set(SystemKey.SYSTEM_VERSION.getValue().toString());
+		this.titleCompleter.storyFileNameProperty().bind(this.viewModelList.getProperty("storyFileName"));
+		this.titleProperty().bind(this.titleCompleter.titleProperty());
 
+		// -------------------------------------------------------
 		// シーンを設定
 		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
-		this.setTitle(SystemKey.SYSTEM_NAME.getValue().toString() + " " + SystemKey.SYSTEM_VERSION.getValue().toString());
 		this.setScene(scene);
 	}
 
@@ -148,7 +147,7 @@ public class MainWindow extends MyStage {
 	// メインツールバーを作成
 	private void modelingMainToolBar () {
 		ToolBar toolBar = new ToolBar();
-		List<Button> buttonList = new ArrayList<Button>();
+		List<Button> buttonList = new ArrayList<>();
 
 		buttonList.add(new Button("dummy"));
 
@@ -162,11 +161,11 @@ public class MainWindow extends MyStage {
 			MainWindow.this.quitApplication();
 		});
 		this.messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
-			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev.getSource());
+			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev);
 		});
 		this.messenger.apply(StoryFileModelFailedMessage.class, this, (ev) -> {
 			MainWindow.this.showErrorMessage(ResourceManager.getMessage("msg.storyfile.failed",
-																		((StoryFileModelFailedMessage) ev.getSource()).
+																		((StoryFileModelFailedMessage) ev).
 																		filePathProperty().get()));
 		});
 	}
@@ -187,6 +186,7 @@ public class MainWindow extends MyStage {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle(ResourceManager.getMessage("msg.error"));
 		alert.setHeaderText(ResourceManager.getMessage("msg.error.caption"));
+		alert.setTitle("Error");
 		alert.setContentText(mes);
 		alert.showAndWait();
 	}

@@ -13,10 +13,9 @@
  */
 package jstorybook.viewtool.messenger;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.InvalidationListener;
 import jstorybook.view.dialog.ExceptionDialog;
 
 /**
@@ -31,8 +30,8 @@ public class Messenger {
 
 	public Messenger () {
 		// 全てのメッセンジャに共通してつける機能
-		this.apply(ExceptionMessage.class, this, (obj) -> {
-			ExceptionDialog.showAndWait((Throwable) obj.getSource());
+		this.apply(ExceptionMessage.class, null, (obj) -> {
+			ExceptionDialog.showAndWait((Throwable) obj);
 		});
 	}
 
@@ -40,7 +39,7 @@ public class Messenger {
 		return Messenger.defaultInstance;
 	}
 
-	public final void apply (Class<? extends Message> messageType, Object actionApplier, ActionListener listener) {
+	public final void apply (Class<? extends Message> messageType, Object actionApplier, InvalidationListener listener) {
 		this.receiverList.add(new MessageReceiver(messageType, actionApplier, listener));
 	}
 
@@ -48,8 +47,7 @@ public class Messenger {
 		Class<? extends Message> messageType = message.getClass();
 		for (MessageReceiver receiver : this.receiverList) {
 			if (receiver.messageType == messageType) {
-				ActionEvent ev = new ActionEvent(message, message.hashCode(), message.toString());
-				receiver.listener.actionPerformed(ev);
+				receiver.listener.invalidated(message);
 			}
 		}
 	}
@@ -81,9 +79,10 @@ public class Messenger {
 
 		public final Class<? extends Message> messageType;
 		public final Object actionApplier;		// アクションを登録したオブジェクト
-		public final ActionListener listener;
+		public final InvalidationListener listener;
 
-		public MessageReceiver (Class<? extends Message> messageType, Object actionApplier, ActionListener listener) {
+		public MessageReceiver (Class<? extends Message> messageType, Object actionApplier,
+								InvalidationListener listener) {
 			this.messageType = messageType;
 			this.actionApplier = actionApplier;
 			this.listener = listener;
