@@ -46,6 +46,7 @@ import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
+import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 
 /**
  *
@@ -168,6 +169,9 @@ public class MainWindow extends MyStage {
 																		((StoryFileModelFailedMessage) ev).
 																		filePathProperty().get()));
 		});
+		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
+		});
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -204,6 +208,7 @@ public class MainWindow extends MyStage {
 		this.addTab(tab);
 		tab.columnListProperty().bind(this.viewModelList.getProperty("personColumnList"));
 		tab.itemsProperty().bind(this.viewModelList.getProperty("personList"));
+		this.viewModelList.getProperty("selectedEntity").bind(tab.selectedItemProperty());
 	}
 
 	// 登場人物編集タブを追加
@@ -211,6 +216,12 @@ public class MainWindow extends MyStage {
 		PersonEditorPane tab = new PersonEditorPane();
 		this.addTab(tab);
 		tab.columnListProperty().bind(this.viewModelList.getProperty("personColumnList"));
+	}
+
+	private void addPersonEditorTab (PersonEditorShowMessage message) {
+		PersonEditorPane tab = new PersonEditorPane();
+		this.addTab(tab);
+		tab.columnListProperty().bind(message.columnListProperty());
 	}
 
 	// -------------------------------------------------------

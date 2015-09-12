@@ -60,25 +60,19 @@ public abstract class EditorPane extends MyPane {
 		this.vbox.getChildren().add(this.gridPane);
 		VBox.setVgrow(this.vbox, Priority.ALWAYS);
 
-		this.setOnCloseRequest((ev) -> {
-			EditorPane.this.closePane();
+		// （まだ検証してないけど）循環参照によるメモリリークを予防する意味合い
+		this.setOnClosed((ev) -> {
+			for (WeakReference<Property> p : EditorPane.this.editPropertyList) {
+				if (p.get() != null) {
+					p.get().unbind();
+				}
+			}
+			this.editPropertyList.clear();
 		});
 	}
 
 	public ObjectProperty<List<EditorColumn>> columnListProperty () {
 		return this.columnList;
-	}
-
-	// 編集画面を閉じるとき、必ずこの処理を実行すること！
-	// さもないと、循環参照が起きる懸念あり
-	// （特に調査はしてないけど予防的なアレ）
-	private void closePane () {
-		for (WeakReference<Property> p : this.editPropertyList) {
-			if (p.get() != null) {
-				p.get().unbind();
-			}
-		}
-		this.editPropertyList.clear();
 	}
 
 	// この、めぢょっとぉ、ゎ、エディタ、をねっ、つくつくちちゃうのー！

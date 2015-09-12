@@ -30,6 +30,8 @@ public class StoryViewModel extends ViewModel {
 	@Override
 	protected void storeProperty () {
 		this.applyProperty("storyModel", this.storyModel);
+		this.applyProperty("selectedEntity", this.storyModel.get().selectedEntityProperty());
+
 		this.applyProperty("storyTitle", this.storyModel.get().getCore().titleProperty());
 		this.applyProperty("storyFileName", this.storyModel.get().fileNameProperty());
 		this.applyProperty("authorName", this.storyModel.get().getCore().authorProperty());

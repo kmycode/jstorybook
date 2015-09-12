@@ -14,7 +14,6 @@
 package jstorybook.view.pane.list;
 
 import java.util.ArrayList;
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -36,6 +35,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	private final TableView<T> tableView;
 	private final ObjectProperty<ArrayList<EditorColumn>> columnList = new SimpleObjectProperty<>();
+	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
 
 	protected EntityListPane (String title) {
 		super(title);
@@ -47,9 +47,13 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.tableView = new TableView<>();
 		this.setContent(tableView);
 
-		this.tableView.getItems().addListener(new InvalidationListener() {
-			@Override
-			public void invalidated (Observable observable) {
+		this.tableView.getItems().addListener((Observable observable) -> {
+		});
+
+		this.tableView.setOnMouseClicked((ev) -> {
+			// ダブルクリックで選択
+			if (ev.getClickCount() >= 2) {
+				this.selectedItem.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItem());
 			}
 		});
 	}
@@ -75,6 +79,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	public ObjectProperty<ArrayList<EditorColumn>> columnListProperty () {
 		return this.columnList;
+	}
+
+	public ObjectProperty<T> selectedItemProperty () {
+		return this.selectedItem;
 	}
 
 }

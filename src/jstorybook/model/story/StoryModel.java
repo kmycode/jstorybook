@@ -14,14 +14,18 @@
 package jstorybook.model.story;
 
 import java.sql.SQLException;
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.model.dao.PersonDAO;
+import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Person;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
+import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 
 /**
  * ストーリーファイルのモデル
@@ -32,7 +36,10 @@ public class StoryModel implements IUseMessenger {
 
 	private final ObjectProperty<StoryCoreModel> core = new SimpleObjectProperty<>(new StoryCoreModel());
 	private final StringProperty storyFileName = new SimpleStringProperty("");
+
 	private final ObjectProperty<PersonDAO> personDAO = new SimpleObjectProperty<>(new PersonDAO());
+
+	private final ObjectProperty<Entity> selectedEntity = new SimpleObjectProperty<>();
 	private final ObjectProperty<StoryEntityColumnModel> entityColumn = new SimpleObjectProperty<>(
 			new StoryEntityColumnModel());
 
@@ -48,6 +55,15 @@ public class StoryModel implements IUseMessenger {
 				this.setDAO();
 			} catch (SQLException e) {
 				this.messenger.send(new StoryFileModelFailedMessage(((StringProperty) obj).get()));
+			}
+		});
+
+		// TableViewなどでモデルを選択した時のイベント
+		this.selectedEntity.addListener((Observable obj) -> {
+			Entity selected = ((ObjectProperty<Entity>) obj).get();
+			if (selected instanceof Person) {
+				this.messenger.send(new PersonEditorShowMessage((Person) selected, this.entityColumn.get().
+																getPersonColumnList((Person) selected)));
 			}
 		});
 	}
@@ -72,6 +88,11 @@ public class StoryModel implements IUseMessenger {
 
 	public StringProperty fileNameProperty () {
 		return this.storyFileName;
+	}
+
+	// TableViewなどで選択されたエンティティ
+	public ObjectProperty<Entity> selectedEntityProperty () {
+		return this.selectedEntity;
 	}
 
 	// -------------------------------------------------------

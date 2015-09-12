@@ -11,31 +11,21 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.model.story;
+package jstorybook.viewtool.messenger.pane;
 
 import java.util.List;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.entity.Person;
-import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.viewtool.model.EditorColumn;
 
 /**
- * 各エンティティのカラムをまとめたモデル
+ * 登場人物の編集エディタを表示するメッセージ
  *
- * @author KMY
+  * @author KMY
  */
-public class StoryEntityColumnModel {
+public class PersonEditorShowMessage extends EntityEditorShowMessage<Person> {
 
-	private final ObjectProperty<List<EditorColumn>> personColumnList = new SimpleObjectProperty<>(PersonColumnFactory.
-			getInstance().createColumnList());
-
-	public ObjectProperty<List<EditorColumn>> personColumnListProperty () {
-		return this.personColumnList;
-	}
-
-	List<EditorColumn> getPersonColumnList (Person model) {
-		return PersonColumnFactory.getInstance().createColumnList(model);
+	public PersonEditorShowMessage (Person e, List<EditorColumn> columns) {
+		super(e, columns);
 	}
 
 }
