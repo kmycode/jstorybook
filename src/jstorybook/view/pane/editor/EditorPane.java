@@ -13,8 +13,11 @@
  */
 package jstorybook.view.pane.editor;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -30,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.view.pane.MyPane;
+import jstorybook.viewtool.converter.LocalDateCalendarConverter;
 import jstorybook.viewtool.model.EditorColumn;
 
 /**
@@ -44,6 +48,7 @@ public abstract class EditorPane extends MyPane {
 	protected final AnchorPane rootPane = new AnchorPane();
 	protected final VBox vbox = new VBox();
 	protected final GridPane gridPane = new GridPane();
+	private List<WeakReference<Property>> editPropertyList = new ArrayList<>();
 
 	protected EditorPane (String title) {
 		super(title);
@@ -54,10 +59,26 @@ public abstract class EditorPane extends MyPane {
 		this.rootPane.getChildren().add(this.vbox);
 		this.vbox.getChildren().add(this.gridPane);
 		VBox.setVgrow(this.vbox, Priority.ALWAYS);
+
+		this.setOnCloseRequest((ev) -> {
+			EditorPane.this.closePane();
+		});
 	}
 
 	public ObjectProperty<List<EditorColumn>> columnListProperty () {
 		return this.columnList;
+	}
+
+	// 編集画面を閉じるとき、必ずこの処理を実行すること！
+	// さもないと、循環参照が起きる懸念あり
+	// （特に調査はしてないけど予防的なアレ）
+	private void closePane () {
+		for (WeakReference<Property> p : this.editPropertyList) {
+			if (p.get() != null) {
+				p.get().unbind();
+			}
+		}
+		this.editPropertyList.clear();
 	}
 
 	// この、めぢょっとぉ、ゎ、エディタ、をねっ、つくつくちちゃうのー！
@@ -95,6 +116,8 @@ public abstract class EditorPane extends MyPane {
 	// ColumnType.TEXT
 	private Control generateTextEdit (EditorColumn column) {
 		TextField node = new TextField();
+		node.textProperty().bindBidirectional(column.getProperty());
+		this.editPropertyList.add(new WeakReference<>(node.textProperty()));
 		return node;
 	}
 
@@ -102,12 +125,21 @@ public abstract class EditorPane extends MyPane {
 	private Control generateDateEdit (EditorColumn column) {
 		DatePicker node = new DatePicker();
 		node.setPromptText("yyyy/MM/dd");
+		
+		LocalDateCalendarConverter converter = new LocalDateCalendarConverter();
+		converter.calendarProperty().bindBidirectional(column.getProperty());
+		converter.localDateProperty().bindBidirectional(node.valueProperty());
+
+		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
+		this.editPropertyList.add(new WeakReference<>(converter.calendarProperty()));
 		return node;
 	}
 
 	// ColumnType.COLOR
 	private Control generateColorEdit (EditorColumn column) {
 		ColorPicker node = new ColorPicker();
+		node.valueProperty().bindBidirectional(column.getProperty());
+		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		return node;
 	}
 

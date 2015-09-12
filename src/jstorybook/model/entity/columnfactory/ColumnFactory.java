@@ -15,9 +15,7 @@ package jstorybook.model.entity.columnfactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.viewtool.model.EditorColumn;
 
@@ -26,7 +24,7 @@ import jstorybook.viewtool.model.EditorColumn;
  *
  * @author KMY
  */
-public abstract class ColumnFactory {
+public abstract class ColumnFactory<E> {
 
 	protected ObjectProperty<ArrayList<EditorColumn>> editorColumnList = new SimpleObjectProperty<>(
 			new ArrayList<EditorColumn>());
@@ -48,6 +46,8 @@ public abstract class ColumnFactory {
 		return this.editorColumnList;
 	}
 
-	protected abstract void createColumnList ();
+	public abstract ArrayList<EditorColumn> createColumnList ();
+
+	public abstract ArrayList<EditorColumn> createColumnList (E model);
 
 }

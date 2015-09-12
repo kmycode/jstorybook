@@ -27,7 +27,7 @@ import jstorybook.viewtool.model.EditorColumn;
 public class StoryEntityColumnModel {
 
 	private final ObjectProperty<List<EditorColumn>> personColumnList = new SimpleObjectProperty<>(PersonColumnFactory.
-			getInstance().columnListProperty().get());
+			getInstance().createColumnList());
 
 	public ObjectProperty<List<EditorColumn>> personColumnListProperty () {
 		return this.personColumnList;

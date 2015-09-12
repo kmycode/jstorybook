@@ -13,6 +13,8 @@
  */
 package jstorybook.viewtool.model;
 
+import javafx.beans.property.Property;
+
 /**
  * エンティティの編集項目をあらわす抽象クラス
  *
@@ -24,6 +26,7 @@ public abstract class EditorColumn<T> {
 	protected final String columnName;
 	protected final String propertyName;
 	protected final ColumnType columnType;
+	private Property property;
 	private int columnWidth = 100;
 	private boolean isDefaultShowFlag = false;
 
@@ -59,6 +62,14 @@ public abstract class EditorColumn<T> {
 
 	public void setDefaultShow (boolean val) {
 		this.isDefaultShowFlag = val;
+	}
+
+	public Property getProperty () {
+		return this.property;
+	}
+
+	public void setProperty (Property p) {
+		this.property = p;
 	}
 
 	public String getColumnName () {

@@ -23,7 +23,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import jstorybook.model.entity.Entity;
-import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewtool.model.EditorColumn;
 
@@ -53,13 +52,6 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 			public void invalidated (Observable observable) {
 			}
 		});
-	}
-
-	// setColumnListで代用
-	@Deprecated
-	protected void setColumnFactory (ColumnFactory cf) {
-		this.tableView.getColumns().clear();
-		this.setColumnList(cf.columnListProperty().get());
 	}
 
 	protected void setColumnList (ArrayList<EditorColumn> cl) {

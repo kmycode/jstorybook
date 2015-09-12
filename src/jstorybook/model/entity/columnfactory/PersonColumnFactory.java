@@ -13,7 +13,9 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import java.util.ArrayList;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Person;
 import jstorybook.viewtool.model.ColorColumn;
 import jstorybook.viewtool.model.DateColumn;
 import jstorybook.viewtool.model.EditorColumn;
@@ -24,7 +26,7 @@ import jstorybook.viewtool.model.StringColumn;
  *
  * @author KMY
  */
-public class PersonColumnFactory extends ColumnFactory {
+public class PersonColumnFactory extends ColumnFactory<Person> {
 
 	private static PersonColumnFactory defaultInstance = new PersonColumnFactory();
 
@@ -36,33 +38,49 @@ public class PersonColumnFactory extends ColumnFactory {
 	}
 
 	@Override
-	protected void createColumnList () {
+	public ArrayList<EditorColumn> createColumnList () {
+		return this.createColumnList(null);
+	}
+
+	public ArrayList<EditorColumn> createColumnList (Person model) {
+		if (model == null) {
+			model = new Person();
+		}
+
+		ArrayList<EditorColumn> columnList = new ArrayList<>();
 		EditorColumn column;
 
 		column = new StringColumn(ResourceManager.getMessage("msg.person.lastname"), "lastName");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.get().add(column);
+		column.setProperty(model.lastNameProperty());
+		columnList.add(column);
 
 		column = new StringColumn(ResourceManager.getMessage("msg.person.firstname"), "firstName");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.get().add(column);
+		column.setProperty(model.firstNameProperty());
+		columnList.add(column);
 
 		column = new DateColumn(ResourceManager.getMessage("msg.person.birthday"), "birthday");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.get().add(column);
+		column.setProperty(model.birthdayProperty());
+		columnList.add(column);
 
 		column = new DateColumn(ResourceManager.getMessage("msg.person.dayofdeath"), "dayOfDeath");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.get().add(column);
+		column.setProperty(model.dayOfDeathProperty());
+		columnList.add(column);
 
 		column = new ColorColumn(ResourceManager.getMessage("msg.person.color"), "color");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
-		this.editorColumnList.get().add(column);
+		column.setProperty(model.colorProperty());
+		columnList.add(column);
+
+		return columnList;
 	}
 
 }
