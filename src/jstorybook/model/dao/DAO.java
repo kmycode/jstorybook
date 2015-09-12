@@ -13,6 +13,7 @@
  */
 package jstorybook.model.dao;
 
+import java.sql.SQLException;
 import jstorybook.model.story.StoryFileModel;
 
 /**
@@ -24,9 +25,12 @@ public abstract class DAO {
 
 	private StoryFileModel storyFileModel;
 
-	public void setStoryFileModel (StoryFileModel storyFileModel) {
+	public void setStoryFileModel (StoryFileModel storyFileModel) throws SQLException {
 		this.storyFileModel = storyFileModel;
+		this.storyFileModelSet();
 	}
+
+	abstract protected void storyFileModelSet () throws SQLException;
 
 	protected StoryFileModel getStoryFileModel () {
 		return this.storyFileModel;

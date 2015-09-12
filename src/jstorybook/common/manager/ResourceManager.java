@@ -19,8 +19,6 @@ import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Alert;
-import static storybook.toolkit.I18N.getMessageResourceBundle;
-import static storybook.toolkit.I18N.getMsg;
 import jstorybook.view.dialog.ExceptionDialog;
 
 /**

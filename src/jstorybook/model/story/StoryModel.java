@@ -13,16 +13,12 @@
  */
 package jstorybook.model.story;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.model.dao.PersonDAO;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
@@ -36,6 +32,9 @@ public class StoryModel implements IUseMessenger {
 
 	private final ObjectProperty<StoryCoreModel> core = new SimpleObjectProperty<>(new StoryCoreModel());
 	private final StringProperty storyFileName = new SimpleStringProperty("");
+	private final ObjectProperty<PersonDAO> personDAO = new SimpleObjectProperty<>(new PersonDAO());
+	private final ObjectProperty<StoryEntityColumnModel> entityColumn = new SimpleObjectProperty<>(
+			new StoryEntityColumnModel());
 
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
@@ -46,20 +45,39 @@ public class StoryModel implements IUseMessenger {
 		this.storyFileName.addListener((obj) -> {
 			try {
 				this.storyFile.set(new StoryFileModel(((StringProperty) obj).get()));
+				this.setDAO();
 			} catch (SQLException e) {
 				this.messenger.send(new StoryFileModelFailedMessage(((StringProperty) obj).get()));
 			}
 		});
 	}
 
-	// -------------------------------------------------------
+	// メッセンジャを設定した時に呼び出す
+	private void setDAO () throws SQLException {
+		this.personDAO.get().setStoryFileModel(this.storyFile.get());
+	}
 
+	// -------------------------------------------------------
+	// 関連するモデル
 	public ObjectProperty<StoryCoreModel> coreProperty () {
 		return this.core;
 	}
 
+	public ObjectProperty<StoryEntityColumnModel> entityColumnProperty () {
+		return this.entityColumn;
+	}
+
+	// -------------------------------------------------------
+	// StoryModelそのものが持つプロパティ
+
 	public StringProperty fileNameProperty () {
 		return this.storyFileName;
+	}
+
+	// -------------------------------------------------------
+	// DAO
+	public ObjectProperty<PersonDAO> personDAOProperty () {
+		return this.personDAO;
 	}
 
 	// -------------------------------------------------------

@@ -28,7 +28,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WritableObjectValue;
 import jstorybook.view.dialog.ExceptionDialog;
 import jstorybook.viewtool.messenger.Messenger;
-import org.jfree.ui.about.resources.AboutResources_pl;
 
 /**
  *
@@ -41,7 +40,8 @@ public abstract class ViewModel {
 	private boolean isPropertyStored = false;
 
 	protected void applyProperty (String propertyName, Property property) {
-		this.propertyList.add(new PropertyContainer(propertyName, property, property.getValue().getClass()));
+		this.propertyList.add(new PropertyContainer(propertyName, property, property.getValue() != null ? property.
+													getValue().getClass() : Object.class));
 		this.isPropertyStored = true;
 	}
 

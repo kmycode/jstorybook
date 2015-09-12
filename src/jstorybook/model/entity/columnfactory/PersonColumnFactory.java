@@ -14,6 +14,8 @@
 package jstorybook.model.entity.columnfactory;
 
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.viewtool.model.ColorColumn;
+import jstorybook.viewtool.model.DateColumn;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.StringColumn;
 
@@ -43,6 +45,21 @@ public class PersonColumnFactory extends ColumnFactory {
 		this.editorColumnList.get().add(column);
 
 		column = new StringColumn(ResourceManager.getMessage("msg.person.firstname"), "firstName");
+		column.setColumnWidth(100);
+		column.setDefaultShow(true);
+		this.editorColumnList.get().add(column);
+
+		column = new DateColumn(ResourceManager.getMessage("msg.person.birthday"), "birthday");
+		column.setColumnWidth(100);
+		column.setDefaultShow(true);
+		this.editorColumnList.get().add(column);
+
+		column = new DateColumn(ResourceManager.getMessage("msg.person.dayofdeath"), "dayOfDeath");
+		column.setColumnWidth(100);
+		column.setDefaultShow(true);
+		this.editorColumnList.get().add(column);
+
+		column = new ColorColumn(ResourceManager.getMessage("msg.person.color"), "color");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		this.editorColumnList.get().add(column);

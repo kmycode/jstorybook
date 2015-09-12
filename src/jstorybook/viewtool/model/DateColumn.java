@@ -14,14 +14,14 @@
 package jstorybook.viewtool.model;
 
 /**
- * 文字列を入力するカラム
+ * 日付を入力するカラム
  *
  * @author KMY
  */
-public class StringColumn extends EditorColumn<String> {
+public class DateColumn extends EditorColumn<String> {
 
-	public StringColumn (String columnName, String propertyName) {
-		super(columnName, propertyName, ColumnType.TEXT);
+	public DateColumn (String columnName, String propertyName) {
+		super(columnName, propertyName, ColumnType.DATE);
 	}
 
 }

@@ -11,17 +11,19 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.model;
+package jstorybook.view.pane.editor;
+
+import jstorybook.common.manager.ResourceManager;
 
 /**
- * 文字列を入力するカラム
+ * 登場人物エディタ
  *
  * @author KMY
  */
-public class StringColumn extends EditorColumn<String> {
+public class PersonEditorPane extends EditorPane {
 
-	public StringColumn (String columnName, String propertyName) {
-		super(columnName, propertyName, ColumnType.TEXT);
+	public PersonEditorPane () {
+		super(ResourceManager.getMessage("msg.edit.person"));
 	}
 
 }

@@ -11,39 +11,26 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.model.dao;
+package jstorybook.model.story;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import jstorybook.model.entity.StorySetting;
+import jstorybook.model.entity.columnfactory.PersonColumnFactory;
+import jstorybook.viewtool.model.EditorColumn;
 
 /**
- * ストーリー設定モデルを取得するDAO
+ * 各エンティティのカラムをまとめたモデル
  *
  * @author KMY
  */
-public class StorySettingDAO extends DAO {
+public class StoryEntityColumnModel {
 
-	private final ObjectProperty<ObservableList> modelList = new SimpleObjectProperty<>();
+	private final ObjectProperty<List<EditorColumn>> personColumnList = new SimpleObjectProperty<>(PersonColumnFactory.
+			getInstance().columnListProperty().get());
 
-	public StorySetting getSetting (String key) throws SQLException {
-		StorySetting model = null;
-		ResultSet rs = this.getStoryFileModel().executeQuery("select * from setting where key='" + key + "';");
-		if (rs.next()) {
-			model = new StorySetting();
-			model.keyProperty().set(rs.getString("key"));
-			model.valueProperty().set(rs.getString("value"));
-		}
-		return model;
-	}
-
-	@Override
-	protected void storyFileModelSet () throws SQLException {
-		this.modelList.set(FXCollections.observableArrayList());
+	public ObjectProperty<List<EditorColumn>> personColumnListProperty () {
+		return this.personColumnList;
 	}
 
 }

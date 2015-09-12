@@ -17,26 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import jstorybook.common.contract.SystemKey;
 import jstorybook.common.contract.PreferenceKey;
+import jstorybook.common.contract.SystemKey;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
+import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
-import jstorybook.view.pane.PersonListPane;
-import jstorybook.viewmodel.MainWindowViewModel;
+import jstorybook.view.pane.editor.PersonEditorPane;
+import jstorybook.view.pane.list.PersonListPane;
+import jstorybook.viewmodel.StoryViewModel;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.action.ExitAction;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
@@ -54,10 +56,10 @@ public class MainWindow extends MyStage {
 	private final Messenger messenger = new Messenger();
 	private final WindowTitleCompleter titleCompleter = new WindowTitleCompleter();
 
-	private final ViewModelList viewModelList = new ViewModelList(new MainWindowViewModel());
+	private final ViewModelList viewModelList = new ViewModelList(new StoryViewModel());
 	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<DockableAreaGroupPane> rootGroupPane = new SimpleObjectProperty<>();
-	private final ObjectProperty<TabPane> activeTabPane = new SimpleObjectProperty<>();
+	private final ObjectProperty<DockableTabPane> activeTabPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<MenuBar> mainMenuBar = new SimpleObjectProperty<>();
 	private final ObjectProperty<ToolBar> mainToolBar = new SimpleObjectProperty<>();
 
@@ -81,13 +83,6 @@ public class MainWindow extends MyStage {
 		// メインパネルを作成・取得
 		this.mainPane.set(new DockablePane(this));
 		this.rootGroupPane.bind(this.mainPane.get().rootGroupProperty());
-
-		// メインパネルで、現在使用されているタブパネルが変わった時に通知
-		DockableTabPane tabPane = rootGroupPane.get().add(0);
-		tabPane.getTabs().add(new PersonListPane());
-		tabPane.setOnMouseClicked((obj) -> {
-			MainWindow.this.activeTabPane.set((TabPane) obj.getSource());
-		});
 
 		// メインパネルのマージンを設定
 		VBox.setVgrow(this.mainPane.get(), Priority.ALWAYS);
@@ -119,6 +114,11 @@ public class MainWindow extends MyStage {
 		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
 		this.setScene(scene);
+
+		// TODO:【テスト】
+		this.viewModelList.setProperty("storyFileName", "teststory/test.db");
+		this.addPersonListTab();
+		this.addPersonEditorTab();
 	}
 
 	// メインメニューバーを作成
@@ -168,6 +168,49 @@ public class MainWindow extends MyStage {
 																		((StoryFileModelFailedMessage) ev).
 																		filePathProperty().get()));
 		});
+		this.viewModelList.storeMessenger(this.messenger);
+	}
+
+	// -------------------------------------------------------
+	// タブを追加
+	private void addTab (DockableTab tab) {
+
+		// アクティブなTabPaneを探す、なければてきとーなTabPaneをアクティブにする
+		// そもそもTabPaneが全く無ければ、新しく作ってしまう
+		if (this.activeTabPane.get() == null) {
+			// 何かTabPaneがないか探す
+			for (Node node : this.rootGroupPane.get().getItems()) {
+				if (node instanceof DockableTabPane) {
+					this.activeTabPane.set((DockableTabPane) node);
+					break;
+				}
+			}
+		}
+		if (this.activeTabPane.get() == null) {
+			this.activeTabPane.set(this.rootGroupPane.get().add(0));
+		}
+
+		// タブを作って、一番前に表示する
+		this.activeTabPane.get().getTabs().add(tab);
+		this.activeTabPane.get().setOnMouseClicked((obj) -> {
+			MainWindow.this.activeTabPane.set((DockableTabPane) obj.getSource());
+		});
+		this.activeTabPane.get().getSelectionModel().select(tab);
+	}
+
+	// 登場人物リストタブを追加
+	private void addPersonListTab () {
+		PersonListPane tab = new PersonListPane();
+		this.addTab(tab);
+		tab.columnListProperty().bind(this.viewModelList.getProperty("personColumnList"));
+		tab.itemsProperty().bind(this.viewModelList.getProperty("personList"));
+	}
+
+	// 登場人物編集タブを追加
+	private void addPersonEditorTab () {
+		PersonEditorPane tab = new PersonEditorPane();
+		this.addTab(tab);
+		tab.columnListProperty().bind(this.viewModelList.getProperty("personColumnList"));
 	}
 
 	// -------------------------------------------------------

@@ -23,12 +23,26 @@ public abstract class EditorColumn<T> {
 
 	protected final String columnName;
 	protected final String propertyName;
+	protected final ColumnType columnType;
 	private int columnWidth = 100;
 	private boolean isDefaultShowFlag = false;
 
+	// カラムの種類
+	public enum ColumnType {
+		NONE,
+		TEXT,
+		DATE,
+		COLOR,;
+	}
+
 	public EditorColumn (String columnName, String propertyName) {
+		this(columnName, propertyName, ColumnType.NONE);
+	}
+
+	protected EditorColumn (String columnName, String propertyName, ColumnType columnType) {
 		this.columnName = columnName;
 		this.propertyName = propertyName;
+		this.columnType = columnType;
 	}
 
 	public int getColumnWidth () {
@@ -53,6 +67,10 @@ public abstract class EditorColumn<T> {
 
 	public String getPropertyName () {
 		return this.propertyName;
+	}
+
+	public ColumnType getColumnType () {
+		return this.columnType;
 	}
 
 }

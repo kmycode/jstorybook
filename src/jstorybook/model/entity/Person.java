@@ -35,9 +35,9 @@ public class Person extends Entity implements Comparable<Entity> {
 	public Person () {
 		this.firstName = new SimpleStringProperty();
 		this.lastName = new SimpleStringProperty();
-		this.birthday = new SimpleObjectProperty<Calendar>();
-		this.dayOfDeath = new SimpleObjectProperty<Calendar>();
-		this.color = new SimpleObjectProperty<Color>();
+		this.birthday = new SimpleObjectProperty<>();
+		this.dayOfDeath = new SimpleObjectProperty<>();
+		this.color = new SimpleObjectProperty<>();
 		this.notes = new SimpleStringProperty();
 	}
 
