@@ -15,6 +15,7 @@ package jstorybook.view.pane.editor;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -122,7 +123,9 @@ public abstract class EditorPane extends MyPane {
 		
 		LocalDateCalendarConverter converter = new LocalDateCalendarConverter();
 		node.valueProperty().bindBidirectional(converter.localDateProperty());
-		converter.calendarProperty().bindBidirectional(column.getProperty());
+		converter.calendarProperty().set((Calendar) column.getProperty().getValue());
+		//converter.calendarProperty().bindBidirectional(column.getProperty());
+		column.getProperty().bind(converter.calendarProperty());
 
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.editPropertyList.add(new WeakReference<>(converter.calendarProperty()));
