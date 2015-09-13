@@ -121,8 +121,8 @@ public abstract class EditorPane extends MyPane {
 		node.setPromptText("yyyy/MM/dd");
 		
 		LocalDateCalendarConverter converter = new LocalDateCalendarConverter();
+		node.valueProperty().bindBidirectional(converter.localDateProperty());
 		converter.calendarProperty().bindBidirectional(column.getProperty());
-		converter.localDateProperty().bindBidirectional(node.valueProperty());
 
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.editPropertyList.add(new WeakReference<>(converter.calendarProperty()));

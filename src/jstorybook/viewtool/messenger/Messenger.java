@@ -31,7 +31,7 @@ public class Messenger {
 	public Messenger () {
 		// 全てのメッセンジャに共通してつける機能
 		this.apply(ExceptionMessage.class, null, (obj) -> {
-			ExceptionDialog.showAndWait((Throwable) obj);
+			ExceptionDialog.showAndWait((Throwable) ((ExceptionMessage) obj).exceptionProperty().get());
 		});
 	}
 

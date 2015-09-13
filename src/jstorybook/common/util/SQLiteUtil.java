@@ -14,8 +14,10 @@
 package jstorybook.common.util;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import javafx.scene.paint.Color;
 import jstorybook.viewtool.messenger.ExceptionMessage;
 import jstorybook.viewtool.messenger.Messenger;
@@ -42,9 +44,11 @@ public class SQLiteUtil {
 			date = new java.util.Date(SQLiteUtil.DATE_FORMAT.parse(str).getTime());
 		} catch (java.text.ParseException e) {
 			Messenger.getInstance().send(new ExceptionMessage(e));
+			return null;
 		}
 
 		Calendar cal = Calendar.getInstance();
+		cal.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
 		cal.setTime(date);
 		return cal;
 	}
@@ -55,10 +59,10 @@ public class SQLiteUtil {
 
 	public static Color getColor (int val) {
 		// 255で割ると色が１段階分減っちゃうけど、256にするなら複雑なロジック必要になりそうだから後回し
-		double red = (val & 0xff0000 >> 16) / 255.0d;
-		double green = (val & 0xff00 >> 8) / 255.0d;
+		double red = ((val & 0xff0000) >> 16) / 255.0d;
+		double green = ((val & 0xff00) >> 8) / 255.0d;
 		double blue = (val & 0xff) / 255.0d;
-		double opacity = (val & 0xff000000 >> 24) / 255.0d;
+		double opacity = (((val & 0xff000000) >> 24) & 0xff) / 255.0d;
 		return new Color(red, green, blue, opacity);
 	}
 

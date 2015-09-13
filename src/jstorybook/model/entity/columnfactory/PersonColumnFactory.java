@@ -62,6 +62,13 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		column.setProperty(model.firstNameProperty());
 		columnList.add(column);
 
+		column = new ColorColumn(ResourceManager.getMessage("msg.person.color"), "color");
+		column.setColumnWidth(40);
+		column.setDefaultShow(true);
+		column.setProperty(model.colorProperty());
+		column.setCellType(EditorColumn.CellType.COLOR);
+		columnList.add(column);
+
 		column = new DateColumn(ResourceManager.getMessage("msg.person.birthday"), "birthday");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
@@ -74,13 +81,6 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		column.setDefaultShow(true);
 		column.setProperty(model.dayOfDeathProperty());
 		column.setCellType(EditorColumn.CellType.DATE);
-		columnList.add(column);
-
-		column = new ColorColumn(ResourceManager.getMessage("msg.person.color"), "color");
-		column.setColumnWidth(100);
-		column.setDefaultShow(true);
-		column.setProperty(model.colorProperty());
-		column.setCellType(EditorColumn.CellType.COLOR);
 		columnList.add(column);
 
 		return columnList;
