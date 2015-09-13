@@ -16,6 +16,8 @@ package jstorybook.viewtool.model;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.viewtool.messenger.ExceptionMessage;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * EditorColumn専用のリスト
@@ -28,6 +30,19 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 
 	public StringProperty titleProperty () {
 		return this.title;
+	}
+
+	public void copyProperty (EditorColumnList from) {
+		try {
+			if (from.size() != this.size()) {
+				throw new ArrayIndexOutOfBoundsException();
+			}
+			for (int i = 0; i < this.size(); i++) {
+				this.get(i).getProperty().setValue(from.get(i).getProperty().getValue());
+			}
+		} catch (Throwable e) {
+			Messenger.getInstance().send(new ExceptionMessage(e));
+		}
 	}
 
 }

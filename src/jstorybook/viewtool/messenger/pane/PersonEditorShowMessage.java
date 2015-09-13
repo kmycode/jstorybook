@@ -23,8 +23,8 @@ import jstorybook.viewtool.model.EditorColumnList;
  */
 public class PersonEditorShowMessage extends EntityEditorShowMessage<Person> {
 
-	public PersonEditorShowMessage (Person e, EditorColumnList columns) {
-		super(e, columns);
+	public PersonEditorShowMessage (EditorColumnList columns, EditorColumnList baseColumns) {
+		super(columns, baseColumns);
 	}
 
 }

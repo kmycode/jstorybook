@@ -223,6 +223,7 @@ public class MainWindow extends MyStage {
 		completer.entityTypeNameProperty().set(entityTypeName);
 		if (message != null) {
 			tab.columnListProperty().bind(message.columnListProperty());
+			tab.baseColumnListProperty().bind(message.baseColumnListProperty());
 			completer.entityTitleProperty().bind(message.columnListProperty().get().titleProperty());
 
 			// こうやって get() を呼び出さないとなぜかきちんとバインディングされないorz

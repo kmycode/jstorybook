@@ -130,4 +130,11 @@ public abstract class Entity implements Comparable<Entity> {
 	@Override
 	public abstract String toString ();
 
+	public final void copyTo (Entity obj) {
+		obj.id.set(this.id.get());
+		obj.title.set(this.title.get());
+	}
+
+	public abstract Entity entityClone ();
+
 }

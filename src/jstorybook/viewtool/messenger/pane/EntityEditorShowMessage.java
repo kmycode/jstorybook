@@ -27,20 +27,23 @@ import jstorybook.viewtool.model.EditorColumnList;
  */
 public abstract class EntityEditorShowMessage<E extends Entity> extends Message {
 
-	private final E entity;
+	// クローン
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>(new EditorColumnList());
 
-	protected EntityEditorShowMessage (E e, EditorColumnList columns) {
-		this.entity = e;
-		this.columnList.set(columns);
-	}
+	// 基本となるエンティティ本体
+	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>(new EditorColumnList());
 
-	public E getEntity () {
-		return this.entity;
+	protected EntityEditorShowMessage (EditorColumnList columns, EditorColumnList baseColumns) {
+		this.columnList.set(columns);
+		this.baseColumnList.set(baseColumns);
 	}
 
 	public ReadOnlyObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
+	}
+
+	public ReadOnlyObjectProperty<EditorColumnList> baseColumnListProperty () {
+		return this.baseColumnList;
 	}
 
 }

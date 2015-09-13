@@ -148,4 +148,31 @@ public class Person extends Entity implements Comparable<Entity> {
 		return this.nameCompleter.nameProperty();
 	}
 
+	@Override
+	public Person entityClone () {
+		Person obj = new Person();
+		this.copyTo(obj);
+		obj.firstName.set(this.firstName.get());
+		obj.lastName.set(this.lastName.get());
+		if (this.birthday.get() != null) {
+			obj.birthday.set((Calendar) this.birthday.get().clone());
+		}
+		if (this.dayOfDeath.get() != null) {
+			obj.dayOfDeath.set((Calendar) this.dayOfDeath.get().clone());
+		}
+		obj.color.set((Color) this.color.get());
+		obj.notes.set(this.notes.get());
+		obj.nameCompleter = null;
+
+		// これを入れないとなぜかバインディングされない
+		// なぜなのかは謎
+		// しかもこれはlastNameだけなのに、firstNameもちゃんとバインディングされるようになるよね
+		// なんでかしら(´・ω・｀)
+		obj.lastName.addListener((objs) -> {
+			obj.lastName.get();
+		});
+
+		return obj;
+	}
+
 }

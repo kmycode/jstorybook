@@ -62,8 +62,10 @@ public class StoryModel implements IUseMessenger {
 		this.selectedEntity.addListener((Observable obj) -> {
 			Entity selected = ((ObjectProperty<Entity>) obj).get();
 			if (selected instanceof Person) {
-				this.messenger.send(new PersonEditorShowMessage((Person) selected, this.entityColumn.get().
-																getPersonColumnList((Person) selected)));
+				Person model = ((Person) selected).entityClone();
+				this.messenger.send(
+						new PersonEditorShowMessage(this.entityColumn.get().getPersonColumnList(model),
+													this.entityColumn.get().getPersonColumnList((Person) selected)));
 			}
 		});
 	}

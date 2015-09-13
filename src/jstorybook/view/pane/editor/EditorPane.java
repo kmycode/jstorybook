@@ -49,6 +49,7 @@ import jstorybook.viewtool.model.EditorColumnList;
 public class EditorPane extends MyPane {
 
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
+	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
 
 	protected final AnchorPane rootPane = new AnchorPane();
 	protected final TabPane tabPane = new TabPane();
@@ -120,6 +121,10 @@ public class EditorPane extends MyPane {
 
 	public ObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
+	}
+
+	public ObjectProperty<EditorColumnList> baseColumnListProperty () {
+		return this.baseColumnList;
 	}
 
 	// この、めぢょっとぉ、ゎ、エディタ、をねっ、つくつくちちゃうのー！
