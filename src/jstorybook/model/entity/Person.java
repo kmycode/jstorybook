@@ -16,11 +16,12 @@
 package jstorybook.model.entity;
 
 import java.util.Calendar;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
+import jstorybook.viewtool.completer.PersonNameCompleter;
 
 // ノート のエンティティを扱うクラス
 public class Person extends Entity implements Comparable<Entity> {
@@ -31,6 +32,7 @@ public class Person extends Entity implements Comparable<Entity> {
 	private ObjectProperty<Calendar> dayOfDeath;
 	private ObjectProperty<Color> color;
 	private StringProperty notes;
+	private PersonNameCompleter nameCompleter = null;
 
 	public Person () {
 		this.firstName = new SimpleStringProperty();
@@ -134,6 +136,16 @@ public class Person extends Entity implements Comparable<Entity> {
 	@Override
 	public String toString () {
 		return this.firstName.getValue() + this.lastName.getValue();
+	}
+
+	@Override
+	public StringProperty titleProperty () {
+		if (this.nameCompleter == null) {
+			this.nameCompleter = new PersonNameCompleter();
+			this.nameCompleter.firstNameProperty().bind(this.firstName);
+			this.nameCompleter.lastNameProperty().bind(this.lastName);
+		}
+		return this.nameCompleter.nameProperty();
 	}
 
 }

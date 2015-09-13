@@ -36,16 +36,18 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
-import jstorybook.view.pane.editor.PersonEditorPane;
+import jstorybook.view.pane.editor.EditorPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.viewmodel.StoryViewModel;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.action.ExitAction;
+import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
+import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 
 /**
@@ -212,17 +214,32 @@ public class MainWindow extends MyStage {
 		this.viewModelList.getProperty("selectedEntity").bind(tab.selectedItemProperty());
 	}
 
-	// 登場人物編集タブを追加
-	private void addPersonEditorTab () {
-		PersonEditorPane tab = new PersonEditorPane();
+	// エンティティ編集タブ
+	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName,
+									 String viewModelColumnListName) {
+		EditorPane tab = new EditorPane();
 		this.addTab(tab);
-		tab.columnListProperty().bind(this.viewModelList.getProperty("personColumnList"));
+		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
+		completer.entityTypeNameProperty().set(entityTypeName);
+		if (message != null) {
+			tab.columnListProperty().bind(message.columnListProperty());
+			completer.entityTitleProperty().bind(message.columnListProperty().get().titleProperty());
+
+			// こうやって get() を呼び出さないとなぜかきちんとバインディングされないorz
+			// JavaFX自体のバグ？bindが複雑過ぎた？
+			message.columnListProperty().get().titleProperty().addListener((obj) -> {
+				completer.titleProperty().get();
+			});
+		}
+		else {
+			tab.columnListProperty().bind(this.viewModelList.getProperty(viewModelColumnListName));
+		}
+		tab.textProperty().bind(completer.titleProperty());
 	}
 
+	// 登場人物編集タブ
 	private void addPersonEditorTab (PersonEditorShowMessage message) {
-		PersonEditorPane tab = new PersonEditorPane();
-		this.addTab(tab);
-		tab.columnListProperty().bind(message.columnListProperty());
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.person"), "personColumnList");
 	}
 
 	// -------------------------------------------------------

@@ -13,14 +13,12 @@
  */
 package jstorybook.viewtool.messenger.pane;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.entity.Entity;
 import jstorybook.viewtool.messenger.Message;
-import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  * エンティティの編集画面を開くよう要求するメッセージ
@@ -30,9 +28,9 @@ import jstorybook.viewtool.model.EditorColumn;
 public abstract class EntityEditorShowMessage<E extends Entity> extends Message {
 
 	private final E entity;
-	private final ObjectProperty<List<EditorColumn>> columnList = new SimpleObjectProperty<>(new ArrayList<>());
+	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>(new EditorColumnList());
 
-	public EntityEditorShowMessage (E e, List<EditorColumn> columns) {
+	protected EntityEditorShowMessage (E e, EditorColumnList columns) {
 		this.entity = e;
 		this.columnList.set(columns);
 	}
@@ -41,7 +39,7 @@ public abstract class EntityEditorShowMessage<E extends Entity> extends Message 
 		return this.entity;
 	}
 
-	public ReadOnlyObjectProperty<List<EditorColumn>> columnListProperty () {
+	public ReadOnlyObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
 	}
 

@@ -13,12 +13,12 @@
  */
 package jstorybook.model.entity.columnfactory;
 
-import java.util.ArrayList;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Person;
 import jstorybook.viewtool.model.ColorColumn;
 import jstorybook.viewtool.model.DateColumn;
 import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.EditorColumnList;
 import jstorybook.viewtool.model.StringColumn;
 
 /**
@@ -38,16 +38,19 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 	}
 
 	@Override
-	public ArrayList<EditorColumn> createColumnList () {
+	public EditorColumnList createColumnList () {
 		return this.createColumnList(null);
 	}
 
-	public ArrayList<EditorColumn> createColumnList (Person model) {
+	@Override
+	public EditorColumnList createColumnList (Person model) {
 		if (model == null) {
 			model = new Person();
 		}
 
-		ArrayList<EditorColumn> columnList = new ArrayList<>();
+		EditorColumnList columnList = new EditorColumnList();
+		Person a = model;
+		columnList.titleProperty().bind(model.titleProperty());
 		EditorColumn column;
 
 		column = new StringColumn(ResourceManager.getMessage("msg.person.lastname"), "lastName");

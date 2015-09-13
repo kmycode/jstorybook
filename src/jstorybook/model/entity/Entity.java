@@ -17,6 +17,8 @@ package jstorybook.model.entity;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 
 // ID のエンティティを扱うクラス
@@ -25,6 +27,7 @@ public abstract class Entity implements Comparable<Entity> {
 	private static long entityCount = 0;
 
 	protected LongProperty id;
+	private final StringProperty title = new SimpleStringProperty();
 
 	public Entity () {
 		this.id = new SimpleLongProperty(++Entity.entityCount);
@@ -87,11 +90,12 @@ public abstract class Entity implements Comparable<Entity> {
 
 	// -------------------------------------------------------
 
-	/*
-	 * ID
-	 */
 	public LongProperty idProperty () {
 		return this.id;
+	}
+
+	public StringProperty titleProperty () {
+		return this.title;
 	}
 
 	@Override

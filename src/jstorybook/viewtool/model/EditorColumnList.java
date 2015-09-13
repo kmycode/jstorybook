@@ -11,19 +11,23 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.editor;
+package jstorybook.viewtool.model;
 
-import jstorybook.common.manager.ResourceManager;
+import java.util.ArrayList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
- * 登場人物エディタ
+ * EditorColumn専用のリスト
  *
  * @author KMY
  */
-public class PersonEditorPane extends EditorPane {
+public class EditorColumnList extends ArrayList<EditorColumn> {
 
-	public PersonEditorPane () {
-		super(ResourceManager.getMessage("msg.edit.person"));
+	private final StringProperty title = new SimpleStringProperty();
+
+	public StringProperty titleProperty () {
+		return this.title;
 	}
 
 }

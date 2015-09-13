@@ -23,43 +23,85 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import jstorybook.common.manager.ResourceManager;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewtool.converter.LocalDateCalendarConverter;
 import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  * 編集画面のパネル
  *
  * @author KMY
  */
-public abstract class EditorPane extends MyPane {
+public class EditorPane extends MyPane {
 
-	private final ObjectProperty<List<EditorColumn>> columnList = new SimpleObjectProperty<>();
+	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 
 	protected final AnchorPane rootPane = new AnchorPane();
+	protected final TabPane tabPane = new TabPane();
 	protected final VBox vbox = new VBox();
-	protected final GridPane gridPane = new GridPane();
+	protected final VBox mainVbox = new VBox();
+	protected final GridPane mainGridPane = new GridPane();
 	private List<WeakReference<Property>> editPropertyList = new ArrayList<>();
 
-	protected EditorPane (String title) {
+	public EditorPane (String title) {
 		super(title);
+		this.rootPane.setMaxWidth(350.0);
+		this.rootPane.setMinWidth(350.0);
+
+		// 編集項目変更時の処理を指定
 		this.columnList.addListener((obj) -> {
-			EditorPane.this.generateEditor(((ObjectProperty<List<EditorColumn>>) obj).get());
+			EditorPane.this.generateEditor(((ObjectProperty<EditorColumnList>) obj).get());
 		});
 		this.setContent(this.rootPane);
-		this.rootPane.getChildren().add(this.vbox);
-		this.vbox.getChildren().add(this.gridPane);
-		VBox.setVgrow(this.vbox, Priority.ALWAYS);
+
+		// タブペイン
+		AnchorPane.setTopAnchor(this.tabPane, 0.0);
+		AnchorPane.setLeftAnchor(this.tabPane, 0.0);
+		AnchorPane.setRightAnchor(this.tabPane, 0.0);
+		AnchorPane.setBottomAnchor(this.tabPane, 40.0);
+		this.rootPane.getChildren().add(this.tabPane);
+
+		// 基本タブの作成
+		Tab mainTab = new Tab();
+		mainTab.setContent(this.mainVbox);
+		mainTab.setClosable(false);
+		mainTab.setText(ResourceManager.getMessage("msg.edit.base"));
+		this.tabPane.getTabs().add(mainTab);
+
+		// 基本タブに乗せる編集項目について
+		this.mainVbox.getChildren().add(this.mainGridPane);
+		VBox.setVgrow(this.mainVbox, Priority.ALWAYS);
+
+		// 編集画面下のボタン
+		Button okButton = new Button(ResourceManager.getMessage("msg.edit.ok"));
+		okButton.setPrefWidth(90.0);
+		AnchorPane.setRightAnchor(okButton, 195.0);
+		AnchorPane.setBottomAnchor(okButton, 15.0);
+		this.rootPane.getChildren().add(okButton);
+		Button cancelButton = new Button(ResourceManager.getMessage("msg.edit.cancel"));
+		cancelButton.setPrefWidth(90.0);
+		AnchorPane.setRightAnchor(cancelButton, 100.0);
+		AnchorPane.setBottomAnchor(cancelButton, 15.0);
+		this.rootPane.getChildren().add(cancelButton);
+		Button applyButton = new Button(ResourceManager.getMessage("msg.edit.apply"));
+		applyButton.setPrefWidth(90.0);
+		AnchorPane.setRightAnchor(applyButton, 5.0);
+		AnchorPane.setBottomAnchor(applyButton, 15.0);
+		this.rootPane.getChildren().add(applyButton);
 
 		// （まだ検証してないけど）循環参照によるメモリリークを予防する意味合い
 		this.setOnClosed((ev) -> {
@@ -72,18 +114,20 @@ public abstract class EditorPane extends MyPane {
 		});
 	}
 
-	public ObjectProperty<List<EditorColumn>> columnListProperty () {
+	public EditorPane () {
+		this("No Titled");
+	}
+
+	public ObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
 	}
 
 	// この、めぢょっとぉ、ゎ、エディタ、をねっ、つくつくちちゃうのー！
-	protected void generateEditor (List<EditorColumn> columnList) {
+	protected void generateEditor (EditorColumnList columnList) {
 		int row = 0;
 		for (EditorColumn column : columnList) {
-			HBox hbox = new HBox();
-
 			Label label = new Label(column.getColumnName());
-			label.setPrefWidth(65.0);
+			label.setPrefWidth(85.0);
 
 			Control node = null;
 			if (column.getColumnType() == EditorColumn.ColumnType.TEXT) {
@@ -102,7 +146,7 @@ public abstract class EditorPane extends MyPane {
 										new Insets(5));
 				GridPane.setConstraints(node, 1, row, 1, 1, HPos.LEFT, VPos.CENTER, Priority.ALWAYS, Priority.NEVER,
 										new Insets(5));
-				this.gridPane.getChildren().addAll(label, node);
+				this.mainGridPane.getChildren().addAll(label, node);
 				row++;
 			}
 		}

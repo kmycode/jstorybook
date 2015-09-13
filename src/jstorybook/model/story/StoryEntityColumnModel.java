@@ -13,12 +13,11 @@
  */
 package jstorybook.model.story;
 
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.entity.Person;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
-import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  * 各エンティティのカラムをまとめたモデル
@@ -27,14 +26,14 @@ import jstorybook.viewtool.model.EditorColumn;
  */
 public class StoryEntityColumnModel {
 
-	private final ObjectProperty<List<EditorColumn>> personColumnList = new SimpleObjectProperty<>(PersonColumnFactory.
+	private final ObjectProperty<EditorColumnList> personColumnList = new SimpleObjectProperty<>(PersonColumnFactory.
 			getInstance().createColumnList());
 
-	public ObjectProperty<List<EditorColumn>> personColumnListProperty () {
+	public ObjectProperty<EditorColumnList> personColumnListProperty () {
 		return this.personColumnList;
 	}
 
-	List<EditorColumn> getPersonColumnList (Person model) {
+	EditorColumnList getPersonColumnList (Person model) {
 		return PersonColumnFactory.getInstance().createColumnList(model);
 	}
 

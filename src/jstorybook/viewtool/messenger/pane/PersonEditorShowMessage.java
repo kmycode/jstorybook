@@ -13,9 +13,8 @@
  */
 package jstorybook.viewtool.messenger.pane;
 
-import java.util.List;
 import jstorybook.model.entity.Person;
-import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  * 登場人物の編集エディタを表示するメッセージ
@@ -24,7 +23,7 @@ import jstorybook.viewtool.model.EditorColumn;
  */
 public class PersonEditorShowMessage extends EntityEditorShowMessage<Person> {
 
-	public PersonEditorShowMessage (Person e, List<EditorColumn> columns) {
+	public PersonEditorShowMessage (Person e, EditorColumnList columns) {
 		super(e, columns);
 	}
 
