@@ -22,6 +22,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import jstorybook.model.entity.Entity;
+import jstorybook.view.control.tablecell.ColorCell;
+import jstorybook.view.control.tablecell.DateCell;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewtool.model.EditorColumn;
 
@@ -70,6 +72,19 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		column.setCellValueFactory(new PropertyValueFactory<>(columnData.getPropertyName()));
 		column.setPrefWidth(columnData.getColumnWidth());
 		column.setVisible(columnData.isDefaultShow());
+
+		// 特殊なセルのファクトリ
+		if (columnData.getCellType() == EditorColumn.CellType.DATE) {
+			column.setCellFactory((arg) -> {
+				return new DateCell();
+			});
+		}
+		else if (columnData.getCellType() == EditorColumn.CellType.COLOR) {
+			column.setCellFactory((arg) -> {
+				return new ColorCell();
+			});
+		}
+
 		this.tableView.getColumns().add(column);
 	}
 

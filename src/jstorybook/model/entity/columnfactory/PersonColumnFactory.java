@@ -66,18 +66,21 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.birthdayProperty());
+		column.setCellType(EditorColumn.CellType.DATE);
 		columnList.add(column);
 
 		column = new DateColumn(ResourceManager.getMessage("msg.person.dayofdeath"), "dayOfDeath");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.dayOfDeathProperty());
+		column.setCellType(EditorColumn.CellType.DATE);
 		columnList.add(column);
 
 		column = new ColorColumn(ResourceManager.getMessage("msg.person.color"), "color");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.colorProperty());
+		column.setCellType(EditorColumn.CellType.COLOR);
 		columnList.add(column);
 
 		return columnList;

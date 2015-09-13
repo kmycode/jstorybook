@@ -29,12 +29,23 @@ public abstract class EditorColumn<T> {
 	private Property property;
 	private int columnWidth = 100;
 	private boolean isDefaultShowFlag = false;
+	private CellType cellType = CellType.NONE;
 
 	// カラムの種類
 	public enum ColumnType {
 		NONE,
 		TEXT,
 		DATE,
+		COLOR,;
+	}
+
+	// セル表示の種類
+	public enum CellType {
+		NONE,
+		DATE,
+		DATETIME,
+		TIME,
+		IMAGE,
 		COLOR,;
 	}
 
@@ -71,6 +82,16 @@ public abstract class EditorColumn<T> {
 	public void setProperty (Property p) {
 		this.property = p;
 	}
+
+	public CellType getCellType () {
+		return this.cellType;
+	}
+
+	public void setCellType (CellType cell) {
+		this.cellType = cell;
+	}
+
+	// -------------------------------------------------------
 
 	public String getColumnName () {
 		return this.columnName;
