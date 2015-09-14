@@ -36,8 +36,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.MyPane;
+import jstorybook.viewtool.action.pane.EntityEditorApplyAction;
+import jstorybook.viewtool.action.pane.EntityEditorCancelAction;
+import jstorybook.viewtool.action.pane.EntityEditorOKAction;
 import jstorybook.viewtool.converter.LocalDateCalendarConverter;
+import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.pane.PaneApplyMessage;
+import jstorybook.viewtool.messenger.pane.PaneCancelMessage;
+import jstorybook.viewtool.messenger.pane.PaneOKMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -50,6 +58,9 @@ public class EditorPane extends MyPane {
 
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
+
+	// 独自のメッセンジャを持つ
+	protected final Messenger messenger = new Messenger();
 
 	protected final AnchorPane rootPane = new AnchorPane();
 	protected final TabPane tabPane = new TabPane();
@@ -88,17 +99,17 @@ public class EditorPane extends MyPane {
 		VBox.setVgrow(this.mainVbox, Priority.ALWAYS);
 
 		// 編集画面下のボタン
-		Button okButton = new Button(ResourceManager.getMessage("msg.edit.ok"));
+		Button okButton = new EntityEditorOKAction(this.messenger).createButton();
 		okButton.setPrefWidth(90.0);
 		AnchorPane.setRightAnchor(okButton, 195.0);
 		AnchorPane.setBottomAnchor(okButton, 15.0);
 		this.rootPane.getChildren().add(okButton);
-		Button cancelButton = new Button(ResourceManager.getMessage("msg.edit.cancel"));
+		Button cancelButton = new EntityEditorCancelAction(this.messenger).createButton();
 		cancelButton.setPrefWidth(90.0);
 		AnchorPane.setRightAnchor(cancelButton, 100.0);
 		AnchorPane.setBottomAnchor(cancelButton, 15.0);
 		this.rootPane.getChildren().add(cancelButton);
-		Button applyButton = new Button(ResourceManager.getMessage("msg.edit.apply"));
+		Button applyButton = new EntityEditorApplyAction(this.messenger).createButton();
 		applyButton.setPrefWidth(90.0);
 		AnchorPane.setRightAnchor(applyButton, 5.0);
 		AnchorPane.setBottomAnchor(applyButton, 15.0);
@@ -113,10 +124,37 @@ public class EditorPane extends MyPane {
 			}
 			this.editPropertyList.clear();
 		});
+
+		// メッセンジャを登録
+		this.applyMessenger();
 	}
 
 	public EditorPane () {
 		this("No Titled");
+	}
+
+	// メッセンジャの設定
+	private void applyMessenger () {
+		// OKボタン
+		this.messenger.apply(PaneOKMessage.class, this, (ev) -> {
+			// Viewからロジックを呼び出してることになるので要修正
+			// （根本的な原因は、EditorColumnがviewtool.modelに置かれてることなので
+			// 　かなりの修正を要するかも）
+			this.baseColumnList.get().copyProperty(this.columnList.get());
+			this.close();
+		});
+		// キャンセルボタン
+		this.messenger.apply(PaneCancelMessage.class, this, (ev) -> {
+			this.close();
+		});
+		// 適用ボタン
+		this.messenger.apply(PaneApplyMessage.class, this, (ev) -> {
+			this.baseColumnList.get().copyProperty(this.columnList.get());
+		});
+	}
+
+	private void close () {
+		((DockableTabPane) this.getTabPane()).cutTab();
 	}
 
 	public ObjectProperty<EditorColumnList> columnListProperty () {
