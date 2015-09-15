@@ -14,8 +14,13 @@
 package jstorybook.viewtool.model;
 
 import java.util.ArrayList;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityType;
 import jstorybook.viewtool.messenger.ExceptionMessage;
 import jstorybook.viewtool.messenger.Messenger;
 
@@ -27,9 +32,19 @@ import jstorybook.viewtool.messenger.Messenger;
 public class EditorColumnList extends ArrayList<EditorColumn> {
 
 	private final StringProperty title = new SimpleStringProperty();
+	private final LongProperty id = new SimpleLongProperty();
+	private final ObjectProperty<EntityType> entityType = new SimpleObjectProperty<>();
 
 	public StringProperty titleProperty () {
 		return this.title;
+	}
+
+	public LongProperty idProperty () {
+		return this.id;
+	}
+
+	public ObjectProperty<EntityType> entityTypeProperty () {
+		return this.entityType;
 	}
 
 	public void copyProperty (EditorColumnList from) {
@@ -43,6 +58,10 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 		} catch (Throwable e) {
 			Messenger.getInstance().send(new ExceptionMessage(e));
 		}
+	}
+
+	public boolean isEqualEntity (EditorColumnList other) {
+		return this.id.get() == other.id.get() && this.entityType.get() == other.entityType.get();
 	}
 
 }

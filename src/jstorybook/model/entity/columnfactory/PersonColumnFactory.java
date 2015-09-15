@@ -13,6 +13,7 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Person;
 import jstorybook.viewtool.model.ColorColumn;
@@ -49,8 +50,9 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		}
 
 		EditorColumnList columnList = new EditorColumnList();
-		Person a = model;
 		columnList.titleProperty().bind(model.titleProperty());
+		columnList.idProperty().bind(model.idProperty());
+		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;
 
 		column = new StringColumn(ResourceManager.getMessage("msg.person.lastname"), "lastName");

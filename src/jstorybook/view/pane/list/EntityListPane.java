@@ -13,7 +13,6 @@
  */
 package jstorybook.view.pane.list;
 
-import java.util.ArrayList;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -25,6 +24,7 @@ import jstorybook.view.control.tablecell.ColorCell;
 import jstorybook.view.control.tablecell.DateCell;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  * エンティティのリストを表示するパネル
@@ -35,14 +35,14 @@ import jstorybook.viewtool.model.EditorColumn;
 public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	private final TableView<T> tableView;
-	private final ObjectProperty<ArrayList<EditorColumn>> columnList = new SimpleObjectProperty<>();
+	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
 
 	protected EntityListPane (String title) {
 		super(title);
 
 		this.columnList.addListener((obj) -> {
-			EntityListPane.this.setColumnList(((ObjectProperty<ArrayList<EditorColumn>>) obj).get());
+			EntityListPane.this.setColumnList(((ObjectProperty<EditorColumnList>) obj).get());
 		});
 
 		this.tableView = new TableView<>();
@@ -57,7 +57,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		});
 	}
 
-	protected void setColumnList (ArrayList<EditorColumn> cl) {
+	protected void setColumnList (EditorColumnList cl) {
 		this.tableView.getColumns().clear();
 		for (EditorColumn column : cl) {
 			this.addTableColumn(column);
@@ -89,12 +89,16 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		return this.tableView.itemsProperty();
 	}
 
-	public ObjectProperty<ArrayList<EditorColumn>> columnListProperty () {
+	public ObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
 	}
 
 	public ObjectProperty<T> selectedItemProperty () {
 		return this.selectedItem;
+	}
+
+	public boolean isEqualPane (EntityListPane other) {
+		return this.columnList.get().isEqualEntity((EditorColumnList) other.columnList.get());
 	}
 
 }

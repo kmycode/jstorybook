@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -49,6 +50,7 @@ import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  *
@@ -218,11 +220,28 @@ public class MainWindow extends MyStage {
 	// エンティティ編集タブ
 	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName,
 									 String viewModelColumnListName) {
+
 		EditorPane tab = new EditorPane();
-		this.addTab(tab);
 		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
 		completer.entityTypeNameProperty().set(entityTypeName);
+
 		if (message != null) {
+
+			// すでに同じエンティティの編集タブが開いてないか？
+			for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
+				for (Tab dtab : dtabPane.getTabs()) {
+					if (dtab instanceof EditorPane) {
+						EditorColumnList otherList = (EditorColumnList) ((EditorPane) dtab).columnListProperty().get();
+						if (otherList.isEqualEntity(message.columnListProperty().get())) {
+							// すでに開いているタブを表示し、新規タブ生成を中止する
+							dtabPane.getSelectionModel().select(dtab);
+							return;
+						}
+					}
+				}
+			}
+
+			// バインド
 			tab.columnListProperty().bind(message.columnListProperty());
 			tab.baseColumnListProperty().bind(message.baseColumnListProperty());
 			completer.entityTitleProperty().bind(message.columnListProperty().get().titleProperty());
@@ -234,9 +253,12 @@ public class MainWindow extends MyStage {
 			});
 		}
 		else {
+			// 新規作成
 			tab.columnListProperty().bind(this.viewModelList.getProperty(viewModelColumnListName));
 		}
+
 		tab.textProperty().bind(completer.titleProperty());
+		this.addTab(tab);
 	}
 
 	// 登場人物編集タブ

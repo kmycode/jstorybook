@@ -18,15 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Window;
 
 enum DockingDirection {
 	NONE,
@@ -146,9 +145,20 @@ public class DockableAreaGroupPane extends SplitPane {
 		this.getRootPane().removeEmptyTabPane();
 	}
 
-	List<DockableTabPane> getTabPaneList () {
+	public List<DockableTabPane> getTabPaneList () {
 		ArrayList<DockableTabPane> result = new ArrayList<>();
 		this.getTabPaneList(result);
+		return result;
+	}
+
+	public List<DockableTab> getTabList () {
+		List<DockableTabPane> tabPaneList = this.getTabPaneList();
+		ArrayList<DockableTab> result = new ArrayList<>();
+		for (DockableTabPane tabPane : tabPaneList) {
+			for (Tab tab : tabPane.getTabs()) {
+				result.add((DockableTab) tab);
+			}
+		}
 		return result;
 	}
 
