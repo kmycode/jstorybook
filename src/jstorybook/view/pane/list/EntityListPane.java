@@ -14,7 +14,6 @@
 package jstorybook.view.pane.list;
 
 import java.util.ArrayList;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -49,13 +48,11 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.tableView = new TableView<>();
 		this.setContent(tableView);
 
-		this.tableView.getItems().addListener((Observable observable) -> {
-		});
-
 		this.tableView.setOnMouseClicked((ev) -> {
 			// ダブルクリックで選択
 			if (ev.getClickCount() >= 2) {
 				this.selectedItem.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItem());
+				this.selectedItem.set(null);
 			}
 		});
 	}

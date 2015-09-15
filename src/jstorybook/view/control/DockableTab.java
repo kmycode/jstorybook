@@ -13,6 +13,7 @@
  */
 package jstorybook.view.control;
 
+import javafx.event.Event;
 import javafx.scene.control.Tab;
 
 /**
@@ -27,11 +28,22 @@ public class DockableTab extends Tab {
 		super(title);
 
 		this.setOnCloseRequest((obj) -> {
+			this.onCloseRequest(obj);
 			DockableTab.this.tabPane = (DockableTabPane) this.getTabPane();
 		});
 		this.setOnClosed((obj) -> {
+			this.onClosed(obj);
 			DockableTab.this.tabPane.getParentPane().getRootPane().removeEmptyTabPane();
 		});
+	}
+
+	// イベントはこのクラス内で設定するため
+	// タブを閉じるイベントを設定するときは、別途このメソッドをオーバーライドする
+	protected void onClosed (Event obj) {
+	}
+
+	// 同上
+	protected void onCloseRequest (Event obj) {
 	}
 
 }

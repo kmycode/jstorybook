@@ -61,11 +61,13 @@ public class StoryModel implements IUseMessenger {
 		// TableViewなどでモデルを選択した時のイベント
 		this.selectedEntity.addListener((Observable obj) -> {
 			Entity selected = ((ObjectProperty<Entity>) obj).get();
-			if (selected instanceof Person) {
-				Person model = ((Person) selected).entityClone();
-				this.messenger.send(
-						new PersonEditorShowMessage(this.entityColumn.get().getPersonColumnList(model),
-													this.entityColumn.get().getPersonColumnList((Person) selected)));
+			if (selected != null) {
+				if (selected instanceof Person) {
+					Person model = ((Person) selected).entityClone();
+					this.messenger.send(
+							new PersonEditorShowMessage(this.entityColumn.get().getPersonColumnList(model),
+														this.entityColumn.get().getPersonColumnList((Person) selected)));
+				}
 			}
 		});
 	}

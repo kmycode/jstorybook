@@ -20,6 +20,7 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.Event;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -115,22 +116,23 @@ public class EditorPane extends MyPane {
 		AnchorPane.setBottomAnchor(applyButton, 15.0);
 		this.rootPane.getChildren().add(applyButton);
 
-		// （まだ検証してないけど）循環参照によるメモリリークを予防する意味合い
-		this.setOnClosed((ev) -> {
-			for (WeakReference<Property> p : EditorPane.this.editPropertyList) {
-				if (p.get() != null) {
-					p.get().unbind();
-				}
-			}
-			this.editPropertyList.clear();
-		});
-
 		// メッセンジャを登録
 		this.applyMessenger();
 	}
 
 	public EditorPane () {
 		this("No Titled");
+	}
+
+	// （まだ検証してないけど）循環参照によるメモリリークを予防する意味合い
+	@Override
+	protected void onClosed (Event ev) {
+		for (WeakReference<Property> p : EditorPane.this.editPropertyList) {
+			if (p.get() != null) {
+				p.get().unbind();
+			}
+		}
+		this.editPropertyList.clear();
 	}
 
 	// メッセンジャの設定

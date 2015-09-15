@@ -123,6 +123,7 @@ public class MainWindow extends MyStage {
 		// TODO:【テスト】
 		this.viewModelList.setProperty("storyFileName", "teststory/test.db");
 		this.addPersonListTab();
+		this.addPersonEditorTab(null);
 	}
 
 	// メインメニューバーを作成
