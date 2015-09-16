@@ -17,13 +17,11 @@ import com.sun.javafx.scene.control.skin.LabeledText;
 import java.awt.Rectangle;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 
 /**
  * ドッキング可能なタブパネル
@@ -93,9 +91,16 @@ public class DockableTabPane extends TabPane {
 	public DockableTab cutTab () {
 		DockableTab currentTab = (DockableTab) this.getSelectionModel().getSelectedItem();
 		if (currentTab != null) {
-			this.getTabs().remove(currentTab);
+			this.removeTab(currentTab);
 		}
 		return currentTab;
+	}
+
+	public void removeTab (DockableTab tab) {
+		if (tab != null) {
+			this.getTabs().remove(tab);
+			this.parent.removeEmptyTabPane();
+		}
 	}
 
 	public void insertTab (int index, DockableTab tab) {

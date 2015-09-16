@@ -17,8 +17,6 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.Alert;
 import jstorybook.view.dialog.ExceptionDialog;
 
 /**
@@ -60,6 +58,10 @@ public class ResourceManager {
 
 		formatter.applyPattern(pattern);
 		return formatter.format(args);
+	}
+
+	public static String getCss (String resourceKey) {
+		return ResourceManager.class.getResource("/jstorybook/resource/stylesheet/" + resourceKey).toExternalForm();
 	}
 
 }

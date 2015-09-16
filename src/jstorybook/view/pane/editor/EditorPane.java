@@ -29,6 +29,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -36,6 +37,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.MyPane;
@@ -72,8 +74,8 @@ public class EditorPane extends MyPane {
 
 	public EditorPane (String title) {
 		super(title);
-		this.rootPane.setMaxWidth(350.0);
-		this.rootPane.setMinWidth(350.0);
+		this.rootPane.setMaxWidth(365.0);
+		this.rootPane.setMinWidth(365.0);
 
 		// 編集項目変更時の処理を指定
 		this.columnList.addListener((obj) -> {
@@ -81,16 +83,28 @@ public class EditorPane extends MyPane {
 		});
 		this.setContent(this.rootPane);
 
+		// タイトルラベル
+		Label titleLabel = new Label("aaa");
+		titleLabel.fontProperty().bind(FontManager.getInstance().titleFontProperty());
+		titleLabel.textProperty().bind(this.textProperty());
+		AnchorPane.setTopAnchor(titleLabel, 5.0);
+		AnchorPane.setLeftAnchor(titleLabel, 10.0);
+		this.rootPane.getChildren().add(titleLabel);
+
 		// タブペイン
-		AnchorPane.setTopAnchor(this.tabPane, 0.0);
+		AnchorPane.setTopAnchor(this.tabPane, 40.0);
 		AnchorPane.setLeftAnchor(this.tabPane, 0.0);
 		AnchorPane.setRightAnchor(this.tabPane, 0.0);
 		AnchorPane.setBottomAnchor(this.tabPane, 40.0);
 		this.rootPane.getChildren().add(this.tabPane);
 
+		// mainVbox用のスクロールペイン
+		ScrollPane mainScrollPane = new ScrollPane();
+		mainScrollPane.setContent(this.mainVbox);
+
 		// 基本タブの作成
 		Tab mainTab = new Tab();
-		mainTab.setContent(this.mainVbox);
+		mainTab.setContent(mainScrollPane);
 		mainTab.setClosable(false);
 		mainTab.setText(ResourceManager.getMessage("msg.edit.base"));
 		this.tabPane.getTabs().add(mainTab);
@@ -142,8 +156,8 @@ public class EditorPane extends MyPane {
 			// Viewからロジックを呼び出してることになるので要修正
 			// （根本的な原因は、EditorColumnがviewtool.modelに置かれてることなので
 			// 　かなりの修正を要するかも）
-			this.baseColumnList.get().copyProperty(this.columnList.get());
-			this.close();
+			EditorPane.this.save();
+			EditorPane.this.close();
 		});
 		// キャンセルボタン
 		this.messenger.apply(PaneCancelMessage.class, this, (ev) -> {
@@ -151,12 +165,22 @@ public class EditorPane extends MyPane {
 		});
 		// 適用ボタン
 		this.messenger.apply(PaneApplyMessage.class, this, (ev) -> {
-			this.baseColumnList.get().copyProperty(this.columnList.get());
+			EditorPane.this.baseColumnList.get().copyProperty(this.columnList.get());
 		});
 	}
 
+	private void save () {
+		// 既存のエンティティを更新
+		if (this.baseColumnList.get() != null) {
+			this.baseColumnList.get().copyProperty(this.columnList.get());
+		}
+		// 新しくエンティティを作成
+		else {
+		}
+	}
+
 	private void close () {
-		((DockableTabPane) this.getTabPane()).cutTab();
+		((DockableTabPane) this.getTabPane()).removeTab(this);
 	}
 
 	public ObjectProperty<EditorColumnList> columnListProperty () {
@@ -186,7 +210,7 @@ public class EditorPane extends MyPane {
 			}
 
 			if (node != null) {
-				node.setPrefWidth(250.0);
+				node.setPrefWidth(240.0);
 				GridPane.setConstraints(label, 0, row, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER,
 										new Insets(5));
 				GridPane.setConstraints(node, 1, row, 1, 1, HPos.LEFT, VPos.CENTER, Priority.ALWAYS, Priority.NEVER,

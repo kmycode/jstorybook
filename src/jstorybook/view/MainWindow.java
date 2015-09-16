@@ -118,14 +118,12 @@ public class MainWindow extends MyStage {
 		// シーンを設定
 		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
-		scene.getStylesheets().add(getClass().getResource("/jstorybook/resource/stylesheet/default.css").
-				toExternalForm());
+		scene.getStylesheets().add(ResourceManager.getCss("default.css"));
 		this.setScene(scene);
 
 		// TODO:【テスト】
 		this.viewModelList.setProperty("storyFileName", "teststory/test.db");
 		this.addPersonListTab();
-		this.addPersonEditorTab(null);
 	}
 
 	// メインメニューバーを作成

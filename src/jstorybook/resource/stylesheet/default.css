@@ -37,3 +37,9 @@
 	-fx-border-color: #8899ee;
 }
 
+.scroll-bar {
+	-fx-pref-width: 20px;
+	-fx-pref-height: 20px;
+	-fx-background-color: #eeeeee;
+}
+
