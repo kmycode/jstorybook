@@ -13,20 +13,20 @@
  */
 package jstorybook.viewmodel;
 
-import com.sun.javafx.binding.ExpressionHelper;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WritableObjectValue;
-import jstorybook.view.dialog.ExceptionDialog;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import jstorybook.viewtool.messenger.Messenger;
 
 /**
@@ -36,17 +36,27 @@ import jstorybook.viewtool.messenger.Messenger;
 public abstract class ViewModel {
 
 	private List<PropertyContainer> propertyList = new ArrayList<>();
+	private List<CommandContainer> commandList = new ArrayList<>();
 	private static final ObjectProperty nullObject = new NullObjectProperty();
+	private static final BooleanProperty nullBooleanObject = new SimpleBooleanProperty();
 	private boolean isPropertyStored = false;
+	private boolean isCommandStored = false;
 
 	protected void applyProperty (String propertyName, Property property) {
 		this.propertyList.add(new PropertyContainer(propertyName, property, property.getValue() != null ? property.
 													getValue().getClass() : Object.class));
-		this.isPropertyStored = true;
 	}
 
+	protected void applyCommand (String commandName, EventHandler event) {
+		this.commandList.add(new CommandContainer(commandName, event));
+	}
+
+	protected void applyCommand (String commandName, EventHandler event, BooleanProperty canExecute) {
+		this.commandList.add(new CommandContainer(commandName, event, canExecute));
+	}
+
+	@Deprecated
 	protected void applyEmptyProperty () {
-		this.isPropertyStored = true;
 	}
 
 	public Property getProperty (String propertyName) {
@@ -73,12 +83,45 @@ public abstract class ViewModel {
 		return result;
 	}
 
+	public void executeCommand (String commandName) {
+		if (!this.isCommandStored) {
+			this.storeCommand();
+			this.isCommandStored = true;
+		}
+		for (CommandContainer cc : this.commandList) {
+			if (cc.getName().equals(commandName)) {
+				cc.execute();
+			}
+		}
+	}
+
+	public ReadOnlyBooleanProperty canExecuteCommandProperty (String commandName) {
+		if (!this.isCommandStored) {
+			this.storeCommand();
+			this.isCommandStored = true;
+		}
+		for (CommandContainer cc : this.commandList) {
+			if (cc.getName().equals(commandName)) {
+				return cc.getCanExecute();
+			}
+		}
+		return ViewModel.nullBooleanObject;
+	}
+
 	public static boolean isNullProperty (Property property) {
-		return ViewModel.nullObject == property;
+		return ViewModel.nullObject == property || ViewModel.nullBooleanObject == property;
+	}
+
+	public static boolean isNullProperty (ReadOnlyBooleanProperty property) {
+		return ViewModel.nullBooleanObject == property;
 	}
 
 	public static Property getNullProperty () {
 		return ViewModel.nullObject;
+	}
+
+	public static ReadOnlyBooleanProperty getNullBooleanProperty () {
+		return ViewModel.nullBooleanObject;
 	}
 
 	public <T> void setProperty (String propertyName, T value) {
@@ -91,6 +134,8 @@ public abstract class ViewModel {
 	abstract protected void storeProperty ();
 
 	abstract public void storeMessenger (Messenger messenger);
+
+	abstract protected void storeCommand ();
 
 	/**
 	 * プロパティ情報を積み込むコンテナ
@@ -119,6 +164,40 @@ public abstract class ViewModel {
 
 		public Class getPropertyClass () {
 			return this.property.getValue().getClass();
+		}
+	}
+
+	/*
+	 * コマンド情報を積みこむコンテナ
+	 */
+	private static class CommandContainer {
+
+		private final String commandName;
+		private final EventHandler event;
+		private final BooleanProperty canExecute;
+
+		public CommandContainer (String name, EventHandler event) {
+			this(name, event, new SimpleBooleanProperty(true));
+		}
+
+		public CommandContainer (String name, EventHandler event, BooleanProperty canExecute) {
+			this.commandName = name;
+			this.event = event;
+			this.canExecute = canExecute;
+		}
+
+		public String getName () {
+			return this.commandName;
+		}
+
+		public ReadOnlyBooleanProperty getCanExecute () {
+			return this.canExecute;
+		}
+
+		public void execute () {
+			if (this.canExecute.get()) {
+				this.event.handle(new Event(EventType.ROOT));
+			}
 		}
 	}
 

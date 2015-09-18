@@ -11,20 +11,19 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view;
+package jstorybook.viewtool.messenger.pane.editor;
 
-import javafx.stage.Stage;
+import javafx.beans.property.Property;
 
 /**
+ * エンティティ編集画面で日付ピッカーを追加するメッセージ
  *
  * @author KMY
  */
-public abstract class MyStage extends Stage {
+public class EditorColumnDateMessage extends EditorColumnControlMessage {
 
-	protected final Stage parent;
-
-	public MyStage (Stage parent) {
-		this.parent = parent;
+	public EditorColumnDateMessage (String title, Property property) {
+		super(title, property);
 	}
 
 }

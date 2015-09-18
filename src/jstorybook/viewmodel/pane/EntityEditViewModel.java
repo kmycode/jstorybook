@@ -11,35 +11,38 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel.dialog;
+package jstorybook.viewmodel.pane;
 
-import jstorybook.model.ExceptionModel;
+import jstorybook.model.story.EntityEditModel;
 import jstorybook.viewmodel.ViewModel;
 import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * 内部エラーダイアログのビューモデル
+ * エンティティを編集するためのビューモデル
  *
  * @author KMY
  */
-public class ExceptionDialogViewModel extends ViewModel {
+public class EntityEditViewModel extends ViewModel {
 
-	private ExceptionModel exceptionModel = new ExceptionModel();
+	private EntityEditModel model = new EntityEditModel();
 
 	@Override
 	protected void storeProperty () {
-		this.applyProperty("exception", this.exceptionModel.exceptionProperty());
-		this.applyProperty("stackTrace", this.exceptionModel.stackTraceProperty());
-		this.applyProperty("exceptionTitle", this.exceptionModel.exceptionTitleProperty());
+		this.applyProperty("columnList", this.model.columnListProperty());
+		this.applyProperty("baseColumnList", this.model.baseColumnListProperty());
+		this.applyProperty("title", this.model.titleProperty());
 	}
 
 	@Override
 	public void storeMessenger (Messenger messenger) {
+		this.model.setMessenger(messenger);
 	}
 
 	@Override
 	protected void storeCommand () {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		this.applyCommand("save", (ev) -> EntityEditViewModel.this.model.save(), this.model.canSaveProperty());
+		this.applyCommand("cancel", (ev) -> EntityEditViewModel.this.model.cancel());
+		this.applyCommand("apply", (ev) -> EntityEditViewModel.this.model.apply());
 	}
 
 }

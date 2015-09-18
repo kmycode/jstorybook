@@ -11,20 +11,34 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view;
+package jstorybook.viewtool.converter;
 
-import javafx.stage.Stage;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
+ * 論理値を反転する
  *
  * @author KMY
  */
-public abstract class MyStage extends Stage {
+public class BooleanReverseConverter {
 
-	protected final Stage parent;
+	private final BooleanProperty value = new SimpleBooleanProperty(false);
+	private final BooleanProperty result = new SimpleBooleanProperty(true);
 
-	public MyStage (Stage parent) {
-		this.parent = parent;
+	public BooleanReverseConverter () {
+		this.value.addListener((obj) -> {
+			this.result.set(!this.value.get());
+		});
+	}
+
+	public BooleanProperty valueProperty () {
+		return this.value;
+	}
+
+	public ReadOnlyBooleanProperty resultProperty () {
+		return this.result;
 	}
 
 }

@@ -11,20 +11,15 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view;
+package jstorybook.viewtool.messenger.general;
 
-import javafx.stage.Stage;
+import jstorybook.viewtool.messenger.Message;
 
 /**
+ * 画面を閉じるメッセージ
  *
  * @author KMY
  */
-public abstract class MyStage extends Stage {
-
-	protected final Stage parent;
-
-	public MyStage (Stage parent) {
-		this.parent = parent;
-	}
+public class CloseMessage extends Message {
 
 }

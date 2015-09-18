@@ -39,17 +39,17 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.MyPane;
-import jstorybook.viewtool.action.pane.EntityEditorApplyAction;
-import jstorybook.viewtool.action.pane.EntityEditorCancelAction;
-import jstorybook.viewtool.action.pane.EntityEditorOKAction;
+import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewmodel.pane.EntityEditViewModel;
 import jstorybook.viewtool.converter.LocalDateCalendarConverter;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.messenger.pane.PaneApplyMessage;
-import jstorybook.viewtool.messenger.pane.PaneCancelMessage;
-import jstorybook.viewtool.messenger.pane.PaneOKMessage;
-import jstorybook.viewtool.model.EditorColumn;
+import jstorybook.viewtool.messenger.general.CloseMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -58,6 +58,8 @@ import jstorybook.viewtool.model.EditorColumnList;
  * @author KMY
  */
 public class EditorPane extends MyPane {
+
+	private final ViewModelList viewModelList = new ViewModelList(new EntityEditViewModel());
 
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
@@ -72,62 +74,61 @@ public class EditorPane extends MyPane {
 	protected final GridPane mainGridPane = new GridPane();
 	private List<WeakReference<Property>> editPropertyList = new ArrayList<>();
 
+	private int mainVboxRow = 0;
+
 	public EditorPane (String title) {
 		super(title);
+
+		// モデルに値を渡す
+		this.viewModelList.getProperty("columnList").bind(this.columnList);
+		this.viewModelList.getProperty("baseColumnList").bind(this.baseColumnList);
+
+		// タブ全体のコンテンツの設定
 		this.rootPane.setMaxWidth(365.0);
 		this.rootPane.setMinWidth(365.0);
-
-		// 編集項目変更時の処理を指定
-		this.columnList.addListener((obj) -> {
-			EditorPane.this.generateEditor(((ObjectProperty<EditorColumnList>) obj).get());
-		});
 		this.setContent(this.rootPane);
 
 		// タイトルラベル
-		Label titleLabel = new Label("aaa");
+		Label titleLabel = new Label();
 		titleLabel.fontProperty().bind(FontManager.getInstance().titleFontProperty());
 		titleLabel.textProperty().bind(this.textProperty());
-		AnchorPane.setTopAnchor(titleLabel, 5.0);
-		AnchorPane.setLeftAnchor(titleLabel, 10.0);
+		GUIUtil.setAnchor(titleLabel, 5.0, null, null, 10.0);
 		this.rootPane.getChildren().add(titleLabel);
 
 		// タブペイン
-		AnchorPane.setTopAnchor(this.tabPane, 40.0);
-		AnchorPane.setLeftAnchor(this.tabPane, 0.0);
-		AnchorPane.setRightAnchor(this.tabPane, 0.0);
-		AnchorPane.setBottomAnchor(this.tabPane, 40.0);
+		GUIUtil.setAnchor(this.tabPane, 40.0, 0.0, 40.0, 0.0);
 		this.rootPane.getChildren().add(this.tabPane);
-
-		// mainVbox用のスクロールペイン
-		ScrollPane mainScrollPane = new ScrollPane();
-		mainScrollPane.setContent(this.mainVbox);
 
 		// 基本タブの作成
 		Tab mainTab = new Tab();
-		mainTab.setContent(mainScrollPane);
 		mainTab.setClosable(false);
 		mainTab.setText(ResourceManager.getMessage("msg.edit.base"));
 		this.tabPane.getTabs().add(mainTab);
 
-		// 基本タブに乗せる編集項目について
+		// 基本タブ用のスクロールペイン
+		ScrollPane mainScrollPane = new ScrollPane();
+		mainScrollPane.setContent(this.mainVbox);
+		mainTab.setContent(mainScrollPane);
+
+		// 基本タブに乗せる編集項目（グリッド）
 		this.mainVbox.getChildren().add(this.mainGridPane);
 		VBox.setVgrow(this.mainVbox, Priority.ALWAYS);
 
 		// 編集画面下のボタン
-		Button okButton = new EntityEditorOKAction(this.messenger).createButton();
+		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "save");
+		okButton.setText(ResourceManager.getMessage("msg.edit.ok"));
 		okButton.setPrefWidth(90.0);
-		AnchorPane.setRightAnchor(okButton, 195.0);
-		AnchorPane.setBottomAnchor(okButton, 15.0);
+		GUIUtil.setAnchor(okButton, null, 195.0, 15.0, null);
 		this.rootPane.getChildren().add(okButton);
-		Button cancelButton = new EntityEditorCancelAction(this.messenger).createButton();
+		Button cancelButton = GUIUtil.createCommandButton(this.viewModelList, "cancel");
+		cancelButton.setText(ResourceManager.getMessage("msg.edit.cancel"));
 		cancelButton.setPrefWidth(90.0);
-		AnchorPane.setRightAnchor(cancelButton, 100.0);
-		AnchorPane.setBottomAnchor(cancelButton, 15.0);
+		GUIUtil.setAnchor(cancelButton, null, 100.0, 15.0, null);
 		this.rootPane.getChildren().add(cancelButton);
-		Button applyButton = new EntityEditorApplyAction(this.messenger).createButton();
+		Button applyButton = GUIUtil.createCommandButton(this.viewModelList, "apply");
+		applyButton.setText(ResourceManager.getMessage("msg.edit.apply"));
 		applyButton.setPrefWidth(90.0);
-		AnchorPane.setRightAnchor(applyButton, 5.0);
-		AnchorPane.setBottomAnchor(applyButton, 15.0);
+		GUIUtil.setAnchor(applyButton, null, 5.0, 15.0, null);
 		this.rootPane.getChildren().add(applyButton);
 
 		// メッセンジャを登録
@@ -151,37 +152,35 @@ public class EditorPane extends MyPane {
 
 	// メッセンジャの設定
 	private void applyMessenger () {
-		// OKボタン
-		this.messenger.apply(PaneOKMessage.class, this, (ev) -> {
-			// Viewからロジックを呼び出してることになるので要修正
-			// （根本的な原因は、EditorColumnがviewtool.modelに置かれてることなので
-			// 　かなりの修正を要するかも）
-			EditorPane.this.save();
-			EditorPane.this.close();
-		});
-		// キャンセルボタン
-		this.messenger.apply(PaneCancelMessage.class, this, (ev) -> {
+		// 閉じる
+		this.messenger.apply(CloseMessage.class, this, (ev) -> {
 			this.close();
 		});
-		// 適用ボタン
-		this.messenger.apply(PaneApplyMessage.class, this, (ev) -> {
-			EditorPane.this.baseColumnList.get().copyProperty(this.columnList.get());
-		});
-	}
 
-	private void save () {
-		// 既存のエンティティを更新
-		if (this.baseColumnList.get() != null) {
-			this.baseColumnList.get().copyProperty(this.columnList.get());
-		}
-		// 新しくエンティティを作成
-		else {
-		}
+		// テキストコントロールを追加
+		this.messenger.apply(EditorColumnTextMessage.class, this, (ev) -> {
+			EditorColumnTextMessage mes = (EditorColumnTextMessage) ev;
+			EditorPane.this.addTextEdit(mes.getColumnTitle(), mes.getProperty());
+		});
+		// 日付ピッカーコントロールを追加
+		this.messenger.apply(EditorColumnDateMessage.class, this, (ev) -> {
+			EditorColumnDateMessage mes = (EditorColumnDateMessage) ev;
+			EditorPane.this.addDateEdit(mes.getColumnTitle(), mes.getProperty());
+		});
+		// カラーピッカーコントロールを追加
+		this.messenger.apply(EditorColumnColorMessage.class, this, (ev) -> {
+			EditorColumnColorMessage mes = (EditorColumnColorMessage) ev;
+			EditorPane.this.addColorEdit(mes.getColumnTitle(), mes.getProperty());
+		});
+
+		this.viewModelList.storeMessenger(this.messenger);
 	}
 
 	private void close () {
 		((DockableTabPane) this.getTabPane()).removeTab(this);
 	}
+
+	// -------------------------------------------------------
 
 	public ObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
@@ -191,66 +190,56 @@ public class EditorPane extends MyPane {
 		return this.baseColumnList;
 	}
 
-	// この、めぢょっとぉ、ゎ、エディタ、をねっ、つくつくちちゃうのー！
-	protected void generateEditor (EditorColumnList columnList) {
-		int row = 0;
-		for (EditorColumn column : columnList) {
-			Label label = new Label(column.getColumnName());
-			label.setPrefWidth(85.0);
+	// -------------------------------------------------------
 
-			Control node = null;
-			if (column.getColumnType() == EditorColumn.ColumnType.TEXT) {
-				node = this.generateTextEdit(column);
-			}
-			else if (column.getColumnType() == EditorColumn.ColumnType.DATE) {
-				node = this.generateDateEdit(column);
-			}
-			else if (column.getColumnType() == EditorColumn.ColumnType.COLOR) {
-				node = this.generateColorEdit(column);
-			}
+	private void addEditControlRow (String title, Control editControl) {
+		Label label = new Label(title);
+		label.setPrefWidth(85.0);
 
-			if (node != null) {
-				node.setPrefWidth(240.0);
-				GridPane.setConstraints(label, 0, row, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER,
-										new Insets(5));
-				GridPane.setConstraints(node, 1, row, 1, 1, HPos.LEFT, VPos.CENTER, Priority.ALWAYS, Priority.NEVER,
-										new Insets(5));
-				this.mainGridPane.getChildren().addAll(label, node);
-				row++;
-			}
-		}
+		editControl.setPrefWidth(240.0);
+
+		GridPane.
+				setConstraints(label, 0, this.mainVboxRow, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER,
+							   new Insets(5));
+		GridPane.
+				setConstraints(editControl, 1, this.mainVboxRow, 1, 1, HPos.LEFT, VPos.CENTER, Priority.ALWAYS,
+							   Priority.NEVER,
+							   new Insets(5));
+		this.mainGridPane.getChildren().addAll(label, editControl);
+
+		this.mainVboxRow++;
 	}
 
 	// ColumnType.TEXT
-	private Control generateTextEdit (EditorColumn column) {
+	private void addTextEdit (String title, Property property) {
 		TextField node = new TextField();
-		node.textProperty().bindBidirectional(column.getProperty());
+		node.textProperty().bindBidirectional(property);
 		this.editPropertyList.add(new WeakReference<>(node.textProperty()));
-		return node;
+		this.addEditControlRow(title, node);
 	}
 
 	// ColumnType.DATE
-	private Control generateDateEdit (EditorColumn column) {
+	private void addDateEdit (String title, Property property) {
 		DatePicker node = new DatePicker();
 		node.setPromptText("yyyy/MM/dd");
 		
 		LocalDateCalendarConverter converter = new LocalDateCalendarConverter();
 		node.valueProperty().bindBidirectional(converter.localDateProperty());
-		converter.calendarProperty().set((Calendar) column.getProperty().getValue());
-		//converter.calendarProperty().bindBidirectional(column.getProperty());
-		column.getProperty().bind(converter.calendarProperty());
+		converter.calendarProperty().set((Calendar) property.getValue());
+		property.bind(converter.calendarProperty());
 
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.editPropertyList.add(new WeakReference<>(converter.calendarProperty()));
-		return node;
+
+		this.addEditControlRow(title, node);
 	}
 
 	// ColumnType.COLOR
-	private Control generateColorEdit (EditorColumn column) {
+	private void addColorEdit (String title, Property property) {
 		ColorPicker node = new ColorPicker();
-		node.valueProperty().bindBidirectional(column.getProperty());
+		node.valueProperty().bindBidirectional(property);
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
-		return node;
+		this.addEditControlRow(title, node);
 	}
 
 }

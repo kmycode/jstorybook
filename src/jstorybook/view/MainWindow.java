@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import jstorybook.common.contract.PreferenceKey;
 import jstorybook.common.contract.SystemKey;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
@@ -91,11 +92,11 @@ public class MainWindow extends MyStage {
 
 		// メインパネルのマージンを設定
 		VBox.setVgrow(this.mainPane.get(), Priority.ALWAYS);
-		this.setAnchor(this.mainPane.get(), 0.0);
+		GUIUtil.setAnchor(this.mainPane.get(), 0.0);
 		root.getChildren().add(this.mainPane.get());
 
 		// メインパネルを設定
-		this.setAnchor(root, 0.0);
+		GUIUtil.setAnchor(root, 0.0);
 
 		// -------------------------------------------------------
 		// プログラム終了時の処理を登録

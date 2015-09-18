@@ -11,20 +11,40 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view;
+package jstorybook.viewtool.messenger.pane.editor;
 
-import javafx.stage.Stage;
+import javafx.beans.property.Property;
+import jstorybook.viewtool.messenger.Message;
 
 /**
+ * 編集画面になにかコントロールを追加するメッセージ
  *
  * @author KMY
  */
-public abstract class MyStage extends Stage {
+public abstract class EditorColumnControlMessage extends Message {
 
-	protected final Stage parent;
+	private String columnTitle;
+	private Property property;
 
-	public MyStage (Stage parent) {
-		this.parent = parent;
+	public EditorColumnControlMessage (String title, Property property) {
+		this.setColumnTitle(title);
+		this.setProperty(property);
+	}
+
+	public String getColumnTitle () {
+		return this.columnTitle;
+	}
+
+	public final void setColumnTitle (String title) {
+		this.columnTitle = title;
+	}
+
+	public Property getProperty () {
+		return this.property;
+	}
+
+	public final void setProperty (Property p) {
+		this.property = p;
 	}
 
 }

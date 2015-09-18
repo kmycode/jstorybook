@@ -15,8 +15,7 @@ package jstorybook.viewmodel;
 
 import java.util.ArrayList;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.WritableObjectValue;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import jstorybook.viewtool.messenger.Messenger;
 
 /**
@@ -52,6 +51,22 @@ public class ViewModelList extends ArrayList<ViewModel> {
 		for (ViewModel vm : this) {
 			vm.setProperty(propertyName, value);
 		}
+	}
+
+	public void executeCommand (String commandName) {
+		for (ViewModel vm : this) {
+			vm.executeCommand(commandName);
+		}
+	}
+
+	public ReadOnlyBooleanProperty canExecuteCommandProperty (String commandName) {
+		for (ViewModel vm : this) {
+			ReadOnlyBooleanProperty p = vm.canExecuteCommandProperty(commandName);
+			if (!ViewModel.isNullProperty(p)) {
+				return p;
+			}
+		}
+		return ViewModel.getNullBooleanProperty();
 	}
 
 	public void storeMessenger (Messenger messenger) {
