@@ -49,7 +49,6 @@ public class StoryViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 }

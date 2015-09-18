@@ -15,6 +15,7 @@ package jstorybook.common.util;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.converter.BooleanReverseConverter;
@@ -29,8 +30,6 @@ public class GUIUtil {
 	private GUIUtil () {
 	}
 
-	public static final double UNSET = -3.14159265358979;
-
 	public static Button createCommandButton (ViewModelList vmlist, String commandName) {
 		Button button = new Button();
 
@@ -43,6 +42,20 @@ public class GUIUtil {
 		});
 
 		return button;
+	}
+
+	public static MenuItem createMenuItem (ViewModelList vmlist, String commandName) {
+		MenuItem menuItem = new MenuItem();
+
+		BooleanReverseConverter converter = new BooleanReverseConverter();
+		converter.valueProperty().bind(vmlist.canExecuteCommandProperty(commandName));
+		menuItem.disableProperty().bind(converter.resultProperty());
+
+		menuItem.setOnAction((ev) -> {
+			vmlist.executeCommand(commandName);
+		});
+
+		return menuItem;
 	}
 
 	public static void setAnchor (Node node, Double top, Double right, Double bottom, Double left) {

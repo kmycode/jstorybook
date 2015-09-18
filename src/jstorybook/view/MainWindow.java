@@ -40,9 +40,9 @@ import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.editor.EditorPane;
 import jstorybook.view.pane.list.PersonListPane;
+import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
 import jstorybook.viewmodel.ViewModelList;
-import jstorybook.viewtool.action.ExitAction;
 import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
@@ -62,7 +62,7 @@ public class MainWindow extends MyStage {
 	private final Messenger messenger = new Messenger();
 	private final WindowTitleCompleter titleCompleter = new WindowTitleCompleter();
 
-	private final ViewModelList viewModelList = new ViewModelList(new StoryViewModel());
+	private final ViewModelList viewModelList = new ViewModelList(new StoryViewModel(), new ApplicationViewModel());
 	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<DockableAreaGroupPane> rootGroupPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<DockableTabPane> activeTabPane = new SimpleObjectProperty<>();
@@ -135,7 +135,8 @@ public class MainWindow extends MyStage {
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		{
-			menu = new ExitAction(this.messenger).createMenuItem();
+			menu = GUIUtil.createMenuItem(this.viewModelList, "exit");
+			menu.setText(ResourceManager.getMessage("msg.exit"));
 			fileMenu.getItems().add(menu);
 		}
 

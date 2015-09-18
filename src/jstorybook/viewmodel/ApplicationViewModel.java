@@ -11,30 +11,32 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.action.pane;
+package jstorybook.viewmodel;
 
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.viewtool.action.Action;
+import jstorybook.model.ApplicationModel;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.messenger.pane.PaneOKMessage;
 
 /**
- * エンティティエディタでOKを押した時のアクション
+ * アプリの終了
  *
- * @author KMY
+  * @author KMY
  */
-public class EntityEditorOKAction extends Action {
+public class ApplicationViewModel extends ViewModel {
 
-	private final Messenger messenger;
+	ApplicationModel model = new ApplicationModel();
 
-	public EntityEditorOKAction (Messenger messenger) {
-		this.name.set(ResourceManager.getMessage("msg.edit.ok"));
-		this.messenger = messenger;
+	@Override
+	protected void storeProperty () {
 	}
 
 	@Override
-	public void onAction () {
-		this.messenger.send(new PaneOKMessage());
+	public void storeMessenger (Messenger messenger) {
+		this.model.setMessenger(messenger);
+	}
+
+	@Override
+	protected void storeCommand () {
+		this.applyCommand("exit", (ev) -> this.model.exit());
 	}
 
 }
