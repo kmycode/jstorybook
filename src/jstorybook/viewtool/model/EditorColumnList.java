@@ -33,6 +33,7 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 
 	private final StringProperty title = new SimpleStringProperty();
 	private final LongProperty id = new SimpleLongProperty();
+	private final StringProperty note = new SimpleStringProperty();
 	private final ObjectProperty<EntityType> entityType = new SimpleObjectProperty<>();
 
 	public StringProperty titleProperty () {
@@ -41,6 +42,10 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 
 	public LongProperty idProperty () {
 		return this.id;
+	}
+
+	public StringProperty noteProperty () {
+		return this.note;
 	}
 
 	public ObjectProperty<EntityType> entityTypeProperty () {

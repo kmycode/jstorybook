@@ -38,7 +38,7 @@ public class PersonDAO extends DAO {
 		model.birthdayProperty().set(SQLiteUtil.getCalendar(rs.getString("birthday")));
 		model.dayOfDeathProperty().set(SQLiteUtil.getCalendar(rs.getString("dayofdeath")));
 		model.colorProperty().set(SQLiteUtil.getColor(rs.getInt("color")));
-		model.notesProperty().set(rs.getString("notes"));
+		model.noteProperty().set(rs.getString("note"));
 		return model;
 	}
 
@@ -47,7 +47,7 @@ public class PersonDAO extends DAO {
 				+ "',lastname = '" + model.lastNameProperty().get() + "',birthday = '" + SQLiteUtil.getString(
 						model.birthdayProperty().get()) + "',dayofdeath = '" + SQLiteUtil.getString(model.
 						dayOfDeathProperty().get()) + "',color = " + SQLiteUtil.getInteger(model.colorProperty().
-						get()) + ",notes = '" + model.notesProperty().get() + "' where id = " + model.idProperty().
+						get()) + ",note = '" + model.noteProperty().get() + "' where id = " + model.idProperty().
 				get() + ";");
 	}
 
@@ -61,7 +61,7 @@ public class PersonDAO extends DAO {
 			throw new SQLException();
 		}
 		this.getStoryFileModel().updateQuery(
-				"insert into person(id,firstname,lastname,birthday,dayofdeath,color,notes) values(" + newid
+				"insert into person(id,firstname,lastname,birthday,dayofdeath,color,note) values(" + newid
 				+ "'','','','',0,''");
 		Person model = new Person();
 		model.idProperty().set(newid);

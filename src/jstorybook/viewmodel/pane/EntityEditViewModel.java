@@ -31,6 +31,7 @@ public class EntityEditViewModel extends ViewModel {
 		this.applyProperty("columnList", this.model.columnListProperty());
 		this.applyProperty("baseColumnList", this.model.baseColumnListProperty());
 		this.applyProperty("title", this.model.titleProperty());
+		this.applyProperty("note", this.model.noteProperty());
 	}
 
 	@Override

@@ -38,7 +38,7 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
-import jstorybook.view.pane.editor.EditorPane;
+import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
@@ -221,7 +221,7 @@ public class MainWindow extends MyStage {
 	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName,
 									 String viewModelColumnListName) {
 
-		EditorPane tab = new EditorPane();
+		EntityEditorPane tab = new EntityEditorPane();
 		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
 		completer.setEntityTypeName(entityTypeName);
 
@@ -230,8 +230,8 @@ public class MainWindow extends MyStage {
 			// すでに同じエンティティの編集タブが開いてないか？
 			for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
 				for (Tab dtab : dtabPane.getTabs()) {
-					if (dtab instanceof EditorPane) {
-						EditorColumnList otherList = (EditorColumnList) ((EditorPane) dtab).columnListProperty().get();
+					if (dtab instanceof EntityEditorPane) {
+						EditorColumnList otherList = (EditorColumnList) ((EntityEditorPane) dtab).columnListProperty().get();
 						if (otherList.isEqualEntity(message.columnListProperty().get())) {
 							// すでに開いているタブを表示し、新規タブ生成を中止する
 							dtabPane.getSelectionModel().select(dtab);

@@ -25,6 +25,7 @@ import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
+import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -73,6 +74,15 @@ public class EntityEditModel implements IUseMessenger {
 		}
 	}
 
+	public StringProperty noteProperty () {
+		if (this.columnList.get() != null) {
+			return this.columnList.get().noteProperty();
+		}
+		else {
+			return new SimpleStringProperty();
+		}
+	}
+
 	private void generateEditor () {
 		EditorColumnList list = this.columnList.get();
 		if (list == null) {
@@ -95,6 +105,9 @@ public class EntityEditModel implements IUseMessenger {
 				EntityEditModel.this.isChanged.set(true);
 			});
 		}
+
+		// ノートを設定
+		this.messenger.send(new PropertyNoteSetMessage(this.noteProperty()));
 	}
 
 	// -------------------------------------------------------

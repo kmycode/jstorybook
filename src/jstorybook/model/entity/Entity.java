@@ -29,6 +29,7 @@ public abstract class Entity implements Comparable<Entity> {
 
 	protected LongProperty id;
 	private final StringProperty title = new SimpleStringProperty();
+	protected StringProperty note ;
 
 	public Entity () {
 		this.id = new SimpleLongProperty(++Entity.entityCount);
@@ -99,12 +100,17 @@ public abstract class Entity implements Comparable<Entity> {
 		return this.title;
 	}
 
+	public StringProperty noteProperty () {
+		return this.note;
+	}
+
 	@Override
 	public boolean equals (Object obj) {
 		boolean ret = super.equals(obj);
 		if (ret) {
 			Entity test = (Entity) obj;
 			ret &= this.equalsProperty(this.id, test.id);
+			ret &= this.equalsProperty(this.note, test.note);
 		}
 		return ret;
 	}
@@ -114,6 +120,7 @@ public abstract class Entity implements Comparable<Entity> {
 	public int hashCode () {
 		int hash = super.hashCode();
 		hash = hash * 31 + this.propertyHashCode(this.id);
+		hash = hash * 31 + this.propertyHashCode(this.note);
 		return hash;
 	}
 
@@ -134,6 +141,7 @@ public abstract class Entity implements Comparable<Entity> {
 	public final void copyTo (Entity obj) {
 		obj.id.set(this.id.get());
 		obj.title.set(this.title.get());
+		obj.note.set(this.note.get());
 	}
 
 	public abstract Entity entityClone ();

@@ -32,7 +32,6 @@ public class Person extends Entity implements Comparable<Entity> {
 	private ObjectProperty<Calendar> birthday;
 	private ObjectProperty<Calendar> dayOfDeath;
 	private ObjectProperty<Color> color;
-	private StringProperty notes;
 	private PersonNameCompleter nameCompleter = null;
 
 	public Person () {
@@ -41,17 +40,17 @@ public class Person extends Entity implements Comparable<Entity> {
 		this.birthday = new SimpleObjectProperty<>();
 		this.dayOfDeath = new SimpleObjectProperty<>();
 		this.color = new SimpleObjectProperty<>();
-		this.notes = new SimpleStringProperty();
+		this.note = new SimpleStringProperty();
 	}
 
-	public Person (String firstName, String lastName, Calendar birthday, Calendar dayOfDeath, Color color, String notes) {
+	public Person (String firstName, String lastName, Calendar birthday, Calendar dayOfDeath, Color color, String note) {
 		this();
 		this.firstName.set(firstName);
 		this.lastName.set(lastName);
 		this.birthday.set(birthday);
 		this.dayOfDeath.set(dayOfDeath);
 		this.color.set(color);
-		this.notes.set(notes);
+		this.note.set(note);
 	}
 
 	/*
@@ -89,13 +88,6 @@ public class Person extends Entity implements Comparable<Entity> {
 		return this.color;
 	}
 
-	/*
-	 * ノート
-	 */
-	public StringProperty notesProperty () {
-		return this.notes;
-	}
-
 	// -------------------------------------------------------
 	@Override
 	public boolean equals (Object obj) {
@@ -107,7 +99,6 @@ public class Person extends Entity implements Comparable<Entity> {
 			ret &= this.equalsProperty(this.birthday, test.birthday);
 			ret &= this.equalsProperty(this.dayOfDeath, test.dayOfDeath);
 			ret &= this.equalsProperty(this.color, test.color);
-			ret &= this.equalsProperty(this.notes, test.notes);
 		}
 		return ret;
 	}
@@ -120,7 +111,6 @@ public class Person extends Entity implements Comparable<Entity> {
 		hash = hash * 31 + this.propertyHashCode(this.birthday);
 		hash = hash * 31 + this.propertyHashCode(this.dayOfDeath);
 		hash = hash * 31 + this.propertyHashCode(this.color);
-		hash = hash * 31 + this.propertyHashCode(this.notes);
 		return hash;
 	}
 
@@ -162,16 +152,7 @@ public class Person extends Entity implements Comparable<Entity> {
 			obj.dayOfDeath.set((Calendar) this.dayOfDeath.get().clone());
 		}
 		obj.color.set((Color) this.color.get());
-		obj.notes.set(this.notes.get());
 		obj.nameCompleter = null;
-
-		// これを入れないとなぜかバインディングされない
-		// なぜなのかは謎
-		// しかもこれはlastNameだけなのに、firstNameもちゃんとバインディングされるようになるよね
-		// なんでかしら(´・ω・｀)
-		obj.lastName.addListener((objs) -> {
-			obj.lastName.get();
-		});
 
 		return obj;
 	}

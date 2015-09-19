@@ -32,6 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -50,6 +51,7 @@ import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
+import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -57,7 +59,7 @@ import jstorybook.viewtool.model.EditorColumnList;
  *
  * @author KMY
  */
-public class EditorPane extends MyPane {
+public class EntityEditorPane extends MyPane {
 
 	private final ViewModelList viewModelList = new ViewModelList(new EntityEditViewModel());
 
@@ -72,11 +74,12 @@ public class EditorPane extends MyPane {
 	protected final VBox vbox = new VBox();
 	protected final VBox mainVbox = new VBox();
 	protected final GridPane mainGridPane = new GridPane();
+	protected final TextArea noteArea = new TextArea();
 	private List<WeakReference<Property>> editPropertyList = new ArrayList<>();
 
 	private int mainVboxRow = 0;
 
-	public EditorPane (String title) {
+	public EntityEditorPane (String title) {
 		super(title);
 
 		// モデルに値を渡す
@@ -99,6 +102,7 @@ public class EditorPane extends MyPane {
 		GUIUtil.setAnchor(this.tabPane, 40.0, 0.0, 40.0, 0.0);
 		this.rootPane.getChildren().add(this.tabPane);
 
+		// -------------------------------------------------------
 		// 基本タブの作成
 		Tab mainTab = new Tab();
 		mainTab.setClosable(false);
@@ -114,6 +118,31 @@ public class EditorPane extends MyPane {
 		this.mainVbox.getChildren().add(this.mainGridPane);
 		VBox.setVgrow(this.mainVbox, Priority.ALWAYS);
 
+		// -------------------------------------------------------
+		// ノートペイン
+		Tab noteTab = new Tab();
+		noteTab.setClosable(false);
+		noteTab.setText(ResourceManager.getMessage("msg.edit.note"));
+		this.tabPane.getTabs().add(noteTab);
+
+		// ノートペインの内容（テキストエリア）
+		GUIUtil.setAnchor(this.noteArea, 5.0, 5.0, 5.0, 5.0);
+		this.noteArea.setPrefSize(330.0, 460.0);
+		this.noteArea.setWrapText(true);
+		this.noteArea.fontProperty().bind(FontManager.getInstance().fontProperty());
+
+		// スクロールペインのメインコンテンツとなるアンサーペイン
+		AnchorPane noteAnchorPane = new AnchorPane();
+		noteAnchorPane.getChildren().add(this.noteArea);
+		GUIUtil.setAnchor(noteAnchorPane, 0.0);
+
+		// ノートペイン用のスクロールペイン
+		ScrollPane noteScrollPane = new ScrollPane();
+		noteScrollPane.setContent(noteAnchorPane);
+		GUIUtil.setAnchor(noteScrollPane, 0.0);
+		noteTab.setContent(noteScrollPane);
+
+		// -------------------------------------------------------
 		// 編集画面下のボタン
 		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "save");
 		okButton.setText(ResourceManager.getMessage("msg.edit.ok"));
@@ -135,14 +164,14 @@ public class EditorPane extends MyPane {
 		this.applyMessenger();
 	}
 
-	public EditorPane () {
+	public EntityEditorPane () {
 		this("No Titled");
 	}
 
 	// （まだ検証してないけど）循環参照によるメモリリークを予防する意味合い
 	@Override
 	protected void onClosed (Event ev) {
-		for (WeakReference<Property> p : EditorPane.this.editPropertyList) {
+		for (WeakReference<Property> p : EntityEditorPane.this.editPropertyList) {
 			if (p.get() != null) {
 				p.get().unbind();
 			}
@@ -160,17 +189,23 @@ public class EditorPane extends MyPane {
 		// テキストコントロールを追加
 		this.messenger.apply(EditorColumnTextMessage.class, this, (ev) -> {
 			EditorColumnTextMessage mes = (EditorColumnTextMessage) ev;
-			EditorPane.this.addTextEdit(mes.getColumnTitle(), mes.getProperty());
+			EntityEditorPane.this.addTextEdit(mes.getColumnTitle(), mes.getProperty());
 		});
 		// 日付ピッカーコントロールを追加
 		this.messenger.apply(EditorColumnDateMessage.class, this, (ev) -> {
 			EditorColumnDateMessage mes = (EditorColumnDateMessage) ev;
-			EditorPane.this.addDateEdit(mes.getColumnTitle(), mes.getProperty());
+			EntityEditorPane.this.addDateEdit(mes.getColumnTitle(), mes.getProperty());
 		});
 		// カラーピッカーコントロールを追加
 		this.messenger.apply(EditorColumnColorMessage.class, this, (ev) -> {
 			EditorColumnColorMessage mes = (EditorColumnColorMessage) ev;
-			EditorPane.this.addColorEdit(mes.getColumnTitle(), mes.getProperty());
+			EntityEditorPane.this.addColorEdit(mes.getColumnTitle(), mes.getProperty());
+		});
+
+		// ノートのテキストを設定
+		this.messenger.apply(PropertyNoteSetMessage.class, this, (ev) -> {
+			PropertyNoteSetMessage mes = (PropertyNoteSetMessage) ev;
+			EntityEditorPane.this.setNoteProperty(mes);
 		});
 
 		this.viewModelList.storeMessenger(this.messenger);
@@ -240,6 +275,11 @@ public class EditorPane extends MyPane {
 		node.valueProperty().bindBidirectional(property);
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.addEditControlRow(title, node);
+	}
+
+	// -------------------------------------------------------
+	private void setNoteProperty (PropertyNoteSetMessage message) {
+		this.noteArea.textProperty().bind(message.noteProperty());
 	}
 
 }
