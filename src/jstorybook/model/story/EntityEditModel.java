@@ -38,6 +38,7 @@ public class EntityEditModel implements IUseMessenger {
 	private ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
 
+	private BooleanProperty isChanged = new SimpleBooleanProperty(false);
 	private BooleanProperty canSave = new SimpleBooleanProperty(false);
 
 	private Messenger messenger = Messenger.getInstance();
@@ -48,6 +49,9 @@ public class EntityEditModel implements IUseMessenger {
 			EntityEditModel.this.checkCanSave();
 		});
 		this.baseColumnList.addListener((obj) -> {
+			EntityEditModel.this.checkCanSave();
+		});
+		this.isChanged.addListener((obj) -> {
 			EntityEditModel.this.checkCanSave();
 		});
 	}
@@ -85,6 +89,11 @@ public class EntityEditModel implements IUseMessenger {
 			else if (column.getColumnType() == EditorColumn.ColumnType.COLOR) {
 				this.messenger.send(new EditorColumnColorMessage(column.getColumnName(), column.getProperty()));
 			}
+
+			// エディタで編集した時のイベント
+			column.getProperty().addListener((obj) -> {
+				EntityEditModel.this.isChanged.set(true);
+			});
 		}
 	}
 
@@ -94,10 +103,12 @@ public class EntityEditModel implements IUseMessenger {
 	public void save () {
 		this.apply();
 		this.messenger.send(new CloseMessage());
+		this.isChanged.set(false);
 	}
 
 	private void checkCanSave () {
-		this.canSave.set(this.columnList.get() != null && this.baseColumnList.get() != null);
+		EntityEditModel.this.canSave.set(this.columnList.get() != null && this.baseColumnList.get() != null
+				&& this.isChanged.get());
 	}
 
 	public BooleanProperty canSaveProperty () {
@@ -110,6 +121,7 @@ public class EntityEditModel implements IUseMessenger {
 
 	public void apply () {
 		this.baseColumnList.get().copyProperty(this.columnList.get());
+		this.isChanged.set(false);
 	}
 
 	// -------------------------------------------------------

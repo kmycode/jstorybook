@@ -16,6 +16,7 @@
 package jstorybook.model.entity;
 
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -94,7 +95,7 @@ public abstract class Entity implements Comparable<Entity> {
 		return this.id;
 	}
 
-	public StringProperty titleProperty () {
+	public ReadOnlyStringProperty titleProperty () {
 		return this.title;
 	}
 

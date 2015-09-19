@@ -11,31 +11,29 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.model.dao;
+package jstorybook.viewtool.completer;
 
-import java.sql.SQLException;
-import jstorybook.model.story.StoryFileModel;
+import java.lang.ref.WeakReference;
+import javafx.beans.value.ObservableValue;
 
 /**
- * DAOクラスの抽象クラス
+ * コンプリータ
  *
  * @author KMY
  */
-public abstract class DAO {
+public abstract class Completer {
 
-	private StoryFileModel storyFileModel;
+	abstract protected void complete ();
 
-	public void setStoryFileModel (StoryFileModel storyFileModel) throws SQLException {
-		this.storyFileModel = storyFileModel;
-		this.storyFileModelSet();
+	protected WeakReference bindValue (ObservableValue property) {
+		property.addListener((obj) -> {
+			this.complete();
+		});
+		return new WeakReference(property);
 	}
 
-	// ここでのsetは受動態。StoryFileModelがセットされた時に呼び出される
-	// おもにStoryFileModelを使った処理を行う
-	abstract protected void storyFileModelSet () throws SQLException;
-
-	protected StoryFileModel getStoryFileModel () {
-		return this.storyFileModel;
+	protected <T> boolean isPropertySet (WeakReference<ObservableValue<T>> property) {
+		return (property != null && property.get() != null);
 	}
 
 }

@@ -13,34 +13,31 @@
  */
 package jstorybook.viewtool.completer;
 
+import java.lang.ref.WeakReference;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import jstorybook.common.util.PropertyUtil;
+import javafx.beans.value.ObservableValue;
 
 /**
  * エディタパネルのタイトルのコンプリータ
  *
  * @author KMY
  */
-public class EditorPaneTitleCompleter {
+public class EditorPaneTitleCompleter extends Completer {
 
 	// 結果
 	private final StringProperty title = new SimpleStringProperty();
 
 	// 必要なデータ
-	private final StringProperty entityTitle = new SimpleStringProperty();
-	private final StringProperty entityTypeName = new SimpleStringProperty();
+	private WeakReference<ObservableValue<String>> entityTitle = new WeakReference<>(null);
+	private WeakReference<ObservableValue<String>> entityTypeName = new WeakReference<>(null);
+	private ObservableValue<String> entityTypeNameValue = null;
 
-	public EditorPaneTitleCompleter () {
-		// プロパティ変更時に結果を更新
-		PropertyUtil.addAllListener((obj) -> {
-			EditorPaneTitleCompleter.this.complete();
-		}, this.entityTitle, this.entityTypeName);
-	}
-
-	private void complete () {
+	@Override
+	protected void complete () {
 		String result = "";
-		result = this.entityTypeName.get() + " [" + this.entityTitle.get() + "]";
+		result = (this.entityTypeName.get() != null ? this.entityTypeName.get().getValue() : "") + " ["
+				+ (this.entityTitle.get() != null ? this.entityTitle.get().getValue() : "") + "]";
 		this.title.set(result);
 	}
 
@@ -48,12 +45,19 @@ public class EditorPaneTitleCompleter {
 		return this.title;
 	}
 
-	public StringProperty entityTitleProperty () {
-		return this.entityTitle;
+	public void bindEntityTitle (ObservableValue<String> property) {
+		this.entityTitle = this.bindValue(property);
+		this.complete();
 	}
 
-	public StringProperty entityTypeNameProperty () {
-		return this.entityTypeName;
+	public void setEntityTypeName (String str) {
+		this.entityTypeNameValue = new SimpleStringProperty(str);
+		this.bindEntityTypeName(this.entityTypeNameValue);
+	}
+
+	public void bindEntityTypeName (ObservableValue<String> property) {
+		this.entityTypeName = this.bindValue(property);
+		this.complete();
 	}
 
 }

@@ -17,6 +17,7 @@ package jstorybook.model.entity;
 
 import java.util.Calendar;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -139,11 +140,11 @@ public class Person extends Entity implements Comparable<Entity> {
 	}
 
 	@Override
-	public StringProperty titleProperty () {
+	public ReadOnlyStringProperty titleProperty () {
 		if (this.nameCompleter == null) {
 			this.nameCompleter = new PersonNameCompleter();
-			this.nameCompleter.firstNameProperty().bind(this.firstName);
-			this.nameCompleter.lastNameProperty().bind(this.lastName);
+			this.nameCompleter.bindFirstName(this.firstName);
+			this.nameCompleter.bindLastName(this.lastName);
 		}
 		return this.nameCompleter.nameProperty();
 	}

@@ -223,7 +223,7 @@ public class MainWindow extends MyStage {
 
 		EditorPane tab = new EditorPane();
 		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
-		completer.entityTypeNameProperty().set(entityTypeName);
+		completer.setEntityTypeName(entityTypeName);
 
 		if (message != null) {
 
@@ -244,13 +244,7 @@ public class MainWindow extends MyStage {
 			// バインド
 			tab.columnListProperty().bind(message.columnListProperty());
 			tab.baseColumnListProperty().bind(message.baseColumnListProperty());
-			completer.entityTitleProperty().bind(message.columnListProperty().get().titleProperty());
-
-			// こうやって get() を呼び出さないとなぜかきちんとバインディングされないorz
-			// JavaFX自体のバグ？bindが複雑過ぎた？
-			message.columnListProperty().get().titleProperty().addListener((obj) -> {
-				completer.titleProperty().get();
-			});
+			completer.bindEntityTitle(message.columnListProperty().get().titleProperty());
 		}
 		else {
 			// 新規作成

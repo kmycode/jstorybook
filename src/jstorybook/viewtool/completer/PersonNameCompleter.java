@@ -13,47 +13,46 @@
  */
 package jstorybook.viewtool.completer;
 
+import java.lang.ref.WeakReference;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import jstorybook.common.util.PropertyUtil;
+import javafx.beans.value.ObservableValue;
 
 /**
  * 登場人物氏名のコンプリータ
  *
  * @author KMY
  */
-public class PersonNameCompleter {
+public class PersonNameCompleter extends Completer {
 
 	// 結果
 	private final StringProperty name = new SimpleStringProperty();
 
 	// 必要なデータ
-	private final StringProperty firstName = new SimpleStringProperty();
-	private final StringProperty lastName = new SimpleStringProperty();
+	private WeakReference<ObservableValue<String>> firstName = null;
+	private WeakReference<ObservableValue<String>> lastName = null;
 
-	public PersonNameCompleter () {
-		// プロパティ変更時に結果を更新
-		PropertyUtil.addAllListener((obj) -> {
-			PersonNameCompleter.this.complete();
-		}, this.firstName, this.lastName);
-	}
-
-	private void complete () {
+	@Override
+	protected void complete () {
 		String result;
-		result = this.lastName.get() + " " + this.firstName.get();
+		result = (this.isPropertySet(this.lastName) ? this.lastName.get().getValue() : "") + " " + (this.isPropertySet(
+				this.firstName) ? this.firstName.get().getValue() : "");
 		this.name.set(result);
 	}
 
-	public StringProperty nameProperty () {
+	public ReadOnlyStringProperty nameProperty () {
 		return this.name;
 	}
 
-	public StringProperty firstNameProperty () {
-		return this.firstName;
+	public void bindFirstName (ObservableValue<String> property) {
+		this.firstName = this.bindValue(property);
+		this.complete();
 	}
 
-	public StringProperty lastNameProperty () {
-		return this.lastName;
+	public void bindLastName (ObservableValue<String> property) {
+		this.lastName = this.bindValue(property);
+		this.complete();
 	}
 
 }

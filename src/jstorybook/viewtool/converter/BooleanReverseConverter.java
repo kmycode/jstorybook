@@ -16,6 +16,7 @@ package jstorybook.viewtool.converter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 
 /**
  * 論理値を反転する
@@ -24,17 +25,17 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class BooleanReverseConverter {
 
-	private final BooleanProperty value = new SimpleBooleanProperty(false);
 	private final BooleanProperty result = new SimpleBooleanProperty(true);
 
-	public BooleanReverseConverter () {
-		this.value.addListener((obj) -> {
-			this.result.set(!this.value.get());
-		});
+	private void convert (boolean value) {
+		this.result.set(!value);
 	}
 
-	public BooleanProperty valueProperty () {
-		return this.value;
+	public void bindValue (ObservableValue<Boolean> property) {
+		property.addListener((obj) -> {
+			this.convert(((ObservableValue<Boolean>) obj).getValue());
+		});
+		this.convert(property.getValue());
 	}
 
 	public ReadOnlyBooleanProperty resultProperty () {

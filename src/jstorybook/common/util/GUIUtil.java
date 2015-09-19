@@ -34,12 +34,15 @@ public class GUIUtil {
 		Button button = new Button();
 
 		BooleanReverseConverter converter = new BooleanReverseConverter();
-		converter.valueProperty().bind(vmlist.canExecuteCommandProperty(commandName));
+		converter.bindValue(vmlist.canExecuteCommandProperty(commandName));
 		button.disableProperty().bind(converter.resultProperty());
 
 		button.setOnAction((ev) -> {
 			vmlist.executeCommand(commandName);
 		});
+
+		// GETバグ
+		//vmlist.canExecuteCommandProperty(commandName).addListener((obj) -> converter.resultProperty().get());
 
 		return button;
 	}
@@ -48,7 +51,7 @@ public class GUIUtil {
 		MenuItem menuItem = new MenuItem();
 
 		BooleanReverseConverter converter = new BooleanReverseConverter();
-		converter.valueProperty().bind(vmlist.canExecuteCommandProperty(commandName));
+		converter.bindValue(vmlist.canExecuteCommandProperty(commandName));
 		menuItem.disableProperty().bind(converter.resultProperty());
 
 		menuItem.setOnAction((ev) -> {

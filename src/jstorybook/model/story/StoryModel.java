@@ -72,7 +72,7 @@ public class StoryModel implements IUseMessenger {
 		});
 	}
 
-	// メッセンジャを設定した時に呼び出す
+	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
 		this.personDAO.get().setStoryFileModel(this.storyFile.get());
 	}

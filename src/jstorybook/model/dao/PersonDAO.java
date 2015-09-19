@@ -15,15 +15,12 @@ package jstorybook.model.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jstorybook.common.util.SQLiteUtil;
 import jstorybook.model.entity.Person;
-import jstorybook.model.entity.StorySetting;
 
 /**
  * 登場人物のDAO
@@ -34,7 +31,7 @@ public class PersonDAO extends DAO {
 
 	private final ObjectProperty<ObservableList<Person>> modelList = new SimpleObjectProperty<>();
 
-	private Person getModel (ResultSet rs) throws SQLException {
+	private Person loadModel (ResultSet rs) throws SQLException {
 		Person model = new Person();
 		model.firstNameProperty().set(rs.getString("firstname"));
 		model.lastNameProperty().set(rs.getString("lastname"));
@@ -45,7 +42,7 @@ public class PersonDAO extends DAO {
 		return model;
 	}
 
-	private void setModel (Person model) throws SQLException {
+	private void saveModel (Person model) throws SQLException {
 		this.getStoryFileModel().updateQuery("update person set firstname = '" + model.firstNameProperty().get()
 				+ "',lastname = '" + model.lastNameProperty().get() + "',birthday = '" + SQLiteUtil.getString(
 						model.birthdayProperty().get()) + "',dayofdeath = '" + SQLiteUtil.getString(model.
@@ -71,19 +68,20 @@ public class PersonDAO extends DAO {
 		return model;
 	}
 
-	public List<Person> getList () throws SQLException {
-		List<Person> result = new ArrayList<>();
+	public void loadList () throws SQLException {
+		ObservableList<Person> result = FXCollections.observableArrayList();
 		ResultSet rs = this.getStoryFileModel().executeQuery("select * from person;");
 		while (rs.next()) {
-			result.add(this.getModel(rs));
+			result.add(this.loadModel(rs));
 		}
-		return result;
+		this.modelList.set(result);
 	}
 
-	public Person getModelById (int id) throws SQLException {
-		ResultSet rs = this.getStoryFileModel().executeQuery("select * from person where id=" + id + ";");
-		if (rs.next()) {
-			return this.getModel(rs);
+	public Person getModelById (int id) {
+		for (Person model : this.modelList.get()) {
+			if (model.idProperty().get() == id) {
+				return model;
+			}
 		}
 		return null;
 	}
@@ -92,8 +90,7 @@ public class PersonDAO extends DAO {
 
 	@Override
 	protected void storyFileModelSet () throws SQLException {
-		this.modelList.set(FXCollections.observableArrayList());
-		this.modelList.get().addAll(this.getList());
+		this.loadList();
 	}
 
 	public ObjectProperty<ObservableList<Person>> modelListProperty () {
