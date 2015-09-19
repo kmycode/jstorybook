@@ -279,7 +279,7 @@ public class EntityEditorPane extends MyPane {
 
 	// -------------------------------------------------------
 	private void setNoteProperty (PropertyNoteSetMessage message) {
-		this.noteArea.textProperty().bind(message.noteProperty());
+		this.noteArea.textProperty().bindBidirectional(message.noteProperty());
 	}
 
 }

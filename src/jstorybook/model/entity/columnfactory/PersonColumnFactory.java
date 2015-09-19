@@ -52,7 +52,7 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bind(model.idProperty());
-		columnList.noteProperty().bind(model.noteProperty());
+		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;
 
