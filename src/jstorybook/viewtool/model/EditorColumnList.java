@@ -60,6 +60,7 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 			for (int i = 0; i < this.size(); i++) {
 				this.get(i).getProperty().setValue(from.get(i).getProperty().getValue());
 			}
+			this.note.set(from.note.get());
 		} catch (Throwable e) {
 			Messenger.getInstance().send(new ExceptionMessage(e));
 		}

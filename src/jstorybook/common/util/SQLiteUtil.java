@@ -67,11 +67,11 @@ public class SQLiteUtil {
 	}
 
 	public static int getInteger (Color col) {
-		byte red = (byte) (col.getRed() * 255);
-		byte green = (byte) (col.getGreen() * 255);
-		byte blue = (byte) (col.getBlue() * 255);
-		byte opacity = (byte) (col.getOpacity() * 255);
-		return ((int) red << 16) | ((int) green << 8) | ((int) blue) | ((int) opacity << 24);
+		int red = (int) (col.getRed() * 255);
+		int green = (int) (col.getGreen() * 255);
+		int blue = (int) (col.getBlue() * 255);
+		int opacity = (int) (col.getOpacity() * 255);
+		return (red << 16) | (green << 8) | (blue) | (opacity << 24);
 	}
 
 }

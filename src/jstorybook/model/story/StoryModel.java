@@ -15,7 +15,9 @@ package jstorybook.model.story;
 
 import java.sql.SQLException;
 import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -24,7 +26,8 @@ import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Person;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
+import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
+import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 
 /**
@@ -45,6 +48,7 @@ public class StoryModel implements IUseMessenger {
 
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
+	private final BooleanProperty canSave = new SimpleBooleanProperty(false);
 	private Messenger messenger = Messenger.getInstance();
 
 	public StoryModel () {
@@ -54,7 +58,7 @@ public class StoryModel implements IUseMessenger {
 				this.storyFile.set(new StoryFileModel(((StringProperty) obj).get()));
 				this.setDAO();
 			} catch (SQLException e) {
-				this.messenger.send(new StoryFileModelFailedMessage(((StringProperty) obj).get()));
+				this.messenger.send(new StoryFileLoadFailedMessage(((StringProperty) obj).get()));
 			}
 		});
 
@@ -75,6 +79,21 @@ public class StoryModel implements IUseMessenger {
 	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
 		this.personDAO.get().setStoryFileModel(this.storyFile.get());
+		this.canSave.set(true);
+	}
+
+	// データの保存
+	public void save () {
+		try {
+			this.personDAO.get().saveList();
+		} catch (SQLException e) {
+			this.messenger.send(new StoryFileSaveFailedMessage(this.storyFileName.get()));
+			e.printStackTrace();
+		}
+	}
+
+	public BooleanProperty canSaveProperty () {
+		return this.canSave;
 	}
 
 	// -------------------------------------------------------

@@ -15,6 +15,8 @@ package jstorybook.model.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -30,9 +32,16 @@ import jstorybook.model.entity.Person;
 public class PersonDAO extends DAO {
 
 	private final ObjectProperty<ObservableList<Person>> modelList = new SimpleObjectProperty<>();
+	private final List<Long> removeIdList = new ArrayList<>();
+	private int lastId = 0;				// 最大ID
+	private int lastIdSaved = 0;		// 最後に保存した時の最大ID
+
+	// -------------------------------------------------------
+	// データベースに対する操作
 
 	private Person loadModel (ResultSet rs) throws SQLException {
 		Person model = new Person();
+		model.idProperty().set(rs.getInt("id"));
 		model.firstNameProperty().set(rs.getString("firstname"));
 		model.lastNameProperty().set(rs.getString("lastname"));
 		model.birthdayProperty().set(SQLiteUtil.getCalendar(rs.getString("birthday")));
@@ -43,6 +52,20 @@ public class PersonDAO extends DAO {
 	}
 
 	private void saveModel (Person model) throws SQLException {
+
+		if (model.idProperty().get() > this.lastIdSaved) {
+
+			// 最新の最大IDを保存（modelのidとは限らない）
+			this.getStoryFileModel().
+					updateQuery("update idtable set value = " + this.lastId + " where key = 'person';");
+
+			// 行を追加
+			this.getStoryFileModel().updateQuery(
+					"insert into person(id,firstname,lastname,birthday,dayofdeath,color,note) values(" + model.
+					idProperty().get() + ",'','','','',0,'');");
+		}
+
+		// 保存
 		this.getStoryFileModel().updateQuery("update person set firstname = '" + model.firstNameProperty().get()
 				+ "',lastname = '" + model.lastNameProperty().get() + "',birthday = '" + SQLiteUtil.getString(
 						model.birthdayProperty().get()) + "',dayofdeath = '" + SQLiteUtil.getString(model.
@@ -50,31 +73,60 @@ public class PersonDAO extends DAO {
 						get()) + ",note = '" + model.noteProperty().get() + "' where id = " + model.idProperty().
 				get() + ";");
 	}
+	
+	private void removeModel (long id) throws SQLException {
+		this.getStoryFileModel().updateQuery("delete from person where id = " + id + ";");
+	}
 
-	private Person insertModel () throws SQLException {
-		int newid = 0;
-		ResultSet rs = this.getStoryFileModel().executeQuery("select max(id) from person;");
+	// -------------------------------------------------------
+	// 変数に対する操作
+	public void addModel (Person model) {
+		model.idProperty().set(++this.lastId);
+		this.modelList.get().add(model);
+	}
+
+	public void deleteModel (Person model) {
+		this.modelList.get().remove(model);
+		this.removeIdList.add(model.idProperty().get());
+	}
+
+	// -------------------------------------------------------
+	// 操作
+
+	public void loadList () throws SQLException {
+
+		// IDの最大値を取得
+		ResultSet rs = this.getStoryFileModel().executeQuery("select * from idtable where key = 'person';");
 		if (rs.next()) {
-			newid = rs.getInt(0) + 1;
+			this.lastIdSaved = this.lastId = rs.getInt("value");
 		}
 		else {
 			throw new SQLException();
 		}
-		this.getStoryFileModel().updateQuery(
-				"insert into person(id,firstname,lastname,birthday,dayofdeath,color,note) values(" + newid
-				+ "'','','','',0,''");
-		Person model = new Person();
-		model.idProperty().set(newid);
-		return model;
-	}
 
-	public void loadList () throws SQLException {
+		// リストを作成
 		ObservableList<Person> result = FXCollections.observableArrayList();
-		ResultSet rs = this.getStoryFileModel().executeQuery("select * from person;");
+		rs = this.getStoryFileModel().executeQuery("select * from person;");
 		while (rs.next()) {
 			result.add(this.loadModel(rs));
 		}
 		this.modelList.set(result);
+	}
+
+	public void saveList () throws SQLException {
+
+		// 保存処理
+		ObservableList<Person> list = this.modelList.get();
+		for (Person model : list) {
+			this.saveModel(model);
+		}
+
+		// 削除処理
+		for (long delid : this.removeIdList) {
+			this.removeModel(delid);
+		}
+
+		this.lastIdSaved = this.lastId;
 	}
 
 	public Person getModelById (int id) {

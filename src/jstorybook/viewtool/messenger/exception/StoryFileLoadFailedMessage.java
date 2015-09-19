@@ -11,37 +11,27 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.manager;
+package jstorybook.viewtool.messenger.exception;
 
-import java.util.Locale;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * 地域・言語のマネージャ
+ * ストーリーファイルモデルの初期化に失敗した時のメッセージ
  *
  * @author KMY
  */
-public class LocaleManager {
+public class StoryFileLoadFailedMessage extends Message {
 
-	private static LocaleManager defaultInstance = new LocaleManager(Locale.getDefault());
-	private ObjectProperty<Locale> locale;
+	private final StringProperty filePath = new SimpleStringProperty();
 
-	private LocaleManager () {
-		this.locale = new SimpleObjectProperty<>();
-		this.locale.addListener((obj) -> Locale.setDefault(this.locale.get()));
+	public StringProperty filePathProperty () {
+		return this.filePath;
 	}
 
-	private LocaleManager (Locale locale) {
-		this();
-		this.locale.set(locale);
+	public StoryFileLoadFailedMessage (String filePath) {
+		this.filePath.set(filePath);
 	}
 
-	public ObjectProperty<Locale> localeProperty () {
-		return this.locale;
-	}
-
-	public static LocaleManager getInstance () {
-		return LocaleManager.defaultInstance;
-	}
 }

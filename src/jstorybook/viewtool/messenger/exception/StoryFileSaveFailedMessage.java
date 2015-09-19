@@ -13,25 +13,23 @@
  */
 package jstorybook.viewtool.messenger.exception;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import jstorybook.viewtool.messenger.Message;
 
 /**
- * ストーリーファイルモデルの初期化に失敗した時のメッセージ
+ * ストーリーファイルの保存に失敗したメッセージ
  *
  * @author KMY
  */
-public class StoryFileModelFailedMessage extends Message {
+public class StoryFileSaveFailedMessage extends Message {
 
-	private final StringProperty filePath = new SimpleStringProperty();
+	private final String filePath;
 
-	public StringProperty filePathProperty () {
+	public String getFilePath () {
 		return this.filePath;
 	}
 
-	public StoryFileModelFailedMessage (String filePath) {
-		this.filePath.set(filePath);
+	public StoryFileSaveFailedMessage (String filePath) {
+		this.filePath = filePath;
 	}
 
 }

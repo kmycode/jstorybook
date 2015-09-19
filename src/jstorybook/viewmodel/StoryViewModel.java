@@ -49,6 +49,7 @@ public class StoryViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
+		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());
 	}
 
 }

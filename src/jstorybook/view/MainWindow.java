@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
@@ -48,7 +49,8 @@ import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
-import jstorybook.viewtool.messenger.exception.StoryFileModelFailedMessage;
+import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
+import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
@@ -135,6 +137,10 @@ public class MainWindow extends MyStage {
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		{
+			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
+			menu.setText(ResourceManager.getMessage("msg.save"));
+			fileMenu.getItems().add(menu);
+			fileMenu.getItems().add(new SeparatorMenuItem());
 			menu = GUIUtil.createMenuItem(this.viewModelList, "exit");
 			menu.setText(ResourceManager.getMessage("msg.exit"));
 			fileMenu.getItems().add(menu);
@@ -170,10 +176,14 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
 			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev);
 		});
-		this.messenger.apply(StoryFileModelFailedMessage.class, this, (ev) -> {
-			MainWindow.this.showErrorMessage(ResourceManager.getMessage("msg.storyfile.failed",
-																		((StoryFileModelFailedMessage) ev).
-																		filePathProperty().get()));
+		this.messenger.apply(StoryFileLoadFailedMessage.class, this, (ev) -> {
+			MainWindow.this.showErrorMessage(
+					ResourceManager.getMessage("msg.storyfile.failed", ((StoryFileLoadFailedMessage) ev).filePathProperty().get()));
+		});
+		this.messenger.apply(StoryFileSaveFailedMessage.class, this, (ev) -> {
+			MainWindow.this.showErrorMessage(
+					ResourceManager.getMessage("msg.storyfile.save.failed", ((StoryFileSaveFailedMessage) ev).
+											   getFilePath()));
 		});
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
@@ -231,7 +241,8 @@ public class MainWindow extends MyStage {
 			for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
 				for (Tab dtab : dtabPane.getTabs()) {
 					if (dtab instanceof EntityEditorPane) {
-						EditorColumnList otherList = (EditorColumnList) ((EntityEditorPane) dtab).columnListProperty().get();
+						EditorColumnList otherList = (EditorColumnList) ((EntityEditorPane) dtab).columnListProperty().
+								get();
 						if (otherList.isEqualEntity(message.columnListProperty().get())) {
 							// すでに開いているタブを表示し、新規タブ生成を中止する
 							dtabPane.getSelectionModel().select(dtab);

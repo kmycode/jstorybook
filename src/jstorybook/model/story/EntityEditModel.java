@@ -108,6 +108,9 @@ public class EntityEditModel implements IUseMessenger {
 
 		// ノートを設定
 		this.messenger.send(new PropertyNoteSetMessage(this.noteProperty()));
+		this.noteProperty().addListener((obj) -> {
+			EntityEditModel.this.isChanged.set(true);
+		});
 	}
 
 	// -------------------------------------------------------
