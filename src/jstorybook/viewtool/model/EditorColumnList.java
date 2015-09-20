@@ -78,7 +78,7 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 	}
 
 	public boolean isEqualEntity (EditorColumnList other) {
-		return this.id.get() == other.id.get() && this.entityType.get() == other.entityType.get();
+		return this.id.get() != 0 && this.id.get() == other.id.get() && this.entityType.get() == other.entityType.get();
 	}
 
 }

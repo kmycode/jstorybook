@@ -27,8 +27,8 @@ import jstorybook.viewtool.completer.PersonNameCompleter;
 // ノート のエンティティを扱うクラス
 public class Person extends Entity implements Comparable<Entity> {
 
-	private StringProperty firstName = new SimpleStringProperty();
-	private StringProperty lastName = new SimpleStringProperty();
+	private StringProperty firstName = new SimpleStringProperty("");
+	private StringProperty lastName = new SimpleStringProperty("");
 	private ObjectProperty<Calendar> birthday = new SimpleObjectProperty<>();
 	private ObjectProperty<Calendar> dayOfDeath = new SimpleObjectProperty<>();
 	private ObjectProperty<Color> color = new SimpleObjectProperty<>();
