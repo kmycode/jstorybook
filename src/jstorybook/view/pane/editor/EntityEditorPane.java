@@ -211,7 +211,7 @@ public class EntityEditorPane extends MyPane {
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
-	private void close () {
+	public void close () {
 		((DockableTabPane) this.getTabPane()).removeTab(this);
 	}
 

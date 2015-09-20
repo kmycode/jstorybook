@@ -19,6 +19,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.StorySetting;
 
 /**
@@ -44,6 +45,21 @@ public class StorySettingDAO extends DAO {
 	@Override
 	protected void storyFileModelSet () throws SQLException {
 		this.modelList.set(FXCollections.observableArrayList());
+	}
+
+	@Override
+	protected String getTableName () {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	protected Entity loadModel (ResultSet rs) throws SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	protected void saveModel (Entity model) throws SQLException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 }

@@ -39,11 +39,6 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 	}
 
 	@Override
-	public EditorColumnList createColumnList () {
-		return this.createColumnList(null);
-	}
-
-	@Override
 	public EditorColumnList createColumnList (Person model) {
 		if (model == null) {
 			model = new Person();

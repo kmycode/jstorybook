@@ -11,34 +11,26 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.control.tablecell;
+package jstorybook.viewtool.messenger.pane;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.TableCell;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
+import jstorybook.viewtool.messenger.Message;
+import jstorybook.viewtool.model.EditorColumnList;
 
 /**
- * TableViewでDateを表示する
+ * エンティティ編集タブを閉じるメッセージ
  *
  * @author KMY
  */
-public class ColorCell<E> extends TableCell<E, Color> {
+public class EntityEditorCloseMessage extends Message {
 
-	private static Color OPAQUE = new Color(0, 0, 0, 0);
+	private final EditorColumnList list;
 
-	@Override
-	protected void updateItem (Color item, boolean empty) {
-		super.updateItem(item, empty);
-		this.setText("");
-		if (item != null) {
-			this.setText("");
-			this.setBackground(new Background(new BackgroundFill(item, CornerRadii.EMPTY, Insets.EMPTY)));
-		}
-		else {
-			this.setBackground(new Background(new BackgroundFill(ColorCell.OPAQUE, CornerRadii.EMPTY, Insets.EMPTY)));
-		}
+	public EntityEditorCloseMessage (EditorColumnList list) {
+		this.list = list;
 	}
+
+	public EditorColumnList getEditorColumnList () {
+		return this.list;
+	}
+
 }

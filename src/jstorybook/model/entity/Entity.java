@@ -25,14 +25,11 @@ import javafx.beans.value.ObservableValue;
 // ID のエンティティを扱うクラス
 public abstract class Entity implements Comparable<Entity> {
 
-	private static long entityCount = 0;
-
-	protected LongProperty id;
+	protected LongProperty id = new SimpleLongProperty(0);
 	private final StringProperty title = new SimpleStringProperty();
-	protected StringProperty note ;
+	protected StringProperty note = new SimpleStringProperty();
 
 	public Entity () {
-		this.id = new SimpleLongProperty(++Entity.entityCount);
 	}
 
 	public Entity (Long id) {
@@ -43,7 +40,8 @@ public abstract class Entity implements Comparable<Entity> {
 	// -------------------------------------------------------
 	// ロジック
 	// -------------------------------------------------------
-	public boolean isTemporary () {
+	// 新規作成中？
+	public boolean isCreating () {
 		return this.id.get() == 0;
 	}
 

@@ -20,13 +20,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Person;
+import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
+import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 
 /**
@@ -60,9 +63,6 @@ public class StoryModel implements IUseMessenger {
 				this.messenger.send(new StoryFileLoadFailedMessage(((StringProperty) obj).get()));
 			}
 		});
-
-		// テーブルビューなどでエンティティが選択された時のイベント
-		//this.personSelected.addListener((obj)->this.selectedEntityChanged());
 	}
 
 	// ファイル名を変更した時に呼び出して、情報を取得する
@@ -71,7 +71,7 @@ public class StoryModel implements IUseMessenger {
 		this.canSave.set(true);
 	}
 
-	// データの保存
+	// ストーリーモデル全体のファイルへの保存
 	public void save () {
 		try {
 			this.personEntity.dao.get().saveList();
@@ -114,12 +114,28 @@ public class StoryModel implements IUseMessenger {
 
 	// -------------------------------------------------------
 	// それぞれのエンティティの新規作成、編集、削除など
+	public void newPerson () {
+		Person newModel = new Person();
+		EntityAdapter adapter = new EntityAdapter(newModel, this.personEntity.dao.get());
+		this.messenger.send(
+				new PersonEditorShowMessage(PersonColumnFactory.getInstance().createColumnList(),
+											PersonColumnFactory.getInstance().createColumnList(newModel, adapter)));
+	}
+
 	public void editPerson () {
 		Person selected = this.personEntity.selectedEntity.get();
 		if (selected != null) {
 			this.messenger.send(
-					new PersonEditorShowMessage(this.entityColumn.get().getPersonColumnList(selected.entityClone()),
-												this.entityColumn.get().getPersonColumnList(selected)));
+					new PersonEditorShowMessage(PersonColumnFactory.getInstance().createColumnList(selected.entityClone()),
+												PersonColumnFactory.getInstance().createColumnList(selected)));
+		}
+	}
+
+	public void deletePerson () {
+		Person selected = this.personEntity.selectedEntity.get();
+		if (selected != null) {
+			this.messenger.send(new EntityEditorCloseMessage(PersonColumnFactory.getInstance().createColumnList(selected)));
+			this.personEntity.dao.get().deleteModel(selected);
 		}
 	}
 
@@ -163,6 +179,37 @@ public class StoryModel implements IUseMessenger {
 
 		public BooleanProperty canEditProperty () {
 			return this.canEdit;
+		}
+	}
+
+	/*
+	 * 全く別のクラス内でエンティティを新規作成、削除できるようにしたアダプタ
+	 */
+	public static class EntityAdapter {
+
+		private final DAO dao;
+		private final Entity entity;
+		private boolean isDid = false;
+
+		private EntityAdapter (Entity entity, DAO dao) {
+			this.dao = dao;
+			this.entity = entity;
+		}
+
+		public void addEntity () {
+			if (isDid) {
+				throw new RuntimeException("The EntityAdapter was used already.");
+			}
+			this.dao.addModel(this.entity);
+			this.isDid = true;
+		}
+
+		public void deleteEntity () {
+			if (isDid) {
+				throw new RuntimeException("The EntityAdapter was used already.");
+			}
+			this.dao.deleteModel(this.entity);
+			this.isDid = true;
 		}
 	}
 

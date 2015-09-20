@@ -15,11 +15,7 @@ package jstorybook.model.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jstorybook.common.util.SQLiteUtil;
 import jstorybook.model.entity.Person;
@@ -29,17 +25,17 @@ import jstorybook.model.entity.Person;
  *
  * @author KMY
  */
-public class PersonDAO extends DAO {
+public class PersonDAO extends DAO<Person> {
 
-	private final ObjectProperty<ObservableList<Person>> modelList = new SimpleObjectProperty<>();
-	private final List<Long> removeIdList = new ArrayList<>();
-	private int lastId = 0;				// 最大ID
-	private int lastIdSaved = 0;		// 最後に保存した時の最大ID
+	@Override
+	protected String getTableName () {
+		return "person";
+	}
 
 	// -------------------------------------------------------
 	// データベースに対する操作
-
-	private Person loadModel (ResultSet rs) throws SQLException {
+	@Override
+	protected Person loadModel (ResultSet rs) throws SQLException {
 		Person model = new Person();
 		model.idProperty().set(rs.getInt("id"));
 		model.firstNameProperty().set(rs.getString("firstname"));
@@ -51,7 +47,8 @@ public class PersonDAO extends DAO {
 		return model;
 	}
 
-	private void saveModel (Person model) throws SQLException {
+	@Override
+	protected void saveModel (Person model) throws SQLException {
 
 		if (model.idProperty().get() > this.lastIdSaved) {
 
@@ -72,70 +69,6 @@ public class PersonDAO extends DAO {
 						dayOfDeathProperty().get()) + "',color = " + SQLiteUtil.getInteger(model.colorProperty().
 						get()) + ",note = '" + model.noteProperty().get() + "' where id = " + model.idProperty().
 				get() + ";");
-	}
-	
-	private void removeModel (long id) throws SQLException {
-		this.getStoryFileModel().updateQuery("delete from person where id = " + id + ";");
-	}
-
-	// -------------------------------------------------------
-	// 変数に対する操作
-	public void addModel (Person model) {
-		model.idProperty().set(++this.lastId);
-		this.modelList.get().add(model);
-	}
-
-	public void deleteModel (Person model) {
-		this.modelList.get().remove(model);
-		this.removeIdList.add(model.idProperty().get());
-	}
-
-	// -------------------------------------------------------
-	// 操作
-
-	public void loadList () throws SQLException {
-
-		// IDの最大値を取得
-		ResultSet rs = this.getStoryFileModel().executeQuery("select * from idtable where key = 'person';");
-		if (rs.next()) {
-			this.lastIdSaved = this.lastId = rs.getInt("value");
-		}
-		else {
-			throw new SQLException();
-		}
-
-		// リストを作成
-		ObservableList<Person> result = FXCollections.observableArrayList();
-		rs = this.getStoryFileModel().executeQuery("select * from person;");
-		while (rs.next()) {
-			result.add(this.loadModel(rs));
-		}
-		this.modelList.set(result);
-	}
-
-	public void saveList () throws SQLException {
-
-		// 保存処理
-		ObservableList<Person> list = this.modelList.get();
-		for (Person model : list) {
-			this.saveModel(model);
-		}
-
-		// 削除処理
-		for (long delid : this.removeIdList) {
-			this.removeModel(delid);
-		}
-
-		this.lastIdSaved = this.lastId;
-	}
-
-	public Person getModelById (int id) {
-		for (Person model : this.modelList.get()) {
-			if (model.idProperty().get() == id) {
-				return model;
-			}
-		}
-		return null;
 	}
 
 	// -------------------------------------------------------

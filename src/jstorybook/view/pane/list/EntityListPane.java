@@ -84,7 +84,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		Button editButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Edit");
 		editButton.setText(ResourceManager.getMessage("msg.edit"));
 		editButton.setPrefSize(100.0, 45.0);
-		this.commandButtonBar.getChildren().addAll(newButton, editButton);
+		Button delButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Delete");
+		delButton.setText(ResourceManager.getMessage("msg.delete"));
+		delButton.setPrefSize(100.0, 45.0);
+		this.commandButtonBar.getChildren().addAll(newButton, editButton, delButton);
 
 		// テーブルビューにイベントを設定
 		this.tableView.setOnMouseClicked((ev) -> {

@@ -35,7 +35,7 @@ public class SQLiteUtil {
 	}
 
 	public static Calendar getCalendar (String str) {
-		if (str == null) {
+		if (str == null || str.isEmpty()) {
 			return null;
 		}
 		Date date = null;
@@ -54,7 +54,12 @@ public class SQLiteUtil {
 	}
 
 	public static String getString (Calendar cal) {
-		return SQLiteUtil.DATE_FORMAT.format(cal.getTime());
+		if (cal != null) {
+			return SQLiteUtil.DATE_FORMAT.format(cal.getTime());
+		}
+		else {
+			return "";
+		}
 	}
 
 	public static Color getColor (int val) {
@@ -67,11 +72,16 @@ public class SQLiteUtil {
 	}
 
 	public static int getInteger (Color col) {
-		int red = (int) (col.getRed() * 255);
-		int green = (int) (col.getGreen() * 255);
-		int blue = (int) (col.getBlue() * 255);
-		int opacity = (int) (col.getOpacity() * 255);
-		return (red << 16) | (green << 8) | (blue) | (opacity << 24);
+		if (col != null) {
+			int red = (int) (col.getRed() * 255);
+			int green = (int) (col.getGreen() * 255);
+			int blue = (int) (col.getBlue() * 255);
+			int opacity = (int) (col.getOpacity() * 255);
+			return (red << 16) | (green << 8) | (blue) | (opacity << 24);
+		}
+		else {
+			return 0;
+		}
 	}
 
 }

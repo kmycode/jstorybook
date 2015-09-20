@@ -27,30 +27,14 @@ import jstorybook.viewtool.completer.PersonNameCompleter;
 // ノート のエンティティを扱うクラス
 public class Person extends Entity implements Comparable<Entity> {
 
-	private StringProperty firstName;
-	private StringProperty lastName;
-	private ObjectProperty<Calendar> birthday;
-	private ObjectProperty<Calendar> dayOfDeath;
-	private ObjectProperty<Color> color;
+	private StringProperty firstName = new SimpleStringProperty();
+	private StringProperty lastName = new SimpleStringProperty();
+	private ObjectProperty<Calendar> birthday = new SimpleObjectProperty<>();
+	private ObjectProperty<Calendar> dayOfDeath = new SimpleObjectProperty<>();
+	private ObjectProperty<Color> color = new SimpleObjectProperty<>();
 	private PersonNameCompleter nameCompleter = null;
 
 	public Person () {
-		this.firstName = new SimpleStringProperty();
-		this.lastName = new SimpleStringProperty();
-		this.birthday = new SimpleObjectProperty<>();
-		this.dayOfDeath = new SimpleObjectProperty<>();
-		this.color = new SimpleObjectProperty<>();
-		this.note = new SimpleStringProperty();
-	}
-
-	public Person (String firstName, String lastName, Calendar birthday, Calendar dayOfDeath, Color color, String note) {
-		this();
-		this.firstName.set(firstName);
-		this.lastName.set(lastName);
-		this.birthday.set(birthday);
-		this.dayOfDeath.set(dayOfDeath);
-		this.color.set(color);
-		this.note.set(note);
 	}
 
 	/*

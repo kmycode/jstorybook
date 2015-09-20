@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.EntityType;
+import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.ExceptionMessage;
 import jstorybook.viewtool.messenger.Messenger;
 
@@ -35,6 +36,7 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 	private final LongProperty id = new SimpleLongProperty();
 	private final StringProperty note = new SimpleStringProperty();
 	private final ObjectProperty<EntityType> entityType = new SimpleObjectProperty<>();
+	private StoryModel.EntityAdapter entityAdapter;
 
 	public StringProperty titleProperty () {
 		return this.title;
@@ -52,6 +54,10 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 		return this.entityType;
 	}
 
+	public void setEntityAdapter (StoryModel.EntityAdapter adapter) {
+		this.entityAdapter = adapter;
+	}
+
 	public void copyProperty (EditorColumnList from) {
 		try {
 			if (from.size() != this.size()) {
@@ -61,6 +67,11 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 				this.get(i).getProperty().setValue(from.get(i).getProperty().getValue());
 			}
 			this.note.set(from.note.get());
+
+			if (this.entityAdapter != null) {
+				this.entityAdapter.addEntity();
+				this.entityAdapter = null;
+			}
 		} catch (Throwable e) {
 			Messenger.getInstance().send(new ExceptionMessage(e));
 		}

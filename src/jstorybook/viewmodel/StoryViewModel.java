@@ -51,8 +51,11 @@ public class StoryViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
+		this.applyCommand("personNew", (ev) -> this.storyModel.get().newPerson());
 		this.applyCommand("personEdit", (ev) -> this.storyModel.get().editPerson(), this.storyModel.get().
 						  getPersonEntity().canEditProperty());
+		this.applyCommand("personDelete", (ev) -> this.storyModel.get().deletePerson(), this.storyModel.get().getPersonEntity().
+						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());
 	}

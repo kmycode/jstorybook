@@ -51,6 +51,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
+import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
@@ -185,6 +186,9 @@ public class MainWindow extends MyStage {
 					ResourceManager.getMessage("msg.storyfile.save.failed", ((StoryFileSaveFailedMessage) ev).
 											   getFilePath()));
 		});
+		this.messenger.apply(EntityEditorCloseMessage.class, this, (ev) -> {
+			MainWindow.this.removeEntityEditorTab((EntityEditorCloseMessage) ev);
+		});
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
 		});
@@ -233,35 +237,46 @@ public class MainWindow extends MyStage {
 		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
 		completer.setEntityTypeName(entityTypeName);
 
-		if (message != null) {
+		// すでに同じエンティティの編集タブが開いてないか？
+		EntityEditorPane otherTab = this.findEntityEditorPane(message.columnListProperty().get());
+		if (otherTab != null) {
+			otherTab.getTabPane().getSelectionModel().select(otherTab);
+			return;
+		}
 
-			// すでに同じエンティティの編集タブが開いてないか？
-			for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
-				for (Tab dtab : dtabPane.getTabs()) {
-					if (dtab instanceof EntityEditorPane) {
-						EditorColumnList otherList = (EditorColumnList) ((EntityEditorPane) dtab).columnListProperty().
-								get();
-						if (otherList.isEqualEntity(message.columnListProperty().get())) {
-							// すでに開いているタブを表示し、新規タブ生成を中止する
-							dtabPane.getSelectionModel().select(dtab);
-							return;
-						}
+		// バインド
+		tab.columnListProperty().bind(message.columnListProperty());
+		tab.baseColumnListProperty().bind(message.baseColumnListProperty());
+		completer.bindEntityTitle(message.columnListProperty().get().titleProperty());
+
+		// タブの表示設定
+		tab.textProperty().bind(completer.titleProperty());
+		this.addTab(tab);
+
+	}
+
+	// エンティティ編集タブを閉じる
+	private void removeEntityEditorTab (EntityEditorCloseMessage message) {
+		EntityEditorPane tab = this.findEntityEditorPane(message.getEditorColumnList());
+		if (tab != null) {
+			tab.close();
+		}
+	}
+
+	// 指定したエンティティリストと同じ編集タブを探す
+	private EntityEditorPane findEntityEditorPane (EditorColumnList list) {
+		for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
+			for (Tab dtab : dtabPane.getTabs()) {
+				if (dtab instanceof EntityEditorPane) {
+					EditorColumnList otherList = (EditorColumnList) ((EntityEditorPane) dtab).columnListProperty().
+							get();
+					if (otherList.isEqualEntity(list)) {
+						return (EntityEditorPane) dtab;
 					}
 				}
 			}
-
-			// バインド
-			tab.columnListProperty().bind(message.columnListProperty());
-			tab.baseColumnListProperty().bind(message.baseColumnListProperty());
-			completer.bindEntityTitle(message.columnListProperty().get().titleProperty());
 		}
-		else {
-			// 新規作成
-			tab.columnListProperty().bind(this.viewModelList.getProperty(viewModelColumnListName));
-		}
-
-		tab.textProperty().bind(completer.titleProperty());
-		this.addTab(tab);
+		return null;
 	}
 
 	// 登場人物編集タブ
