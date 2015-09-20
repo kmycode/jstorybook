@@ -14,7 +14,6 @@
 package jstorybook.model.story;
 
 import java.sql.SQLException;
-import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -40,11 +39,11 @@ public class StoryModel implements IUseMessenger {
 	private final ObjectProperty<StoryCoreModel> core = new SimpleObjectProperty<>(new StoryCoreModel());
 	private final StringProperty storyFileName = new SimpleStringProperty("");
 
-	private final ObjectProperty<PersonDAO> personDAO = new SimpleObjectProperty<>(new PersonDAO());
-
-	private final ObjectProperty<Entity> selectedEntity = new SimpleObjectProperty<>();
 	private final ObjectProperty<StoryEntityColumnModel> entityColumn = new SimpleObjectProperty<>(
 			new StoryEntityColumnModel());
+
+	// エンティティをあらわすインスタンス
+	private final StoryEntityModel<Person, PersonDAO> personEntity = new StoryEntityModel<>(new PersonDAO());
 
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
@@ -62,30 +61,20 @@ public class StoryModel implements IUseMessenger {
 			}
 		});
 
-		// TableViewなどでモデルを選択した時のイベント
-		this.selectedEntity.addListener((Observable obj) -> {
-			Entity selected = ((ObjectProperty<Entity>) obj).get();
-			if (selected != null) {
-				if (selected instanceof Person) {
-					Person model = ((Person) selected).entityClone();
-					this.messenger.send(
-							new PersonEditorShowMessage(this.entityColumn.get().getPersonColumnList(model),
-														this.entityColumn.get().getPersonColumnList((Person) selected)));
-				}
-			}
-		});
+		// テーブルビューなどでエンティティが選択された時のイベント
+		//this.personSelected.addListener((obj)->this.selectedEntityChanged());
 	}
 
 	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
-		this.personDAO.get().setStoryFileModel(this.storyFile.get());
+		this.personEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.canSave.set(true);
 	}
 
 	// データの保存
 	public void save () {
 		try {
-			this.personDAO.get().saveList();
+			this.personEntity.dao.get().saveList();
 		} catch (SQLException e) {
 			this.messenger.send(new StoryFileSaveFailedMessage(this.storyFileName.get()));
 			e.printStackTrace();
@@ -102,6 +91,10 @@ public class StoryModel implements IUseMessenger {
 		return this.core;
 	}
 
+	public StoryCoreModel getCore () {
+		return this.core.get();
+	}
+
 	public ObjectProperty<StoryEntityColumnModel> entityColumnProperty () {
 		return this.entityColumn;
 	}
@@ -113,21 +106,21 @@ public class StoryModel implements IUseMessenger {
 		return this.storyFileName;
 	}
 
-	// TableViewなどで選択されたエンティティ
-	public ObjectProperty<Entity> selectedEntityProperty () {
-		return this.selectedEntity;
+	// -------------------------------------------------------
+	// エンティティをあらわすモデルクラス
+	public StoryEntityModel<Person, PersonDAO> getPersonEntity () {
+		return this.personEntity;
 	}
 
 	// -------------------------------------------------------
-	// DAO
-	public ObjectProperty<PersonDAO> personDAOProperty () {
-		return this.personDAO;
-	}
-
-	// -------------------------------------------------------
-
-	public StoryCoreModel getCore () {
-		return this.core.get();
+	// それぞれのエンティティの新規作成、編集、削除など
+	public void editPerson () {
+		Person selected = this.personEntity.selectedEntity.get();
+		if (selected != null) {
+			this.messenger.send(
+					new PersonEditorShowMessage(this.entityColumn.get().getPersonColumnList(selected.entityClone()),
+												this.entityColumn.get().getPersonColumnList(selected)));
+		}
 	}
 
 	// -------------------------------------------------------
@@ -136,6 +129,40 @@ public class StoryModel implements IUseMessenger {
 	public void setMessenger (Messenger messenger) {
 		if (messenger != null) {
 			this.messenger = messenger;
+		}
+	}
+
+	/*
+	 * エンティティの種類ごとに処理を共通化
+	 * E: エンティティの型
+	 * D: DAOの型
+	 */
+	public class StoryEntityModel<E extends Entity, D> {
+
+		private final ObjectProperty<D> dao = new SimpleObjectProperty<>();
+		private final ObjectProperty<E> selectedEntity = new SimpleObjectProperty<>();
+		private final BooleanProperty canEdit = new SimpleBooleanProperty(false);
+
+		private StoryEntityModel (D dao) {
+			this.dao.set(dao);
+
+			// 選択中のエンティティが変更された場合
+			this.selectedEntity.addListener((obj) -> {
+				this.canEdit.set(((ObjectProperty<Entity>) obj).get() != null);
+			});
+		}
+
+		public ObjectProperty<D> DAOProperty () {
+			return this.dao;
+		}
+
+		// TableViewなどで選択されたエンティティ
+		public ObjectProperty<E> selectedEntityProperty () {
+			return this.selectedEntity;
+		}
+
+		public BooleanProperty canEditProperty () {
+			return this.canEdit;
 		}
 	}
 

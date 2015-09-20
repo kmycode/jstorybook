@@ -27,4 +27,9 @@ public class PersonListPane extends EntityListPane<Person> {
 		super(ResourceManager.getMessage("msg.person"));
 	}
 
+	@Override
+	protected String getEntityTypeName () {
+		return "person";
+	}
+
 }

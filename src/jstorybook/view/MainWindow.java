@@ -221,10 +221,8 @@ public class MainWindow extends MyStage {
 	// 登場人物リストタブを追加
 	private void addPersonListTab () {
 		PersonListPane tab = new PersonListPane();
+		tab.setViewModelList(this.viewModelList);
 		this.addTab(tab);
-		tab.columnListProperty().bind(this.viewModelList.getProperty("personColumnList"));
-		tab.itemsProperty().bind(this.viewModelList.getProperty("personList"));
-		this.viewModelList.getProperty("selectedEntity").bind(tab.selectedItemProperty());
 	}
 
 	// エンティティ編集タブ

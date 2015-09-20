@@ -15,14 +15,19 @@ package jstorybook.view.pane.list;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.common.util.GUIUtil;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.tablecell.ColorCell;
 import jstorybook.view.control.tablecell.DateCell;
 import jstorybook.view.pane.MyPane;
+import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -34,7 +39,10 @@ import jstorybook.viewtool.model.EditorColumnList;
  */
 public abstract class EntityListPane<T extends Entity> extends MyPane {
 
+	private ViewModelList viewModelList;
+
 	private final TableView<T> tableView;
+	protected final HBox commandButtonBar;
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
 
@@ -45,14 +53,44 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 			EntityListPane.this.setColumnList(((ObjectProperty<EditorColumnList>) obj).get());
 		});
 
+		// テーブルビュー
 		this.tableView = new TableView<>();
-		this.setContent(tableView);
+		GUIUtil.setAnchor(this.tableView, 5.0, 5.0, 55.0, 5.0);
 
+		// コマンドボタンバー（新規とか編集とか）
+		this.commandButtonBar = new HBox();
+		GUIUtil.setAnchor(this.commandButtonBar, null, null, 10.0, 15.0);
+
+		// コンテンツを設定
+		this.setContent(new AnchorPane(this.tableView, this.commandButtonBar));
+	}
+
+	// 第二のコンストラクタ。ビューモデルを設定、ボタンとかも作る
+	public void setViewModelList (ViewModelList viewModelList) {
+		if (this.viewModelList != null) {
+			throw new RuntimeException("ViewModelList already set.");
+		}
+
+		// ビューモデル、バインドとか
+		this.viewModelList = viewModelList;
+		this.columnList.bind(this.viewModelList.getProperty(this.getEntityTypeName() + "ColumnList"));
+		this.tableView.itemsProperty().bind(this.viewModelList.getProperty(this.getEntityTypeName() + "List"));
+		this.viewModelList.getProperty(this.getEntityTypeName() + "Selected").bind(this.selectedItem);
+
+		// ボタン作り
+		Button newButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "New");
+		newButton.setText(ResourceManager.getMessage("msg.new"));
+		newButton.setPrefSize(100.0, 45.0);
+		Button editButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Edit");
+		editButton.setText(ResourceManager.getMessage("msg.edit"));
+		editButton.setPrefSize(100.0, 45.0);
+		this.commandButtonBar.getChildren().addAll(newButton, editButton);
+
+		// テーブルビューにイベントを設定
 		this.tableView.setOnMouseClicked((ev) -> {
-			// ダブルクリックで選択
+			this.selectedItem.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItem());
 			if (ev.getClickCount() >= 2) {
-				this.selectedItem.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItem());
-				this.selectedItem.set(null);
+				this.viewModelList.executeCommand(this.getEntityTypeName() + "Edit");
 			}
 		});
 	}
@@ -85,20 +123,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.tableView.getColumns().add(column);
 	}
 
-	public ObjectProperty<ObservableList<T>> itemsProperty () {
-		return this.tableView.itemsProperty();
-	}
-
-	public ObjectProperty<EditorColumnList> columnListProperty () {
-		return this.columnList;
-	}
-
-	public ObjectProperty<T> selectedItemProperty () {
-		return this.selectedItem;
-	}
-
 	public boolean isEqualPane (EntityListPane other) {
 		return this.columnList.get().isEqualEntity((EditorColumnList) other.columnList.get());
 	}
+
+	protected abstract String getEntityTypeName ();
 
 }

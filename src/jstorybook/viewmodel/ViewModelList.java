@@ -66,7 +66,7 @@ public class ViewModelList extends ArrayList<ViewModel> {
 				return p;
 			}
 		}
-		return ViewModel.getNullBooleanProperty();
+		return ViewModel.getNullBooleanTrueProperty();
 	}
 
 	public void storeMessenger (Messenger messenger) {

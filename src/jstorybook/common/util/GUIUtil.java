@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import jstorybook.common.manager.FontManager;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.converter.BooleanReverseConverter;
 
@@ -36,6 +37,7 @@ public class GUIUtil {
 		BooleanReverseConverter converter = new BooleanReverseConverter();
 		converter.bindValue(vmlist.canExecuteCommandProperty(commandName));
 		button.disableProperty().bind(converter.resultProperty());
+		button.fontProperty().bind(FontManager.getInstance().fontProperty());
 
 		button.setOnAction((ev) -> {
 			vmlist.executeCommand(commandName);

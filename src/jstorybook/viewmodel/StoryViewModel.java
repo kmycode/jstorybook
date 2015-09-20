@@ -30,7 +30,6 @@ public class StoryViewModel extends ViewModel {
 	@Override
 	protected void storeProperty () {
 		this.applyProperty("storyModel", this.storyModel);
-		this.applyProperty("selectedEntity", this.storyModel.get().selectedEntityProperty());
 
 		this.applyProperty("storyTitle", this.storyModel.get().getCore().titleProperty());
 		this.applyProperty("storyFileName", this.storyModel.get().fileNameProperty());
@@ -39,7 +38,10 @@ public class StoryViewModel extends ViewModel {
 		this.applyProperty("personColumnList", this.storyModel.get().entityColumnProperty().get().
 						   personColumnListProperty());
 
-		this.applyProperty("personList", this.storyModel.get().personDAOProperty().get().modelListProperty());
+		this.applyProperty("personList", this.storyModel.get().getPersonEntity().DAOProperty().get().
+							  modelListProperty());
+
+		this.applyProperty("personSelected", this.storyModel.get().getPersonEntity().selectedEntityProperty());
 	}
 
 	@Override
@@ -49,6 +51,9 @@ public class StoryViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
+		this.applyCommand("personEdit", (ev) -> this.storyModel.get().editPerson(), this.storyModel.get().
+						  getPersonEntity().canEditProperty());
+
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());
 	}
 

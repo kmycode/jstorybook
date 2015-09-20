@@ -38,7 +38,8 @@ public abstract class ViewModel {
 	private List<PropertyContainer> propertyList = new ArrayList<>();
 	private List<CommandContainer> commandList = new ArrayList<>();
 	private static final ObjectProperty nullObject = new NullObjectProperty();
-	private static final BooleanProperty nullBooleanObject = new SimpleBooleanProperty();
+	private static final BooleanProperty nullBooleanObject = new SimpleBooleanProperty(false);
+	private static final BooleanProperty nullBooleanTrueObject = new SimpleBooleanProperty(true);
 	private boolean isPropertyStored = false;
 	private boolean isCommandStored = false;
 
@@ -109,11 +110,12 @@ public abstract class ViewModel {
 	}
 
 	public static boolean isNullProperty (Property property) {
-		return ViewModel.nullObject == property || ViewModel.nullBooleanObject == property;
+		return ViewModel.nullObject == property || ViewModel.nullBooleanObject == property
+				|| ViewModel.nullBooleanTrueObject == property;
 	}
 
 	public static boolean isNullProperty (ReadOnlyBooleanProperty property) {
-		return ViewModel.nullBooleanObject == property;
+		return ViewModel.nullBooleanObject == property || ViewModel.nullBooleanTrueObject == property;
 	}
 
 	public static Property getNullProperty () {
@@ -122,6 +124,10 @@ public abstract class ViewModel {
 
 	public static ReadOnlyBooleanProperty getNullBooleanProperty () {
 		return ViewModel.nullBooleanObject;
+	}
+
+	public static ReadOnlyBooleanProperty getNullBooleanTrueProperty () {
+		return ViewModel.nullBooleanTrueObject;
 	}
 
 	public <T> void setProperty (String propertyName, T value) {
