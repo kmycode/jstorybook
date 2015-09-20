@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.DialogResult;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.entity.Entity;
@@ -29,6 +30,7 @@ import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
+import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 
@@ -134,8 +136,12 @@ public class StoryModel implements IUseMessenger {
 	public void deletePerson () {
 		Person selected = this.personEntity.selectedEntity.get();
 		if (selected != null) {
-			this.messenger.send(new EntityEditorCloseMessage(PersonColumnFactory.getInstance().createColumnList(selected)));
-			this.personEntity.dao.get().deleteModel(selected);
+			DeleteDialogMessage delmes = new DeleteDialogMessage(selected.titleProperty().get());
+			this.messenger.send(delmes);
+			if (delmes.getResult() == DialogResult.YES) {
+				this.messenger.send(new EntityEditorCloseMessage(PersonColumnFactory.getInstance().createColumnList(selected)));
+				this.personEntity.dao.get().deleteModel(selected);
+			}
 		}
 	}
 

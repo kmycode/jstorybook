@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -31,6 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import jstorybook.common.contract.DialogResult;
 import jstorybook.common.contract.PreferenceKey;
 import jstorybook.common.contract.SystemKey;
 import jstorybook.common.manager.ResourceManager;
@@ -51,6 +53,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
+import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
@@ -189,6 +192,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(EntityEditorCloseMessage.class, this, (ev) -> {
 			MainWindow.this.removeEntityEditorTab((EntityEditorCloseMessage) ev);
 		});
+		this.messenger.apply(DeleteDialogMessage.class, this, (ev) -> {
+			this.deleteDialog((DeleteDialogMessage) ev);
+		});
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
 		});
@@ -285,6 +291,13 @@ public class MainWindow extends MyStage {
 	}
 
 	// -------------------------------------------------------
+	// 削除確認ダイアログ
+	private void deleteDialog (DeleteDialogMessage message) {
+		DialogResult result = this.askYesNo(ResourceManager.getMessage("msg.confirm.delete", message.getTargetName()));
+		message.setResult(result);
+	}
+
+	// -------------------------------------------------------
 	// ストーリーモデルを返す
 	private void mountCurrentStoryModel (StoryModelCurrentGetMessage message) {
 		message.setStoryModel(this.viewModelList.getProperty("storyModel"));
@@ -295,14 +308,34 @@ public class MainWindow extends MyStage {
 		this.close();
 	}
 
+	// -------------------------------------------------------
+
 	// 一般的なエラーメッセージを表示するダイアログ
 	private void showErrorMessage (String mes) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle(ResourceManager.getMessage("msg.error"));
 		alert.setHeaderText(ResourceManager.getMessage("msg.error.caption"));
-		alert.setTitle("Error");
 		alert.setContentText(mes);
 		alert.showAndWait();
+	}
+
+	// 二択
+	private DialogResult askYesNo (String mes) {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle(ResourceManager.getMessage("msg.confirm"));
+		alert.setHeaderText(ResourceManager.getMessage("msg.confirm"));
+		alert.setContentText(mes);
+		alert.getButtonTypes().clear();
+		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+		((Button) alert.getDialogPane().lookupButton(ButtonType.YES)).setDefaultButton(true);
+		alert.showAndWait();
+		if (alert.getResult() == ButtonType.YES) {
+			return DialogResult.YES;
+		}
+		else if (alert.getResult() == ButtonType.NO) {
+			return DialogResult.NO;
+		}
+		return null;
 	}
 
 }
