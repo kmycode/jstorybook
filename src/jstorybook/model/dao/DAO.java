@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.ISortableEntity;
 import jstorybook.model.story.StoryFileModel;
 
 /**
@@ -68,6 +69,9 @@ public abstract class DAO<E extends Entity> {
 			throw new RuntimeException("This model already created.");
 		}
 		model.idProperty().set(++this.lastId);
+		if (model instanceof ISortableEntity) {
+			((ISortableEntity) model).orderProperty().set(model.idProperty().get());
+		}
 		this.modelList.get().add(model);
 	}
 

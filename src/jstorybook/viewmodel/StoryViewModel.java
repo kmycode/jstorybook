@@ -56,6 +56,10 @@ public class StoryViewModel extends ViewModel {
 						  getPersonEntity().canEditProperty());
 		this.applyCommand("personDelete", (ev) -> this.storyModel.get().deletePerson(), this.storyModel.get().getPersonEntity().
 						  canEditProperty());
+		this.applyCommand("personUp", (ev) -> this.storyModel.get().upPerson(), this.storyModel.get().getPersonEntity().
+						  canEditProperty());
+		this.applyCommand("personDown", (ev) -> this.storyModel.get().downPerson(), this.storyModel.get().getPersonEntity().
+						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());
 	}

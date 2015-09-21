@@ -27,10 +27,11 @@ import javafx.scene.paint.Color;
 import jstorybook.viewtool.completer.PersonNameCompleter;
 
 // ノート のエンティティを扱うクラス
-public class Person extends Entity implements Comparable<Entity> {
+public class Person extends Entity implements Comparable<Entity>, ISortableEntity {
 
 	private StringProperty firstName = new SimpleStringProperty("");
 	private StringProperty lastName = new SimpleStringProperty("");
+	private LongProperty order = new SimpleLongProperty();
 	private LongProperty sexId = new SimpleLongProperty();
 	private ObjectProperty<Calendar> birthday = new SimpleObjectProperty<>();
 	private ObjectProperty<Calendar> dayOfDeath = new SimpleObjectProperty<>();
@@ -52,6 +53,14 @@ public class Person extends Entity implements Comparable<Entity> {
 	 */
 	public StringProperty lastNameProperty () {
 		return this.lastName;
+	}
+
+	/*
+	 * 順番
+	 */
+	@Override
+	public LongProperty orderProperty () {
+		return this.order;
 	}
 
 	/*
@@ -90,6 +99,7 @@ public class Person extends Entity implements Comparable<Entity> {
 			Person test = (Person) obj;
 			ret &= this.equalsProperty(this.firstName, test.firstName);
 			ret &= this.equalsProperty(this.lastName, test.lastName);
+			ret &= this.equalsProperty(this.order, test.order);
 			ret &= this.equalsProperty(this.sexId, test.sexId);
 			ret &= this.equalsProperty(this.birthday, test.birthday);
 			ret &= this.equalsProperty(this.dayOfDeath, test.dayOfDeath);
@@ -103,6 +113,7 @@ public class Person extends Entity implements Comparable<Entity> {
 		int hash = super.hashCode();
 		hash = hash * 31 + this.propertyHashCode(this.firstName);
 		hash = hash * 31 + this.propertyHashCode(this.lastName);
+		hash = hash * 31 + this.propertyHashCode(this.order);
 		hash = hash * 31 + this.propertyHashCode(this.sexId);
 		hash = hash * 31 + this.propertyHashCode(this.birthday);
 		hash = hash * 31 + this.propertyHashCode(this.dayOfDeath);
@@ -113,7 +124,7 @@ public class Person extends Entity implements Comparable<Entity> {
 	@Override
 	public int compareTo (Entity obj) {
 		if (obj instanceof Person) {
-			return this.toString().compareTo(obj.toString());
+			return (int) (this.order.get() - ((ISortableEntity) obj).orderProperty().get());
 		}
 		else {
 			return super.compareTo(obj);
@@ -141,6 +152,7 @@ public class Person extends Entity implements Comparable<Entity> {
 		this.copyTo(obj);
 		obj.firstName.set(this.firstName.get());
 		obj.lastName.set(this.lastName.get());
+		obj.order.set(this.order.get());
 		obj.sexId.set(this.sexId.get());
 		if (this.birthday.get() != null) {
 			obj.birthday.set((Calendar) this.birthday.get().clone());

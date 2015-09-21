@@ -97,6 +97,17 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		});
 	}
 
+	// ならべ替えのボタン
+	protected void setOrderButton () {
+		Button upButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Up");
+		upButton.setText(ResourceManager.getMessage("msg.order.up"));
+		upButton.setPrefSize(50.0, 45.0);
+		Button downButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Down");
+		downButton.setText(ResourceManager.getMessage("msg.order.down"));
+		downButton.setPrefSize(50.0, 45.0);
+		this.commandButtonBar.getChildren().addAll(upButton, downButton);
+	}
+
 	public boolean isEqualPane (EntityListPane other) {
 		return this.columnList.get().isEqualEntity((EditorColumnList) other.columnList.get());
 	}

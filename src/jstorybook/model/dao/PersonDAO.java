@@ -35,7 +35,8 @@ public class PersonDAO extends DAO<Person> {
 	@Override
 	protected Person loadModel (ResultSet rs) throws SQLException {
 		Person model = new Person();
-		model.idProperty().set(rs.getInt("id"));
+		model.idProperty().set(rs.getLong("id"));
+		model.orderProperty().set(rs.getLong("order"));
 		model.firstNameProperty().set(rs.getString("firstname"));
 		model.lastNameProperty().set(rs.getString("lastname"));
 		model.sexIdProperty().set(rs.getLong("sex"));
@@ -57,17 +58,22 @@ public class PersonDAO extends DAO<Person> {
 
 			// 行を追加
 			this.getStoryFileModel().updateQuery(
-					"insert into person(id,firstname,lastname,sex,birthday,dayofdeath,color,note) values(" + model.
-					idProperty().get() + ",'','',0,'','',0,'');");
+					"insert into person(id,firstname,lastname,order,sex,birthday,dayofdeath,color,note) values(" + model.
+					idProperty().get() + ",'','',0,0,'','',0,'');");
 		}
 
 		// 保存
-		this.getStoryFileModel().updateQuery("update person set firstname = '" + model.firstNameProperty().get()
-				+ "',lastname = '" + model.lastNameProperty().get() + "',sex = " + model.sexIdProperty().get() + ",birthday = '"
-				+ SQLiteUtil.getString(model.birthdayProperty().get()) + "',dayofdeath = '" + SQLiteUtil.getString(model.
-						dayOfDeathProperty().get()) + "',color = " + SQLiteUtil.getInteger(model.colorProperty().
-						get()) + ",note = '" + model.noteProperty().get() + "' where id = " + model.idProperty().
-				get() + ";");
+		StringBuilder query = new StringBuilder("update person set ");
+		query.append(SQLiteUtil.updateQueryColumn("firstname", model.firstNameProperty().get(), false));
+		query.append(SQLiteUtil.updateQueryColumn("lastname", model.lastNameProperty().get(), false));
+		query.append(SQLiteUtil.updateQueryColumn("order", model.orderProperty().get(), false));
+		query.append(SQLiteUtil.updateQueryColumn("sex", model.sexIdProperty().get(), false));
+		query.append(SQLiteUtil.updateQueryColumn("birthday", SQLiteUtil.getString(model.birthdayProperty().get()), false));
+		query.append(SQLiteUtil.updateQueryColumn("dayofdeath", SQLiteUtil.getString(model.dayOfDeathProperty().get()), false));
+		query.append(SQLiteUtil.updateQueryColumn("color", SQLiteUtil.getInteger(model.colorProperty().get()), false));
+		query.append(SQLiteUtil.updateQueryColumn("note", model.noteProperty().get(), true));
+		query.append("where id = " + model.idProperty().get() + ";");
+		this.getStoryFileModel().updateQuery(query.toString());
 	}
 
 }

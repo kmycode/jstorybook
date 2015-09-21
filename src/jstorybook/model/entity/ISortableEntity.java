@@ -11,32 +11,24 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.list;
+package jstorybook.model.entity;
 
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Person;
-import jstorybook.viewmodel.ViewModelList;
+import javafx.beans.property.LongProperty;
 
 /**
- * 登場人物のリスト
+ * ソート可能なエンティティ
  *
-  * @author KMY
+ * @author KMY
  */
-public class PersonListPane extends EntityListPane<Person> {
+public interface ISortableEntity {
 
-	public PersonListPane () {
-		super(ResourceManager.getMessage("msg.person"));
+	public LongProperty idProperty ();
+
+	public LongProperty orderProperty ();
+
+	default public void replaceOrder (ISortableEntity another) {
+		long anotherOrder = another.orderProperty().get();
+		another.orderProperty().set(this.orderProperty().get());
+		this.orderProperty().set(anotherOrder);
 	}
-
-	@Override
-	public void setViewModelList (ViewModelList viewModelList) {
-		super.setViewModelList(viewModelList);
-		this.setOrderButton();
-	}
-
-	@Override
-	protected String getEntityTypeName () {
-		return "person";
-	}
-
 }

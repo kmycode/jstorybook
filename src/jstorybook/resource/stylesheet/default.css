@@ -23,6 +23,11 @@
 	-fx-border-color: #aabbcc;
 	-fx-border-width: 0 0 1px 0;
 }
+
+.tab-pane .tab-close-button:hover {
+	-fx-border-color: red;
+}
+
 .tab-pane .tab {
 	-fx-background-color: #bdd5ea;
 	-fx-border-color: #8899ee;

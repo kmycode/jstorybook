@@ -11,32 +11,17 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.list;
-
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Person;
-import jstorybook.viewmodel.ViewModelList;
+package jstorybook.viewtool.model;
 
 /**
- * 登場人物のリスト
+ * リストのみに表示するカラム
  *
-  * @author KMY
+ * @author KMY
  */
-public class PersonListPane extends EntityListPane<Person> {
+public class ListOnlyColumn extends EditorColumn<String> {
 
-	public PersonListPane () {
-		super(ResourceManager.getMessage("msg.person"));
-	}
-
-	@Override
-	public void setViewModelList (ViewModelList viewModelList) {
-		super.setViewModelList(viewModelList);
-		this.setOrderButton();
-	}
-
-	@Override
-	protected String getEntityTypeName () {
-		return "person";
+	public ListOnlyColumn (String columnName, String propertyName) {
+		super(columnName, propertyName, ColumnType.LISTONLY);
 	}
 
 }

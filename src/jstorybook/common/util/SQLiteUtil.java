@@ -84,4 +84,17 @@ public class SQLiteUtil {
 		}
 	}
 
+	// コードフォーマットがあると見づらくなるので作ったメソッド
+	public static String updateQueryColumn (String columnName, String value, boolean isLast) {
+		return "`" + columnName + "`='" + value + "'" + (isLast ? " " : ", ");
+	}
+
+	public static String updateQueryColumn (String columnName, int value, boolean isLast) {
+		return SQLiteUtil.updateQueryColumn(columnName, Integer.toString(value), isLast);
+	}
+
+	public static String updateQueryColumn (String columnName, long value, boolean isLast) {
+		return SQLiteUtil.updateQueryColumn(columnName, Long.toString(value), isLast);
+	}
+
 }

@@ -1,12 +1,9 @@
 親クラスは「Entity」
 クラス名は「Person」。
 データは、
-「String,firstName,名前,,,1
-String,lastName,苗字,,,1
-Calendar,birthday,誕生日
-Calendar,dayOfDeath,死亡日
-Color,color,色
-String,notes,ノート
+「String,name,名前,,,1
+String,order,順番,
+String,notes,ノート,
 」。
 # 型, 名前, 説明, 新名前, フィールド権限, toStringフラグ, hasフラグ
 

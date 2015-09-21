@@ -34,6 +34,7 @@ public abstract class EditorColumn<T> {
 	// カラムの種類
 	public enum ColumnType {
 		NONE,
+		LISTONLY,
 		TEXT,
 		DATE,
 		COLOR,

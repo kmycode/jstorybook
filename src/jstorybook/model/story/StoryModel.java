@@ -15,6 +15,7 @@ package jstorybook.model.story;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -181,6 +182,44 @@ public class StoryModel implements IUseMessenger {
 					this.personEntity.dao.get().deleteModel(selected);
 				}
 			}
+		}
+	}
+
+	public void upPerson () {
+		List<Person> selectedList = this.personEntity.selectedEntityList.get();
+		if (selectedList != null && selectedList.size() > 0) {
+			List<Person> entityList = this.personEntity.dao.get().modelListProperty().get();
+			Collections.sort(entityList);
+			int entityNum = entityList.size();
+			for (Person selected : selectedList) {
+				for (int i = 0; i < entityNum; i++) {
+					if (entityList.get(i).idProperty().get() == selected.idProperty().get()) {
+						if (i > 0) {
+							selected.replaceOrder(entityList.get(i - 1));
+						}
+					}
+				}
+			}
+			Collections.sort(entityList);
+		}
+	}
+
+	public void downPerson () {
+		List<Person> selectedList = this.personEntity.selectedEntityList.get();
+		if (selectedList != null && selectedList.size() > 0) {
+			List<Person> entityList = this.personEntity.dao.get().modelListProperty().get();
+			Collections.sort(entityList);
+			int entityNum = entityList.size();
+			for (Person selected : selectedList) {
+				for (int i = 0; i < entityNum; i++) {
+					if (entityList.get(i).idProperty().get() == selected.idProperty().get()) {
+						if (i < entityNum - 1) {
+							selected.replaceOrder(entityList.get(i + 1));
+						}
+					}
+				}
+			}
+			Collections.sort(entityList);
 		}
 	}
 

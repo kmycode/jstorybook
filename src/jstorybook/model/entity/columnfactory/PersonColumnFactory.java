@@ -54,6 +54,12 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;
 
+		column = new StringColumn(ResourceManager.getMessage("msg.order"), "order");
+		column.setColumnWidth(30);
+		column.setDefaultShow(true);
+		column.setProperty(model.orderProperty());
+		columnList.add(column);
+
 		column = new StringColumn(ResourceManager.getMessage("msg.person.lastname"), "lastName");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
