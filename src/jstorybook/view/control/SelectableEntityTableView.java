@@ -38,6 +38,7 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 
 	private final Map<Long, BooleanProperty> selectedList = new HashMap<>();
 	private final BooleanProperty isChanged = new SimpleBooleanProperty(false);
+	private boolean lockIsChanged = false;
 
 	public SelectableEntityTableView () {
 		this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -67,7 +68,9 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 		if (result == null) {
 			result = new SimpleBooleanProperty(false);
 			result.addListener((obj) -> {
-				SelectableEntityTableView.this.isChanged.set(true);
+				if (!SelectableEntityTableView.this.lockIsChanged) {
+					SelectableEntityTableView.this.isChanged.set(true);
+				}
 			});
 			this.selectedList.put(entityId, result);
 		}
@@ -75,19 +78,31 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 	}
 
 	public void setSelectedList (List<E> list) {
+		this.lockIsChanged = true;
+		this.resetSelected();
 		for (E entity : list) {
 			if (entity.idProperty().get() > 0) {
 				this.selectedProperty(entity.idProperty().get()).set(true);
 			}
 		}
+		this.lockIsChanged = false;
 	}
 
 	public void setSelectedIdList (List<Long> list) {
+		this.lockIsChanged = true;
+		this.resetSelected();
 		for (Long entityId : list) {
 			if (entityId > 0) {
 				this.selectedProperty(entityId).set(true);
 			}
 		}
+		this.lockIsChanged = false;
+	}
+
+	private void resetSelected () {
+		this.selectedList.forEach((k, v) -> {
+			v.set(false);
+		});
 	}
 
 	public List<Long> getSelectedList () {

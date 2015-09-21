@@ -151,7 +151,7 @@ public class StoryModel implements IUseMessenger {
 
 	public void editPerson () {
 		List<Person> selectedList = this.personEntity.selectedEntityList.get();
-		if (selectedList != null) {
+		if (selectedList != null && selectedList.size() > 0) {
 			for (Person selected : selectedList) {
 				this.messenger.send(
 						new PersonEditorShowMessage(PersonColumnFactory.getInstance().createColumnList(selected.entityClone()),
@@ -162,7 +162,7 @@ public class StoryModel implements IUseMessenger {
 
 	public void deletePerson () {
 		List<Person> selectedList = this.personEntity.selectedEntityList.get();
-		if (selectedList != null) {
+		if (selectedList != null && selectedList.size() > 0) {
 			DeleteDialogMessage delmes = new DeleteDialogMessage(selectedList.size() <= 1 ? selectedList.get(0).titleProperty().get()
 																		 : ResourceManager.getMessage("msg.confirm.delete.multi",
 																									  selectedList.
@@ -170,7 +170,13 @@ public class StoryModel implements IUseMessenger {
 																									  selectedList.size()));
 			this.messenger.send(delmes);
 			if (delmes.getResult() == DialogResult.YES) {
-				for (Person selected : selectedList) {
+
+				// 削除するエンティティリストのクローンを作る
+				List<Person> deleteList = new ArrayList<>();
+				deleteList.addAll(selectedList);
+
+				// 削除実行
+				for (Person selected : deleteList) {
 					this.messenger.send(new EntityEditorCloseMessage(PersonColumnFactory.getInstance().createColumnList(selected)));
 					this.personEntity.dao.get().deleteModel(selected);
 				}
@@ -203,7 +209,8 @@ public class StoryModel implements IUseMessenger {
 
 			// 選択中のエンティティが変更された場合
 			this.selectedEntityList.addListener((obj) -> {
-				this.canEdit.set(((ObjectProperty<Entity>) obj).get() != null);
+				List<Entity> entityList = ((ObjectProperty<List<Entity>>) obj).get();
+				this.canEdit.set(entityList != null && entityList.size() > 0);
 			});
 		}
 

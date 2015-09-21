@@ -30,7 +30,9 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
-import jstorybook.viewtool.messenger.pane.relation.PersonRelationMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -141,7 +143,7 @@ public class EntityEditModel implements IUseMessenger {
 
 				// 関連人物のタブを表示
 				if (storyModel != null) {
-					this.messenger.send(new PersonRelationMessage(storyModel.getPersonPersonRelation(
+					this.messenger.send(new PersonRelationShowMessage(storyModel.getPersonPersonRelation(
 							this.columnList.get().idProperty().get())));
 				}
 			}
@@ -188,6 +190,20 @@ public class EntityEditModel implements IUseMessenger {
 		// エンティティそのものの値をコピー
 		this.baseColumnList.get().copyProperty(this.columnList.get());
 		this.isChanged.set(false);
+
+		// 他の編集画面の関連付け設定も全部変えに行く
+		this.messenger.send(new RelationRenewTriggerMessage());
+	}
+
+	public void relationListRenew () {
+		StoryModel storyModel = this.getStoryModel();
+
+		if (storyModel != null) {
+			if (this.columnList.get().isRelation(EntityRelation.PERSON_PERSON)) {
+				this.messenger.send(new PersonRelationRenewMessage(storyModel.getPersonPersonRelation(
+						this.columnList.get().idProperty().get())));
+			}
+		}
 	}
 
 	// -------------------------------------------------------

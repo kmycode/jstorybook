@@ -45,6 +45,7 @@ public class EntityEditViewModel extends ViewModel {
 		this.applyCommand("save", (ev) -> EntityEditViewModel.this.model.save(), this.model.canSaveProperty());
 		this.applyCommand("cancel", (ev) -> EntityEditViewModel.this.model.cancel());
 		this.applyCommand("apply", (ev) -> EntityEditViewModel.this.model.apply(), this.model.canSaveProperty());
+		this.applyCommand("relationListRenew", (ev) -> EntityEditViewModel.this.model.relationListRenew());
 	}
 
 }

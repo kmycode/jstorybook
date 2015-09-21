@@ -13,24 +13,13 @@
  */
 package jstorybook.viewtool.messenger.pane.relation;
 
-import java.util.List;
 import jstorybook.viewtool.messenger.Message;
 
 /**
- * エンティティ同士の関係を設定するタブを追加するメッセージ
+ * 現在表示されている全ての関連付け画面のチェック項目を更新するトリガー
  *
  * @author KMY
  */
-public abstract class RelationMessage extends Message {
-
-	protected final List<Long> entityIdList;
-
-	public RelationMessage (List<Long> entityIdList) {
-		this.entityIdList = entityIdList;
-	}
-
-	public List<Long> getRelatedEntityIdList () {
-		return this.entityIdList;
-	}
+public class RelationRenewTriggerMessage extends Message {
 
 }

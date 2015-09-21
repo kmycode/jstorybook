@@ -52,7 +52,9 @@ public abstract class EntityRelationDAO<T extends EntityRelation> extends DAO<T>
 		List<T> deleteList = new ArrayList<>();
 		for (T rl : list) {
 			boolean hit = false;
+			boolean tryCheck = false;
 			if (rl.entity1IdProperty().get() == modelId) {
+				tryCheck = true;
 				for (long relatedId : relatedIdList) {
 					if (relatedId == rl.entity2IdProperty().get()) {
 						hit = true;
@@ -61,6 +63,7 @@ public abstract class EntityRelationDAO<T extends EntityRelation> extends DAO<T>
 				}
 			}
 			else if (rl.entity2IdProperty().get() == modelId) {
+				tryCheck = true;
 				for (long relatedId : relatedIdList) {
 					if (relatedId == rl.entity1IdProperty().get()) {
 						hit = true;
@@ -68,7 +71,7 @@ public abstract class EntityRelationDAO<T extends EntityRelation> extends DAO<T>
 					}
 				}
 			}
-			if (!hit) {
+			if (tryCheck && !hit) {
 				deleteList.add(rl);
 			}
 		}

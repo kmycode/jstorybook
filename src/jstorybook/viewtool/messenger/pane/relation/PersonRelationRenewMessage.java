@@ -16,13 +16,13 @@ package jstorybook.viewtool.messenger.pane.relation;
 import java.util.List;
 
 /**
- * 関係する登場人物を設定する画面を表示させるメッセージ
+ * 関連人物リストのチェックを更新
  *
  * @author KMY
  */
-public class PersonRelationMessage extends RelationMessage {
+public class PersonRelationRenewMessage extends RelationRenewMessage {
 
-	public PersonRelationMessage (List<Long> entityIdList) {
+	public PersonRelationRenewMessage (List<Long> entityIdList) {
 		super(entityIdList);
 	}
 

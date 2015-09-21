@@ -13,7 +13,11 @@
  */
 package jstorybook.view.control.tablecell;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.TableCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import jstorybook.common.manager.ResourceManager;
 
@@ -24,11 +28,16 @@ import jstorybook.common.manager.ResourceManager;
  */
 public class SexCell<E> extends TableCell<E, Long> {
 
+	private static Color maleColor = new Color(0.8f, 0.8f, 1, 1);
+	private static Color femaleColor = new Color(1, 0.8f, 0.8f, 1);
+
 	@Override
 	protected void updateItem (Long item, boolean empty) {
 		super.updateItem(item, empty);
 		this.setText(item == null ? "" : item == 0L ? ResourceManager.getMessage("msg.person.sex.male") : ResourceManager.getMessage(
 				"msg.person.sex.female"));
-		this.setTextFill(item == null ? null : item == 0L ? Color.BLUE : Color.RED);
+		//this.setTextFill(item == null ? null : item == 0L ? Color.BLUE : Color.RED);
+		this.setBackground(new Background(new BackgroundFill(item == null ? null : item == 0L ? maleColor : femaleColor,
+															 CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 }

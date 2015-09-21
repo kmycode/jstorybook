@@ -16,6 +16,7 @@ package jstorybook.view.pane.editor;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -58,7 +59,9 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
-import jstorybook.viewtool.messenger.pane.relation.PersonRelationMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -67,6 +70,9 @@ import jstorybook.viewtool.model.EditorColumnList;
  * @author KMY
  */
 public class EntityEditorPane extends MyPane {
+
+	// 全ての編集画面
+	private static final List<WeakReference<EntityEditorPane>> paneList = new LinkedList<>();
 
 	private final ViewModelList viewModelList = new ViewModelList(new EntityEditViewModel());
 	private ViewModelList storyViewModelList;
@@ -174,6 +180,9 @@ public class EntityEditorPane extends MyPane {
 
 		// メッセンジャを登録
 		this.applyMessenger();
+
+		// 自身をstatic配列に登録
+		EntityEditorPane.paneList.add(new WeakReference<>(this));
 	}
 
 	public EntityEditorPane () {
@@ -230,9 +239,18 @@ public class EntityEditorPane extends MyPane {
 		});
 
 		// 関連人物タブを設定
-		this.messenger.apply(PersonRelationMessage.class, this, (ev) -> {
-			PersonRelationMessage mes = (PersonRelationMessage) ev;
+		this.messenger.apply(PersonRelationShowMessage.class, this, (ev) -> {
+			PersonRelationShowMessage mes = (PersonRelationShowMessage) ev;
 			EntityEditorPane.this.addPersonRelationTab(mes);
+		});
+		this.messenger.apply(PersonRelationRenewMessage.class, this, (ev) -> {
+			PersonRelationRenewMessage mes = (PersonRelationRenewMessage) ev;
+			EntityEditorPane.this.renewPersonRelationTab(mes);
+		});
+
+		// 関連タブを更新するためのトリガー
+		this.messenger.apply(RelationRenewTriggerMessage.class, this, (ev) -> {
+			EntityEditorPane.renewRelationTab();
 		});
 
 		// ストーリーモデルを渡す
@@ -254,6 +272,22 @@ public class EntityEditorPane extends MyPane {
 	}
 
 	// -------------------------------------------------------
+	// すべての編集画面に一斉に出す処理
+	private static void renewRelationTab () {
+		List<WeakReference<EntityEditorPane>> deleteList = new ArrayList<>();
+		for (WeakReference<EntityEditorPane> pane : EntityEditorPane.paneList) {
+			if (pane.get() == null) {
+				deleteList.add(pane);
+			}
+			else {
+				pane.get().viewModelList.executeCommand("relationListRenew");
+				pane.get().personRelationTab.resetChanged();
+			}
+		}
+		EntityEditorPane.paneList.removeAll(deleteList);
+	}
+
+	// -------------------------------------------------------
 
 	public ObjectProperty<EditorColumnList> columnListProperty () {
 		return this.columnList;
@@ -265,13 +299,19 @@ public class EntityEditorPane extends MyPane {
 
 	// -------------------------------------------------------
 
-	private void addPersonRelationTab (PersonRelationMessage mes) {
+	private void addPersonRelationTab (PersonRelationShowMessage mes) {
 		this.personRelationTab = new PersonRelationTab(this.columnList.get().idProperty().get());
 		this.personRelationTab.itemsProperty().bind(this.storyViewModelList.getProperty("personList"));
 		this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
 		this.personRelationTab.resetChanged();
 		this.viewModelList.getProperty("canSave").bind(this.personRelationTab.changedProperty());
 		this.tabPane.getTabs().add(this.personRelationTab);
+	}
+
+	private void renewPersonRelationTab (PersonRelationRenewMessage mes) {
+		if (this.personRelationTab != null) {
+			this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
+		}
 	}
 
 	// -------------------------------------------------------
