@@ -77,9 +77,11 @@ public class StoryModel implements IUseMessenger {
 
 	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
+		// 初期化・データの読み込み
 		this.personEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.personPersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
 
+		// 関連付け
 		this.personPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
 
 		this.canSave.set(true);

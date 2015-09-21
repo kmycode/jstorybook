@@ -24,6 +24,7 @@ import javafx.event.Event;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Control;
@@ -42,6 +43,7 @@ import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.MyPane;
 import jstorybook.view.pane.editor.relation.PersonRelationTab;
 import jstorybook.viewmodel.ViewModelList;
@@ -52,6 +54,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
@@ -214,6 +217,11 @@ public class EntityEditorPane extends MyPane {
 			EditorColumnColorMessage mes = (EditorColumnColorMessage) ev;
 			EntityEditorPane.this.addColorEdit(mes.getColumnTitle(), mes.getProperty());
 		});
+		// 性選択コントロールを追加
+		this.messenger.apply(EditorColumnSexMessage.class, this, (ev) -> {
+			EditorColumnSexMessage mes = (EditorColumnSexMessage) ev;
+			EntityEditorPane.this.addSexEdit(mes.getColumnTitle(), mes.getProperty());
+		});
 
 		// ノートのテキストを設定
 		this.messenger.apply(PropertyNoteSetMessage.class, this, (ev) -> {
@@ -268,11 +276,13 @@ public class EntityEditorPane extends MyPane {
 
 	// -------------------------------------------------------
 
-	private void addEditControlRow (String title, Control editControl) {
+	private void addEditControlRow (String title, Node editControl) {
 		Label label = new Label(title);
 		label.setPrefWidth(85.0);
 
-		editControl.setPrefWidth(240.0);
+		if (editControl instanceof Control) {
+			((Control) editControl).setPrefWidth(240.0);
+		}
 
 		GridPane.
 				setConstraints(label, 0, this.mainVboxRow, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER,
@@ -313,6 +323,14 @@ public class EntityEditorPane extends MyPane {
 	// ColumnType.COLOR
 	private void addColorEdit (String title, Property property) {
 		ColorPicker node = new ColorPicker();
+		node.valueProperty().bindBidirectional(property);
+		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
+		this.addEditControlRow(title, node);
+	}
+
+	// ColumnType.SEX
+	private void addSexEdit (String title, Property property) {
+		SexControl node = new SexControl();
 		node.valueProperty().bindBidirectional(property);
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.addEditControlRow(title, node);

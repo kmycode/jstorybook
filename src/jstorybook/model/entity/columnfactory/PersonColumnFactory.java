@@ -21,6 +21,7 @@ import jstorybook.viewtool.model.ColorColumn;
 import jstorybook.viewtool.model.DateColumn;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.viewtool.model.SexColumn;
 import jstorybook.viewtool.model.StringColumn;
 
 /**
@@ -70,6 +71,13 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		column.setDefaultShow(true);
 		column.setProperty(model.colorProperty());
 		column.setCellType(EditorColumn.CellType.COLOR);
+		columnList.add(column);
+
+		column = new SexColumn(ResourceManager.getMessage("msg.person.sex"), "sexId");
+		column.setColumnWidth(50);
+		column.setDefaultShow(true);
+		column.setProperty(model.sexIdProperty());
+		column.setCellType(EditorColumn.CellType.SEX);
 		columnList.add(column);
 
 		column = new DateColumn(ResourceManager.getMessage("msg.person.birthday"), "birthday");

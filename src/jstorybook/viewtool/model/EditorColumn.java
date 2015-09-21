@@ -36,7 +36,8 @@ public abstract class EditorColumn<T> {
 		NONE,
 		TEXT,
 		DATE,
-		COLOR,;
+		COLOR,
+		SEX,;
 	}
 
 	// セル表示の種類
@@ -46,7 +47,8 @@ public abstract class EditorColumn<T> {
 		DATETIME,
 		TIME,
 		IMAGE,
-		COLOR,;
+		COLOR,
+		SEX,;
 	}
 
 	public EditorColumn (String columnName, String propertyName) {

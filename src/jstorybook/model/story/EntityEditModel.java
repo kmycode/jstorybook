@@ -26,6 +26,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
@@ -114,6 +115,9 @@ public class EntityEditModel implements IUseMessenger {
 			}
 			else if (column.getColumnType() == EditorColumn.ColumnType.COLOR) {
 				this.messenger.send(new EditorColumnColorMessage(column.getColumnName(), column.getProperty()));
+			}
+			else if (column.getColumnType() == EditorColumn.ColumnType.SEX) {
+				this.messenger.send(new EditorColumnSexMessage(column.getColumnName(), column.getProperty()));
 			}
 
 			// エディタで編集した時のイベント

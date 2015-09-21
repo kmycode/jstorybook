@@ -38,6 +38,7 @@ public class PersonDAO extends DAO<Person> {
 		model.idProperty().set(rs.getInt("id"));
 		model.firstNameProperty().set(rs.getString("firstname"));
 		model.lastNameProperty().set(rs.getString("lastname"));
+		model.sexIdProperty().set(rs.getLong("sex"));
 		model.birthdayProperty().set(SQLiteUtil.getCalendar(rs.getString("birthday")));
 		model.dayOfDeathProperty().set(SQLiteUtil.getCalendar(rs.getString("dayofdeath")));
 		model.colorProperty().set(SQLiteUtil.getColor(rs.getInt("color")));
@@ -56,14 +57,14 @@ public class PersonDAO extends DAO<Person> {
 
 			// 行を追加
 			this.getStoryFileModel().updateQuery(
-					"insert into person(id,firstname,lastname,birthday,dayofdeath,color,note) values(" + model.
-					idProperty().get() + ",'','','','',0,'');");
+					"insert into person(id,firstname,lastname,sex,birthday,dayofdeath,color,note) values(" + model.
+					idProperty().get() + ",'','',0,'','',0,'');");
 		}
 
 		// 保存
 		this.getStoryFileModel().updateQuery("update person set firstname = '" + model.firstNameProperty().get()
-				+ "',lastname = '" + model.lastNameProperty().get() + "',birthday = '" + SQLiteUtil.getString(
-						model.birthdayProperty().get()) + "',dayofdeath = '" + SQLiteUtil.getString(model.
+				+ "',lastname = '" + model.lastNameProperty().get() + "',sex = " + model.sexIdProperty().get() + ",birthday = '"
+				+ SQLiteUtil.getString(model.birthdayProperty().get()) + "',dayofdeath = '" + SQLiteUtil.getString(model.
 						dayOfDeathProperty().get()) + "',color = " + SQLiteUtil.getInteger(model.colorProperty().
 						get()) + ",note = '" + model.noteProperty().get() + "' where id = " + model.idProperty().
 				get() + ";");

@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.tablecell.ColorCell;
 import jstorybook.view.control.tablecell.DateCell;
+import jstorybook.view.control.tablecell.SexCell;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -56,6 +57,11 @@ public class EntityTableView<E extends Entity> extends TableView<E> {
 		else if (columnData.getCellType() == EditorColumn.CellType.COLOR) {
 			column.setCellFactory((arg) -> {
 				return new ColorCell();
+			});
+		}
+		else if (columnData.getCellType() == EditorColumn.CellType.SEX) {
+			column.setCellFactory((arg) -> {
+				return new SexCell();
 			});
 		}
 

@@ -16,8 +16,10 @@
 package jstorybook.model.entity;
 
 import java.util.Calendar;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -29,6 +31,7 @@ public class Person extends Entity implements Comparable<Entity> {
 
 	private StringProperty firstName = new SimpleStringProperty("");
 	private StringProperty lastName = new SimpleStringProperty("");
+	private LongProperty sexId = new SimpleLongProperty();
 	private ObjectProperty<Calendar> birthday = new SimpleObjectProperty<>();
 	private ObjectProperty<Calendar> dayOfDeath = new SimpleObjectProperty<>();
 	private ObjectProperty<Color> color = new SimpleObjectProperty<>();
@@ -49,6 +52,13 @@ public class Person extends Entity implements Comparable<Entity> {
 	 */
 	public StringProperty lastNameProperty () {
 		return this.lastName;
+	}
+
+	/*
+	 * 性
+	 */
+	public LongProperty sexIdProperty () {
+		return this.sexId;
 	}
 
 	/*
@@ -80,6 +90,7 @@ public class Person extends Entity implements Comparable<Entity> {
 			Person test = (Person) obj;
 			ret &= this.equalsProperty(this.firstName, test.firstName);
 			ret &= this.equalsProperty(this.lastName, test.lastName);
+			ret &= this.equalsProperty(this.sexId, test.sexId);
 			ret &= this.equalsProperty(this.birthday, test.birthday);
 			ret &= this.equalsProperty(this.dayOfDeath, test.dayOfDeath);
 			ret &= this.equalsProperty(this.color, test.color);
@@ -92,6 +103,7 @@ public class Person extends Entity implements Comparable<Entity> {
 		int hash = super.hashCode();
 		hash = hash * 31 + this.propertyHashCode(this.firstName);
 		hash = hash * 31 + this.propertyHashCode(this.lastName);
+		hash = hash * 31 + this.propertyHashCode(this.sexId);
 		hash = hash * 31 + this.propertyHashCode(this.birthday);
 		hash = hash * 31 + this.propertyHashCode(this.dayOfDeath);
 		hash = hash * 31 + this.propertyHashCode(this.color);
@@ -129,6 +141,7 @@ public class Person extends Entity implements Comparable<Entity> {
 		this.copyTo(obj);
 		obj.firstName.set(this.firstName.get());
 		obj.lastName.set(this.lastName.get());
+		obj.sexId.set(this.sexId.get());
 		if (this.birthday.get() != null) {
 			obj.birthday.set((Calendar) this.birthday.get().clone());
 		}

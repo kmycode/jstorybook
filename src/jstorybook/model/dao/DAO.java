@@ -38,8 +38,19 @@ public abstract class DAO<E extends Entity> {
 	protected int lastIdSaved = 0;		// 最後に保存した時の最大ID
 
 	public void setStoryFileModel (StoryFileModel storyFileModel) throws SQLException {
+		this.reset();
 		this.storyFileModel = storyFileModel;
 		this.storyFileModelSet();
+	}
+
+	protected void reset () {
+		this.storyFileModel = null;
+		if (this.modelList.get() != null) {
+			this.modelList.get().clear();
+		}
+		this.removeIdList.clear();
+		this.lastId = 0;
+		this.lastIdSaved = 0;
 	}
 
 	abstract protected String getTableName ();
