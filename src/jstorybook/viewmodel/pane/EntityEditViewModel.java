@@ -32,6 +32,7 @@ public class EntityEditViewModel extends ViewModel {
 		this.applyProperty("baseColumnList", this.model.baseColumnListProperty());
 		this.applyProperty("title", this.model.titleProperty());
 		this.applyProperty("note", this.model.noteProperty());
+		this.applyProperty("canSave", this.model.canSaveByOutProperty());
 	}
 
 	@Override

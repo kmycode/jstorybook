@@ -50,7 +50,7 @@ import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.messenger.StoryModelCurrentGetMessage;
+import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
@@ -177,8 +177,8 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
 		});
-		this.messenger.apply(StoryModelCurrentGetMessage.class, this, (ev) -> {
-			MainWindow.this.mountCurrentStoryModel((StoryModelCurrentGetMessage) ev);
+		this.messenger.apply(CurrentStoryModelGetMessage.class, this, (ev) -> {
+			MainWindow.this.mountCurrentStoryModel((CurrentStoryModelGetMessage) ev);
 		});
 		this.messenger.apply(StoryFileLoadFailedMessage.class, this, (ev) -> {
 			MainWindow.this.showErrorMessage(
@@ -240,6 +240,7 @@ public class MainWindow extends MyStage {
 									 String viewModelColumnListName) {
 
 		EntityEditorPane tab = new EntityEditorPane();
+		tab.setViewModelList(this.viewModelList);
 		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
 		completer.setEntityTypeName(entityTypeName);
 
@@ -299,8 +300,8 @@ public class MainWindow extends MyStage {
 
 	// -------------------------------------------------------
 	// ストーリーモデルを返す
-	private void mountCurrentStoryModel (StoryModelCurrentGetMessage message) {
-		message.setStoryModel(this.viewModelList.getProperty("storyModel"));
+	private void mountCurrentStoryModel (CurrentStoryModelGetMessage message) {
+		message.storyModelProperty().bind(this.viewModelList.getProperty("storyModel"));
 	}
 
 	// プログラムを終了

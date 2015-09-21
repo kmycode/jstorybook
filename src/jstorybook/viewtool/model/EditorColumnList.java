@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.ExceptionMessage;
@@ -36,6 +37,7 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 	private final LongProperty id = new SimpleLongProperty();
 	private final StringProperty note = new SimpleStringProperty();
 	private final ObjectProperty<EntityType> entityType = new SimpleObjectProperty<>();
+	private final ArrayList<EntityRelation> entityRelation = new ArrayList<>();
 	private StoryModel.EntityAdapter entityAdapter;
 
 	public StringProperty titleProperty () {
@@ -52,6 +54,20 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 
 	public ObjectProperty<EntityType> entityTypeProperty () {
 		return this.entityType;
+	}
+
+	public boolean isRelation (EntityRelation relation) {
+		return this.entityRelation.indexOf(relation) >= 0;
+	}
+
+	public void addRelation (EntityRelation relation) {
+		if (!this.isRelation(relation)) {
+			this.entityRelation.add(relation);
+		}
+	}
+
+	public ArrayList<EntityRelation> getEntityRelationList () {
+		return this.entityRelation;
 	}
 
 	public void setEntityAdapter (StoryModel.EntityAdapter adapter) {

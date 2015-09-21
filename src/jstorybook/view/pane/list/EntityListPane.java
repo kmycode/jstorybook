@@ -16,19 +16,14 @@ package jstorybook.view.pane.list;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.model.entity.Entity;
-import jstorybook.view.control.tablecell.ColorCell;
-import jstorybook.view.control.tablecell.DateCell;
+import jstorybook.view.control.EntityTableView;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewmodel.ViewModelList;
-import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -41,7 +36,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	private ViewModelList viewModelList;
 
-	private final TableView<T> tableView;
+	private final EntityTableView<T> tableView;
 	protected final HBox commandButtonBar;
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
@@ -50,11 +45,11 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		super(title);
 
 		this.columnList.addListener((obj) -> {
-			EntityListPane.this.setColumnList(((ObjectProperty<EditorColumnList>) obj).get());
+			EntityListPane.this.tableView.setColumnList(((ObjectProperty<EditorColumnList>) obj).get());
 		});
 
 		// テーブルビュー
-		this.tableView = new TableView<>();
+		this.tableView = new EntityTableView<>();
 		GUIUtil.setAnchor(this.tableView, 5.0, 5.0, 55.0, 5.0);
 
 		// コマンドボタンバー（新規とか編集とか）
@@ -96,34 +91,6 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 				this.viewModelList.executeCommand(this.getEntityTypeName() + "Edit");
 			}
 		});
-	}
-
-	protected void setColumnList (EditorColumnList cl) {
-		this.tableView.getColumns().clear();
-		for (EditorColumn column : cl) {
-			this.addTableColumn(column);
-		}
-	}
-
-	private <S> void addTableColumn (EditorColumn<S> columnData) {
-		TableColumn<T, S> column = new TableColumn<>(columnData.getColumnName());
-		column.setCellValueFactory(new PropertyValueFactory<>(columnData.getPropertyName()));
-		column.setPrefWidth(columnData.getColumnWidth());
-		column.setVisible(columnData.isDefaultShow());
-
-		// 特殊なセルのファクトリ
-		if (columnData.getCellType() == EditorColumn.CellType.DATE) {
-			column.setCellFactory((arg) -> {
-				return new DateCell();
-			});
-		}
-		else if (columnData.getCellType() == EditorColumn.CellType.COLOR) {
-			column.setCellFactory((arg) -> {
-				return new ColorCell();
-			});
-		}
-
-		this.tableView.getColumns().add(column);
 	}
 
 	public boolean isEqualPane (EntityListPane other) {

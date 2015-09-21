@@ -11,29 +11,19 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.messenger;
+package jstorybook.viewtool.messenger.pane.relation;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
-import jstorybook.model.story.StoryModel;
+import java.util.List;
 
 /**
+ * 関係する登場人物を設定する画面を表示させるメッセージ
  *
  * @author KMY
  */
-public class StoryModelCurrentGetMessage extends Message {
+public class PersonRelationMessage extends RelationMessage {
 
-	private ObjectProperty<StoryModel> storyModel = new SimpleObjectProperty<>(null);
-
-	public ObjectProperty<StoryModel> storyModelProperty () {
-		return this.storyModel;
-	}
-
-	public void setStoryModel (Property<?> storyModel) {
-		if (storyModel.getValue() != null && storyModel.getValue().getClass() == StoryModel.class) {
-			this.storyModel.set((StoryModel) storyModel.getValue());
-		}
+	public PersonRelationMessage (List<Long> entityIdList) {
+		super(entityIdList);
 	}
 
 }

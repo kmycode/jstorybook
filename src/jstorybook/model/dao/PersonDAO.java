@@ -15,8 +15,6 @@ package jstorybook.model.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.beans.property.ObjectProperty;
-import javafx.collections.ObservableList;
 import jstorybook.common.util.SQLiteUtil;
 import jstorybook.model.entity.Person;
 
@@ -69,17 +67,6 @@ public class PersonDAO extends DAO<Person> {
 						dayOfDeathProperty().get()) + "',color = " + SQLiteUtil.getInteger(model.colorProperty().
 						get()) + ",note = '" + model.noteProperty().get() + "' where id = " + model.idProperty().
 				get() + ";");
-	}
-
-	// -------------------------------------------------------
-
-	@Override
-	protected void storyFileModelSet () throws SQLException {
-		this.loadList();
-	}
-
-	public ObjectProperty<ObservableList<Person>> modelListProperty () {
-		return this.modelList;
 	}
 
 }

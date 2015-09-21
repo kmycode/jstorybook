@@ -14,6 +14,7 @@
 package jstorybook.model.story;
 
 import java.sql.SQLException;
+import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,8 +24,10 @@ import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.DialogResult;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.PersonDAO;
+import jstorybook.model.dao.PersonPersonRelationDAO;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Person;
+import jstorybook.model.entity.PersonPersonRelation;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
@@ -49,6 +52,8 @@ public class StoryModel implements IUseMessenger {
 
 	// エンティティをあらわすインスタンス
 	private final StoryEntityModel<Person, PersonDAO> personEntity = new StoryEntityModel<>(new PersonDAO());
+	private final StoryEntityModel<PersonPersonRelation, PersonPersonRelationDAO> personPersonEntity = new StoryEntityModel<>(
+			new PersonPersonRelationDAO());
 
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
@@ -63,6 +68,7 @@ public class StoryModel implements IUseMessenger {
 				this.setDAO();
 			} catch (SQLException e) {
 				this.messenger.send(new StoryFileLoadFailedMessage(((StringProperty) obj).get()));
+				e.printStackTrace();
 			}
 		});
 	}
@@ -70,6 +76,10 @@ public class StoryModel implements IUseMessenger {
 	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
 		this.personEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		this.personPersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
+
+		this.personPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
+
 		this.canSave.set(true);
 	}
 
@@ -77,6 +87,7 @@ public class StoryModel implements IUseMessenger {
 	public void save () {
 		try {
 			this.personEntity.dao.get().saveList();
+			this.personPersonEntity.dao.get().saveList();
 		} catch (SQLException e) {
 			this.messenger.send(new StoryFileSaveFailedMessage(this.storyFileName.get()));
 			e.printStackTrace();
@@ -112,6 +123,16 @@ public class StoryModel implements IUseMessenger {
 	// エンティティをあらわすモデルクラス
 	public StoryEntityModel<Person, PersonDAO> getPersonEntity () {
 		return this.personEntity;
+	}
+
+	// -------------------------------------------------------
+	// エンティティ同士の関係
+	public List<Long> getPersonPersonRelation (long personId) {
+		return this.personPersonEntity.dao.get().getRelatedIdList(personId);
+	}
+
+	public void setPersonPersonRelation (long personId, List<Long> list) {
+		this.personPersonEntity.dao.get().setRelatedIdList(personId, list);
 	}
 
 	// -------------------------------------------------------

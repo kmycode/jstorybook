@@ -43,15 +43,19 @@ import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.editor.relation.PersonRelationTab;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.EntityEditViewModel;
 import jstorybook.viewtool.converter.LocalDateCalendarConverter;
+import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -62,6 +66,7 @@ import jstorybook.viewtool.model.EditorColumnList;
 public class EntityEditorPane extends MyPane {
 
 	private final ViewModelList viewModelList = new ViewModelList(new EntityEditViewModel());
+	private ViewModelList storyViewModelList;
 
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
@@ -69,6 +74,7 @@ public class EntityEditorPane extends MyPane {
 	// 独自のメッセンジャを持つ
 	protected final Messenger messenger = new Messenger();
 
+	// 基本となるコントロール
 	protected final AnchorPane rootPane = new AnchorPane();
 	protected final TabPane tabPane = new TabPane();
 	protected final VBox vbox = new VBox();
@@ -76,6 +82,9 @@ public class EntityEditorPane extends MyPane {
 	protected final GridPane mainGridPane = new GridPane();
 	protected final TextArea noteArea = new TextArea();
 	private List<WeakReference<Property>> editPropertyList = new ArrayList<>();
+
+	// エンティティ関連付けのタブ
+	protected PersonRelationTab personRelationTab;
 
 	private int mainVboxRow = 0;
 
@@ -168,6 +177,10 @@ public class EntityEditorPane extends MyPane {
 		this("No Titled");
 	}
 
+	public void setViewModelList (ViewModelList list) {
+		this.storyViewModelList = list;
+	}
+
 	// （まだ検証してないけど）循環参照によるメモリリークを予防する意味合い
 	@Override
 	protected void onClosed (Event ev) {
@@ -208,6 +221,23 @@ public class EntityEditorPane extends MyPane {
 			EntityEditorPane.this.setNoteProperty(mes);
 		});
 
+		// 関連人物タブを設定
+		this.messenger.apply(PersonRelationMessage.class, this, (ev) -> {
+			PersonRelationMessage mes = (PersonRelationMessage) ev;
+			EntityEditorPane.this.addPersonRelationTab(mes);
+		});
+
+		// ストーリーモデルを渡す
+		this.messenger.apply(CurrentStoryModelGetMessage.class, this, (ev) -> {
+			((CurrentStoryModelGetMessage) ev).storyModelProperty().bind(this.storyViewModelList.getProperty("storyModel"));
+		});
+		// 関連するエンティティのリストを渡す
+		this.messenger.apply(PersonRelationListGetMessage.class, this, (ev) -> {
+			if (this.personRelationTab != null) {
+				((PersonRelationListGetMessage) ev).setRelationList(this.personRelationTab.getSelectedIdList());
+			}
+		});
+
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -223,6 +253,17 @@ public class EntityEditorPane extends MyPane {
 
 	public ObjectProperty<EditorColumnList> baseColumnListProperty () {
 		return this.baseColumnList;
+	}
+
+	// -------------------------------------------------------
+
+	private void addPersonRelationTab (PersonRelationMessage mes) {
+		this.personRelationTab = new PersonRelationTab(this.columnList.get().idProperty().get());
+		this.personRelationTab.itemsProperty().bind(this.storyViewModelList.getProperty("personList"));
+		this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
+		this.personRelationTab.resetChanged();
+		this.viewModelList.getProperty("canSave").bind(this.personRelationTab.changedProperty());
+		this.tabPane.getTabs().add(this.personRelationTab);
 	}
 
 	// -------------------------------------------------------

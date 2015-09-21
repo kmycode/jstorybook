@@ -13,6 +13,7 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Person;
@@ -48,6 +49,7 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bind(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
+		columnList.addRelation(EntityRelation.PERSON_PERSON);
 		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;
 

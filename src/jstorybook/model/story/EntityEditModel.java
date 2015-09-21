@@ -19,6 +19,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityRelation;
+import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
@@ -26,6 +28,8 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonRelationMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -41,6 +45,7 @@ public class EntityEditModel implements IUseMessenger {
 
 	private BooleanProperty isChanged = new SimpleBooleanProperty(false);
 	private BooleanProperty canSave = new SimpleBooleanProperty(false);
+	private BooleanProperty canSaveByOut = new SimpleBooleanProperty(false);		// 外部から設定された変更
 
 	private Messenger messenger = Messenger.getInstance();
 
@@ -55,6 +60,12 @@ public class EntityEditModel implements IUseMessenger {
 		this.isChanged.addListener((obj) -> {
 			EntityEditModel.this.checkCanSave();
 		});
+
+		this.canSaveByOut.addListener((obj) -> {
+			if (this.canSaveByOut.get()) {
+				this.isChanged.set(true);
+			}
+		});
 	}
 
 	public ObjectProperty<EditorColumnList> columnListProperty () {
@@ -63,6 +74,10 @@ public class EntityEditModel implements IUseMessenger {
 
 	public ObjectProperty<EditorColumnList> baseColumnListProperty () {
 		return this.baseColumnList;
+	}
+
+	public BooleanProperty canSaveByOutProperty () {
+		return this.canSaveByOut;
 	}
 
 	public StringProperty titleProperty () {
@@ -89,6 +104,7 @@ public class EntityEditModel implements IUseMessenger {
 			return;
 		}
 
+		// 編集項目
 		for (EditorColumn column : list) {
 			if (column.getColumnType() == EditorColumn.ColumnType.TEXT) {
 				this.messenger.send(new EditorColumnTextMessage(column.getColumnName(), column.getProperty()));
@@ -111,6 +127,27 @@ public class EntityEditModel implements IUseMessenger {
 		this.noteProperty().addListener((obj) -> {
 			EntityEditModel.this.isChanged.set(true);
 		});
+
+		// 関連エンティティを選択するためのタブを設定
+		for (EntityRelation relation : list.getEntityRelationList()) {
+			if (relation == EntityRelation.PERSON_PERSON) {
+
+				// ストーリーモデルを取得
+				StoryModel storyModel = this.getStoryModel();
+
+				// 関連人物のタブを表示
+				if (storyModel != null) {
+					this.messenger.send(new PersonRelationMessage(storyModel.getPersonPersonRelation(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+		}
+	}
+
+	private StoryModel getStoryModel () {
+		CurrentStoryModelGetMessage storyModelMessage = new CurrentStoryModelGetMessage();
+		this.messenger.send(storyModelMessage);
+		return storyModelMessage.storyModelProperty().get();
 	}
 
 	// -------------------------------------------------------
@@ -136,6 +173,15 @@ public class EntityEditModel implements IUseMessenger {
 	}
 
 	public void apply () {
+		// エンティティ同士の関連を保存
+		StoryModel storyModel = this.getStoryModel();
+		PersonRelationListGetMessage relationListMessage = new PersonRelationListGetMessage();
+		this.messenger.send(relationListMessage);
+		if (relationListMessage.getRelationList() != null) {
+			storyModel.setPersonPersonRelation(this.columnList.get().idProperty().get(), relationListMessage.getRelationList());
+		}
+
+		// エンティティそのものの値をコピー
 		this.baseColumnList.get().copyProperty(this.columnList.get());
 		this.isChanged.set(false);
 	}

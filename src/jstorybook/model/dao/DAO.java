@@ -81,7 +81,7 @@ public abstract class DAO<E extends Entity> {
 			this.lastIdSaved = this.lastId = rs.getInt("value");
 		}
 		else {
-			throw new SQLException();
+			throw new SQLException("idtable doesn't have the key: " + this.getTableName());
 		}
 
 		// リストを作成
@@ -109,7 +109,7 @@ public abstract class DAO<E extends Entity> {
 		this.lastIdSaved = this.lastId;
 	}
 
-	public E getModelById (int id) {
+	public E getModelById (long id) {
 		for (E model : this.modelList.get()) {
 			if (model.idProperty().get() == id) {
 				return model;
@@ -120,7 +120,13 @@ public abstract class DAO<E extends Entity> {
 
 	// ここでのsetは受動態。StoryFileModelがセットされた時に呼び出される
 	// おもにStoryFileModelを使った処理を行う
-	abstract protected void storyFileModelSet () throws SQLException;
+	protected void storyFileModelSet () throws SQLException {
+		this.loadList();
+	}
+
+	public ObjectProperty<ObservableList<E>> modelListProperty () {
+		return this.modelList;
+	}
 
 	protected StoryFileModel getStoryFileModel () {
 		return this.storyFileModel;
