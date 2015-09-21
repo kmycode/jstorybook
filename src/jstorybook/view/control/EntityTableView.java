@@ -13,6 +13,7 @@
  */
 package jstorybook.view.control;
 
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,6 +29,10 @@ import jstorybook.viewtool.model.EditorColumnList;
   * @author KMY
  */
 public class EntityTableView<E extends Entity> extends TableView<E> {
+
+	public EntityTableView () {
+		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+	}
 
 	public void setColumnList (EditorColumnList cl) {
 		this.getColumns().clear();

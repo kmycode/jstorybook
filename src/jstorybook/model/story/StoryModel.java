@@ -14,6 +14,7 @@
 package jstorybook.model.story;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -22,6 +23,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.DialogResult;
+import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.dao.PersonPersonRelationDAO;
@@ -146,22 +148,30 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void editPerson () {
-		Person selected = this.personEntity.selectedEntity.get();
-		if (selected != null) {
-			this.messenger.send(
-					new PersonEditorShowMessage(PersonColumnFactory.getInstance().createColumnList(selected.entityClone()),
-												PersonColumnFactory.getInstance().createColumnList(selected)));
+		List<Person> selectedList = this.personEntity.selectedEntityList.get();
+		if (selectedList != null) {
+			for (Person selected : selectedList) {
+				this.messenger.send(
+						new PersonEditorShowMessage(PersonColumnFactory.getInstance().createColumnList(selected.entityClone()),
+													PersonColumnFactory.getInstance().createColumnList(selected)));
+			}
 		}
 	}
 
 	public void deletePerson () {
-		Person selected = this.personEntity.selectedEntity.get();
-		if (selected != null) {
-			DeleteDialogMessage delmes = new DeleteDialogMessage(selected.titleProperty().get());
+		List<Person> selectedList = this.personEntity.selectedEntityList.get();
+		if (selectedList != null) {
+			DeleteDialogMessage delmes = new DeleteDialogMessage(selectedList.size() <= 1 ? selectedList.get(0).titleProperty().get()
+																		 : ResourceManager.getMessage("msg.confirm.delete.multi",
+																									  selectedList.
+																									  get(0).titleProperty().get(),
+																									  selectedList.size()));
 			this.messenger.send(delmes);
 			if (delmes.getResult() == DialogResult.YES) {
-				this.messenger.send(new EntityEditorCloseMessage(PersonColumnFactory.getInstance().createColumnList(selected)));
-				this.personEntity.dao.get().deleteModel(selected);
+				for (Person selected : selectedList) {
+					this.messenger.send(new EntityEditorCloseMessage(PersonColumnFactory.getInstance().createColumnList(selected)));
+					this.personEntity.dao.get().deleteModel(selected);
+				}
 			}
 		}
 	}
@@ -183,14 +193,14 @@ public class StoryModel implements IUseMessenger {
 	public class StoryEntityModel<E extends Entity, D> {
 
 		private final ObjectProperty<D> dao = new SimpleObjectProperty<>();
-		private final ObjectProperty<E> selectedEntity = new SimpleObjectProperty<>();
+		private final ObjectProperty<List<E>> selectedEntityList = new SimpleObjectProperty<>(new ArrayList<>());
 		private final BooleanProperty canEdit = new SimpleBooleanProperty(false);
 
 		private StoryEntityModel (D dao) {
 			this.dao.set(dao);
 
 			// 選択中のエンティティが変更された場合
-			this.selectedEntity.addListener((obj) -> {
+			this.selectedEntityList.addListener((obj) -> {
 				this.canEdit.set(((ObjectProperty<Entity>) obj).get() != null);
 			});
 		}
@@ -200,8 +210,8 @@ public class StoryModel implements IUseMessenger {
 		}
 
 		// TableViewなどで選択されたエンティティ
-		public ObjectProperty<E> selectedEntityProperty () {
-			return this.selectedEntity;
+		public ObjectProperty<List<E>> selectedEntityProperty () {
+			return this.selectedEntityList;
 		}
 
 		public BooleanProperty canEditProperty () {

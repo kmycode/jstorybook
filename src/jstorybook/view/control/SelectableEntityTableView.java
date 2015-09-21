@@ -21,6 +21,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -37,6 +38,10 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 
 	private final Map<Long, BooleanProperty> selectedList = new HashMap<>();
 	private final BooleanProperty isChanged = new SimpleBooleanProperty(false);
+
+	public SelectableEntityTableView () {
+		this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+	}
 
 	@Override
 	public void setColumnList (EditorColumnList cl) {

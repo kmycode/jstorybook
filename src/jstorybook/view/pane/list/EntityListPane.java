@@ -13,6 +13,8 @@
  */
 package jstorybook.view.pane.list;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
@@ -40,6 +42,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 	protected final HBox commandButtonBar;
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
+	private final ObjectProperty<List<T>> selectedItemList = new SimpleObjectProperty<>(new ArrayList<T>());
 
 	protected EntityListPane (String title) {
 		super(title);
@@ -70,7 +73,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.viewModelList = viewModelList;
 		this.columnList.bind(this.viewModelList.getProperty(this.getEntityTypeName() + "ColumnList"));
 		this.tableView.itemsProperty().bind(this.viewModelList.getProperty(this.getEntityTypeName() + "List"));
-		this.viewModelList.getProperty(this.getEntityTypeName() + "Selected").bind(this.selectedItem);
+		this.viewModelList.getProperty(this.getEntityTypeName() + "Selected").bind(this.selectedItemList);
 
 		// ボタン作り
 		Button newButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "New");
@@ -84,9 +87,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		delButton.setPrefSize(100.0, 45.0);
 		this.commandButtonBar.getChildren().addAll(newButton, editButton, delButton);
 
-		// テーブルビューにイベントを設定
+		// テーブルビューを選択した時のイベント
 		this.tableView.setOnMouseClicked((ev) -> {
 			this.selectedItem.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItem());
+			this.selectedItemList.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItems());
 			if (ev.getClickCount() >= 2) {
 				this.viewModelList.executeCommand(this.getEntityTypeName() + "Edit");
 			}
