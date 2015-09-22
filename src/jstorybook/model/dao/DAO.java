@@ -18,7 +18,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,6 +38,7 @@ public abstract class DAO<E extends Entity> {
 	private StoryFileModel storyFileModel;
 	protected final ObjectProperty<ObservableList<E>> modelList = new SimpleObjectProperty<>();
 	protected final List<Long> removeIdList = new ArrayList<>();
+	protected final IntegerProperty saveStep = new SimpleIntegerProperty(0);
 	protected int lastId = 0;				// 最大ID
 	protected int lastIdSaved = 0;		// 最後に保存した時の最大ID
 
@@ -129,10 +132,14 @@ public abstract class DAO<E extends Entity> {
 
 	public void saveList () throws SQLException {
 
+		this.saveStep.set(0);
+		int saveCount = 0;
+
 		// 保存処理
 		ObservableList<E> list = this.modelList.get();
 		for (E model : list) {
 			this.saveModel(model);
+			this.saveStep.set(++saveCount);
 		}
 
 		// 削除処理
@@ -160,6 +167,14 @@ public abstract class DAO<E extends Entity> {
 
 	public ObjectProperty<ObservableList<E>> modelListProperty () {
 		return this.modelList;
+	}
+
+	public int getModelCount () {
+		return this.modelList.get().size();
+	}
+
+	public IntegerProperty saveStepProperty () {
+		return this.saveStep;
 	}
 
 	protected StoryFileModel getStoryFileModel () {

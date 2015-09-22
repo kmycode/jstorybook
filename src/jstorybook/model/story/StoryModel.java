@@ -54,10 +54,11 @@ import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
+import jstorybook.model.story.sync.StorySaveModel;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
-import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
@@ -145,7 +146,8 @@ public class StoryModel implements IUseMessenger {
 
 	// ストーリーモデル全体のファイルへの保存
 	public void save () {
-		try {
+		/*
+		 		try {
 			this.personEntity.dao.get().saveList();
 			this.groupEntity.dao.get().saveList();
 			this.placeEntity.dao.get().saveList();
@@ -160,6 +162,34 @@ public class StoryModel implements IUseMessenger {
 			this.messenger.send(new StoryFileSaveFailedMessage(this.storyFileName.get()));
 			e.printStackTrace();
 		}
+		 */
+
+		StorySaveModel.StorySaveService service = new StorySaveModel.StorySaveService(this);
+
+		// 進捗状況を表示
+		this.messenger.send(new ProgressDialogShowMessage(service.myProgressProperty()));
+
+		// 保存処理（非同期）
+		service.stepProperty().addListener((obj) -> {
+			// getバグ
+			service.stepProperty().get();
+		});
+		service.start();
+	}
+
+	public List<DAO> getDAOList () {
+		List<DAO> daoList = new ArrayList<>();
+		daoList.add(this.personEntity.dao.get());
+		daoList.add(this.groupEntity.dao.get());
+		daoList.add(this.placeEntity.dao.get());
+		daoList.add(this.sceneEntity.dao.get());
+		daoList.add(this.chapterEntity.dao.get());
+		daoList.add(this.personPersonEntity.dao.get());
+		daoList.add(this.groupPersonEntity.dao.get());
+		daoList.add(this.chapterSceneEntity.dao.get());
+		daoList.add(this.scenePersonEntity.dao.get());
+		daoList.add(this.scenePlaceEntity.dao.get());
+		return daoList;
 	}
 
 	public BooleanProperty canSaveProperty () {

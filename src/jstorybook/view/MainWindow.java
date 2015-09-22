@@ -41,6 +41,7 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.GroupListPane;
@@ -55,6 +56,7 @@ import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
@@ -188,6 +190,9 @@ public class MainWindow extends MyStage {
 	private void applyMessenger () {
 		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
+		});
+		this.messenger.apply(ProgressDialogShowMessage.class, this, (ev) -> {
+			MainWindow.this.showProgress(((ProgressDialogShowMessage) ev));
 		});
 		this.messenger.apply(CurrentStoryModelGetMessage.class, this, (ev) -> {
 			MainWindow.this.mountCurrentStoryModel((CurrentStoryModelGetMessage) ev);
@@ -389,6 +394,13 @@ public class MainWindow extends MyStage {
 		alert.setHeaderText(ResourceManager.getMessage("msg.error.caption"));
 		alert.setContentText(mes);
 		alert.showAndWait();
+	}
+
+	// 進捗を表示するダイアログ
+	private void showProgress (ProgressDialogShowMessage mes) {
+		ProgressDialog dialog = new ProgressDialog(this);
+		dialog.progressProperty().bind(mes.progressProperty());
+		dialog.show();
 	}
 
 	// 二択
