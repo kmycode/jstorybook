@@ -21,5 +21,8 @@ package jstorybook.common.contract;
 public enum EntityRelation {
 
 	PERSON_PERSON,
-	GROUP_PERSON,;
+	GROUP_PERSON,
+	CHAPTER_SCENE,
+	SCENE_PERSON,
+	SCENE_PLACE,;
 }

@@ -11,19 +11,16 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.entity;
 
 /**
- * エンティティの種類
+ * シーンと場所の関係
  *
  * @author KMY
  */
-public enum EntityType {
+public class ScenePlaceRelation extends EntityRelation<Scene, Place> {
 
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,
-	CHAPTER,;
+	public ScenePlaceRelation () {
+	}
 
 }

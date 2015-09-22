@@ -42,6 +42,7 @@ import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
+import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.GroupListPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.view.pane.list.PlaceListPane;
@@ -57,6 +58,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
+import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
@@ -140,6 +142,7 @@ public class MainWindow extends MyStage {
 		this.addGroupListTab();
 		this.addPlaceListTab();
 		this.addSceneListTab();
+		this.addChapterListTab();
 	}
 
 	// メインメニューバーを作成
@@ -216,6 +219,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(SceneEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSceneEditorTab((SceneEditorShowMessage) ev);
 		});
+		this.messenger.apply(ChapterEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addChapterEditorTab((ChapterEditorShowMessage) ev);
+		});
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -270,6 +276,13 @@ public class MainWindow extends MyStage {
 	// シーンリストタブを追加
 	private void addSceneListTab () {
 		SceneListPane tab = new SceneListPane();
+		tab.setViewModelList(this.viewModelList);
+		this.addTab(tab);
+	}
+
+	// 章リストタブを追加
+	private void addChapterListTab () {
+		ChapterListPane tab = new ChapterListPane();
 		tab.setViewModelList(this.viewModelList);
 		this.addTab(tab);
 	}
@@ -342,6 +355,11 @@ public class MainWindow extends MyStage {
 	// シーン編集タブ
 	private void addSceneEditorTab (SceneEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.scene"));
+	}
+
+	// 章編集タブ
+	private void addChapterEditorTab (ChapterEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.chapter"));
 	}
 
 	// -------------------------------------------------------

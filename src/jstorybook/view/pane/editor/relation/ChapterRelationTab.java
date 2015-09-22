@@ -11,19 +11,22 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.view.pane.editor.relation;
+
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 
 /**
- * エンティティの種類
+ * 関係する章を設定するタブ
  *
  * @author KMY
  */
-public enum EntityType {
+public class ChapterRelationTab extends EntityRelationTab<Chapter> {
 
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,
-	CHAPTER,;
+	public ChapterRelationTab (long entityId) {
+		super(ResourceManager.getMessage("msg.relation.chapter"), entityId);
+		this.tableView.setColumnList(ChapterColumnFactory.getInstance().createColumnList());
+	}
 
 }

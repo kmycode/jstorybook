@@ -16,43 +16,40 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Scene;
-import jstorybook.viewtool.model.DateColumn;
+import jstorybook.model.entity.Chapter;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 import jstorybook.viewtool.model.ListOnlyColumn;
 import jstorybook.viewtool.model.StringColumn;
 
 /**
- * シーンリストのカラム
+ * 章リストのカラム
  *
  * @author KMY
  */
-public class SceneColumnFactory extends ColumnFactory<Scene> {
+public class ChapterColumnFactory extends ColumnFactory<Chapter> {
 
-	private static final SceneColumnFactory defaultInstance = new SceneColumnFactory();
+	private static final ChapterColumnFactory defaultInstance = new ChapterColumnFactory();
 
-	private SceneColumnFactory () {
+	private ChapterColumnFactory () {
 	}
 
-	public static SceneColumnFactory getInstance () {
-		return SceneColumnFactory.defaultInstance;
+	public static ChapterColumnFactory getInstance () {
+		return ChapterColumnFactory.defaultInstance;
 	}
 
 	@Override
-	public EditorColumnList createColumnList (Scene model) {
+	public EditorColumnList createColumnList (Chapter model) {
 		if (model == null) {
-			model = new Scene();
+			model = new Chapter();
 		}
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bind(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
+		columnList.entityTypeProperty().set(EntityType.CHAPTER);
 		columnList.addRelation(EntityRelation.CHAPTER_SCENE);
-		columnList.addRelation(EntityRelation.SCENE_PERSON);
-		columnList.addRelation(EntityRelation.SCENE_PLACE);
-		columnList.entityTypeProperty().set(EntityType.SCENE);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");
@@ -61,24 +58,10 @@ public class SceneColumnFactory extends ColumnFactory<Scene> {
 		column.setProperty(model.orderProperty());
 		columnList.add(column);
 
-		column = new StringColumn(ResourceManager.getMessage("msg.scene.name"), "name");
+		column = new StringColumn(ResourceManager.getMessage("msg.chapter.name"), "name");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());
-		columnList.add(column);
-
-		column = new DateColumn(ResourceManager.getMessage("msg.scene.starttime"), "starttime");
-		column.setColumnWidth(100);
-		column.setDefaultShow(true);
-		column.setProperty(model.starttimeProperty());
-		column.setCellType(EditorColumn.CellType.DATE);
-		columnList.add(column);
-
-		column = new DateColumn(ResourceManager.getMessage("msg.scene.endtime"), "endtime");
-		column.setColumnWidth(100);
-		column.setDefaultShow(true);
-		column.setProperty(model.endtimeProperty());
-		column.setCellType(EditorColumn.CellType.DATE);
 		columnList.add(column);
 
 		return columnList;

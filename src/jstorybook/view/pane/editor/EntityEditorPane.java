@@ -46,6 +46,7 @@ import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.editor.relation.ChapterRelationTab;
 import jstorybook.view.pane.editor.relation.EntityRelationTab;
 import jstorybook.view.pane.editor.relation.GroupRelationTab;
 import jstorybook.view.pane.editor.relation.PersonRelationTab;
@@ -62,6 +63,9 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.ChapterRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.ChapterRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
@@ -112,6 +116,7 @@ public class EntityEditorPane extends MyPane {
 	protected GroupRelationTab groupRelationTab;
 	protected PlaceRelationTab placeRelationTab;
 	protected SceneRelationTab sceneRelationTab;
+	protected ChapterRelationTab chapterRelationTab;
 
 	private int mainVboxRow = 0;
 
@@ -296,6 +301,16 @@ public class EntityEditorPane extends MyPane {
 			EntityEditorPane.this.renewSceneRelationTab(mes);
 		});
 
+		// 関連章タブを設定
+		this.messenger.apply(ChapterRelationShowMessage.class, this, (ev) -> {
+			ChapterRelationShowMessage mes = (ChapterRelationShowMessage) ev;
+			EntityEditorPane.this.addChapterRelationTab(mes);
+		});
+		this.messenger.apply(ChapterRelationRenewMessage.class, this, (ev) -> {
+			ChapterRelationRenewMessage mes = (ChapterRelationRenewMessage) ev;
+			EntityEditorPane.this.renewChapterRelationTab(mes);
+		});
+
 		// 関連タブを更新するためのトリガー
 		this.messenger.apply(RelationRenewTriggerMessage.class, this, (ev) -> {
 			EntityEditorPane.renewRelationTab();
@@ -324,6 +339,11 @@ public class EntityEditorPane extends MyPane {
 		this.messenger.apply(SceneRelationListGetMessage.class, this, (ev) -> {
 			if (this.sceneRelationTab != null) {
 				((SceneRelationListGetMessage) ev).setRelationList(this.sceneRelationTab.getSelectedIdList());
+			}
+		});
+		this.messenger.apply(ChapterRelationListGetMessage.class, this, (ev) -> {
+			if (this.chapterRelationTab != null) {
+				((ChapterRelationListGetMessage) ev).setRelationList(this.chapterRelationTab.getSelectedIdList());
 			}
 		});
 
@@ -356,6 +376,9 @@ public class EntityEditorPane extends MyPane {
 				if (pane.get().sceneRelationTab != null) {
 					pane.get().sceneRelationTab.resetChanged();
 				}
+				if (pane.get().chapterRelationTab != null) {
+					pane.get().chapterRelationTab.resetChanged();
+				}
 			}
 		}
 		EntityEditorPane.paneList.removeAll(deleteList);
@@ -381,6 +404,15 @@ public class EntityEditorPane extends MyPane {
 		}
 		if (this.groupRelationTab != null) {
 			result |= this.groupRelationTab.changedProperty().get();
+		}
+		if (this.placeRelationTab != null) {
+			result |= this.placeRelationTab.changedProperty().get();
+		}
+		if (this.sceneRelationTab != null) {
+			result |= this.sceneRelationTab.changedProperty().get();
+		}
+		if (this.chapterRelationTab != null) {
+			result |= this.chapterRelationTab.changedProperty().get();
 		}
 		return result;
 	}
@@ -433,6 +465,16 @@ public class EntityEditorPane extends MyPane {
 
 	private void renewSceneRelationTab (SceneRelationRenewMessage mes) {
 		this.renewRelationTab(mes, this.sceneRelationTab);
+	}
+
+	private void addChapterRelationTab (ChapterRelationShowMessage mes) {
+		this.chapterRelationTab = new ChapterRelationTab(this.columnList.get().idProperty().get());
+		this.chapterRelationTab.setSingleSelect(mes.isSingleSelect());
+		this.addRelationTab(mes, this.chapterRelationTab, "chapterList");
+	}
+
+	private void renewChapterRelationTab (ChapterRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.chapterRelationTab);
 	}
 
 	// -------------------------------------------------------

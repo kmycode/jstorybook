@@ -15,6 +15,7 @@ package jstorybook.model.story;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
@@ -36,6 +37,8 @@ public class StoryEntityColumnModel {
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> sceneColumnList = new SimpleObjectProperty<>(SceneColumnFactory.
 			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> chapterColumnList = new SimpleObjectProperty<>(ChapterColumnFactory.
+			getInstance().createColumnList());
 
 	public ObjectProperty<EditorColumnList> personColumnListProperty () {
 		return this.personColumnList;
@@ -51,6 +54,10 @@ public class StoryEntityColumnModel {
 
 	public ObjectProperty<EditorColumnList> sceneColumnListProperty () {
 		return this.sceneColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> chapterColumnListProperty () {
+		return this.chapterColumnList;
 	}
 
 }

@@ -30,6 +30,9 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.ChapterRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.ChapterRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
@@ -37,8 +40,12 @@ import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PlaceRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.PlaceRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.PlaceRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.SceneRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -160,6 +167,36 @@ public class EntityEditModel implements IUseMessenger {
 								this.columnList.get().idProperty().get())));
 					}
 				}
+				else if (relation == EntityRelation.CHAPTER_SCENE) {
+					if (list.getEntityType() == EntityType.CHAPTER) {
+						this.messenger.send(new SceneRelationShowMessage(storyModel.getChapterSceneRelation_Scene(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.SCENE) {
+						this.messenger.send(new ChapterRelationShowMessage(storyModel.getChapterSceneRelation_Chapter(
+								this.columnList.get().idProperty().get()), true));
+					}
+				}
+				else if (relation == EntityRelation.SCENE_PERSON) {
+					if (list.getEntityType() == EntityType.SCENE) {
+						this.messenger.send(new PersonRelationShowMessage(storyModel.getScenePersonRelation_Person(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.PERSON) {
+						this.messenger.send(new SceneRelationShowMessage(storyModel.getScenePersonRelation_Scene(
+								this.columnList.get().idProperty().get())));
+					}
+				}
+				else if (relation == EntityRelation.SCENE_PLACE) {
+					if (list.getEntityType() == EntityType.SCENE) {
+						this.messenger.send(new PlaceRelationShowMessage(storyModel.getScenePlaceRelation_Place(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.PLACE) {
+						this.messenger.send(new SceneRelationShowMessage(storyModel.getScenePlaceRelation_Scene(
+								this.columnList.get().idProperty().get())));
+					}
+				}
 			}
 		}
 	}
@@ -200,10 +237,12 @@ public class EntityEditModel implements IUseMessenger {
 		GroupRelationListGetMessage groupRelationListMessage = new GroupRelationListGetMessage();
 		PlaceRelationListGetMessage placeRelationListMessage = new PlaceRelationListGetMessage();
 		SceneRelationListGetMessage sceneRelationListMessage = new SceneRelationListGetMessage();
+		ChapterRelationListGetMessage chapterRelationListMessage = new ChapterRelationListGetMessage();
 		this.messenger.send(personRelationListMessage);
 		this.messenger.send(groupRelationListMessage);
 		this.messenger.send(placeRelationListMessage);
 		this.messenger.send(sceneRelationListMessage);
+		this.messenger.send(chapterRelationListMessage);
 		if (personRelationListMessage.getRelationList() != null) {
 			if (entityType == EntityType.PERSON) {
 				storyModel.setPersonPersonRelation(this.columnList.get().idProperty().get(), personRelationListMessage.
@@ -212,6 +251,11 @@ public class EntityEditModel implements IUseMessenger {
 			else if (entityType == EntityType.GROUP) {
 				storyModel.
 						setGroupPersonRelation_Person(this.columnList.get().idProperty().get(), personRelationListMessage.
+													  getRelationList());
+			}
+			else if (entityType == EntityType.SCENE) {
+				storyModel.
+						setScenePersonRelation_Person(this.columnList.get().idProperty().get(), personRelationListMessage.
 													  getRelationList());
 			}
 		}
@@ -223,8 +267,34 @@ public class EntityEditModel implements IUseMessenger {
 			}
 		}
 		if (placeRelationListMessage.getRelationList() != null) {
+			if (entityType == EntityType.SCENE) {
+				storyModel.
+						setScenePlaceRelation_Scene(this.columnList.get().idProperty().get(), placeRelationListMessage.													 getRelationList());
+			}
 		}
 		if (sceneRelationListMessage.getRelationList() != null) {
+			if (entityType == EntityType.CHAPTER) {
+				storyModel.
+						setChapterSceneRelation_Scene(this.columnList.get().idProperty().get(), sceneRelationListMessage.
+													  getRelationList());
+			}
+			else if (entityType == EntityType.PERSON) {
+				storyModel.
+						setScenePersonRelation_Scene(this.columnList.get().idProperty().get(), sceneRelationListMessage.
+													 getRelationList());
+			}
+			else if (entityType == EntityType.PLACE) {
+				storyModel.
+						setScenePlaceRelation_Scene(this.columnList.get().idProperty().get(), sceneRelationListMessage.
+													getRelationList());
+			}
+		}
+		if (chapterRelationListMessage.getRelationList() != null) {
+			if (entityType == EntityType.SCENE) {
+				storyModel.
+						setChapterSceneRelation_Chapter(this.columnList.get().idProperty().get(), chapterRelationListMessage.
+														getRelationList());
+			}
 		}
 
 		// エンティティそのものの値をコピー
@@ -250,6 +320,36 @@ public class EntityEditModel implements IUseMessenger {
 				}
 				else if (this.columnList.get().getEntityType() == EntityType.PERSON) {
 					this.messenger.send(new GroupRelationRenewMessage(storyModel.getGroupPersonRelation_Group(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.CHAPTER_SCENE)) {
+				if (this.columnList.get().getEntityType() == EntityType.CHAPTER) {
+					this.messenger.send(new SceneRelationRenewMessage(storyModel.getChapterSceneRelation_Scene(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.SCENE) {
+					this.messenger.send(new ChapterRelationRenewMessage(storyModel.getChapterSceneRelation_Chapter(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.SCENE_PERSON)) {
+				if (this.columnList.get().getEntityType() == EntityType.SCENE) {
+					this.messenger.send(new PersonRelationRenewMessage(storyModel.getScenePersonRelation_Person(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.PERSON) {
+					this.messenger.send(new SceneRelationRenewMessage(storyModel.getScenePersonRelation_Scene(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.SCENE_PLACE)) {
+				if (this.columnList.get().getEntityType() == EntityType.SCENE) {
+					this.messenger.send(new PlaceRelationRenewMessage(storyModel.getScenePlaceRelation_Place(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.PLACE) {
+					this.messenger.send(new SceneRelationRenewMessage(storyModel.getScenePlaceRelation_Scene(
 							this.columnList.get().idProperty().get())));
 				}
 			}

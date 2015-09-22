@@ -13,6 +13,7 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Place;
@@ -47,6 +48,7 @@ public class PlaceColumnFactory extends ColumnFactory<Place> {
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bind(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
+		columnList.addRelation(EntityRelation.SCENE_PLACE);
 		columnList.entityTypeProperty().set(EntityType.PLACE);
 		EditorColumn column;
 

@@ -11,19 +11,37 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.ScenePersonRelation;
 
 /**
- * エンティティの種類
+ * シーンと登場人物の関係のDAO
  *
  * @author KMY
  */
-public enum EntityType {
+public class ScenePersonRelationDAO extends EntityRelationDAO<ScenePersonRelation> {
 
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,
-	CHAPTER,;
+	@Override
+	protected String getTableName () {
+		return "sceneperson";
+	}
+
+	public void readPersonDAO (PersonDAO dao) {
+		for (ScenePersonRelation model : this.modelList.get()) {
+			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
+		}
+	}
+
+	public void readSceneDAO (SceneDAO dao) {
+		for (ScenePersonRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected ScenePersonRelation newEntityRelationInstance () {
+		return new ScenePersonRelation();
+	}
 
 }

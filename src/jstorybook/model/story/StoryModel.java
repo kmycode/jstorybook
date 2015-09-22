@@ -25,6 +25,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.DialogResult;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.dao.ChapterDAO;
+import jstorybook.model.dao.ChapterSceneRelationDAO;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.GroupDAO;
 import jstorybook.model.dao.GroupPersonRelationDAO;
@@ -32,6 +34,10 @@ import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.dao.PersonPersonRelationDAO;
 import jstorybook.model.dao.PlaceDAO;
 import jstorybook.model.dao.SceneDAO;
+import jstorybook.model.dao.ScenePersonRelationDAO;
+import jstorybook.model.dao.ScenePlaceRelationDAO;
+import jstorybook.model.entity.Chapter;
+import jstorybook.model.entity.ChapterSceneRelation;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Group;
 import jstorybook.model.entity.GroupPersonRelation;
@@ -40,6 +46,9 @@ import jstorybook.model.entity.Person;
 import jstorybook.model.entity.PersonPersonRelation;
 import jstorybook.model.entity.Place;
 import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.ScenePersonRelation;
+import jstorybook.model.entity.ScenePlaceRelation;
+import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
@@ -50,6 +59,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
+import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
@@ -75,10 +85,17 @@ public class StoryModel implements IUseMessenger {
 	private final StoryEntityModel<Group, GroupDAO> groupEntity = new StoryEntityModel<>(new GroupDAO());
 	private final StoryEntityModel<Place, PlaceDAO> placeEntity = new StoryEntityModel<>(new PlaceDAO());
 	private final StoryEntityModel<Scene, SceneDAO> sceneEntity = new StoryEntityModel<>(new SceneDAO());
+	private final StoryEntityModel<Chapter, ChapterDAO> chapterEntity = new StoryEntityModel<>(new ChapterDAO());
 	private final StoryEntityModel<PersonPersonRelation, PersonPersonRelationDAO> personPersonEntity = new StoryEntityModel<>(
 			new PersonPersonRelationDAO());
 	private final StoryEntityModel<GroupPersonRelation, GroupPersonRelationDAO> groupPersonEntity = new StoryEntityModel<>(
 			new GroupPersonRelationDAO());
+	private final StoryEntityModel<ChapterSceneRelation, ChapterSceneRelationDAO> chapterSceneEntity = new StoryEntityModel<>(
+			new ChapterSceneRelationDAO());
+	private final StoryEntityModel<ScenePersonRelation, ScenePersonRelationDAO> scenePersonEntity = new StoryEntityModel<>(
+			new ScenePersonRelationDAO());
+	private final StoryEntityModel<ScenePlaceRelation, ScenePlaceRelationDAO> scenePlaceEntity = new StoryEntityModel<>(
+			new ScenePlaceRelationDAO());
 
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
@@ -105,13 +122,23 @@ public class StoryModel implements IUseMessenger {
 		this.groupEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.placeEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.sceneEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		this.chapterEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.personPersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.groupPersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		this.chapterSceneEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		this.scenePersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		this.scenePlaceEntity.dao.get().setStoryFileModel(this.storyFile.get());
 
 		// 関連付け
 		this.personPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
 		this.groupPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
 		this.groupPersonEntity.dao.get().readGroupDAO(this.groupEntity.dao.get());
+		this.chapterSceneEntity.dao.get().readChapterDAO(this.chapterEntity.dao.get());
+		this.chapterSceneEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
+		this.scenePersonEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
+		this.scenePersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
+		this.scenePlaceEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
+		this.scenePlaceEntity.dao.get().readPlaceDAO(this.placeEntity.dao.get());
 
 		this.canSave.set(true);
 	}
@@ -123,8 +150,12 @@ public class StoryModel implements IUseMessenger {
 			this.groupEntity.dao.get().saveList();
 			this.placeEntity.dao.get().saveList();
 			this.sceneEntity.dao.get().saveList();
+			this.chapterEntity.dao.get().saveList();
 			this.personPersonEntity.dao.get().saveList();
 			this.groupPersonEntity.dao.get().saveList();
+			this.chapterSceneEntity.dao.get().saveList();
+			this.scenePersonEntity.dao.get().saveList();
+			this.scenePlaceEntity.dao.get().saveList();
 		} catch (SQLException e) {
 			this.messenger.send(new StoryFileSaveFailedMessage(this.storyFileName.get()));
 			e.printStackTrace();
@@ -174,6 +205,10 @@ public class StoryModel implements IUseMessenger {
 		return this.sceneEntity;
 	}
 
+	public StoryEntityModel<Chapter, ChapterDAO> getChapterEntity () {
+		return this.chapterEntity;
+	}
+
 	// -------------------------------------------------------
 	// エンティティ同士の関係
 	public List<Long> getPersonPersonRelation (long personId) {
@@ -198,6 +233,54 @@ public class StoryModel implements IUseMessenger {
 
 	public void setGroupPersonRelation_Group (long groupId, List<Long> list) {
 		this.groupPersonEntity.dao.get().setRelatedIdList(groupId, list, false);
+	}
+
+	public List<Long> getChapterSceneRelation_Scene (long sceneId) {
+		return this.chapterSceneEntity.dao.get().getRelatedIdList(sceneId, true);
+	}
+
+	public void setChapterSceneRelation_Scene (long sceneId, List<Long> list) {
+		this.chapterSceneEntity.dao.get().setRelatedIdList(sceneId, list, true);
+	}
+
+	public List<Long> getChapterSceneRelation_Chapter (long chapterId) {
+		return this.chapterSceneEntity.dao.get().getRelatedIdList(chapterId, false);
+	}
+
+	public void setChapterSceneRelation_Chapter (long chapterId, List<Long> list) {
+		this.chapterSceneEntity.dao.get().setRelatedIdList(chapterId, list, false);
+	}
+
+	public List<Long> getScenePersonRelation_Person (long personId) {
+		return this.scenePersonEntity.dao.get().getRelatedIdList(personId, true);
+	}
+
+	public void setScenePersonRelation_Person (long personId, List<Long> list) {
+		this.scenePersonEntity.dao.get().setRelatedIdList(personId, list, true);
+	}
+
+	public List<Long> getScenePersonRelation_Scene (long sceneId) {
+		return this.scenePersonEntity.dao.get().getRelatedIdList(sceneId, false);
+	}
+
+	public void setScenePersonRelation_Scene (long sceneId, List<Long> list) {
+		this.scenePersonEntity.dao.get().setRelatedIdList(sceneId, list, false);
+	}
+
+	public List<Long> getScenePlaceRelation_Place (long placeId) {
+		return this.scenePlaceEntity.dao.get().getRelatedIdList(placeId, true);
+	}
+
+	public void setScenePlaceRelation_Place (long placeId, List<Long> list) {
+		this.scenePlaceEntity.dao.get().setRelatedIdList(placeId, list, true);
+	}
+
+	public List<Long> getScenePlaceRelation_Scene (long sceneId) {
+		return this.scenePlaceEntity.dao.get().getRelatedIdList(sceneId, false);
+	}
+
+	public void setScenePlaceRelation_Scene (long sceneId, List<Long> list) {
+		this.scenePlaceEntity.dao.get().setRelatedIdList(sceneId, list, false);
 	}
 
 	// -------------------------------------------------------
@@ -363,6 +446,30 @@ public class StoryModel implements IUseMessenger {
 
 	public void downScene () {
 		this.downEntity(this.sceneEntity.selectedEntityList.get(), this.sceneEntity.dao.get());
+	}
+
+	public void newChapter () {
+		this.newEntity(new Chapter(), this.chapterEntity.dao.get(), ChapterEditorShowMessage.getInstance(), ChapterColumnFactory.
+					   getInstance());
+	}
+
+	public void editChapter () {
+		this.editEntity(this.chapterEntity.selectedEntityList.get(), ChapterEditorShowMessage.getInstance(), ChapterColumnFactory.
+						getInstance());
+	}
+
+	public void deleteChapter () {
+		this.
+				deleteEntity(this.chapterEntity.selectedEntityList.get(), ChapterColumnFactory.getInstance(), this.chapterEntity.dao.
+							 get());
+	}
+
+	public void upChapter () {
+		this.upEntity(this.chapterEntity.selectedEntityList.get(), this.chapterEntity.dao.get());
+	}
+
+	public void downChapter () {
+		this.downEntity(this.chapterEntity.selectedEntityList.get(), this.chapterEntity.dao.get());
 	}
 
 	// -------------------------------------------------------

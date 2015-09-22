@@ -58,6 +58,12 @@ public class StoryViewModel extends ViewModel {
 		this.applyProperty("sceneList", this.storyModel.get().getSceneEntity().DAOProperty().get().
 						   modelListProperty());
 		this.applyProperty("sceneSelected", this.storyModel.get().getSceneEntity().selectedEntityProperty());
+
+		this.applyProperty("chapterColumnList", this.storyModel.get().entityColumnProperty().get().
+						   chapterColumnListProperty());
+		this.applyProperty("chapterList", this.storyModel.get().getChapterEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("chapterSelected", this.storyModel.get().getChapterEntity().selectedEntityProperty());
 	}
 
 	@Override
@@ -105,6 +111,16 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("sceneUp", (ev) -> this.storyModel.get().upScene(), this.storyModel.get().getSceneEntity().
 						  canEditProperty());
 		this.applyCommand("sceneDown", (ev) -> this.storyModel.get().downScene(), this.storyModel.get().getSceneEntity().
+						  canEditProperty());
+
+		this.applyCommand("chapterNew", (ev) -> this.storyModel.get().newChapter());
+		this.applyCommand("chapterEdit", (ev) -> this.storyModel.get().editChapter(), this.storyModel.get().
+						  getChapterEntity().canEditProperty());
+		this.applyCommand("chapterDelete", (ev) -> this.storyModel.get().deleteChapter(), this.storyModel.get().getChapterEntity().
+						  canEditProperty());
+		this.applyCommand("chapterUp", (ev) -> this.storyModel.get().upChapter(), this.storyModel.get().getChapterEntity().
+						  canEditProperty());
+		this.applyCommand("chapterDown", (ev) -> this.storyModel.get().downChapter(), this.storyModel.get().getChapterEntity().
 						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());

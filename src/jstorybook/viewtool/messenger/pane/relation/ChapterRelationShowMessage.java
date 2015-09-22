@@ -11,19 +11,26 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.pane.relation;
+
+import java.util.List;
 
 /**
- * エンティティの種類
+ * 関係する章を設定する画面を表示させるメッセージ
  *
  * @author KMY
  */
-public enum EntityType {
+public class ChapterRelationShowMessage extends RelationShowMessage {
 
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,
-	CHAPTER,;
+	private final boolean isSingleSelect;
+
+	public ChapterRelationShowMessage (List<Long> entityIdList, boolean isSingleSelect) {
+		super(entityIdList);
+		this.isSingleSelect = isSingleSelect;
+	}
+
+	public boolean isSingleSelect () {
+		return this.isSingleSelect;
+	}
 
 }

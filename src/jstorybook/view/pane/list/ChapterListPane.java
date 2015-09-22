@@ -11,19 +11,32 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.view.pane.list;
+
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Chapter;
+import jstorybook.viewmodel.ViewModelList;
 
 /**
- * エンティティの種類
+ * 章のリスト
  *
- * @author KMY
+  * @author KMY
  */
-public enum EntityType {
+public class ChapterListPane extends EntityListPane<Chapter> {
 
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,
-	CHAPTER,;
+	public ChapterListPane () {
+		super(ResourceManager.getMessage("msg.chapter"));
+	}
+
+	@Override
+	public void setViewModelList (ViewModelList viewModelList) {
+		super.setViewModelList(viewModelList);
+		this.setOrderButton();
+	}
+
+	@Override
+	protected String getEntityTypeName () {
+		return "chapter";
+	}
 
 }

@@ -53,6 +53,7 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.addRelation(EntityRelation.PERSON_PERSON);
 		columnList.addRelation(EntityRelation.GROUP_PERSON);
+		columnList.addRelation(EntityRelation.SCENE_PERSON);
 		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;
 
