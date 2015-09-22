@@ -27,7 +27,7 @@ public abstract class Entity implements Comparable<Entity> {
 
 	protected LongProperty id = new SimpleLongProperty(0);
 	protected final StringProperty title = new SimpleStringProperty();
-	protected StringProperty note = new SimpleStringProperty();
+	protected StringProperty note = new SimpleStringProperty("");
 
 	public Entity () {
 	}

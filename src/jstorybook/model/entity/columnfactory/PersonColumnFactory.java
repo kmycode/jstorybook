@@ -57,7 +57,7 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");
-		column.setColumnWidth(30);
+		column.setColumnWidth(40);
 		column.setDefaultShow(true);
 		column.setProperty(model.orderProperty());
 		columnList.add(column);

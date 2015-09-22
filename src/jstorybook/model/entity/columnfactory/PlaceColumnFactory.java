@@ -13,43 +13,41 @@
  */
 package jstorybook.model.entity.columnfactory;
 
-import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Group;
+import jstorybook.model.entity.Place;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 import jstorybook.viewtool.model.ListOnlyColumn;
 import jstorybook.viewtool.model.StringColumn;
 
 /**
- * 登場人物リストのカラム
+ * 場所リストのカラム
  *
  * @author KMY
  */
-public class GroupColumnFactory extends ColumnFactory<Group> {
+public class PlaceColumnFactory extends ColumnFactory<Place> {
 
-	private static final GroupColumnFactory defaultInstance = new GroupColumnFactory();
+	private static final PlaceColumnFactory defaultInstance = new PlaceColumnFactory();
 
-	private GroupColumnFactory () {
+	private PlaceColumnFactory () {
 	}
 
-	public static GroupColumnFactory getInstance () {
-		return GroupColumnFactory.defaultInstance;
+	public static PlaceColumnFactory getInstance () {
+		return PlaceColumnFactory.defaultInstance;
 	}
 
 	@Override
-	public EditorColumnList createColumnList (Group model) {
+	public EditorColumnList createColumnList (Place model) {
 		if (model == null) {
-			model = new Group();
+			model = new Place();
 		}
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bind(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
-		columnList.entityTypeProperty().set(EntityType.GROUP);
-		columnList.addRelation(EntityRelation.GROUP_PERSON);
+		columnList.entityTypeProperty().set(EntityType.PLACE);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");
@@ -58,7 +56,7 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 		column.setProperty(model.orderProperty());
 		columnList.add(column);
 
-		column = new StringColumn(ResourceManager.getMessage("msg.group.name"), "name");
+		column = new StringColumn(ResourceManager.getMessage("msg.place.name"), "name");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());

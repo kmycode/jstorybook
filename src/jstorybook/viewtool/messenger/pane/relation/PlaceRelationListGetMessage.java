@@ -11,18 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.pane.relation;
 
 /**
- * エンティティの種類
+ * 関連場所のリストを取得するメッセージ
  *
  * @author KMY
  */
-public enum EntityType {
-
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,;
+public class PlaceRelationListGetMessage extends RelationListGetMessage {
 
 }

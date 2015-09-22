@@ -1,7 +1,9 @@
 親クラスは「Entity」
-クラス名は「Group」。
+クラス名は「Scene」。
 データは、
 「String,name,名前,,,1
+Calendar,starttime,開始時刻,
+Calendar,endtime,終了時刻,
 Long,order,順番,
 」。
 # 型, 名前, 説明, 新名前, フィールド権限, toStringフラグ, hasフラグ
@@ -158,13 +160,13 @@ Long,order,順番,
 package jstorybook.model.entity;
 
 {インポートソース}
-// {説明} のエンティティを扱うクラス
+// {クラス名} のエンティティを扱うクラス
 public class {クラス名} extends {親クラス}{インターフェース} {波カッコ}
 
+{フィールド}
 	public {クラス名} () {波カッコ}
 		this.title.bind(this.name);
 	{波カッコ閉じ}
-{フィールド}
 {メソッド}
 	// -------------------------------------------------------
 	@Override

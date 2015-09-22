@@ -17,6 +17,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
+import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
+import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -30,6 +32,10 @@ public class StoryEntityColumnModel {
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> groupColumnList = new SimpleObjectProperty<>(GroupColumnFactory.
 			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> placeColumnList = new SimpleObjectProperty<>(PlaceColumnFactory.
+			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> sceneColumnList = new SimpleObjectProperty<>(SceneColumnFactory.
+			getInstance().createColumnList());
 
 	public ObjectProperty<EditorColumnList> personColumnListProperty () {
 		return this.personColumnList;
@@ -37,6 +43,14 @@ public class StoryEntityColumnModel {
 
 	public ObjectProperty<EditorColumnList> groupColumnListProperty () {
 		return this.groupColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> placeColumnListProperty () {
+		return this.placeColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> sceneColumnListProperty () {
+		return this.sceneColumnList;
 	}
 
 }

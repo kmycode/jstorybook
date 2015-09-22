@@ -61,4 +61,8 @@ public abstract class EntityRelationTab<E extends Entity> extends Tab {
 	public void resetChanged () {
 		this.tableView.resetChanged();
 	}
+
+	public void setSingleSelect (boolean value) {
+		this.tableView.singleSelectProperty().set(value);
+	}
 }

@@ -46,6 +46,18 @@ public class StoryViewModel extends ViewModel {
 		this.applyProperty("groupList", this.storyModel.get().getGroupEntity().DAOProperty().get().
 						   modelListProperty());
 		this.applyProperty("groupSelected", this.storyModel.get().getGroupEntity().selectedEntityProperty());
+
+		this.applyProperty("placeColumnList", this.storyModel.get().entityColumnProperty().get().
+						   placeColumnListProperty());
+		this.applyProperty("placeList", this.storyModel.get().getPlaceEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("placeSelected", this.storyModel.get().getPlaceEntity().selectedEntityProperty());
+
+		this.applyProperty("sceneColumnList", this.storyModel.get().entityColumnProperty().get().
+						   sceneColumnListProperty());
+		this.applyProperty("sceneList", this.storyModel.get().getSceneEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("sceneSelected", this.storyModel.get().getSceneEntity().selectedEntityProperty());
 	}
 
 	@Override
@@ -73,6 +85,26 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("groupUp", (ev) -> this.storyModel.get().upGroup(), this.storyModel.get().getGroupEntity().
 						  canEditProperty());
 		this.applyCommand("groupDown", (ev) -> this.storyModel.get().downGroup(), this.storyModel.get().getGroupEntity().
+						  canEditProperty());
+
+		this.applyCommand("placeNew", (ev) -> this.storyModel.get().newPlace());
+		this.applyCommand("placeEdit", (ev) -> this.storyModel.get().editPlace(), this.storyModel.get().
+						  getPlaceEntity().canEditProperty());
+		this.applyCommand("placeDelete", (ev) -> this.storyModel.get().deletePlace(), this.storyModel.get().getPlaceEntity().
+						  canEditProperty());
+		this.applyCommand("placeUp", (ev) -> this.storyModel.get().upPlace(), this.storyModel.get().getPlaceEntity().
+						  canEditProperty());
+		this.applyCommand("placeDown", (ev) -> this.storyModel.get().downPlace(), this.storyModel.get().getPlaceEntity().
+						  canEditProperty());
+
+		this.applyCommand("sceneNew", (ev) -> this.storyModel.get().newScene());
+		this.applyCommand("sceneEdit", (ev) -> this.storyModel.get().editScene(), this.storyModel.get().
+						  getSceneEntity().canEditProperty());
+		this.applyCommand("sceneDelete", (ev) -> this.storyModel.get().deleteScene(), this.storyModel.get().getSceneEntity().
+						  canEditProperty());
+		this.applyCommand("sceneUp", (ev) -> this.storyModel.get().upScene(), this.storyModel.get().getSceneEntity().
+						  canEditProperty());
+		this.applyCommand("sceneDown", (ev) -> this.storyModel.get().downScene(), this.storyModel.get().getSceneEntity().
 						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());

@@ -44,6 +44,8 @@ import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.GroupListPane;
 import jstorybook.view.pane.list.PersonListPane;
+import jstorybook.view.pane.list.PlaceListPane;
+import jstorybook.view.pane.list.SceneListPane;
 import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
 import jstorybook.viewmodel.ViewModelList;
@@ -59,6 +61,8 @@ import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -134,6 +138,8 @@ public class MainWindow extends MyStage {
 		this.viewModelList.setProperty("storyFileName", "teststory/test.db");
 		this.addPersonListTab();
 		this.addGroupListTab();
+		this.addPlaceListTab();
+		this.addSceneListTab();
 	}
 
 	// メインメニューバーを作成
@@ -204,6 +210,12 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(GroupEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addGroupEditorTab((GroupEditorShowMessage) ev);
 		});
+		this.messenger.apply(PlaceEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPlaceEditorTab((PlaceEditorShowMessage) ev);
+		});
+		this.messenger.apply(SceneEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addSceneEditorTab((SceneEditorShowMessage) ev);
+		});
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -248,9 +260,22 @@ public class MainWindow extends MyStage {
 		this.addTab(tab);
 	}
 
+	// 場所リストタブを追加
+	private void addPlaceListTab () {
+		PlaceListPane tab = new PlaceListPane();
+		tab.setViewModelList(this.viewModelList);
+		this.addTab(tab);
+	}
+
+	// シーンリストタブを追加
+	private void addSceneListTab () {
+		SceneListPane tab = new SceneListPane();
+		tab.setViewModelList(this.viewModelList);
+		this.addTab(tab);
+	}
+
 	// エンティティ編集タブ
-	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName,
-									 String viewModelColumnListName) {
+	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName) {
 
 		EntityEditorPane tab = new EntityEditorPane();
 		tab.setViewModelList(this.viewModelList);
@@ -301,12 +326,22 @@ public class MainWindow extends MyStage {
 
 	// 登場人物編集タブ
 	private void addPersonEditorTab (PersonEditorShowMessage message) {
-		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.person"), "personColumnList");
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.person"));
 	}
 
 	// 集団編集タブ
 	private void addGroupEditorTab (GroupEditorShowMessage message) {
-		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.group"), "groupColumnList");
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.group"));
+	}
+
+	// 場所編集タブ
+	private void addPlaceEditorTab (PlaceEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.place"));
+	}
+
+	// シーン編集タブ
+	private void addSceneEditorTab (SceneEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.scene"));
 	}
 
 	// -------------------------------------------------------

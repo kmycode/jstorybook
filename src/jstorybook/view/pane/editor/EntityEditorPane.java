@@ -46,8 +46,11 @@ import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.editor.relation.EntityRelationTab;
 import jstorybook.view.pane.editor.relation.GroupRelationTab;
 import jstorybook.view.pane.editor.relation.PersonRelationTab;
+import jstorybook.view.pane.editor.relation.PlaceRelationTab;
+import jstorybook.view.pane.editor.relation.SceneRelationTab;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.EntityEditViewModel;
 import jstorybook.viewtool.converter.LocalDateCalendarConverter;
@@ -65,7 +68,15 @@ import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.PlaceRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.PlaceRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.PlaceRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.RelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
+import jstorybook.viewtool.messenger.pane.relation.RelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.SceneRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -99,6 +110,8 @@ public class EntityEditorPane extends MyPane {
 	// エンティティ関連付けのタブ
 	protected PersonRelationTab personRelationTab;
 	protected GroupRelationTab groupRelationTab;
+	protected PlaceRelationTab placeRelationTab;
+	protected SceneRelationTab sceneRelationTab;
 
 	private int mainVboxRow = 0;
 
@@ -263,6 +276,26 @@ public class EntityEditorPane extends MyPane {
 			EntityEditorPane.this.renewGroupRelationTab(mes);
 		});
 
+		// 関連場所タブを設定
+		this.messenger.apply(PlaceRelationShowMessage.class, this, (ev) -> {
+			PlaceRelationShowMessage mes = (PlaceRelationShowMessage) ev;
+			EntityEditorPane.this.addPlaceRelationTab(mes);
+		});
+		this.messenger.apply(PlaceRelationRenewMessage.class, this, (ev) -> {
+			PlaceRelationRenewMessage mes = (PlaceRelationRenewMessage) ev;
+			EntityEditorPane.this.renewPlaceRelationTab(mes);
+		});
+
+		// 関連シーンタブを設定
+		this.messenger.apply(SceneRelationShowMessage.class, this, (ev) -> {
+			SceneRelationShowMessage mes = (SceneRelationShowMessage) ev;
+			EntityEditorPane.this.addSceneRelationTab(mes);
+		});
+		this.messenger.apply(SceneRelationRenewMessage.class, this, (ev) -> {
+			SceneRelationRenewMessage mes = (SceneRelationRenewMessage) ev;
+			EntityEditorPane.this.renewSceneRelationTab(mes);
+		});
+
 		// 関連タブを更新するためのトリガー
 		this.messenger.apply(RelationRenewTriggerMessage.class, this, (ev) -> {
 			EntityEditorPane.renewRelationTab();
@@ -281,6 +314,16 @@ public class EntityEditorPane extends MyPane {
 		this.messenger.apply(GroupRelationListGetMessage.class, this, (ev) -> {
 			if (this.groupRelationTab != null) {
 				((GroupRelationListGetMessage) ev).setRelationList(this.groupRelationTab.getSelectedIdList());
+			}
+		});
+		this.messenger.apply(PlaceRelationListGetMessage.class, this, (ev) -> {
+			if (this.placeRelationTab != null) {
+				((PlaceRelationListGetMessage) ev).setRelationList(this.placeRelationTab.getSelectedIdList());
+			}
+		});
+		this.messenger.apply(SceneRelationListGetMessage.class, this, (ev) -> {
+			if (this.sceneRelationTab != null) {
+				((SceneRelationListGetMessage) ev).setRelationList(this.sceneRelationTab.getSelectedIdList());
 			}
 		});
 
@@ -306,6 +349,12 @@ public class EntityEditorPane extends MyPane {
 				}
 				if (pane.get().groupRelationTab != null) {
 					pane.get().groupRelationTab.resetChanged();
+				}
+				if (pane.get().placeRelationTab != null) {
+					pane.get().placeRelationTab.resetChanged();
+				}
+				if (pane.get().sceneRelationTab != null) {
+					pane.get().sceneRelationTab.resetChanged();
 				}
 			}
 		}
@@ -336,36 +385,54 @@ public class EntityEditorPane extends MyPane {
 		return result;
 	}
 
+	private void addRelationTab (RelationShowMessage mes, EntityRelationTab tab, String entityListName) {
+		tab.itemsProperty().bind(this.storyViewModelList.getProperty(entityListName));
+		tab.setSelectedIdList(mes.getRelatedEntityIdList());
+		tab.resetChanged();
+		tab.changedProperty().addListener((obj) -> this.viewModelList.getProperty("canSave").setValue(this.checkCanSave()));
+		this.tabPane.getTabs().add(tab);
+	}
+
+	private void renewRelationTab (RelationRenewMessage mes, EntityRelationTab tab) {
+		if (tab != null) {
+			tab.setSelectedIdList(mes.getRelatedEntityIdList());
+		}
+	}
+
 	private void addPersonRelationTab (PersonRelationShowMessage mes) {
 		this.personRelationTab = new PersonRelationTab(this.columnList.get().idProperty().get());
-		this.personRelationTab.itemsProperty().bind(this.storyViewModelList.getProperty("personList"));
-		this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
-		this.personRelationTab.resetChanged();
-		this.personRelationTab.changedProperty().addListener((obj) -> this.viewModelList.getProperty("canSave").setValue(this.
-				checkCanSave()));
-		this.tabPane.getTabs().add(this.personRelationTab);
+		this.addRelationTab(mes, this.personRelationTab, "personList");
 	}
 
 	private void renewPersonRelationTab (PersonRelationRenewMessage mes) {
-		if (this.personRelationTab != null) {
-			this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
-		}
+		this.renewRelationTab(mes, this.personRelationTab);
 	}
 
 	private void addGroupRelationTab (GroupRelationShowMessage mes) {
 		this.groupRelationTab = new GroupRelationTab(this.columnList.get().idProperty().get());
-		this.groupRelationTab.itemsProperty().bind(this.storyViewModelList.getProperty("groupList"));
-		this.groupRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
-		this.groupRelationTab.resetChanged();
-		this.groupRelationTab.changedProperty().addListener((obj) -> this.viewModelList.getProperty("canSave").setValue(this.
-				checkCanSave()));
-		this.tabPane.getTabs().add(this.groupRelationTab);
+		this.addRelationTab(mes, this.groupRelationTab, "groupList");
 	}
 
 	private void renewGroupRelationTab (GroupRelationRenewMessage mes) {
-		if (this.groupRelationTab != null) {
-			this.groupRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
-		}
+		this.renewRelationTab(mes, this.groupRelationTab);
+	}
+
+	private void addPlaceRelationTab (PlaceRelationShowMessage mes) {
+		this.placeRelationTab = new PlaceRelationTab(this.columnList.get().idProperty().get());
+		this.addRelationTab(mes, this.placeRelationTab, "placeList");
+	}
+
+	private void renewPlaceRelationTab (PlaceRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.placeRelationTab);
+	}
+
+	private void addSceneRelationTab (SceneRelationShowMessage mes) {
+		this.sceneRelationTab = new SceneRelationTab(this.columnList.get().idProperty().get());
+		this.addRelationTab(mes, this.sceneRelationTab, "sceneList");
+	}
+
+	private void renewSceneRelationTab (SceneRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.sceneRelationTab);
 	}
 
 	// -------------------------------------------------------

@@ -13,43 +13,42 @@
  */
 package jstorybook.model.entity.columnfactory;
 
-import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Group;
+import jstorybook.model.entity.Scene;
+import jstorybook.viewtool.model.DateColumn;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 import jstorybook.viewtool.model.ListOnlyColumn;
 import jstorybook.viewtool.model.StringColumn;
 
 /**
- * 登場人物リストのカラム
+ * シーンリストのカラム
  *
  * @author KMY
  */
-public class GroupColumnFactory extends ColumnFactory<Group> {
+public class SceneColumnFactory extends ColumnFactory<Scene> {
 
-	private static final GroupColumnFactory defaultInstance = new GroupColumnFactory();
+	private static final SceneColumnFactory defaultInstance = new SceneColumnFactory();
 
-	private GroupColumnFactory () {
+	private SceneColumnFactory () {
 	}
 
-	public static GroupColumnFactory getInstance () {
-		return GroupColumnFactory.defaultInstance;
+	public static SceneColumnFactory getInstance () {
+		return SceneColumnFactory.defaultInstance;
 	}
 
 	@Override
-	public EditorColumnList createColumnList (Group model) {
+	public EditorColumnList createColumnList (Scene model) {
 		if (model == null) {
-			model = new Group();
+			model = new Scene();
 		}
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bind(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
-		columnList.entityTypeProperty().set(EntityType.GROUP);
-		columnList.addRelation(EntityRelation.GROUP_PERSON);
+		columnList.entityTypeProperty().set(EntityType.SCENE);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");
@@ -58,10 +57,22 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 		column.setProperty(model.orderProperty());
 		columnList.add(column);
 
-		column = new StringColumn(ResourceManager.getMessage("msg.group.name"), "name");
+		column = new StringColumn(ResourceManager.getMessage("msg.scene.name"), "name");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());
+		columnList.add(column);
+
+		column = new DateColumn(ResourceManager.getMessage("msg.scene.starttime"), "starttime");
+		column.setColumnWidth(100);
+		column.setDefaultShow(true);
+		column.setProperty(model.starttimeProperty());
+		columnList.add(column);
+
+		column = new DateColumn(ResourceManager.getMessage("msg.scene.endtime"), "endtime");
+		column.setColumnWidth(100);
+		column.setDefaultShow(true);
+		column.setProperty(model.endtimeProperty());
 		columnList.add(column);
 
 		return columnList;

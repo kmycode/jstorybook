@@ -11,18 +11,19 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.pane.relation;
+
+import java.util.List;
 
 /**
- * エンティティの種類
+ * 関係するシーンを設定する画面を表示させるメッセージ
  *
  * @author KMY
  */
-public enum EntityType {
+public class SceneRelationShowMessage extends RelationShowMessage {
 
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,;
+	public SceneRelationShowMessage (List<Long> entityIdList) {
+		super(entityIdList);
+	}
 
 }

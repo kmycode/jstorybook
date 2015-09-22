@@ -39,6 +39,7 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 	private final Map<Long, BooleanProperty> selectedList = new HashMap<>();
 	private final BooleanProperty isChanged = new SimpleBooleanProperty(false);
 	private boolean lockIsChanged = false;
+	private final BooleanProperty singleSelect = new SimpleBooleanProperty(false);
 
 	public SelectableEntityTableView () {
 		this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -70,6 +71,15 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 			result.addListener((obj) -> {
 				if (!SelectableEntityTableView.this.lockIsChanged) {
 					SelectableEntityTableView.this.isChanged.set(true);
+				}
+
+				// １つしか選択できない場合
+				if (this.singleSelect.get() && ((BooleanProperty) obj).get()) {
+					this.selectedList.forEach((k, v) -> {
+						if (k != entityId) {
+							v.set(false);
+						}
+					});
 				}
 			});
 			this.selectedList.put(entityId, result);
@@ -117,6 +127,10 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 
 	public ReadOnlyBooleanProperty changedProperty () {
 		return this.isChanged;
+	}
+
+	public BooleanProperty singleSelectProperty () {
+		return this.singleSelect;
 	}
 
 	public void resetChanged () {

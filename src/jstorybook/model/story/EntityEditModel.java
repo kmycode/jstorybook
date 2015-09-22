@@ -36,7 +36,9 @@ import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.PlaceRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
+import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -196,8 +198,12 @@ public class EntityEditModel implements IUseMessenger {
 		EntityType entityType = this.columnList.get().getEntityType();
 		PersonRelationListGetMessage personRelationListMessage = new PersonRelationListGetMessage();
 		GroupRelationListGetMessage groupRelationListMessage = new GroupRelationListGetMessage();
+		PlaceRelationListGetMessage placeRelationListMessage = new PlaceRelationListGetMessage();
+		SceneRelationListGetMessage sceneRelationListMessage = new SceneRelationListGetMessage();
 		this.messenger.send(personRelationListMessage);
 		this.messenger.send(groupRelationListMessage);
+		this.messenger.send(placeRelationListMessage);
+		this.messenger.send(sceneRelationListMessage);
 		if (personRelationListMessage.getRelationList() != null) {
 			if (entityType == EntityType.PERSON) {
 				storyModel.setPersonPersonRelation(this.columnList.get().idProperty().get(), personRelationListMessage.
@@ -215,6 +221,10 @@ public class EntityEditModel implements IUseMessenger {
 						setGroupPersonRelation_Group(this.columnList.get().idProperty().get(), groupRelationListMessage.
 													 getRelationList());
 			}
+		}
+		if (placeRelationListMessage.getRelationList() != null) {
+		}
+		if (sceneRelationListMessage.getRelationList() != null) {
 		}
 
 		// エンティティそのものの値をコピー
