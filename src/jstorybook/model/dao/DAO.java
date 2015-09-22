@@ -18,9 +18,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +38,7 @@ public abstract class DAO<E extends Entity> {
 	private StoryFileModel storyFileModel;
 	protected final ObjectProperty<ObservableList<E>> modelList = new SimpleObjectProperty<>();
 	protected final List<Long> removeIdList = new ArrayList<>();
-	protected final IntegerProperty saveStep = new SimpleIntegerProperty(0);
+	protected final LongProperty saveStep = new SimpleLongProperty(0);
 	protected int lastId = 0;				// 最大ID
 	protected int lastIdSaved = 0;		// 最後に保存した時の最大ID
 
@@ -93,6 +93,9 @@ public abstract class DAO<E extends Entity> {
 
 	public void loadList () throws SQLException {
 
+		this.saveStep.set(0);
+		int saveCount = 0;
+
 		// IDの最大値を取得
 		ResultSet rs = this.getStoryFileModel().executeQuery("select * from idtable where key = '" + this.getTableName()
 				+ "';");
@@ -108,6 +111,7 @@ public abstract class DAO<E extends Entity> {
 		rs = this.getStoryFileModel().executeQuery("select * from `" + this.getTableName() + "`;");
 		while (rs.next()) {
 			result.add(this.loadModel(rs));
+			this.saveStep.set(++saveCount);
 		}
 
 		this.modelList.set(result);
@@ -173,7 +177,7 @@ public abstract class DAO<E extends Entity> {
 		return this.modelList.get().size();
 	}
 
-	public IntegerProperty saveStepProperty () {
+	public LongProperty saveStepProperty () {
 		return this.saveStep;
 	}
 

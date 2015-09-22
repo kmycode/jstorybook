@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.DialogResult;
+import jstorybook.common.contract.StorySettingName;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.dao.ChapterDAO;
 import jstorybook.model.dao.ChapterSceneRelationDAO;
@@ -36,6 +37,7 @@ import jstorybook.model.dao.PlaceDAO;
 import jstorybook.model.dao.SceneDAO;
 import jstorybook.model.dao.ScenePersonRelationDAO;
 import jstorybook.model.dao.ScenePlaceRelationDAO;
+import jstorybook.model.dao.StorySettingDAO;
 import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.ChapterSceneRelation;
 import jstorybook.model.entity.Entity;
@@ -48,13 +50,15 @@ import jstorybook.model.entity.Place;
 import jstorybook.model.entity.Scene;
 import jstorybook.model.entity.ScenePersonRelation;
 import jstorybook.model.entity.ScenePlaceRelation;
+import jstorybook.model.entity.StorySetting;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
-import jstorybook.model.story.sync.StorySaveModel;
+import jstorybook.model.story.sync.StoryLoadSync;
+import jstorybook.model.story.sync.StorySaveSync;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.ProgressDialogShowMessage;
@@ -82,6 +86,7 @@ public class StoryModel implements IUseMessenger {
 			new StoryEntityColumnModel());
 
 	// エンティティをあらわすインスタンス
+	private final StoryEntityModel<StorySetting, StorySettingDAO> storySettingEntity = new StoryEntityModel<>(new StorySettingDAO());
 	private final StoryEntityModel<Person, PersonDAO> personEntity = new StoryEntityModel<>(new PersonDAO());
 	private final StoryEntityModel<Group, GroupDAO> groupEntity = new StoryEntityModel<>(new GroupDAO());
 	private final StoryEntityModel<Place, PlaceDAO> placeEntity = new StoryEntityModel<>(new PlaceDAO());
@@ -118,8 +123,24 @@ public class StoryModel implements IUseMessenger {
 
 	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
+		// 設定の読み込み
+		this.storySettingEntity.dao.get().setStoryFileModel(this.storyFile.get());
+
+		StoryLoadSync.StoryLoadService service = new StoryLoadSync.StoryLoadService(this);
+
+		// 進捗状況を表示
+		this.messenger.send(new ProgressDialogShowMessage(service.myProgressProperty()));
+
+		// 読み込み処理（非同期）
+		service.stepProperty().addListener((obj) -> {
+			// getバグ
+			service.stepProperty().get();
+		});
+		service.start();
+
 		// 初期化・データの読み込み
-		this.personEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		/*
+		 		this.personEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.groupEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.placeEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.sceneEntity.dao.get().setStoryFileModel(this.storyFile.get());
@@ -129,9 +150,11 @@ public class StoryModel implements IUseMessenger {
 		this.chapterSceneEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.scenePersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
 		this.scenePlaceEntity.dao.get().setStoryFileModel(this.storyFile.get());
+		 */
 
 		// 関連付け
-		this.personPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
+		/*
+		 		this.personPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
 		this.groupPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
 		this.groupPersonEntity.dao.get().readGroupDAO(this.groupEntity.dao.get());
 		this.chapterSceneEntity.dao.get().readChapterDAO(this.chapterEntity.dao.get());
@@ -140,6 +163,7 @@ public class StoryModel implements IUseMessenger {
 		this.scenePersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
 		this.scenePlaceEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
 		this.scenePlaceEntity.dao.get().readPlaceDAO(this.placeEntity.dao.get());
+		 */
 
 		this.canSave.set(true);
 	}
@@ -164,7 +188,7 @@ public class StoryModel implements IUseMessenger {
 		}
 		 */
 
-		StorySaveModel.StorySaveService service = new StorySaveModel.StorySaveService(this);
+		StorySaveSync.StorySaveService service = new StorySaveSync.StorySaveService(this);
 
 		// 進捗状況を表示
 		this.messenger.send(new ProgressDialogShowMessage(service.myProgressProperty()));
@@ -177,6 +201,7 @@ public class StoryModel implements IUseMessenger {
 		service.start();
 	}
 
+	// 保存や読み込みで利用
 	public List<DAO> getDAOList () {
 		List<DAO> daoList = new ArrayList<>();
 		daoList.add(this.personEntity.dao.get());
@@ -189,6 +214,10 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.chapterSceneEntity.dao.get());
 		daoList.add(this.scenePersonEntity.dao.get());
 		daoList.add(this.scenePlaceEntity.dao.get());
+
+		// 設定は最後
+		daoList.add(this.storySettingEntity.dao.get());
+
 		return daoList;
 	}
 
@@ -204,6 +233,10 @@ public class StoryModel implements IUseMessenger {
 
 	public StoryCoreModel getCore () {
 		return this.core.get();
+	}
+
+	public StoryFileModel getStoryFile () {
+		return this.storyFile.get();
 	}
 
 	public ObjectProperty<StoryEntityColumnModel> entityColumnProperty () {
@@ -500,6 +533,12 @@ public class StoryModel implements IUseMessenger {
 
 	public void downChapter () {
 		this.downEntity(this.chapterEntity.selectedEntityList.get(), this.chapterEntity.dao.get());
+	}
+
+	// -------------------------------------------------------
+	// 設定を取得
+	public StorySetting getSetting (StorySettingName key) {
+		return this.storySettingEntity.dao.get().getSetting(key.getKey());
 	}
 
 	// -------------------------------------------------------

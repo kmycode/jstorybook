@@ -16,6 +16,7 @@ package jstorybook.common.util;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import jstorybook.common.manager.FontManager;
 import jstorybook.viewmodel.ViewModelList;
@@ -61,6 +62,18 @@ public class GUIUtil {
 		});
 
 		return menuItem;
+	}
+
+	public static void bindFontStyle (Node node) {
+		node.styleProperty().bind(FontManager.getInstance().fontStyleProperty());
+	}
+
+	public static void bindFontStyle (MenuItem node) {
+		node.styleProperty().bind(FontManager.getInstance().fontStyleProperty());
+	}
+
+	public static void bindFontStyle (Tab node) {
+		node.styleProperty().bind(FontManager.getInstance().fontStyleProperty());
 	}
 
 	public static void setAnchor (Node node, Double top, Double right, Double bottom, Double left) {

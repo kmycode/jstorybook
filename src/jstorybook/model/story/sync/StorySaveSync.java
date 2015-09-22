@@ -19,13 +19,15 @@ import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import jstorybook.common.contract.StorySettingName;
 import jstorybook.model.dao.DAO;
+import jstorybook.model.entity.StorySetting;
 import jstorybook.model.story.StoryModel;
 import jstorybook.view.dialog.ExceptionDialog;
 
@@ -34,18 +36,18 @@ import jstorybook.view.dialog.ExceptionDialog;
  *
  * @author KMY
  */
-public class StorySaveModel extends Task<Object> {
+public class StorySaveSync extends Task<Object> {
 
 	private final StoryModel storyModel;
 
-	private final IntegerProperty goal = new SimpleIntegerProperty(0);
-	private final IntegerProperty step = new SimpleIntegerProperty(0);
+	private final LongProperty goal = new SimpleLongProperty(0);
+	private final LongProperty step = new SimpleLongProperty(0);
 	private final BooleanProperty countAllModelFinish = new SimpleBooleanProperty(false);
 	private final BooleanProperty finish = new SimpleBooleanProperty(false);
 
-	private int lastStep = 0;
+	private long lastStep = 0;
 
-	public StorySaveModel (StoryModel storyModel) {
+	public StorySaveSync (StoryModel storyModel) {
 		this.storyModel = storyModel;
 	}
 
@@ -70,10 +72,13 @@ public class StorySaveModel extends Task<Object> {
 			return null;
 		}
 
+		// エンティティ数を記録
+		StorySetting entityCount = this.storyModel.getSetting(StorySettingName.ENTITY_COUNT);
+
 		// 保存処理
 		this.lastStep = 0;
 		InvalidationListener listener = (obj) -> {
-			IntegerProperty num = ((IntegerProperty) obj);
+			LongProperty num = ((LongProperty) obj);
 			this.step.set(num.get() + this.lastStep);
 		};
 		for (DAO dao : daoList) {
@@ -81,7 +86,10 @@ public class StorySaveModel extends Task<Object> {
 				dao.saveStepProperty().addListener(listener);
 				dao.saveList();
 				dao.saveStepProperty().removeListener(listener);
+
 				this.lastStep = this.step.get();
+				entityCount.intValueProperty().set(this.lastStep);
+
 				if (this.isCancelled()) {
 					return null;
 				}
@@ -93,14 +101,15 @@ public class StorySaveModel extends Task<Object> {
 			}
 		}
 
+		this.step.set(this.goal.get());
 		return new Object();
 	}
 
-	public IntegerProperty goalProperty () {
+	public LongProperty goalProperty () {
 		return this.goal;
 	}
 
-	public IntegerProperty stepProperty () {
+	public LongProperty stepProperty () {
 		return this.step;
 	}
 
@@ -115,8 +124,8 @@ public class StorySaveModel extends Task<Object> {
 	public static class StorySaveService extends Service<Object> {
 
 		private final StoryModel storyModel;
-		private final IntegerProperty goal = new SimpleIntegerProperty(0);
-		private final IntegerProperty step = new SimpleIntegerProperty(0);
+		private final LongProperty goal = new SimpleLongProperty(0);
+		private final LongProperty step = new SimpleLongProperty(0);
 		private final DoubleProperty progress = new SimpleDoubleProperty(0);
 		private final BooleanProperty countAllModelFinish = new SimpleBooleanProperty(false);
 		private final BooleanProperty finish = new SimpleBooleanProperty(false);
@@ -132,7 +141,7 @@ public class StorySaveModel extends Task<Object> {
 
 		@Override
 		protected Task<Object> createTask () {
-			StorySaveModel task = new StorySaveModel(this.storyModel);
+			StorySaveSync task = new StorySaveSync(this.storyModel);
 			this.goal.bind(task.goal);
 			this.step.bind(task.step);
 			this.countAllModelFinish.bind(task.countAllModelFinish);
@@ -144,11 +153,11 @@ public class StorySaveModel extends Task<Object> {
 			return this.progress;
 		}
 
-		public IntegerProperty goalProperty () {
+		public LongProperty goalProperty () {
 			return this.goal;
 		}
 
-		public IntegerProperty stepProperty () {
+		public LongProperty stepProperty () {
 			return this.step;
 		}
 

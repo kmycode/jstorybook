@@ -15,11 +15,7 @@ package jstorybook.model.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import jstorybook.model.entity.Entity;
+import jstorybook.common.util.SQLiteUtil;
 import jstorybook.model.entity.StorySetting;
 
 /**
@@ -27,39 +23,56 @@ import jstorybook.model.entity.StorySetting;
  *
  * @author KMY
  */
-public class StorySettingDAO extends DAO {
+public class StorySettingDAO extends DAO<StorySetting> {
 
-	private final ObjectProperty<ObservableList> modelList = new SimpleObjectProperty<>();
+	@Override
+	protected String getTableName () {
+		return "setting";
+	}
 
-	public StorySetting getSetting (String key) throws SQLException {
-		StorySetting model = null;
-		ResultSet rs = this.getStoryFileModel().executeQuery("select * from setting where key='" + key + "';");
-		if (rs.next()) {
-			model = new StorySetting();
-			model.keyProperty().set(rs.getString("key"));
-			model.valueProperty().set(rs.getString("value"));
-		}
+	@Override
+	protected StorySetting loadModel (ResultSet rs) throws SQLException {
+		StorySetting model = new StorySetting();
+		model.idProperty().set(0);
+		model.keyProperty().set(rs.getString("key"));
+		model.valueProperty().set(rs.getString("value"));
+		model.intValueProperty().set(rs.getInt("intvalue"));
+		model.noteProperty().set("");
 		return model;
 	}
 
 	@Override
-	protected void storyFileModelSet () throws SQLException {
-		this.modelList.set(FXCollections.observableArrayList());
+	protected void saveModel (StorySetting model) throws SQLException {
+		StringBuilder query = new StringBuilder("update `" + this.getTableName() + "` set ");
+		query.append(SQLiteUtil.updateQueryColumn("value", model.valueProperty().get(), false));
+		query.append(SQLiteUtil.updateQueryColumn("intvalue", model.intValueProperty().get(), true));
+		query.append("where key = '" + model.keyProperty().get() + "';");
+		this.getStoryFileModel().updateQuery(query.toString());
 	}
 
-	@Override
-	protected String getTableName () {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public StorySetting getSetting (String key) {
+		for (StorySetting model : this.modelList.get()) {
+			if (model.keyProperty().get().equals(key)) {
+				return model;
+			}
+		}
+		return null;
 	}
 
-	@Override
-	protected Entity loadModel (ResultSet rs) throws SQLException {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public void setSetting (String key, String value) {
+		for (StorySetting model : this.modelList.get()) {
+			if (model.keyProperty().get().equals(key)) {
+				model.valueProperty().set(value);
+			}
+		}
 	}
 
-	@Override
-	protected void saveModel (Entity model) throws SQLException {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public void setSetting (String key, int value) {
+		for (StorySetting model : this.modelList.get()) {
+			if (model.keyProperty().get().equals(key)) {
+				model.intValueProperty().set(value);
+			}
+		}
 	}
 
 }

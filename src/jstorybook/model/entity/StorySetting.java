@@ -13,6 +13,8 @@
  */
 package jstorybook.model.entity;
 
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -21,10 +23,11 @@ import javafx.beans.property.StringProperty;
  *
  * @author KMY
  */
-public class StorySetting {
+public class StorySetting extends Entity {
 
 	private final StringProperty key = new SimpleStringProperty();
-	private final StringProperty value = new SimpleStringProperty();
+	private final StringProperty value = new SimpleStringProperty("");
+	private final LongProperty intValue = new SimpleLongProperty();
 
 	public StringProperty keyProperty () {
 		return this.key;
@@ -32,6 +35,20 @@ public class StorySetting {
 
 	public StringProperty valueProperty () {
 		return this.value;
+	}
+
+	public LongProperty intValueProperty () {
+		return this.intValue;
+	}
+
+	@Override
+	public String toString () {
+		return this.key.get() + "=" + this.intValue.get() + "/" + this.value.get();
+	}
+
+	@Override
+	public Entity entityClone () {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 }

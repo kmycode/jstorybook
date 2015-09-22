@@ -90,11 +90,11 @@ public class SQLiteUtil {
 	}
 
 	public static String updateQueryColumn (String columnName, int value, boolean isLast) {
-		return SQLiteUtil.updateQueryColumn(columnName, Integer.toString(value), isLast);
+		return SQLiteUtil.updateQueryColumn(columnName, (long) value, isLast);
 	}
 
 	public static String updateQueryColumn (String columnName, long value, boolean isLast) {
-		return SQLiteUtil.updateQueryColumn(columnName, Long.toString(value), isLast);
+		return "`" + columnName + "`=" + value + "" + (isLast ? " " : ", ");
 	}
 
 }

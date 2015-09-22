@@ -154,6 +154,7 @@ public class MainWindow extends MyStage {
 
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
+		GUIUtil.bindFontStyle(fileMenu);
 		{
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
 			menu.setText(ResourceManager.getMessage("msg.save"));
@@ -166,6 +167,7 @@ public class MainWindow extends MyStage {
 
 		// 編集メニュー
 		Menu editMenu = new Menu(ResourceManager.getMessage("msg.edit"));
+		GUIUtil.bindFontStyle(editMenu);
 		{
 			menu = new MenuItem(ResourceManager.getMessage("msg.preference"));
 			editMenu.getItems().add(menu);
@@ -233,6 +235,9 @@ public class MainWindow extends MyStage {
 	// -------------------------------------------------------
 	// タブを追加
 	private void addTab (DockableTab tab) {
+
+		// フォントを設定
+		GUIUtil.bindFontStyle(tab);
 
 		// アクティブなTabPaneを探す、なければてきとーなTabPaneをアクティブにする
 		// そもそもTabPaneが全く無ければ、新しく作ってしまう

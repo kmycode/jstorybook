@@ -16,6 +16,7 @@ package jstorybook.common.manager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,14 +31,16 @@ import javafx.scene.text.FontWeight;
  */
 public class FontManager {
 
-	private static FontManager defaultInstance = new FontManager();
+	private static final FontManager defaultInstance = new FontManager();
 
-	private StringProperty fontName = new SimpleStringProperty();
-	private DoubleProperty fontSize = new SimpleDoubleProperty();
+	private final StringProperty fontName = new SimpleStringProperty();
+	private final DoubleProperty fontSize = new SimpleDoubleProperty();
 
-	private ObjectProperty<Font> normalFont = new SimpleObjectProperty<>();
-	private ObjectProperty<Font> boldFont = new SimpleObjectProperty<>();
-	private ObjectProperty<Font> titleFont = new SimpleObjectProperty<>();
+	private final ObjectProperty<Font> normalFont = new SimpleObjectProperty<>();
+	private final ObjectProperty<Font> boldFont = new SimpleObjectProperty<>();
+	private final ObjectProperty<Font> titleFont = new SimpleObjectProperty<>();
+
+	private final StringProperty normalFontStyle = new SimpleStringProperty("");
 
 	private FontManager () {
 		this.fontName.addListener((obj) -> {
@@ -48,7 +51,7 @@ public class FontManager {
 		});
 
 		this.fontName.set("Meiryo UI");
-		this.fontSize.set(12.0);
+		this.fontSize.set(16.0);
 	}
 
 	public static FontManager getInstance () {
@@ -59,6 +62,8 @@ public class FontManager {
 		this.normalFont.set(Font.font(this.fontName.get(), this.fontSize.get()));
 		this.boldFont.set(Font.font(this.fontName.get(), FontWeight.BOLD, this.fontSize.get()));
 		this.titleFont.set(Font.font(this.fontName.get(), FontWeight.BOLD, 18));
+
+		this.normalFontStyle.set("-fx-font-family:" + this.fontName.get() + ";-fx-font-size:" + this.fontSize.get() + ";");
 	}
 
 	public StringProperty fontNameProperty () {
@@ -71,6 +76,10 @@ public class FontManager {
 
 	public ReadOnlyObjectProperty<Font> fontProperty () {
 		return this.normalFont;
+	}
+
+	public ReadOnlyStringProperty fontStyleProperty () {
+		return this.normalFontStyle;
 	}
 
 	public ReadOnlyObjectProperty<Font> boldFontProperty () {
