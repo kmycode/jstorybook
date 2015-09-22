@@ -36,5 +36,8 @@ public class NormalCell<E> extends TableCell<E, Object> {
 		if (item != null) {
 			this.setText(item.toString());
 		}
+		else {
+			this.setText("");
+		}
 	}
 }
