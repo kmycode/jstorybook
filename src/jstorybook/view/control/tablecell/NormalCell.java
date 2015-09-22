@@ -13,27 +13,28 @@
  */
 package jstorybook.view.control.tablecell;
 
-import java.util.Calendar;
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
-import jstorybook.common.manager.DateTimeManager;
 import jstorybook.common.manager.FontManager;
 
 /**
- * TableViewでDateを表示する
+ * TableViewで通常の文字列を表示する
  *
  * @author KMY
  */
-public class DateCell<E> extends TableCell<E, Calendar> {
+public class NormalCell<E> extends TableCell<E, Object> {
 
-	public DateCell () {
+	public NormalCell () {
+		// これが目的
 		this.fontProperty().bind(FontManager.getInstance().fontProperty());
 		this.setTextFill(Color.BLACK);
 	}
 
 	@Override
-	protected void updateItem (Calendar item, boolean empty) {
+	protected void updateItem (Object item, boolean empty) {
 		super.updateItem(item, empty);
-		this.setText(DateTimeManager.getInstance().dateToString(item));
+		if (item != null) {
+			this.setText(item.toString());
+		}
 	}
 }

@@ -14,7 +14,6 @@
 	-fx-background-color: #b8cfe5;
 }
 .table-view .table-row-cell:selected:filled .table-cell {
-	-fx-text-fill: black;
 	-fx-border-color: transparent transparent transparent transparent;
 }
 

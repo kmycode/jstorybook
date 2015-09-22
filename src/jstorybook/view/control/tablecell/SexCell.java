@@ -15,6 +15,7 @@ package jstorybook.view.control.tablecell;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
+import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 
 /**
@@ -23,6 +24,10 @@ import jstorybook.common.manager.ResourceManager;
  * @author KMY
  */
 public class SexCell<E> extends TableCell<E, Long> {
+
+	public SexCell () {
+		this.fontProperty().bind(FontManager.getInstance().fontProperty());
+	}
 
 	@Override
 	protected void updateItem (Long item, boolean empty) {
