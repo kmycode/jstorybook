@@ -21,6 +21,7 @@ import jstorybook.viewtool.model.ColorColumn;
 import jstorybook.viewtool.model.DateColumn;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.viewtool.model.ListOnlyColumn;
 import jstorybook.viewtool.model.SexColumn;
 import jstorybook.viewtool.model.StringColumn;
 
@@ -51,10 +52,11 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		columnList.idProperty().bind(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.addRelation(EntityRelation.PERSON_PERSON);
+		columnList.addRelation(EntityRelation.GROUP_PERSON);
 		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;
 
-		column = new StringColumn(ResourceManager.getMessage("msg.order"), "order");
+		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");
 		column.setColumnWidth(30);
 		column.setDefaultShow(true);
 		column.setProperty(model.orderProperty());

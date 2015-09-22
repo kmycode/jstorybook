@@ -11,16 +11,32 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.view.pane.list;
+
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Group;
+import jstorybook.viewmodel.ViewModelList;
 
 /**
- * エンティティの種類
+ * 集団のリスト
  *
- * @author KMY
+  * @author KMY
  */
-public enum EntityType {
+public class GroupListPane extends EntityListPane<Group> {
 
-	PERSON,
-	GROUP,;
+	public GroupListPane () {
+		super(ResourceManager.getMessage("msg.group"));
+	}
+
+	@Override
+	public void setViewModelList (ViewModelList viewModelList) {
+		super.setViewModelList(viewModelList);
+		this.setOrderButton();
+	}
+
+	@Override
+	protected String getEntityTypeName () {
+		return "group";
+	}
 
 }

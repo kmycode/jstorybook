@@ -11,16 +11,19 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.pane.relation;
+
+import java.util.List;
 
 /**
- * エンティティの種類
+ * 所属集団リストのチェックを更新
  *
  * @author KMY
  */
-public enum EntityType {
+public class GroupRelationRenewMessage extends RelationRenewMessage {
 
-	PERSON,
-	GROUP,;
+	public GroupRelationRenewMessage (List<Long> entityIdList) {
+		super(entityIdList);
+	}
 
 }

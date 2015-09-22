@@ -96,7 +96,9 @@ public class EntityRelation<S extends Entity, T extends Entity> extends Entity {
 
 	@Override
 	public String toString () {
-		return this.entity1.get().toString() + " + " + entity2.get().toString();
+		Object entity1 = this.entity1.get();
+		Object entity2 = this.entity2.get();
+		return entity1 + " + " + entity2;
 	}
 
 	@Override

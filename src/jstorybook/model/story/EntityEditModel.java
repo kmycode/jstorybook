@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.EntityRelation;
+import jstorybook.common.contract.EntityType;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
@@ -29,6 +30,9 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
@@ -134,17 +138,25 @@ public class EntityEditModel implements IUseMessenger {
 			EntityEditModel.this.isChanged.set(true);
 		});
 
-		// 関連エンティティを選択するためのタブを設定
-		for (EntityRelation relation : list.getEntityRelationList()) {
-			if (relation == EntityRelation.PERSON_PERSON) {
+		// ストーリーモデルを取得
+		StoryModel storyModel = this.getStoryModel();
 
-				// ストーリーモデルを取得
-				StoryModel storyModel = this.getStoryModel();
-
-				// 関連人物のタブを表示
-				if (storyModel != null) {
+		if (storyModel != null) {
+			// 関連エンティティを選択するためのタブを設定
+			for (EntityRelation relation : list.getEntityRelationList()) {
+				if (relation == EntityRelation.PERSON_PERSON) {
 					this.messenger.send(new PersonRelationShowMessage(storyModel.getPersonPersonRelation(
 							this.columnList.get().idProperty().get())));
+				}
+				else if (relation == EntityRelation.GROUP_PERSON) {
+					if (list.getEntityType() == EntityType.GROUP) {
+						this.messenger.send(new PersonRelationShowMessage(storyModel.getGroupPersonRelation_Person(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.PERSON) {
+						this.messenger.send(new GroupRelationShowMessage(storyModel.getGroupPersonRelation_Group(
+								this.columnList.get().idProperty().get())));
+					}
 				}
 			}
 		}
@@ -181,10 +193,28 @@ public class EntityEditModel implements IUseMessenger {
 	public void apply () {
 		// エンティティ同士の関連を保存
 		StoryModel storyModel = this.getStoryModel();
-		PersonRelationListGetMessage relationListMessage = new PersonRelationListGetMessage();
-		this.messenger.send(relationListMessage);
-		if (relationListMessage.getRelationList() != null) {
-			storyModel.setPersonPersonRelation(this.columnList.get().idProperty().get(), relationListMessage.getRelationList());
+		EntityType entityType = this.columnList.get().getEntityType();
+		PersonRelationListGetMessage personRelationListMessage = new PersonRelationListGetMessage();
+		GroupRelationListGetMessage groupRelationListMessage = new GroupRelationListGetMessage();
+		this.messenger.send(personRelationListMessage);
+		this.messenger.send(groupRelationListMessage);
+		if (personRelationListMessage.getRelationList() != null) {
+			if (entityType == EntityType.PERSON) {
+				storyModel.setPersonPersonRelation(this.columnList.get().idProperty().get(), personRelationListMessage.
+												   getRelationList());
+			}
+			else if (entityType == EntityType.GROUP) {
+				storyModel.
+						setGroupPersonRelation_Person(this.columnList.get().idProperty().get(), personRelationListMessage.
+													  getRelationList());
+			}
+		}
+		if (groupRelationListMessage.getRelationList() != null) {
+			if (entityType == EntityType.PERSON) {
+				storyModel.
+						setGroupPersonRelation_Group(this.columnList.get().idProperty().get(), groupRelationListMessage.
+													 getRelationList());
+			}
 		}
 
 		// エンティティそのものの値をコピー
@@ -202,6 +232,16 @@ public class EntityEditModel implements IUseMessenger {
 			if (this.columnList.get().isRelation(EntityRelation.PERSON_PERSON)) {
 				this.messenger.send(new PersonRelationRenewMessage(storyModel.getPersonPersonRelation(
 						this.columnList.get().idProperty().get())));
+			}
+			if (this.columnList.get().isRelation(EntityRelation.GROUP_PERSON)) {
+				if (this.columnList.get().getEntityType() == EntityType.GROUP) {
+					this.messenger.send(new PersonRelationRenewMessage(storyModel.getGroupPersonRelation_Person(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.PERSON) {
+					this.messenger.send(new GroupRelationRenewMessage(storyModel.getGroupPersonRelation_Group(
+							this.columnList.get().idProperty().get())));
+				}
 			}
 		}
 	}

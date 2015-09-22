@@ -46,6 +46,7 @@ import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.editor.relation.GroupRelationTab;
 import jstorybook.view.pane.editor.relation.PersonRelationTab;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.EntityEditViewModel;
@@ -58,6 +59,9 @@ import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
@@ -94,6 +98,7 @@ public class EntityEditorPane extends MyPane {
 
 	// エンティティ関連付けのタブ
 	protected PersonRelationTab personRelationTab;
+	protected GroupRelationTab groupRelationTab;
 
 	private int mainVboxRow = 0;
 
@@ -248,6 +253,16 @@ public class EntityEditorPane extends MyPane {
 			EntityEditorPane.this.renewPersonRelationTab(mes);
 		});
 
+		// 関連集団タブを設定
+		this.messenger.apply(GroupRelationShowMessage.class, this, (ev) -> {
+			GroupRelationShowMessage mes = (GroupRelationShowMessage) ev;
+			EntityEditorPane.this.addGroupRelationTab(mes);
+		});
+		this.messenger.apply(GroupRelationRenewMessage.class, this, (ev) -> {
+			GroupRelationRenewMessage mes = (GroupRelationRenewMessage) ev;
+			EntityEditorPane.this.renewGroupRelationTab(mes);
+		});
+
 		// 関連タブを更新するためのトリガー
 		this.messenger.apply(RelationRenewTriggerMessage.class, this, (ev) -> {
 			EntityEditorPane.renewRelationTab();
@@ -261,6 +276,11 @@ public class EntityEditorPane extends MyPane {
 		this.messenger.apply(PersonRelationListGetMessage.class, this, (ev) -> {
 			if (this.personRelationTab != null) {
 				((PersonRelationListGetMessage) ev).setRelationList(this.personRelationTab.getSelectedIdList());
+			}
+		});
+		this.messenger.apply(GroupRelationListGetMessage.class, this, (ev) -> {
+			if (this.groupRelationTab != null) {
+				((GroupRelationListGetMessage) ev).setRelationList(this.groupRelationTab.getSelectedIdList());
 			}
 		});
 
@@ -281,7 +301,12 @@ public class EntityEditorPane extends MyPane {
 			}
 			else {
 				pane.get().viewModelList.executeCommand("relationListRenew");
-				pane.get().personRelationTab.resetChanged();
+				if (pane.get().personRelationTab != null) {
+					pane.get().personRelationTab.resetChanged();
+				}
+				if (pane.get().groupRelationTab != null) {
+					pane.get().groupRelationTab.resetChanged();
+				}
 			}
 		}
 		EntityEditorPane.paneList.removeAll(deleteList);
@@ -298,19 +323,48 @@ public class EntityEditorPane extends MyPane {
 	}
 
 	// -------------------------------------------------------
+	// 関連付けのタブを追加
+
+	private boolean checkCanSave () {
+		boolean result = false;
+		if (this.personRelationTab != null) {
+			result |= this.personRelationTab.changedProperty().get();
+		}
+		if (this.groupRelationTab != null) {
+			result |= this.groupRelationTab.changedProperty().get();
+		}
+		return result;
+	}
 
 	private void addPersonRelationTab (PersonRelationShowMessage mes) {
 		this.personRelationTab = new PersonRelationTab(this.columnList.get().idProperty().get());
 		this.personRelationTab.itemsProperty().bind(this.storyViewModelList.getProperty("personList"));
 		this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
 		this.personRelationTab.resetChanged();
-		this.viewModelList.getProperty("canSave").bind(this.personRelationTab.changedProperty());
+		this.personRelationTab.changedProperty().addListener((obj) -> this.viewModelList.getProperty("canSave").setValue(this.
+				checkCanSave()));
 		this.tabPane.getTabs().add(this.personRelationTab);
 	}
 
 	private void renewPersonRelationTab (PersonRelationRenewMessage mes) {
 		if (this.personRelationTab != null) {
 			this.personRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
+		}
+	}
+
+	private void addGroupRelationTab (GroupRelationShowMessage mes) {
+		this.groupRelationTab = new GroupRelationTab(this.columnList.get().idProperty().get());
+		this.groupRelationTab.itemsProperty().bind(this.storyViewModelList.getProperty("groupList"));
+		this.groupRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
+		this.groupRelationTab.resetChanged();
+		this.groupRelationTab.changedProperty().addListener((obj) -> this.viewModelList.getProperty("canSave").setValue(this.
+				checkCanSave()));
+		this.tabPane.getTabs().add(this.groupRelationTab);
+	}
+
+	private void renewGroupRelationTab (GroupRelationRenewMessage mes) {
+		if (this.groupRelationTab != null) {
+			this.groupRelationTab.setSelectedIdList(mes.getRelatedEntityIdList());
 		}
 	}
 

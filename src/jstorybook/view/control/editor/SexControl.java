@@ -18,6 +18,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import jstorybook.common.manager.ResourceManager;
 
 /**
@@ -33,7 +34,9 @@ public class SexControl extends HBox {
 	public SexControl () {
 		ToggleButton male = new ToggleButton(ResourceManager.getMessage("msg.person.sex.male"));
 		male.setSelected(true);
+		male.setTextFill(Color.BLUE);
 		ToggleButton female = new ToggleButton(ResourceManager.getMessage("msg.person.sex.female"));
+		female.setTextFill(Color.RED);
 		ToggleGroup group = new ToggleGroup();
 		male.setToggleGroup(group);
 		female.setToggleGroup(group);

@@ -13,8 +13,6 @@
  */
 package jstorybook.model.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import jstorybook.model.entity.PersonPersonRelation;
 
 /**
@@ -29,38 +27,11 @@ public class PersonPersonRelationDAO extends EntityRelationDAO<PersonPersonRelat
 		return "personperson";
 	}
 
-	@Override
-	protected PersonPersonRelation loadModel (ResultSet rs) throws SQLException {
-		PersonPersonRelation model = new PersonPersonRelation();
-		return super.loadModel(rs, model);
-	}
-
 	public void readPersonDAO (PersonDAO dao) {
 		for (PersonPersonRelation model : this.modelList.get()) {
 			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
 			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
 		}
-	}
-
-	@Override
-	protected void saveModel (PersonPersonRelation model) throws SQLException {
-
-		if (model.idProperty().get() > this.lastIdSaved) {
-
-			// 最新の最大IDを保存（modelのidとは限らない）
-			this.getStoryFileModel().
-					updateQuery("update idtable set value = " + this.lastId + " where key = 'personperson';");
-
-			// 行を追加
-			this.getStoryFileModel().updateQuery(
-					"insert into personperson(id,entity1,entity2,note) values(" + model.
-					idProperty().get() + ",0,0,'');");
-		}
-
-		// 保存
-		this.getStoryFileModel().updateQuery("update personperson set entity1 = " + model.entity1IdProperty().get()
-				+ ", entity2 = " + model.entity2IdProperty().get() + ",note = '" + model.noteProperty().get() + "' where id = "
-				+ model.idProperty().get() + ";");
 	}
 
 	@Override

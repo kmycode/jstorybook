@@ -42,6 +42,7 @@ import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
+import jstorybook.view.pane.list.GroupListPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
@@ -49,13 +50,14 @@ import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
-import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
+import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -131,6 +133,7 @@ public class MainWindow extends MyStage {
 		// TODO:【テスト】
 		this.viewModelList.setProperty("storyFileName", "teststory/test.db");
 		this.addPersonListTab();
+		this.addGroupListTab();
 	}
 
 	// メインメニューバーを作成
@@ -198,6 +201,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
 		});
+		this.messenger.apply(GroupEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addGroupEditorTab((GroupEditorShowMessage) ev);
+		});
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -231,6 +237,13 @@ public class MainWindow extends MyStage {
 	// 登場人物リストタブを追加
 	private void addPersonListTab () {
 		PersonListPane tab = new PersonListPane();
+		tab.setViewModelList(this.viewModelList);
+		this.addTab(tab);
+	}
+
+	// 集団リストタブを追加
+	private void addGroupListTab () {
+		GroupListPane tab = new GroupListPane();
 		tab.setViewModelList(this.viewModelList);
 		this.addTab(tab);
 	}
@@ -289,6 +302,11 @@ public class MainWindow extends MyStage {
 	// 登場人物編集タブ
 	private void addPersonEditorTab (PersonEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.person"), "personColumnList");
+	}
+
+	// 集団編集タブ
+	private void addGroupEditorTab (GroupEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.group"), "groupColumnList");
 	}
 
 	// -------------------------------------------------------

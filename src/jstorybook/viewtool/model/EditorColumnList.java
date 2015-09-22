@@ -70,6 +70,10 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 		return this.entityRelation;
 	}
 
+	public EntityType getEntityType () {
+		return this.entityType.get();
+	}
+
 	public void setEntityAdapter (StoryModel.EntityAdapter adapter) {
 		this.entityAdapter = adapter;
 	}

@@ -46,4 +46,7 @@ public abstract class EntityEditorShowMessage<E extends Entity> extends Message 
 		return this.baseColumnList;
 	}
 
+	// newInstanceと同じようなもの
+	abstract public EntityEditorShowMessage newMessage (EditorColumnList columns, EditorColumnList baseColumns);
+
 }

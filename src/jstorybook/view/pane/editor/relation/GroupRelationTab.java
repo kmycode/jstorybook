@@ -11,16 +11,22 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.view.pane.editor.relation;
+
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Group;
+import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 
 /**
- * エンティティの種類
+ * 関係する集団を設定するタブ
  *
  * @author KMY
  */
-public enum EntityType {
+public class GroupRelationTab extends EntityRelationTab<Group> {
 
-	PERSON,
-	GROUP,;
+	public GroupRelationTab (long entityId) {
+		super(ResourceManager.getMessage("msg.relation.group"), entityId);
+		this.tableView.setColumnList(GroupColumnFactory.getInstance().createColumnList());
+	}
 
 }

@@ -16,6 +16,7 @@ package jstorybook.model.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -101,10 +102,14 @@ public abstract class DAO<E extends Entity> {
 
 		// リストを作成
 		ObservableList<E> result = FXCollections.observableArrayList();
-		rs = this.getStoryFileModel().executeQuery("select * from " + this.getTableName() + ";");
+		rs = this.getStoryFileModel().executeQuery("select * from `" + this.getTableName() + "`;");
 		while (rs.next()) {
 			result.add(this.loadModel(rs));
 		}
+
+		// ソート
+		Collections.sort(result);
+
 		this.modelList.set(result);
 	}
 

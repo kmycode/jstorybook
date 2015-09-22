@@ -26,7 +26,7 @@ import javafx.beans.value.ObservableValue;
 public abstract class Entity implements Comparable<Entity> {
 
 	protected LongProperty id = new SimpleLongProperty(0);
-	private final StringProperty title = new SimpleStringProperty();
+	protected final StringProperty title = new SimpleStringProperty();
 	protected StringProperty note = new SimpleStringProperty();
 
 	public Entity () {
@@ -43,6 +43,10 @@ public abstract class Entity implements Comparable<Entity> {
 	// 新規作成中？
 	public boolean isCreating () {
 		return this.id.get() == 0;
+	}
+
+	private boolean isSortable (Entity other) {
+		return this instanceof ISortableEntity;
 	}
 
 	protected int propertyHashCode (ObservableValue o) {
@@ -138,7 +142,9 @@ public abstract class Entity implements Comparable<Entity> {
 
 	public final void copyTo (Entity obj) {
 		obj.id.set(this.id.get());
-		obj.title.set(this.title.get());
+		if (!obj.title.isBound()) {
+			obj.title.set(this.title.get());
+		}
 		obj.note.set(this.note.get());
 	}
 

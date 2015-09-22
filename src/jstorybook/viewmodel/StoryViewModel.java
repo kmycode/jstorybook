@@ -37,11 +37,15 @@ public class StoryViewModel extends ViewModel {
 
 		this.applyProperty("personColumnList", this.storyModel.get().entityColumnProperty().get().
 						   personColumnListProperty());
-
 		this.applyProperty("personList", this.storyModel.get().getPersonEntity().DAOProperty().get().
 							  modelListProperty());
-
 		this.applyProperty("personSelected", this.storyModel.get().getPersonEntity().selectedEntityProperty());
+
+		this.applyProperty("groupColumnList", this.storyModel.get().entityColumnProperty().get().
+						   groupColumnListProperty());
+		this.applyProperty("groupList", this.storyModel.get().getGroupEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("groupSelected", this.storyModel.get().getGroupEntity().selectedEntityProperty());
 	}
 
 	@Override
@@ -59,6 +63,16 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("personUp", (ev) -> this.storyModel.get().upPerson(), this.storyModel.get().getPersonEntity().
 						  canEditProperty());
 		this.applyCommand("personDown", (ev) -> this.storyModel.get().downPerson(), this.storyModel.get().getPersonEntity().
+						  canEditProperty());
+
+		this.applyCommand("groupNew", (ev) -> this.storyModel.get().newGroup());
+		this.applyCommand("groupEdit", (ev) -> this.storyModel.get().editGroup(), this.storyModel.get().
+						  getGroupEntity().canEditProperty());
+		this.applyCommand("groupDelete", (ev) -> this.storyModel.get().deleteGroup(), this.storyModel.get().getGroupEntity().
+						  canEditProperty());
+		this.applyCommand("groupUp", (ev) -> this.storyModel.get().upGroup(), this.storyModel.get().getGroupEntity().
+						  canEditProperty());
+		this.applyCommand("groupDown", (ev) -> this.storyModel.get().downGroup(), this.storyModel.get().getGroupEntity().
 						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());

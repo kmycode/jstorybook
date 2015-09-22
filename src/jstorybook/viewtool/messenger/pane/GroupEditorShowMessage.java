@@ -13,31 +13,31 @@
  */
 package jstorybook.viewtool.messenger.pane;
 
-import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Group;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
- * 登場人物の編集エディタを表示するメッセージ
+ * 集団の編集エディタを表示するメッセージ
  *
-  * @author KMY
+ * @author KMY
  */
-public class PersonEditorShowMessage extends EntityEditorShowMessage<Person> {
+public class GroupEditorShowMessage extends EntityEditorShowMessage<Group> {
 
-	private static PersonEditorShowMessage defaultInstance = new PersonEditorShowMessage(null, null);
+	private static GroupEditorShowMessage defaultInstance = new GroupEditorShowMessage(null, null);
 
-	public PersonEditorShowMessage (EditorColumnList columns, EditorColumnList baseColumns) {
+	public GroupEditorShowMessage (EditorColumnList columns, EditorColumnList baseColumns) {
 		super(columns, baseColumns);
 	}
 
 	@Override
-	public PersonEditorShowMessage newMessage (EditorColumnList columns, EditorColumnList baseColumns) {
+	public GroupEditorShowMessage newMessage (EditorColumnList columns, EditorColumnList baseColumns) {
 		if (this == defaultInstance) {
-			return new PersonEditorShowMessage(columns, baseColumns);
+			return new GroupEditorShowMessage(columns, baseColumns);
 		}
 		throw new UnsupportedOperationException("This is not defaultInstance!");
 	}
 
-	public static PersonEditorShowMessage getInstance () {
+	public static GroupEditorShowMessage getInstance () {
 		return defaultInstance;
 	}
 

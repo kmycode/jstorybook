@@ -161,10 +161,10 @@ package jstorybook.model.entity;
 // {説明} のエンティティを扱うクラス
 public class {クラス名} extends {親クラス}{インターフェース} {波カッコ}
 
+{フィールド}
 	public {クラス名} () {波カッコ}
 		this.title.bind(this.name);
 	{波カッコ閉じ}
-{フィールド}
 {メソッド}
 	// -------------------------------------------------------
 	@Override

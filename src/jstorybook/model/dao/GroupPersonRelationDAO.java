@@ -11,16 +11,37 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.GroupPersonRelation;
 
 /**
- * エンティティの種類
+ * 登場人物の関係のDAO
  *
  * @author KMY
  */
-public enum EntityType {
+public class GroupPersonRelationDAO extends EntityRelationDAO<GroupPersonRelation> {
 
-	PERSON,
-	GROUP,;
+	@Override
+	protected String getTableName () {
+		return "groupperson";
+	}
+
+	public void readPersonDAO (PersonDAO dao) {
+		for (GroupPersonRelation model : this.modelList.get()) {
+			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
+		}
+	}
+
+	public void readGroupDAO (GroupDAO dao) {
+		for (GroupPersonRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected GroupPersonRelation newEntityRelationInstance () {
+		return new GroupPersonRelation();
+	}
 
 }
