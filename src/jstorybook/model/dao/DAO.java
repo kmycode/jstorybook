@@ -107,10 +107,24 @@ public abstract class DAO<E extends Entity> {
 			result.add(this.loadModel(rs));
 		}
 
-		// ソート
+		this.modelList.set(result);
+
+		// ソート・順番振り直し
+		this.resetOrder();
+	}
+
+	// ソートして、順番を一から振り直す
+	public void resetOrder () {
+		List<E> result = this.modelList.get();
+
 		Collections.sort(result);
 
-		this.modelList.set(result);
+		if (result.size() > 0 && result.get(0) instanceof ISortableEntity) {
+			int count = 0;
+			for (Entity entity : result) {
+				((ISortableEntity) entity).orderProperty().set(++count);
+			}
+		}
 	}
 
 	public void saveList () throws SQLException {
