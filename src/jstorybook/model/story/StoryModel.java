@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -174,10 +173,8 @@ public class StoryModel implements IUseMessenger {
 			// getバグ
 			service.stepProperty().get();
 		});
-		service.myProgressProperty().addListener((obj) -> {
-			if (((DoubleProperty) obj).get() == 1) {
+		service.setOnSucceeded((obj) -> {
 				this.setDaoFinish.set(true);
-			}
 		});
 		service.start();
 	}

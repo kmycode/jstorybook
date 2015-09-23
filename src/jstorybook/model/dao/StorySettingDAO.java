@@ -60,6 +60,7 @@ public class StorySettingDAO extends DAO<StorySetting> {
 	}
 
 	public void setSetting (String key, String value) {
+		System.out.println(key + "/" + value + " - " + this.modelList.get().size());
 		for (StorySetting model : this.modelList.get()) {
 			if (model.keyProperty().get().equals(key)) {
 				model.valueProperty().set(value);
@@ -82,6 +83,7 @@ public class StorySettingDAO extends DAO<StorySetting> {
 		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('storyname','',0);");
 		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('entitycount','',0);");
 		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('fileversion','',1);");
+		this.loadList();
 	}
 
 }

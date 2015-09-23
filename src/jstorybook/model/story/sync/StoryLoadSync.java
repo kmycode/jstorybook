@@ -138,6 +138,7 @@ public class StoryLoadSync extends Task<Object> {
 			this.step.bind(task.step);
 			this.countAllModelFinish.bind(task.countAllModelFinish);
 			this.finish.bind(task.finish);
+			task.setOnSucceeded((ev) -> this.succeeded());
 			return task;
 		}
 
