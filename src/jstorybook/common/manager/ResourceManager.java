@@ -17,6 +17,8 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import jstorybook.view.dialog.ExceptionDialog;
 
 /**
@@ -62,6 +64,17 @@ public class ResourceManager {
 
 	public static String getCss (String resourceKey) {
 		return ResourceManager.class.getResource("/jstorybook/resource/stylesheet/" + resourceKey).toExternalForm();
+	}
+
+	public static ImageView getIconNode (String resourceKey) {
+		return new ImageView(new Image(ResourceManager.class.getResource("/jstorybook/resource/icon/" + resourceKey).toExternalForm()));
+	}
+
+	public static ImageView getMiniIconNode (String resourceKey) {
+		Image image = new Image(ResourceManager.class.getResource("/jstorybook/resource/icon/" + resourceKey).toExternalForm(), 16, 16,
+								false, true);
+		ImageView imageView = new ImageView(image);
+		return imageView;
 	}
 
 }

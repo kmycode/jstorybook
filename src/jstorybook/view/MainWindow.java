@@ -25,6 +25,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToolBar;
@@ -184,6 +185,7 @@ public class MainWindow extends MyStage {
 			fileMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
 			menu.setText(ResourceManager.getMessage("msg.save"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("save.png"));
 			fileMenu.getItems().add(menu);
 		}
 
@@ -193,21 +195,26 @@ public class MainWindow extends MyStage {
 		{
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showPersonList");
 			menu.setText(ResourceManager.getMessage("msg.person"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("person.png"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showGroupList");
 			menu.setText(ResourceManager.getMessage("msg.group"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("group.png"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showPlaceList");
 			menu.setText(ResourceManager.getMessage("msg.place"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("place.png"));
 			editMenu.getItems().add(menu);
 
 			editMenu.getItems().add(new SeparatorMenuItem());
 
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showSceneList");
 			menu.setText(ResourceManager.getMessage("msg.scene"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("scene.png"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showChapterList");
 			menu.setText(ResourceManager.getMessage("msg.chapter"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
 			editMenu.getItems().add(menu);
 		}
 
@@ -218,19 +225,28 @@ public class MainWindow extends MyStage {
 	// メインツールバーを作成
 	private void modelingMainToolBar () {
 		ToolBar toolBar = new ToolBar();
-		List<Button> buttonList = new ArrayList<>();
+		List<Node> buttonList = new ArrayList<>();
 
 		Button button = null;
 		{
+			button = GUIUtil.createCommandButton(this.viewModelList, "save", ResourceManager.getMessage("msg.save"));
+			button.setGraphic(ResourceManager.getIconNode("save.png"));
+			buttonList.add(button);
+			buttonList.add(new Separator());
 			button = GUIUtil.createCommandButton(this.viewModelList, "showPersonList", ResourceManager.getMessage("msg.person"));
+			button.setGraphic(ResourceManager.getIconNode("person.png"));
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showGroupList", ResourceManager.getMessage("msg.group"));
+			button.setGraphic(ResourceManager.getIconNode("group.png"));
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showPlaceList", ResourceManager.getMessage("msg.place"));
+			button.setGraphic(ResourceManager.getIconNode("place.png"));
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showSceneList", ResourceManager.getMessage("msg.scene"));
+			button.setGraphic(ResourceManager.getIconNode("scene.png"));
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showChapterList", ResourceManager.getMessage("msg.chapter"));
+			button.setGraphic(ResourceManager.getIconNode("chapter.png"));
 			buttonList.add(button);
 		}
 
@@ -360,27 +376,37 @@ public class MainWindow extends MyStage {
 
 	// 登場人物リストタブを追加
 	private void addPersonListTab () {
-		this.addEntityListTab(new PersonListPane());
+		EntityListPane tab = new PersonListPane();
+		tab.setGraphic(ResourceManager.getMiniIconNode("person.png"));
+		this.addEntityListTab(tab);
 	}
 
 	// 集団リストタブを追加
 	private void addGroupListTab () {
-		this.addEntityListTab(new GroupListPane());
+		EntityListPane tab = new GroupListPane();
+		tab.setGraphic(ResourceManager.getMiniIconNode("group.png"));
+		this.addEntityListTab(tab);
 	}
 
 	// 場所リストタブを追加
 	private void addPlaceListTab () {
-		this.addEntityListTab(new PlaceListPane());
+		EntityListPane tab = new PlaceListPane();
+		tab.setGraphic(ResourceManager.getMiniIconNode("place.png"));
+		this.addEntityListTab(tab);
 	}
 
 	// シーンリストタブを追加
 	private void addSceneListTab () {
-		this.addEntityListTab(new SceneListPane());
+		EntityListPane tab = new SceneListPane();
+		tab.setGraphic(ResourceManager.getMiniIconNode("scene.png"));
+		this.addEntityListTab(tab);
 	}
 
 	// 章リストタブを追加
 	private void addChapterListTab () {
-		this.addEntityListTab(new ChapterListPane());
+		EntityListPane tab = new ChapterListPane();
+		tab.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
+		this.addEntityListTab(tab);
 	}
 
 	// エンティティ編集タブ
