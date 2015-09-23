@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -76,6 +77,12 @@ public class NewStoryDialog extends MyStage {
 		this.setTitle(ResourceManager.getMessage("msg.new.story"));
 		this.setResizable(false);
 		this.initModality(Modality.APPLICATION_MODAL);
+
+		scene.setOnKeyPressed((ev) -> {
+			if (ev.getCode() == KeyCode.ESCAPE) {
+				this.viewModelList.executeCommand("cancel");
+			}
+		});
 
 		this.viewModelList.storeMessenger(this.messenger);
 		this.messenger.apply(CloseMessage.class, this, (ev) -> this.close());

@@ -29,6 +29,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -173,6 +174,7 @@ public class MainWindow extends MyStage {
 
 			menu = GUIUtil.createMenuItem(this.viewModelList, "exit");
 			menu.setText(ResourceManager.getMessage("msg.exit"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+Q"));
 			appMenu.getItems().add(menu);
 		}
 
@@ -186,6 +188,7 @@ public class MainWindow extends MyStage {
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
 			menu.setText(ResourceManager.getMessage("msg.save"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("save.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+S"));
 			fileMenu.getItems().add(menu);
 		}
 
@@ -196,14 +199,17 @@ public class MainWindow extends MyStage {
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showPersonList");
 			menu.setText(ResourceManager.getMessage("msg.person"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("person.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+P"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showGroupList");
 			menu.setText(ResourceManager.getMessage("msg.group"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("group.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+G"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showPlaceList");
 			menu.setText(ResourceManager.getMessage("msg.place"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("place.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+L"));
 			editMenu.getItems().add(menu);
 
 			editMenu.getItems().add(new SeparatorMenuItem());
@@ -211,10 +217,12 @@ public class MainWindow extends MyStage {
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showSceneList");
 			menu.setText(ResourceManager.getMessage("msg.scene"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("scene.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+S"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showChapterList");
 			menu.setText(ResourceManager.getMessage("msg.chapter"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+C"));
 			editMenu.getItems().add(menu);
 		}
 
