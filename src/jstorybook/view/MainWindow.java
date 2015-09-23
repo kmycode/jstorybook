@@ -13,6 +13,7 @@
  */
 package jstorybook.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
@@ -33,6 +34,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import jstorybook.common.contract.DialogResult;
 import jstorybook.common.contract.EntityType;
@@ -60,8 +62,10 @@ import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
+import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
+import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
@@ -149,14 +153,6 @@ public class MainWindow extends MyStage {
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
 		scene.getStylesheets().add(ResourceManager.getCss("default.css"));
 		this.setScene(scene);
-
-		// TODO:【テスト】
-		this.viewModelList.setProperty("storyFileName", "teststory/test.db");
-		this.addPersonListTab();
-		this.addGroupListTab();
-		this.addPlaceListTab();
-		this.addSceneListTab();
-		this.addChapterListTab();
 	}
 
 	// メインメニューバーを作成
@@ -186,6 +182,10 @@ public class MainWindow extends MyStage {
 			menu = GUIUtil.createMenuItem(this.viewModelList, "newStory");
 			menu.setText(ResourceManager.getMessage("msg.new.story"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+N"));
+			fileMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "loadStory");
+			menu.setText(ResourceManager.getMessage("msg.menu.load.story"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+O"));
 			fileMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
 			menu.setText(ResourceManager.getMessage("msg.save"));
@@ -294,11 +294,17 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(EntityEditorCloseMessage.class, this, (ev) -> {
 			MainWindow.this.removeEntityEditorTab((EntityEditorCloseMessage) ev);
 		});
+		this.messenger.apply(OpenFileChooserMessage.class, this, (ev) -> {
+			this.openFileDialog((OpenFileChooserMessage) ev);
+		});
 		this.messenger.apply(DeleteDialogMessage.class, this, (ev) -> {
 			this.deleteDialog((DeleteDialogMessage) ev);
 		});
 		this.messenger.apply(EntityListNoSelectMessage.class, this, (ev) -> {
 			this.entityListPaneNoSelect((EntityListNoSelectMessage) ev);
+		});
+		this.messenger.apply(MainWindowResetMessage.class, this, (ev) -> {
+			this.resetTab();
 		});
 
 		this.messenger.apply(PersonListShowMessage.class, this, (ev) -> {
@@ -336,6 +342,17 @@ public class MainWindow extends MyStage {
 	}
 
 	// -------------------------------------------------------
+	// 表示タブを初期状態にリセット
+	private void resetTab () {
+		this.clearTab();
+		this.addPersonListTab();
+		this.addGroupListTab();
+		this.addPlaceListTab();
+		this.addSceneListTab();
+		this.addChapterListTab();
+		this.addPersonListTab();
+	}
+
 	// タブを追加
 	private void addTab (DockableTab tab) {
 
@@ -363,6 +380,15 @@ public class MainWindow extends MyStage {
 			MainWindow.this.activeTabPane.set((DockableTabPane) obj.getSource());
 		});
 		this.activeTabPane.get().getSelectionModel().select(tab);
+	}
+
+	// タブを全部消す
+	private void clearTab () {
+		for (Node node : this.rootGroupPane.get().getItems()) {
+			if (node instanceof DockableTabPane) {
+				((DockableTabPane) node).removeTabPane();
+			}
+		}
 	}
 
 	// エンティティリストタブを追加
@@ -549,6 +575,15 @@ public class MainWindow extends MyStage {
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.progressProperty().bind(mes.progressProperty());
 		dialog.show();
+	}
+
+	// ファイルを開くダイアログ
+	private void openFileDialog (OpenFileChooserMessage mes) {
+		FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog(this);
+		if (file != null) {
+			mes.fileNameProperty().set(file.getPath());
+		}
 	}
 
 	// 二択

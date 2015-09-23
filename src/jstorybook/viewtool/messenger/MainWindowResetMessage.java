@@ -11,34 +11,15 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel;
+package jstorybook.viewtool.messenger;
 
-import jstorybook.model.ApplicationModel;
-import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * アプリの終了
+ * メインウィンドウ画面表示をリセットする
  *
-  * @author KMY
+ * @author KMY
  */
-public class ApplicationViewModel extends ViewModel {
-
-	ApplicationModel model = new ApplicationModel();
-
-	@Override
-	protected void storeProperty () {
-	}
-
-	@Override
-	public void storeMessenger (Messenger messenger) {
-		this.model.setMessenger(messenger);
-	}
-
-	@Override
-	protected void storeCommand () {
-		this.applyCommand("newStory", (ev) -> this.model.newStory());
-		this.applyCommand("loadStory", (ev) -> this.model.loadStory());
-		this.applyCommand("exit", (ev) -> this.model.exit());
-	}
+public class MainWindowResetMessage extends Message {
 
 }

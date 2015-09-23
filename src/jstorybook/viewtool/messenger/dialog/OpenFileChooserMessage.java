@@ -11,34 +11,26 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel;
+package jstorybook.viewtool.messenger.dialog;
 
-import jstorybook.model.ApplicationModel;
-import jstorybook.viewtool.messenger.Messenger;
+import javafx.beans.property.StringProperty;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * アプリの終了
+ * 開くファイル選択ダイアログ表示メッセージ
  *
-  * @author KMY
+ * @author KMY
  */
-public class ApplicationViewModel extends ViewModel {
+public class OpenFileChooserMessage extends Message {
 
-	ApplicationModel model = new ApplicationModel();
+	private StringProperty fileName;
 
-	@Override
-	protected void storeProperty () {
+	public OpenFileChooserMessage (StringProperty fileName) {
+		this.fileName = fileName;
 	}
 
-	@Override
-	public void storeMessenger (Messenger messenger) {
-		this.model.setMessenger(messenger);
-	}
-
-	@Override
-	protected void storeCommand () {
-		this.applyCommand("newStory", (ev) -> this.model.newStory());
-		this.applyCommand("loadStory", (ev) -> this.model.loadStory());
-		this.applyCommand("exit", (ev) -> this.model.exit());
+	public StringProperty fileNameProperty () {
+		return this.fileName;
 	}
 
 }

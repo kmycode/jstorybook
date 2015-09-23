@@ -93,6 +93,7 @@ public class StoryLoadSync extends Task<Object> {
 		}
 
 		this.step.set(this.goal.get());
+		this.succeeded();
 		return new Object();
 	}
 

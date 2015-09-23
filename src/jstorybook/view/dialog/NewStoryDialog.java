@@ -60,17 +60,21 @@ public class NewStoryDialog extends MyStage {
 
 		Label newLabel = new Label(ResourceManager.getMessage("msg.new.story.name.input"));
 		GUIUtil.setAnchor(newLabel, 20.0, null, null, 20.0);
+		GUIUtil.bindFontStyle(newLabel);
 
 		GUIUtil.setAnchor(this.storyTitleText, 50.0, 20.0, null, 20.0);
 		this.viewModelList.getProperty("storyName").bind(this.storyTitleText.textProperty());
+		GUIUtil.bindFontStyle(this.storyTitleText);
 
 		Label selectLabel = new Label(ResourceManager.getMessage("msg.new.story.file.select"));
 		GUIUtil.setAnchor(selectLabel, 100.0, 20.0, null, 20.0);
+		GUIUtil.bindFontStyle(selectLabel);
 
 		Button selectButton = GUIUtil.createCommandButton(this.viewModelList, "fileSelect");
 		selectButton.setText(ResourceManager.getMessage("msg.select"));
 
 		GUIUtil.setAnchor(this.fileNameText, 130.0, 120.0, null, 20.0);
+		GUIUtil.bindFontStyle(this.fileNameText);
 		this.viewModelList.getProperty("fileName").bindBidirectional(this.fileNameText.textProperty());
 
 		HBox fileSelectBox = new HBox(this.fileNameText, selectButton);
@@ -106,7 +110,9 @@ public class NewStoryDialog extends MyStage {
 	private void saveFileChooser (SaveFileChooserMessage mes) {
 		FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showSaveDialog(this);
-		mes.fileNameProperty().set(file.getPath());
+		if (file != null) {
+			mes.fileNameProperty().set(file.getPath());
+		}
 	}
 
 	public StringProperty storyNameProperty () {

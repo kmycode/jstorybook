@@ -13,15 +13,16 @@
  */
 package jstorybook.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
+import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
+import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
-import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
-import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
-import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
-import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
-import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
+import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 
 /**
  * アプリケーションモデル
@@ -36,28 +37,22 @@ public class ApplicationModel implements IUseMessenger {
 		this.messenger.send(new ApplicationQuitMessage());
 	}
 
-	public void showPersonList () {
-		this.messenger.send(new PersonListShowMessage());
-	}
-
-	public void showGroupList () {
-		this.messenger.send(new GroupListShowMessage());
-	}
-
-	public void showPlaceList () {
-		this.messenger.send(new PlaceListShowMessage());
-	}
-
-	public void showSceneList () {
-		this.messenger.send(new SceneListShowMessage());
-	}
-
-	public void showChapterList () {
-		this.messenger.send(new ChapterListShowMessage());
-	}
-
 	public void newStory () {
 		this.messenger.send(new NewStoryDialogShowMessage());
+	}
+
+	public void loadStory () {
+		StringProperty fileName = new SimpleStringProperty();
+		this.messenger.send(new OpenFileChooserMessage(fileName));
+		if (fileName.get() != null && !fileName.get().isEmpty()) {
+			CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
+			this.messenger.send(mes);
+			StoryModel storyModel = mes.storyModelProperty().get();
+			if (storyModel != null) {
+				storyModel.fileNameProperty().set(fileName.get());
+				this.messenger.send(new MainWindowResetMessage());
+			}
+		}
 	}
 
 	@Override

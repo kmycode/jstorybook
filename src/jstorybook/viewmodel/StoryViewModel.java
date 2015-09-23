@@ -73,54 +73,58 @@ public class StoryViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
-		this.applyCommand("personNew", (ev) -> this.storyModel.get().newPerson());
-		this.applyCommand("personEdit", (ev) -> this.storyModel.get().editPerson(), this.storyModel.get().
-						  getPersonEntity().canEditProperty());
-		this.applyCommand("personDelete", (ev) -> this.storyModel.get().deletePerson(), this.storyModel.get().getPersonEntity().
+		this.applyCommand("showPersonList", (ev) -> this.storyModel.get().showPersonList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("personNew", (ev) -> this.storyModel.get().newPerson(), this.storyModel.get().canEditProperty());
+		this.applyCommand("personEdit", (ev) -> this.storyModel.get().editPerson(), this.storyModel.get().canEditProperty());
+		this.applyCommand("personDelete", (ev) -> this.storyModel.get().deletePerson(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("personUp", (ev) -> this.storyModel.get().upPerson(), this.storyModel.get().getPersonEntity().
+		this.applyCommand("personUp", (ev) -> this.storyModel.get().upPerson(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("personDown", (ev) -> this.storyModel.get().downPerson(), this.storyModel.get().getPersonEntity().
+		this.applyCommand("personDown", (ev) -> this.storyModel.get().downPerson(), this.storyModel.get().
 						  canEditProperty());
 
-		this.applyCommand("groupNew", (ev) -> this.storyModel.get().newGroup());
+		this.applyCommand("showGroupList", (ev) -> this.storyModel.get().showGroupList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("groupNew", (ev) -> this.storyModel.get().newGroup(), this.storyModel.get().canEditProperty());
 		this.applyCommand("groupEdit", (ev) -> this.storyModel.get().editGroup(), this.storyModel.get().
-						  getGroupEntity().canEditProperty());
-		this.applyCommand("groupDelete", (ev) -> this.storyModel.get().deleteGroup(), this.storyModel.get().getGroupEntity().
 						  canEditProperty());
-		this.applyCommand("groupUp", (ev) -> this.storyModel.get().upGroup(), this.storyModel.get().getGroupEntity().
+		this.applyCommand("groupDelete", (ev) -> this.storyModel.get().deleteGroup(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("groupDown", (ev) -> this.storyModel.get().downGroup(), this.storyModel.get().getGroupEntity().
+		this.applyCommand("groupUp", (ev) -> this.storyModel.get().upGroup(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("groupDown", (ev) -> this.storyModel.get().downGroup(), this.storyModel.get().
 						  canEditProperty());
 
-		this.applyCommand("placeNew", (ev) -> this.storyModel.get().newPlace());
+		this.applyCommand("showPlaceList", (ev) -> this.storyModel.get().showPlaceList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("placeNew", (ev) -> this.storyModel.get().newPlace(), this.storyModel.get().canEditProperty());
 		this.applyCommand("placeEdit", (ev) -> this.storyModel.get().editPlace(), this.storyModel.get().
-						  getPlaceEntity().canEditProperty());
-		this.applyCommand("placeDelete", (ev) -> this.storyModel.get().deletePlace(), this.storyModel.get().getPlaceEntity().
 						  canEditProperty());
-		this.applyCommand("placeUp", (ev) -> this.storyModel.get().upPlace(), this.storyModel.get().getPlaceEntity().
+		this.applyCommand("placeDelete", (ev) -> this.storyModel.get().deletePlace(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("placeDown", (ev) -> this.storyModel.get().downPlace(), this.storyModel.get().getPlaceEntity().
+		this.applyCommand("placeUp", (ev) -> this.storyModel.get().upPlace(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("placeDown", (ev) -> this.storyModel.get().downPlace(), this.storyModel.get().
 						  canEditProperty());
 
-		this.applyCommand("sceneNew", (ev) -> this.storyModel.get().newScene());
+		this.applyCommand("showSceneList", (ev) -> this.storyModel.get().showSceneList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("sceneNew", (ev) -> this.storyModel.get().newScene(), this.storyModel.get().canEditProperty());
 		this.applyCommand("sceneEdit", (ev) -> this.storyModel.get().editScene(), this.storyModel.get().
-						  getSceneEntity().canEditProperty());
-		this.applyCommand("sceneDelete", (ev) -> this.storyModel.get().deleteScene(), this.storyModel.get().getSceneEntity().
 						  canEditProperty());
-		this.applyCommand("sceneUp", (ev) -> this.storyModel.get().upScene(), this.storyModel.get().getSceneEntity().
+		this.applyCommand("sceneDelete", (ev) -> this.storyModel.get().deleteScene(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("sceneDown", (ev) -> this.storyModel.get().downScene(), this.storyModel.get().getSceneEntity().
+		this.applyCommand("sceneUp", (ev) -> this.storyModel.get().upScene(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("sceneDown", (ev) -> this.storyModel.get().downScene(), this.storyModel.get().
 						  canEditProperty());
 
-		this.applyCommand("chapterNew", (ev) -> this.storyModel.get().newChapter());
+		this.applyCommand("showChapterList", (ev) -> this.storyModel.get().showChapterList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("chapterNew", (ev) -> this.storyModel.get().newChapter(), this.storyModel.get().canEditProperty());
 		this.applyCommand("chapterEdit", (ev) -> this.storyModel.get().editChapter(), this.storyModel.get().
-						  getChapterEntity().canEditProperty());
-		this.applyCommand("chapterDelete", (ev) -> this.storyModel.get().deleteChapter(), this.storyModel.get().getChapterEntity().
 						  canEditProperty());
-		this.applyCommand("chapterUp", (ev) -> this.storyModel.get().upChapter(), this.storyModel.get().getChapterEntity().
+		this.applyCommand("chapterDelete", (ev) -> this.storyModel.get().deleteChapter(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("chapterDown", (ev) -> this.storyModel.get().downChapter(), this.storyModel.get().getChapterEntity().
+		this.applyCommand("chapterUp", (ev) -> this.storyModel.get().upChapter(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("chapterDown", (ev) -> this.storyModel.get().downChapter(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());

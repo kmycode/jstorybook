@@ -15,6 +15,7 @@ package jstorybook.common.util;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
@@ -85,6 +86,10 @@ public class GUIUtil {
 	}
 
 	public static void bindFontStyle (Tab node) {
+		node.styleProperty().bind(FontManager.getInstance().fontStyleProperty());
+	}
+
+	public static void bindFontStyle (Control node) {
 		node.styleProperty().bind(FontManager.getInstance().fontStyleProperty());
 	}
 

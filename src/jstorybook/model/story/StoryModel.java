@@ -17,7 +17,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -61,18 +63,24 @@ import jstorybook.model.story.sync.StoryLoadSync;
 import jstorybook.model.story.sync.StorySaveSync;
 import jstorybook.viewtool.messenger.ExceptionMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
+import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
 
 /**
  * ストーリーファイルのモデル
@@ -109,26 +117,50 @@ public class StoryModel implements IUseMessenger {
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
 	private final BooleanProperty canSave = new SimpleBooleanProperty(false);
+	private final BooleanProperty canEdit = new SimpleBooleanProperty(false);
+	private final BooleanProperty setDaoFinish = new SimpleBooleanProperty(false);
 	private Messenger messenger = Messenger.getInstance();
+	private StoryCreateModel storyCreateModel;
 
 	public StoryModel () {
 		// ファイル名変更時のイベント
 		this.storyFileName.addListener((obj) -> {
+			this.canEdit.set(false);
 			try {
 				this.storyFile.set(new StoryFileModel(((StringProperty) obj).get()));
 				if (this.isCreating) {
 					this.createDAO();
 				}
 				this.setDAO();
+
+				this.canEdit.set(true);
 			} catch (SQLException e) {
 				this.messenger.send(new StoryFileLoadFailedMessage(((StringProperty) obj).get()));
 				e.printStackTrace();
 			}
 		});
+
+		// ストーリー新規作成時、ストーリーの設定を保存する
+		this.setDaoFinish.addListener((objs) -> {
+			if (this.storyCreateModel != null) {
+				if (this.setDaoFinish.get()) {
+					this.storySettingEntity.dao.get().setSetting(StorySettingName.STORY_NAME.getKey(), this.storyCreateModel.
+																 storyNameProperty().get());
+					Platform.runLater(() -> this.save());
+					this.storyCreateModel = null;
+				}
+			}
+		});
+
+		// 保存可能か？（今はいったんcanEditにバインドしてる）
+		this.canSave.bind(this.canEdit);
 	}
 
 	// ファイル名を変更した時に呼び出して、情報を取得する
 	private void setDAO () throws SQLException {
+
+		this.setDaoFinish.set(false);
+
 		// 設定の読み込み
 		this.storySettingEntity.dao.get().setStoryFileModel(this.storyFile.get());
 
@@ -142,9 +174,12 @@ public class StoryModel implements IUseMessenger {
 			// getバグ
 			service.stepProperty().get();
 		});
+		service.myProgressProperty().addListener((obj) -> {
+			if (((DoubleProperty) obj).get() == 1) {
+				this.setDaoFinish.set(true);
+			}
+		});
 		service.start();
-
-		this.canSave.set(true);
 	}
 
 	// ストーリーモデル全体のファイルへの保存
@@ -163,13 +198,16 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	// ストーリーの新規作成
-	public void create (String fileName, String storyName) {
+	public void create (StoryCreateModel createModel) {
 
-		this.getCore().titleProperty().set(storyName);
+		this.storyCreateModel = createModel;
 
 		// たったこれだけで初期化処理がなされる
 		this.isCreating = true;
-		this.storyFileName.set(fileName);
+		this.storyFileName.set(createModel.fileNameProperty().get());
+
+		// メイン画面の表示をリセット
+		this.messenger.send(new MainWindowResetMessage());
 	}
 
 	// ストーリー新規作成・ファイルへの書き込み
@@ -182,7 +220,6 @@ public class StoryModel implements IUseMessenger {
 		} catch (SQLException e) {
 			this.messenger.send(new ExceptionMessage(e));
 		}
-		this.storySettingEntity.dao.get().setSetting(StorySettingName.STORY_NAME.getKey(), this.getCore().titleProperty().get());
 	}
 
 	// 保存や読み込みで利用
@@ -207,6 +244,10 @@ public class StoryModel implements IUseMessenger {
 
 	public BooleanProperty canSaveProperty () {
 		return this.canSave;
+	}
+
+	public BooleanProperty canEditProperty () {
+		return this.canEdit;
 	}
 
 	// -------------------------------------------------------
@@ -415,6 +456,10 @@ public class StoryModel implements IUseMessenger {
 					   getInstance());
 	}
 
+	public void showPersonList () {
+		this.messenger.send(new PersonListShowMessage());
+	}
+
 	public void editPerson () {
 		this.editEntity(this.personEntity.selectedEntityList.get(), PersonEditorShowMessage.getInstance(), PersonColumnFactory.
 						getInstance());
@@ -435,6 +480,10 @@ public class StoryModel implements IUseMessenger {
 	public void newGroup () {
 		this.newEntity(new Group(), this.groupEntity.dao.get(), GroupEditorShowMessage.getInstance(), GroupColumnFactory.
 					   getInstance());
+	}
+
+	public void showGroupList () {
+		this.messenger.send(new GroupListShowMessage());
 	}
 
 	public void editGroup () {
@@ -459,6 +508,10 @@ public class StoryModel implements IUseMessenger {
 					   getInstance());
 	}
 
+	public void showPlaceList () {
+		this.messenger.send(new PlaceListShowMessage());
+	}
+
 	public void editPlace () {
 		this.editEntity(this.placeEntity.selectedEntityList.get(), PlaceEditorShowMessage.getInstance(), PlaceColumnFactory.
 						getInstance());
@@ -481,6 +534,10 @@ public class StoryModel implements IUseMessenger {
 					   getInstance());
 	}
 
+	public void showSceneList () {
+		this.messenger.send(new SceneListShowMessage());
+	}
+
 	public void editScene () {
 		this.editEntity(this.sceneEntity.selectedEntityList.get(), SceneEditorShowMessage.getInstance(), SceneColumnFactory.
 						getInstance());
@@ -501,6 +558,10 @@ public class StoryModel implements IUseMessenger {
 	public void newChapter () {
 		this.newEntity(new Chapter(), this.chapterEntity.dao.get(), ChapterEditorShowMessage.getInstance(), ChapterColumnFactory.
 					   getInstance());
+	}
+
+	public void showChapterList () {
+		this.messenger.send(new ChapterListShowMessage());
 	}
 
 	public void editChapter () {

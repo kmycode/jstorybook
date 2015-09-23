@@ -54,6 +54,7 @@ public class ProgressDialog extends MyStage {
 		this.setScene(scene);
 		this.initStyle(StageStyle.DECORATED);
 		this.initModality(Modality.APPLICATION_MODAL);	// showAndWaitではだめ
+		this.setResizable(false);
 		this.setAlwaysOnTop(true);
 		this.setOnCloseRequest((ev) -> {
 			ev.consume();

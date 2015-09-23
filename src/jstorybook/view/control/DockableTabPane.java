@@ -103,6 +103,11 @@ public class DockableTabPane extends TabPane {
 		}
 	}
 
+	public void removeTabPane () {
+		this.getTabs().clear();
+		this.parent.removeEmptyTabPane();
+	}
+
 	public void insertTab (int index, DockableTab tab) {
 		this.getTabs().add(index, tab);
 	}

@@ -55,7 +55,7 @@ public class StoryCreateModel implements IUseMessenger {
 
 		StoryModel storyModel = message.storyModelProperty().get();
 		if (storyModel != null) {
-			storyModel.create(this.fileName.get(), this.storyName.get());
+			storyModel.create(this);
 		}
 		else {
 			this.messenger.send(new ExceptionMessage(new NullPointerException("storyModel cannot get")));

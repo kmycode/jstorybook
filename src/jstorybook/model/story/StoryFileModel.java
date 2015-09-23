@@ -16,6 +16,8 @@ package jstorybook.model.story;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import jstorybook.model.db.SQLiteFile;
 
 /**
@@ -28,10 +30,14 @@ public class StoryFileModel {
 
 	private final SQLiteFile db;
 	private final String fileName;
+	private final BooleanProperty isOpen = new SimpleBooleanProperty(false);
 
 	public StoryFileModel (String fileName) throws SQLException {
-		this.db = new SQLiteFile(new File(fileName).toPath().toString());
 		this.fileName = fileName;
+		this.db = new SQLiteFile(new File(fileName).toPath().toString());
+
+		// 例外発生なら、コードはここまで到達しない
+		this.isOpen.set(true);
 	}
 
 	public ResultSet executeQuery (String sql) throws SQLException {
@@ -44,6 +50,10 @@ public class StoryFileModel {
 
 	public String getFileName () {
 		return this.fileName;
+	}
+
+	public BooleanProperty isOpenProperty () {
+		return this.isOpen;
 	}
 
 }
