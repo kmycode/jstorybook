@@ -11,39 +11,25 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.operatemodel;
+
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * ストーリー設定名の一蘭
+ * 新規ストーリー作成メッセージ
  *
  * @author KMY
  */
-public enum StorySettingName {
+public class NewStoryCreateMessage extends Message {
 
-	// 設定追加したら、StorySettingDAOも忘れずに変更してねっ☆
+	private final String newStoryName;
 
-	FILE_VERSION("fileversion", true),
-	ENTITY_COUNT("entitycount", true),
-	STORY_NAME("storyname", false),;
-
-	private final String key;
-	private final boolean isInt;
-
-	private StorySettingName (String key, boolean isInt) {
-		this.key = key;
-		this.isInt = isInt;
+	public NewStoryCreateMessage (String name) {
+		this.newStoryName = name;
 	}
 
-	public String getKey () {
-		return this.key;
-	}
-
-	public boolean isInt () {
-		return this.isInt;
-	}
-
-	public boolean isString () {
-		return !this.isInt;
+	public String getNewStoryName () {
+		return this.newStoryName;
 	}
 
 }

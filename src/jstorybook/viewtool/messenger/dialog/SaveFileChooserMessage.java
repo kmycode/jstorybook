@@ -11,39 +11,26 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.dialog;
+
+import javafx.beans.property.StringProperty;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * ストーリー設定名の一蘭
+ * 保存先ファイル選択ダイアログ表示メッセージ
  *
  * @author KMY
  */
-public enum StorySettingName {
+public class SaveFileChooserMessage extends Message {
 
-	// 設定追加したら、StorySettingDAOも忘れずに変更してねっ☆
+	private StringProperty fileName;
 
-	FILE_VERSION("fileversion", true),
-	ENTITY_COUNT("entitycount", true),
-	STORY_NAME("storyname", false),;
-
-	private final String key;
-	private final boolean isInt;
-
-	private StorySettingName (String key, boolean isInt) {
-		this.key = key;
-		this.isInt = isInt;
+	public SaveFileChooserMessage (StringProperty fileName) {
+		this.fileName = fileName;
 	}
 
-	public String getKey () {
-		return this.key;
-	}
-
-	public boolean isInt () {
-		return this.isInt;
-	}
-
-	public boolean isString () {
-		return !this.isInt;
+	public StringProperty fileNameProperty () {
+		return this.fileName;
 	}
 
 }

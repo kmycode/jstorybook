@@ -70,6 +70,7 @@ import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
@@ -184,11 +185,16 @@ public class MainWindow extends MyStage {
 		{
 			menu = GUIUtil.createMenuItem(this.viewModelList, "newStory");
 			menu.setText(ResourceManager.getMessage("msg.new.story"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+N"));
 			fileMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
 			menu.setText(ResourceManager.getMessage("msg.save"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("save.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+S"));
+			fileMenu.getItems().add(menu);
+			fileMenu.getItems().add(new SeparatorMenuItem());
+			menu = new MenuItem();
+			menu.setText(ResourceManager.getMessage("msg.story.setting"));
 			fileMenu.getItems().add(menu);
 		}
 
@@ -291,6 +297,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(DeleteDialogMessage.class, this, (ev) -> {
 			this.deleteDialog((DeleteDialogMessage) ev);
 		});
+		this.messenger.apply(EntityListNoSelectMessage.class, this, (ev) -> {
+			this.entityListPaneNoSelect((EntityListNoSelectMessage) ev);
+		});
 
 		this.messenger.apply(PersonListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonListTab();
@@ -380,6 +389,14 @@ public class MainWindow extends MyStage {
 			}
 		}
 		return null;
+	}
+
+	// 指定した種類のエンティティリストで、何も選ばない
+	private void entityListPaneNoSelect (EntityListNoSelectMessage mes) {
+		EntityListPane tab = this.findEntityListPane(mes.getEntityType());
+		if (tab != null) {
+			tab.noSelect();
+		}
 	}
 
 	// 登場人物リストタブを追加

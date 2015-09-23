@@ -92,9 +92,9 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.commandButtonBar.getChildren().addAll(newButton, editButton, delButton);
 
 		// テーブルビューを選択した時のイベント
+		this.selectedItem.bind(this.tableView.getSelectionModel().selectedItemProperty());
+		this.selectedItem.addListener((obj) -> this.selectedItemList.set(this.tableView.getSelectionModel().getSelectedItems()));
 		this.tableView.setOnMouseClicked((ev) -> {
-			this.selectedItem.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItem());
-			this.selectedItemList.set(EntityListPane.this.tableView.getSelectionModel().getSelectedItems());
 			if (ev.getClickCount() >= 2) {
 				this.viewModelList.executeCommand(this.getEntityTypeName() + "Edit");
 			}
@@ -110,6 +110,12 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		downButton.setText(ResourceManager.getMessage("msg.order.down"));
 		downButton.setPrefSize(50.0, 45.0);
 		this.commandButtonBar.getChildren().addAll(upButton, downButton);
+	}
+
+	// 何も選択しない
+	public void noSelect () {
+		this.tableView.getSelectionModel().clearSelection();
+		System.out.println(this.tableView.getSelectionModel().getSelectedItem());
 	}
 
 	public boolean isEqualPane (EntityListPane other) {

@@ -59,6 +59,7 @@ import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.model.story.sync.StoryLoadSync;
 import jstorybook.model.story.sync.StorySaveSync;
+import jstorybook.viewtool.messenger.ExceptionMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
@@ -67,6 +68,7 @@ import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
@@ -81,6 +83,7 @@ public class StoryModel implements IUseMessenger {
 
 	private final ObjectProperty<StoryCoreModel> core = new SimpleObjectProperty<>(new StoryCoreModel());
 	private final StringProperty storyFileName = new SimpleStringProperty("");
+	private boolean isCreating = false;
 
 	private final ObjectProperty<StoryEntityColumnModel> entityColumn = new SimpleObjectProperty<>(
 			new StoryEntityColumnModel());
@@ -113,6 +116,9 @@ public class StoryModel implements IUseMessenger {
 		this.storyFileName.addListener((obj) -> {
 			try {
 				this.storyFile.set(new StoryFileModel(((StringProperty) obj).get()));
+				if (this.isCreating) {
+					this.createDAO();
+				}
 				this.setDAO();
 			} catch (SQLException e) {
 				this.messenger.send(new StoryFileLoadFailedMessage(((StringProperty) obj).get()));
@@ -138,56 +144,11 @@ public class StoryModel implements IUseMessenger {
 		});
 		service.start();
 
-		// 初期化・データの読み込み
-		/*
-		 		this.personEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.groupEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.placeEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.sceneEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.chapterEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.personPersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.groupPersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.chapterSceneEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.scenePersonEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		this.scenePlaceEntity.dao.get().setStoryFileModel(this.storyFile.get());
-		 */
-
-		// 関連付け
-		/*
-		 		this.personPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
-		this.groupPersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
-		this.groupPersonEntity.dao.get().readGroupDAO(this.groupEntity.dao.get());
-		this.chapterSceneEntity.dao.get().readChapterDAO(this.chapterEntity.dao.get());
-		this.chapterSceneEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
-		this.scenePersonEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
-		this.scenePersonEntity.dao.get().readPersonDAO(this.personEntity.dao.get());
-		this.scenePlaceEntity.dao.get().readSceneDAO(this.sceneEntity.dao.get());
-		this.scenePlaceEntity.dao.get().readPlaceDAO(this.placeEntity.dao.get());
-		 */
-
 		this.canSave.set(true);
 	}
 
 	// ストーリーモデル全体のファイルへの保存
 	public void save () {
-		/*
-		 		try {
-			this.personEntity.dao.get().saveList();
-			this.groupEntity.dao.get().saveList();
-			this.placeEntity.dao.get().saveList();
-			this.sceneEntity.dao.get().saveList();
-			this.chapterEntity.dao.get().saveList();
-			this.personPersonEntity.dao.get().saveList();
-			this.groupPersonEntity.dao.get().saveList();
-			this.chapterSceneEntity.dao.get().saveList();
-			this.scenePersonEntity.dao.get().saveList();
-			this.scenePlaceEntity.dao.get().saveList();
-		} catch (SQLException e) {
-			this.messenger.send(new StoryFileSaveFailedMessage(this.storyFileName.get()));
-			e.printStackTrace();
-		}
-		 */
-
 		StorySaveSync.StorySaveService service = new StorySaveSync.StorySaveService(this);
 
 		// 進捗状況を表示
@@ -199,6 +160,29 @@ public class StoryModel implements IUseMessenger {
 			service.stepProperty().get();
 		});
 		service.start();
+	}
+
+	// ストーリーの新規作成
+	public void create (String fileName, String storyName) {
+
+		this.getCore().titleProperty().set(storyName);
+
+		// たったこれだけで初期化処理がなされる
+		this.isCreating = true;
+		this.storyFileName.set(fileName);
+	}
+
+	// ストーリー新規作成・ファイルへの書き込み
+	private void createDAO () {
+		try {
+			DAO.createStorySystemTable(this.getStoryFile());
+			for (DAO dao : this.getDAOList()) {
+				dao.setStoryFileModel(this.getStoryFile(), true);
+			}
+		} catch (SQLException e) {
+			this.messenger.send(new ExceptionMessage(e));
+		}
+		this.storySettingEntity.dao.get().setSetting(StorySettingName.STORY_NAME.getKey(), this.getCore().titleProperty().get());
 	}
 
 	// 保存や読み込みで利用
@@ -383,6 +367,9 @@ public class StoryModel implements IUseMessenger {
 					this.messenger.send(new EntityEditorCloseMessage(columnFactory.createColumnList(selected)));
 					dao.deleteModel(selected);
 				}
+
+				// 何も選ばないというメッセージを送る
+				this.messenger.send(new EntityListNoSelectMessage(columnFactory.createColumnList().getEntityType()));
 			}
 		}
 	}

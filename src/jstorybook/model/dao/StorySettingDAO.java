@@ -75,4 +75,13 @@ public class StorySettingDAO extends DAO<StorySetting> {
 		}
 	}
 
+	@Override
+	protected void createTable () throws SQLException {
+		this.getStoryFileModel().updateQuery(
+				"CREATE TABLE setting (key TEXT PRIMARY KEY NOT NULL, value TEXT, intValue INTEGER)");
+		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('storyname','',0);");
+		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('entitycount','',0);");
+		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('fileversion','',1);");
+	}
+
 }

@@ -13,17 +13,18 @@
  */
 package jstorybook.view.dialog;
 
+import java.io.File;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.MyStage;
@@ -31,6 +32,7 @@ import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.dialog.NewStoryDialogViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.dialog.SaveFileChooserMessage;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 
 /**
@@ -46,6 +48,7 @@ public class NewStoryDialog extends MyStage {
 	private final Messenger parentMessenger;
 
 	TextField storyTitleText = new TextField();
+	TextField fileNameText = new TextField();
 
 	public NewStoryDialog (Stage parent, Messenger messenger) {
 		super(parent);
@@ -53,24 +56,40 @@ public class NewStoryDialog extends MyStage {
 		this.parentMessenger = messenger;
 
 		AnchorPane root = new AnchorPane();
-		root.setPrefSize(500.0, 150.0);
+		root.setPrefSize(500.0, 220.0);
 
 		Label newLabel = new Label(ResourceManager.getMessage("msg.new.story.name.input"));
 		GUIUtil.setAnchor(newLabel, 20.0, null, null, 20.0);
 
-		GUIUtil.setAnchor(this.storyTitleText, null, 20.0, 60.0, 20.0);
+		GUIUtil.setAnchor(this.storyTitleText, 50.0, 20.0, null, 20.0);
 		this.viewModelList.getProperty("storyName").bind(this.storyTitleText.textProperty());
+
+		Label selectLabel = new Label(ResourceManager.getMessage("msg.new.story.file.select"));
+		GUIUtil.setAnchor(selectLabel, 100.0, 20.0, null, 20.0);
+
+		Button selectButton = GUIUtil.createCommandButton(this.viewModelList, "fileSelect");
+		selectButton.setText(ResourceManager.getMessage("msg.select"));
+
+		GUIUtil.setAnchor(this.fileNameText, 130.0, 120.0, null, 20.0);
+		this.viewModelList.getProperty("fileName").bindBidirectional(this.fileNameText.textProperty());
+
+		HBox fileSelectBox = new HBox(this.fileNameText, selectButton);
+		GUIUtil.setAnchor(fileSelectBox, 128.0, 20.0, null, 20.0);
+		HBox.setHgrow(this.fileNameText, Priority.ALWAYS);
 
 		HBox commandBox = new HBox();
 		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "create");
 		okButton.setText(ResourceManager.getMessage("msg.ok"));
+		okButton.setDefaultButton(true);
+		okButton.setPrefWidth(100);
 		Button cancelButton = GUIUtil.createCommandButton(this.viewModelList, "cancel");
 		cancelButton.setText(ResourceManager.getMessage("msg.cancel"));
-		cancelButton.fontProperty().bind(FontManager.getInstance().fontProperty());
+		cancelButton.setCancelButton(true);
+		cancelButton.setPrefWidth(100);
 		commandBox.getChildren().addAll(okButton, cancelButton);
 		GUIUtil.setAnchor(commandBox, null, 30.0, 20.0, null);
 
-		root.getChildren().addAll(newLabel, this.storyTitleText, commandBox);
+		root.getChildren().addAll(newLabel, this.storyTitleText, selectLabel, fileSelectBox, commandBox);
 
 		Scene scene = new Scene(root);
 		this.setScene(scene);
@@ -78,15 +97,16 @@ public class NewStoryDialog extends MyStage {
 		this.setResizable(false);
 		this.initModality(Modality.APPLICATION_MODAL);
 
-		scene.setOnKeyPressed((ev) -> {
-			if (ev.getCode() == KeyCode.ESCAPE) {
-				this.viewModelList.executeCommand("cancel");
-			}
-		});
-
 		this.viewModelList.storeMessenger(this.messenger);
 		this.messenger.apply(CloseMessage.class, this, (ev) -> this.close());
+		this.messenger.apply(SaveFileChooserMessage.class, this, (ev) -> this.saveFileChooser((SaveFileChooserMessage) ev));
 		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.parentMessenger);
+	}
+
+	private void saveFileChooser (SaveFileChooserMessage mes) {
+		FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showSaveDialog(this);
+		mes.fileNameProperty().set(file.getPath());
 	}
 
 	public StringProperty storyNameProperty () {

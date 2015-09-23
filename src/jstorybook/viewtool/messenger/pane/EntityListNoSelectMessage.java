@@ -11,39 +11,26 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.pane;
+
+import jstorybook.common.contract.EntityType;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * ストーリー設定名の一蘭
+ * エンティティリストの選択を解除するメッセージ
  *
  * @author KMY
  */
-public enum StorySettingName {
+public class EntityListNoSelectMessage extends Message {
 
-	// 設定追加したら、StorySettingDAOも忘れずに変更してねっ☆
+	private final EntityType entityType;
 
-	FILE_VERSION("fileversion", true),
-	ENTITY_COUNT("entitycount", true),
-	STORY_NAME("storyname", false),;
-
-	private final String key;
-	private final boolean isInt;
-
-	private StorySettingName (String key, boolean isInt) {
-		this.key = key;
-		this.isInt = isInt;
+	public EntityListNoSelectMessage (EntityType entityType) {
+		this.entityType = entityType;
 	}
 
-	public String getKey () {
-		return this.key;
-	}
-
-	public boolean isInt () {
-		return this.isInt;
-	}
-
-	public boolean isString () {
-		return !this.isInt;
+	public EntityType getEntityType () {
+		return this.entityType;
 	}
 
 }

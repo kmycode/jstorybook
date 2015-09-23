@@ -218,4 +218,11 @@ public abstract class EntityRelationDAO<T extends EntityRelation> extends DAO<T>
 				+ model.idProperty().get() + ";");
 	}
 
+	@Override
+	protected void createTable () throws SQLException {
+		this.getStoryFileModel().updateQuery(
+				"CREATE TABLE `" + this.getTableName()
+				+ "`(id INTEGER PRIMARY KEY NOT NULL, entity1 INTEGER NOT NULL, entity2 INTEGER NOT NULL, note TEXT)");
+	}
+
 }

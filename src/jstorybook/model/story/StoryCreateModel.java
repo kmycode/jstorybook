@@ -17,10 +17,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javax.naming.OperationNotSupportedException;
+import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.ExceptionMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.dialog.SaveFileChooserMessage;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 
 /**
@@ -32,17 +33,38 @@ public class StoryCreateModel implements IUseMessenger {
 
 	private Messenger messenger;
 	private final StringProperty storyName = new SimpleStringProperty("");
+	private final StringProperty fileName = new SimpleStringProperty("");
 	private final BooleanProperty canCreate = new SimpleBooleanProperty(false);
 
 	public StoryCreateModel () {
 		this.storyName.addListener((obj) -> {
-			this.canCreate.set(((StringProperty) obj).get().length() > 0);
+			this.checkCanCreate();
+		});
+		this.fileName.addListener((obj) -> {
+			this.checkCanCreate();
 		});
 	}
 
+	private void checkCanCreate () {
+		this.canCreate.set(this.storyName.get().length() > 0 && this.fileName.get().length() > 0);
+	}
+
 	public void create () {
-		this.messenger.send(
-				new ExceptionMessage(new OperationNotSupportedException("Creating story will be implemented the future...")));
+		CurrentStoryModelGetMessage message = new CurrentStoryModelGetMessage();
+		this.messenger.send(message);
+
+		StoryModel storyModel = message.storyModelProperty().get();
+		if (storyModel != null) {
+			storyModel.create(this.fileName.get(), this.storyName.get());
+		}
+		else {
+			this.messenger.send(new ExceptionMessage(new NullPointerException("storyModel cannot get")));
+		}
+		this.messenger.send(new CloseMessage());
+	}
+
+	public void fileSelect () {
+		this.messenger.send(new SaveFileChooserMessage(this.fileName));
 	}
 
 	public void cancel () {
@@ -51,6 +73,10 @@ public class StoryCreateModel implements IUseMessenger {
 
 	public StringProperty storyNameProperty () {
 		return this.storyName;
+	}
+
+	public StringProperty fileNameProperty () {
+		return this.fileName;
 	}
 
 	public BooleanProperty canCreateProperty () {

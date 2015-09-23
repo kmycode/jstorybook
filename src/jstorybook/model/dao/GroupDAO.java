@@ -66,4 +66,10 @@ public class GroupDAO extends DAO<Group> {
 		this.getStoryFileModel().updateQuery(query.toString());
 	}
 
+	@Override
+	protected void createTable () throws SQLException {
+		this.getStoryFileModel().updateQuery(
+				"CREATE TABLE [group] (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), note TEXT)");
+	}
+
 }

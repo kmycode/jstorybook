@@ -43,8 +43,16 @@ public abstract class DAO<E extends Entity> {
 	protected int lastIdSaved = 0;		// 最後に保存した時の最大ID
 
 	public void setStoryFileModel (StoryFileModel storyFileModel) throws SQLException {
+		this.setStoryFileModel(storyFileModel, false);
+	}
+
+	public void setStoryFileModel (StoryFileModel storyFileModel, boolean isCreate) throws SQLException {
 		this.reset();
 		this.storyFileModel = storyFileModel;
+		if (isCreate) {
+			this.getStoryFileModel().updateQuery("insert into idtable(key,value) values ('" + this.getTableName() + "',1);");
+			this.createTable();
+		}
 		this.storyFileModelSet();
 	}
 
@@ -63,6 +71,8 @@ public abstract class DAO<E extends Entity> {
 	abstract protected E loadModel (ResultSet rs) throws SQLException;
 
 	abstract protected void saveModel (E model) throws SQLException;
+
+	abstract protected void createTable () throws SQLException;
 
 	protected void removeModel (long id) throws SQLException {
 		this.getStoryFileModel().updateQuery("delete from `" + this.getTableName() + "` where id = " + id + ";");
@@ -183,6 +193,11 @@ public abstract class DAO<E extends Entity> {
 
 	protected StoryFileModel getStoryFileModel () {
 		return this.storyFileModel;
+	}
+
+	// DAOの定義されていないテーブルを作成する
+	public static void createStorySystemTable (StoryFileModel model) throws SQLException {
+		model.updateQuery("CREATE TABLE idtable (key TEXT PRIMARY KEY NOT NULL, value INTEGER NOT NULL);");
 	}
 
 }

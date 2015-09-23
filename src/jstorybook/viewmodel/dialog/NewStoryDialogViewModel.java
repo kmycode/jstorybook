@@ -29,6 +29,7 @@ public class NewStoryDialogViewModel extends ViewModel {
 	@Override
 	protected void storeProperty () {
 		this.applyProperty("storyName", this.model.storyNameProperty());
+		this.applyProperty("fileName", this.model.fileNameProperty());
 	}
 
 	@Override
@@ -39,6 +40,7 @@ public class NewStoryDialogViewModel extends ViewModel {
 	@Override
 	protected void storeCommand () {
 		this.applyCommand("create", (ev) -> this.model.create(), this.model.canCreateProperty());
+		this.applyCommand("fileSelect", (ev) -> this.model.fileSelect());
 		this.applyCommand("cancel", (ev) -> this.model.cancel());
 	}
 

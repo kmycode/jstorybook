@@ -70,4 +70,10 @@ public class SceneDAO extends DAO<Scene> {
 		this.getStoryFileModel().updateQuery(query.toString());
 	}
 
+	@Override
+	protected void createTable () throws SQLException {
+		this.getStoryFileModel().updateQuery(
+				"CREATE TABLE scene (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), starttime TEXT, endtime TEXT, note TEXT)");
+	}
+
 }

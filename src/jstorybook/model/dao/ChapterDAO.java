@@ -66,4 +66,10 @@ public class ChapterDAO extends DAO<Chapter> {
 		this.getStoryFileModel().updateQuery(query.toString());
 	}
 
+	@Override
+	protected void createTable () throws SQLException {
+		this.getStoryFileModel().updateQuery(
+				"CREATE TABLE chapter (id INTEGER PRIMARY KEY NOT NULL, note TEXT, `order` INTEGER NOT NULL, name TEXT NOT NULL);");
+	}
+
 }
