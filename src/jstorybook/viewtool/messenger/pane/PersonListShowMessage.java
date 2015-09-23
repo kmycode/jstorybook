@@ -11,33 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.list;
-
-import jstorybook.common.contract.EntityType;
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Group;
-import jstorybook.viewmodel.ViewModelList;
+package jstorybook.viewtool.messenger.pane;
 
 /**
- * 集団のリスト
+ * 登場人物のリストを表示するメッセージ
  *
-  * @author KMY
+ * @author KMY
  */
-public class GroupListPane extends EntityListPane<Group> {
-
-	public GroupListPane () {
-		super(ResourceManager.getMessage("msg.group"), EntityType.GROUP);
-	}
-
-	@Override
-	public void setViewModelList (ViewModelList viewModelList) {
-		super.setViewModelList(viewModelList);
-		this.setOrderButton();
-	}
-
-	@Override
-	protected String getEntityTypeName () {
-		return "group";
-	}
+public class PersonListShowMessage extends EntityListShowMessage {
 
 }

@@ -60,7 +60,7 @@ public class StoryLoadSync extends Task<Object> {
 
 		// 必要な作業量を計算
 		StorySetting entityCount = this.storyModel.getSetting(StorySettingName.ENTITY_COUNT);
-		long goalNum = entityCount.intValueProperty().get();
+		long goalNum = entityCount.intValueProperty().get() + 1;
 		this.goal.set(goalNum);
 		this.countAllModelFinish.set(true);
 		if (this.isCancelled()) {

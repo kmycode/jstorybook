@@ -16,6 +16,12 @@ package jstorybook.model;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
+import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
+import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
+import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
+import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
+import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
 
 /**
  * アプリケーションモデル
@@ -28,6 +34,30 @@ public class ApplicationModel implements IUseMessenger {
 
 	public void exit () {
 		this.messenger.send(new ApplicationQuitMessage());
+	}
+
+	public void showPersonList () {
+		this.messenger.send(new PersonListShowMessage());
+	}
+
+	public void showGroupList () {
+		this.messenger.send(new GroupListShowMessage());
+	}
+
+	public void showPlaceList () {
+		this.messenger.send(new PlaceListShowMessage());
+	}
+
+	public void showSceneList () {
+		this.messenger.send(new SceneListShowMessage());
+	}
+
+	public void showChapterList () {
+		this.messenger.send(new ChapterListShowMessage());
+	}
+
+	public void newStory () {
+		this.messenger.send(new NewStoryDialogShowMessage());
 	}
 
 	@Override

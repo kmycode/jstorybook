@@ -11,33 +11,35 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.list;
+package jstorybook.viewmodel.dialog;
 
-import jstorybook.common.contract.EntityType;
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Group;
-import jstorybook.viewmodel.ViewModelList;
+import jstorybook.model.story.StoryCreateModel;
+import jstorybook.viewmodel.ViewModel;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * 集団のリスト
+ * 新規ストーリー作成ダイアログのビューモデル
  *
   * @author KMY
  */
-public class GroupListPane extends EntityListPane<Group> {
+public class NewStoryDialogViewModel extends ViewModel {
 
-	public GroupListPane () {
-		super(ResourceManager.getMessage("msg.group"), EntityType.GROUP);
+	private StoryCreateModel model = new StoryCreateModel();
+
+	@Override
+	protected void storeProperty () {
+		this.applyProperty("storyName", this.model.storyNameProperty());
 	}
 
 	@Override
-	public void setViewModelList (ViewModelList viewModelList) {
-		super.setViewModelList(viewModelList);
-		this.setOrderButton();
+	public void storeMessenger (Messenger messenger) {
+		this.model.setMessenger(messenger);
 	}
 
 	@Override
-	protected String getEntityTypeName () {
-		return "group";
+	protected void storeCommand () {
+		this.applyCommand("create", (ev) -> this.model.create(), this.model.canCreateProperty());
+		this.applyCommand("cancel", (ev) -> this.model.cancel());
 	}
 
 }

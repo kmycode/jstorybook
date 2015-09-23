@@ -33,6 +33,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jstorybook.common.contract.DialogResult;
+import jstorybook.common.contract.EntityType;
 import jstorybook.common.contract.PreferenceKey;
 import jstorybook.common.contract.SystemKey;
 import jstorybook.common.manager.ResourceManager;
@@ -41,9 +42,11 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.dialog.NewStoryDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
+import jstorybook.view.pane.list.EntityListPane;
 import jstorybook.view.pane.list.GroupListPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.view.pane.list.PlaceListPane;
@@ -56,17 +59,23 @@ import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.messenger.ProgressDialogShowMessage;
+import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
+import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -152,16 +161,29 @@ public class MainWindow extends MyStage {
 		MenuBar menuBar = new MenuBar();
 		MenuItem menu;
 
+		// アプリメニュー
+		Menu appMenu = new Menu(ResourceManager.getMessage("msg.menu.app"));
+		GUIUtil.bindFontStyle(appMenu);
+		{
+			menu = new MenuItem(ResourceManager.getMessage("msg.preference"));
+			appMenu.getItems().add(menu);
+
+			appMenu.getItems().add(new SeparatorMenuItem());
+
+			menu = GUIUtil.createMenuItem(this.viewModelList, "exit");
+			menu.setText(ResourceManager.getMessage("msg.exit"));
+			appMenu.getItems().add(menu);
+		}
+
 		// ファイルメニュー
 		Menu fileMenu = new Menu(ResourceManager.getMessage("msg.story"));
 		GUIUtil.bindFontStyle(fileMenu);
 		{
+			menu = GUIUtil.createMenuItem(this.viewModelList, "newStory");
+			menu.setText(ResourceManager.getMessage("msg.new.story"));
+			fileMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
 			menu.setText(ResourceManager.getMessage("msg.save"));
-			fileMenu.getItems().add(menu);
-			fileMenu.getItems().add(new SeparatorMenuItem());
-			menu = GUIUtil.createMenuItem(this.viewModelList, "exit");
-			menu.setText(ResourceManager.getMessage("msg.exit"));
 			fileMenu.getItems().add(menu);
 		}
 
@@ -169,11 +191,27 @@ public class MainWindow extends MyStage {
 		Menu editMenu = new Menu(ResourceManager.getMessage("msg.edit"));
 		GUIUtil.bindFontStyle(editMenu);
 		{
-			menu = new MenuItem(ResourceManager.getMessage("msg.preference"));
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showPersonList");
+			menu.setText(ResourceManager.getMessage("msg.person"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showGroupList");
+			menu.setText(ResourceManager.getMessage("msg.group"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showPlaceList");
+			menu.setText(ResourceManager.getMessage("msg.place"));
+			editMenu.getItems().add(menu);
+
+			editMenu.getItems().add(new SeparatorMenuItem());
+
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showSceneList");
+			menu.setText(ResourceManager.getMessage("msg.scene"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showChapterList");
+			menu.setText(ResourceManager.getMessage("msg.chapter"));
 			editMenu.getItems().add(menu);
 		}
 
-		menuBar.getMenus().addAll(fileMenu, editMenu);
+		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu);
 		this.mainMenuBar.set(menuBar);
 	}
 
@@ -182,7 +220,19 @@ public class MainWindow extends MyStage {
 		ToolBar toolBar = new ToolBar();
 		List<Button> buttonList = new ArrayList<>();
 
-		buttonList.add(new Button("dummy"));
+		Button button = null;
+		{
+			button = GUIUtil.createCommandButton(this.viewModelList, "showPersonList", ResourceManager.getMessage("msg.person"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showGroupList", ResourceManager.getMessage("msg.group"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showPlaceList", ResourceManager.getMessage("msg.place"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showSceneList", ResourceManager.getMessage("msg.scene"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showChapterList", ResourceManager.getMessage("msg.chapter"));
+			buttonList.add(button);
+		}
 
 		toolBar.getItems().addAll(buttonList);
 		this.mainToolBar.set(toolBar);
@@ -192,6 +242,9 @@ public class MainWindow extends MyStage {
 	private void applyMessenger () {
 		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
+		});
+		this.messenger.apply(NewStoryDialogShowMessage.class, this, (ev) -> {
+			MainWindow.this.showNewStoryDialog();
 		});
 		this.messenger.apply(ProgressDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showProgress(((ProgressDialogShowMessage) ev));
@@ -214,6 +267,23 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(DeleteDialogMessage.class, this, (ev) -> {
 			this.deleteDialog((DeleteDialogMessage) ev);
 		});
+
+		this.messenger.apply(PersonListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPersonListTab();
+		});
+		this.messenger.apply(GroupListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addGroupListTab();
+		});
+		this.messenger.apply(PlaceListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPlaceListTab();
+		});
+		this.messenger.apply(SceneListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addSceneListTab();
+		});
+		this.messenger.apply(ChapterListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addChapterListTab();
+		});
+
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
 		});
@@ -262,39 +332,55 @@ public class MainWindow extends MyStage {
 		this.activeTabPane.get().getSelectionModel().select(tab);
 	}
 
+	// エンティティリストタブを追加
+	private void addEntityListTab (EntityListPane tab) {
+		EntityListPane otherTab = this.findEntityListPane(tab.getEntityType());
+		if (otherTab != null) {
+			otherTab.getTabPane().getSelectionModel().select(otherTab);
+		}
+		else {
+			tab.setViewModelList(this.viewModelList);
+			this.addTab(tab);
+		}
+	}
+
+	// 指定したエンティティリストと同じリストタブを探す
+	private EntityListPane findEntityListPane (EntityType entityType) {
+		for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
+			for (Tab dtab : dtabPane.getTabs()) {
+				if (dtab instanceof EntityListPane) {
+					if (((EntityListPane) dtab).getEntityType() == entityType) {
+						return (EntityListPane) dtab;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	// 登場人物リストタブを追加
 	private void addPersonListTab () {
-		PersonListPane tab = new PersonListPane();
-		tab.setViewModelList(this.viewModelList);
-		this.addTab(tab);
+		this.addEntityListTab(new PersonListPane());
 	}
 
 	// 集団リストタブを追加
 	private void addGroupListTab () {
-		GroupListPane tab = new GroupListPane();
-		tab.setViewModelList(this.viewModelList);
-		this.addTab(tab);
+		this.addEntityListTab(new GroupListPane());
 	}
 
 	// 場所リストタブを追加
 	private void addPlaceListTab () {
-		PlaceListPane tab = new PlaceListPane();
-		tab.setViewModelList(this.viewModelList);
-		this.addTab(tab);
+		this.addEntityListTab(new PlaceListPane());
 	}
 
 	// シーンリストタブを追加
 	private void addSceneListTab () {
-		SceneListPane tab = new SceneListPane();
-		tab.setViewModelList(this.viewModelList);
-		this.addTab(tab);
+		this.addEntityListTab(new SceneListPane());
 	}
 
 	// 章リストタブを追加
 	private void addChapterListTab () {
-		ChapterListPane tab = new ChapterListPane();
-		tab.setViewModelList(this.viewModelList);
-		this.addTab(tab);
+		this.addEntityListTab(new ChapterListPane());
 	}
 
 	// エンティティ編集タブ
@@ -388,6 +474,12 @@ public class MainWindow extends MyStage {
 	// プログラムを終了
 	private void quitApplication () {
 		this.close();
+	}
+
+	// -------------------------------------------------------
+	private void showNewStoryDialog () {
+		NewStoryDialog dialog = new NewStoryDialog(this, this.messenger);
+		dialog.showAndWait();
 	}
 
 	// -------------------------------------------------------

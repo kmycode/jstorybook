@@ -36,6 +36,12 @@ public class ApplicationViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
+		this.applyCommand("newStory", (ev) -> this.model.newStory());
+		this.applyCommand("showPersonList", (ev) -> this.model.showPersonList());
+		this.applyCommand("showGroupList", (ev) -> this.model.showGroupList());
+		this.applyCommand("showPlaceList", (ev) -> this.model.showPlaceList());
+		this.applyCommand("showSceneList", (ev) -> this.model.showSceneList());
+		this.applyCommand("showChapterList", (ev) -> this.model.showChapterList());
 		this.applyCommand("exit", (ev) -> this.model.exit());
 	}
 

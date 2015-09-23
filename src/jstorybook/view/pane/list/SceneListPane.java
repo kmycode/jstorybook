@@ -13,6 +13,7 @@
  */
 package jstorybook.view.pane.list;
 
+import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Scene;
 import jstorybook.viewmodel.ViewModelList;
@@ -25,7 +26,7 @@ import jstorybook.viewmodel.ViewModelList;
 public class SceneListPane extends EntityListPane<Scene> {
 
 	public SceneListPane () {
-		super(ResourceManager.getMessage("msg.scene"));
+		super(ResourceManager.getMessage("msg.scene"), EntityType.SCENE);
 	}
 
 	@Override

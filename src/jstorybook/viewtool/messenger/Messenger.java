@@ -43,6 +43,10 @@ public class Messenger {
 		this.receiverList.add(new MessageReceiver(messageType, actionApplier, listener));
 	}
 
+	public final void relay (Class<? extends Message> messageType, Object actionApplier, Messenger target) {
+		this.receiverList.add(new MessageReceiver(messageType, actionApplier, (ev) -> target.send((Message) ev)));
+	}
+
 	public void send (Message message) {
 		Class<? extends Message> messageType = message.getClass();
 		for (MessageReceiver receiver : this.receiverList) {

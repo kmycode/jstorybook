@@ -59,7 +59,7 @@ public class StorySaveSync extends Task<Object> {
 		}
 
 		// 必要な作業量を計算
-		int goalNum = 0;
+		int goalNum = 1;
 		for (DAO dao : daoList) {
 			goalNum += dao.getModelCount();
 			if (this.isCancelled()) {

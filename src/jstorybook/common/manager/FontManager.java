@@ -51,7 +51,7 @@ public class FontManager {
 		});
 
 		this.fontName.set("Meiryo UI");
-		this.fontSize.set(16.0);
+		this.fontSize.set(14.0);
 	}
 
 	public static FontManager getInstance () {

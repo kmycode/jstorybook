@@ -59,7 +59,7 @@ public class ChapterColumnFactory extends ColumnFactory<Chapter> {
 		columnList.add(column);
 
 		column = new StringColumn(ResourceManager.getMessage("msg.chapter.name"), "name");
-		column.setColumnWidth(100);
+		column.setColumnWidth(240);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());
 		columnList.add(column);

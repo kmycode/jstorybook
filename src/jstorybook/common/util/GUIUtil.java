@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import jstorybook.common.manager.FontManager;
 import jstorybook.viewmodel.ViewModelList;
@@ -46,6 +47,17 @@ public class GUIUtil {
 
 		// GETバグ
 		//vmlist.canExecuteCommandProperty(commandName).addListener((obj) -> converter.resultProperty().get());
+
+		return button;
+	}
+
+	public static Button createCommandButton (ViewModelList vmlist, String commandName, String tooltip) {
+
+		Button button = GUIUtil.createCommandButton(vmlist, commandName);
+
+		Tooltip toolTipObj = new Tooltip(tooltip);
+		toolTipObj.fontProperty().bind(FontManager.getInstance().fontProperty());
+		button.setTooltip(toolTipObj);
 
 		return button;
 	}

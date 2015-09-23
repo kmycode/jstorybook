@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.model.entity.Entity;
@@ -38,14 +39,17 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	private ViewModelList viewModelList;
 
+	private final EntityType entityType;
 	private final EntityTableView<T> tableView;
 	protected final HBox commandButtonBar;
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
 	private final ObjectProperty<List<T>> selectedItemList = new SimpleObjectProperty<>(new ArrayList<T>());
 
-	protected EntityListPane (String title) {
+	protected EntityListPane (String title, EntityType entityType) {
 		super(title);
+
+		this.entityType = entityType;
 
 		this.columnList.addListener((obj) -> {
 			EntityListPane.this.tableView.setColumnList(((ObjectProperty<EditorColumnList>) obj).get());
@@ -113,5 +117,9 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 	}
 
 	protected abstract String getEntityTypeName ();
+
+	public EntityType getEntityType () {
+		return this.entityType;
+	}
 
 }

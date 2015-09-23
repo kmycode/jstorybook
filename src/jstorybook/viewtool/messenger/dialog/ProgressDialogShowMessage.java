@@ -11,9 +11,10 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.messenger;
+package jstorybook.viewtool.messenger.dialog;
 
 import javafx.beans.property.DoubleProperty;
+import jstorybook.viewtool.messenger.Message;
 
 /**
  * 進捗状況を表示したい時に使うメッセージ
