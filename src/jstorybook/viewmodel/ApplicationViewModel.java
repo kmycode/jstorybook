@@ -38,6 +38,7 @@ public class ApplicationViewModel extends ViewModel {
 	protected void storeCommand () {
 		this.applyCommand("newStory", (ev) -> this.model.newStory());
 		this.applyCommand("loadStory", (ev) -> this.model.loadStory());
+		this.applyCommand("about", (ev) -> this.model.about());
 		this.applyCommand("exit", (ev) -> this.model.exit());
 	}
 

@@ -11,26 +11,33 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewmodel.dialog;
+
+import jstorybook.model.AboutModel;
+import jstorybook.viewmodel.ViewModel;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * システムの定数を設定
+ * jStorybook情報の表示画面のビューモデル
  *
  * @author KMY
  */
-public enum SystemKey {
+public class AboutViewModel extends ViewModel {
 
-	SYSTEM_NAME("jStorybook"),
-	SYSTEM_VERSION("6.0.0 alpha1");
+	private final AboutModel model = new AboutModel();
 
-	private final Object value;
-
-
-	private SystemKey (Object value) {
-		this.value = value;
+	@Override
+	protected void storeProperty () {
 	}
 
-	public Object getValue () {
-		return this.value;
+	@Override
+	public void storeMessenger (Messenger messenger) {
+		this.model.setMessenger(messenger);
 	}
+
+	@Override
+	protected void storeCommand () {
+		this.applyCommand("close", (ev) -> model.close());
+	}
+
 }

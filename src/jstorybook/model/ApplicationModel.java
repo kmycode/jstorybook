@@ -21,6 +21,7 @@ import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 
@@ -35,6 +36,10 @@ public class ApplicationModel implements IUseMessenger {
 
 	public void exit () {
 		this.messenger.send(new ApplicationQuitMessage());
+	}
+
+	public void about () {
+		this.messenger.send(new AboutDialogShowMessage());
 	}
 
 	public void newStory () {

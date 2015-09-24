@@ -11,26 +11,28 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model;
+
+import jstorybook.viewtool.messenger.IUseMessenger;
+import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.general.CloseMessage;
 
 /**
- * システムの定数を設定
+ * jStorybookの情報
  *
  * @author KMY
  */
-public enum SystemKey {
+public class AboutModel implements IUseMessenger {
 
-	SYSTEM_NAME("jStorybook"),
-	SYSTEM_VERSION("6.0.0 alpha1");
+	private Messenger messenger = Messenger.getInstance();
 
-	private final Object value;
-
-
-	private SystemKey (Object value) {
-		this.value = value;
+	public void close () {
+		this.messenger.send(new CloseMessage());
 	}
 
-	public Object getValue () {
-		return this.value;
+	@Override
+	public void setMessenger (Messenger messenger) {
+		this.messenger = messenger;
 	}
+
 }

@@ -46,6 +46,7 @@ import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.dialog.AboutDialog;
 import jstorybook.view.dialog.NewStoryDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
@@ -66,6 +67,7 @@ import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.MainWindowClearMessage;
 import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
@@ -172,7 +174,8 @@ public class MainWindow extends MyStage {
 			menu.setGraphic(ResourceManager.getMiniIconNode("setting.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+."));
 			appMenu.getItems().add(menu);
-			menu = new MenuItem(ResourceManager.getMessage("msg.menu.about"));
+			menu = GUIUtil.createMenuItem(this.viewModelList, "about");
+			menu.setText(ResourceManager.getMessage("msg.app.about"));
 			appMenu.getItems().add(menu);
 
 			appMenu.getItems().add(new SeparatorMenuItem());
@@ -295,6 +298,9 @@ public class MainWindow extends MyStage {
 	private void applyMessenger () {
 		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
+		});
+		this.messenger.apply(AboutDialogShowMessage.class, this, (ev) -> {
+			MainWindow.this.showAboutDialog();
 		});
 		this.messenger.apply(NewStoryDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showNewStoryDialog();
@@ -583,6 +589,11 @@ public class MainWindow extends MyStage {
 	}
 
 	// -------------------------------------------------------
+	private void showAboutDialog () {
+		AboutDialog dialog = new AboutDialog(this);
+		dialog.showAndWait();
+	}
+
 	private void showNewStoryDialog () {
 		NewStoryDialog dialog = new NewStoryDialog(this, this.messenger);
 		dialog.showAndWait();
