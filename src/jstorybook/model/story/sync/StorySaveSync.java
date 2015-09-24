@@ -53,6 +53,8 @@ public class StorySaveSync extends Task<Object> {
 
 	@Override
 	protected Object call () throws Exception {
+		this.storyModel.getCore().save();
+
 		List<DAO> daoList = this.storyModel.getDAOList();
 		if (this.isCancelled()) {
 			return null;

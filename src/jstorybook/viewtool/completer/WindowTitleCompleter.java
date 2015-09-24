@@ -13,12 +13,10 @@
  */
 package jstorybook.viewtool.completer;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.util.PropertyUtil;
-import jstorybook.model.story.StoryFileModel;
 
 /**
  * ウィンドウのタイトルのコンプリータ
@@ -34,23 +32,28 @@ public class WindowTitleCompleter {
 	private final StringProperty appTitle = new SimpleStringProperty();
 	private final StringProperty version = new SimpleStringProperty();
 	private final StringProperty storyFileName = new SimpleStringProperty();
+	private final StringProperty storyName = new SimpleStringProperty();
+
+	private String resultTmp;
 
 	public WindowTitleCompleter () {
 		// プロパティ変更時に結果を更新
 		PropertyUtil.addAllListener((obj) -> {
 			WindowTitleCompleter.this.complete();
-		}, this.appTitle, this.version, this.storyFileName);
+		}, this.appTitle, this.version, this.storyFileName, this.storyName);
 	}
 
 	private void complete () {
 		String result = "";
 		if (this.storyFileName.get() != null && !this.storyFileName.get().isEmpty()) {
-			result = this.appTitle.get() + " - " + this.version.get() + " [" + this.storyFileName.get() + "]";
+			result = this.appTitle.get() + " - " + this.version.get() + " [" + (this.storyName.get().isEmpty() ? this.storyFileName.
+					get() : this.storyName.get()) + "]";
 		}
 		else {
 			result = this.appTitle.get() + " - " + this.version.get();
 		}
-		this.title.set(result);
+		this.resultTmp = result;
+		Platform.runLater(() -> this.title.set(this.resultTmp));
 	}
 
 	public StringProperty titleProperty () {
@@ -67,6 +70,10 @@ public class WindowTitleCompleter {
 
 	public StringProperty storyFileNameProperty () {
 		return this.storyFileName;
+	}
+
+	public StringProperty storyNameProperty () {
+		return this.storyName;
 	}
 
 }

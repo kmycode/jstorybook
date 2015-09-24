@@ -60,7 +60,6 @@ public class StorySettingDAO extends DAO<StorySetting> {
 	}
 
 	public void setSetting (String key, String value) {
-		System.out.println(key + "/" + value + " - " + this.modelList.get().size());
 		for (StorySetting model : this.modelList.get()) {
 			if (model.keyProperty().get().equals(key)) {
 				model.valueProperty().set(value);

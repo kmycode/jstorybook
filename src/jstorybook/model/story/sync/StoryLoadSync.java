@@ -92,6 +92,7 @@ public class StoryLoadSync extends Task<Object> {
 			}
 		}
 
+		this.storyModel.getCore().reload();
 		this.step.set(this.goal.get());
 		this.succeeded();
 		return new Object();

@@ -48,6 +48,7 @@ import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.dialog.NewStoryDialog;
 import jstorybook.view.dialog.ProgressDialog;
+import jstorybook.view.dialog.StorySettingDialog;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
@@ -62,11 +63,13 @@ import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.completer.WindowTitleCompleter;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
+import jstorybook.viewtool.messenger.MainWindowClearMessage;
 import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
+import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
@@ -145,7 +148,11 @@ public class MainWindow extends MyStage {
 		this.titleCompleter.appTitleProperty().set(SystemKey.SYSTEM_NAME.getValue().toString());
 		this.titleCompleter.versionProperty().set(SystemKey.SYSTEM_VERSION.getValue().toString());
 		this.titleCompleter.storyFileNameProperty().bind(this.viewModelList.getProperty("storyFileName"));
+		this.titleCompleter.storyNameProperty().bind(this.viewModelList.getProperty("storyName"));
 		this.titleProperty().bind(this.titleCompleter.titleProperty());
+
+		// アイコン
+		this.getIcons().add(ResourceManager.getIconNode("appicon.png").getImage());
 
 		// -------------------------------------------------------
 		// シーンを設定
@@ -165,12 +172,17 @@ public class MainWindow extends MyStage {
 		GUIUtil.bindFontStyle(appMenu);
 		{
 			menu = new MenuItem(ResourceManager.getMessage("msg.preference"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("setting.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+."));
+			appMenu.getItems().add(menu);
+			menu = new MenuItem(ResourceManager.getMessage("msg.menu.about"));
 			appMenu.getItems().add(menu);
 
 			appMenu.getItems().add(new SeparatorMenuItem());
 
 			menu = GUIUtil.createMenuItem(this.viewModelList, "exit");
 			menu.setText(ResourceManager.getMessage("msg.exit"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("exit.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+Q"));
 			appMenu.getItems().add(menu);
 		}
@@ -181,19 +193,26 @@ public class MainWindow extends MyStage {
 		{
 			menu = GUIUtil.createMenuItem(this.viewModelList, "newStory");
 			menu.setText(ResourceManager.getMessage("msg.new.story"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("new.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+N"));
 			fileMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "loadStory");
 			menu.setText(ResourceManager.getMessage("msg.menu.load.story"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("open.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+O"));
 			fileMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "save");
-			menu.setText(ResourceManager.getMessage("msg.save"));
+			menu.setText(ResourceManager.getMessage("msg.story.save"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("save.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+S"));
 			fileMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "close");
+			menu.setText(ResourceManager.getMessage("msg.story.close"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+W"));
+			fileMenu.getItems().add(menu);
 			fileMenu.getItems().add(new SeparatorMenuItem());
 			menu = new MenuItem();
+			menu = GUIUtil.createMenuItem(this.viewModelList, "storySetting");
 			menu.setText(ResourceManager.getMessage("msg.story.setting"));
 			fileMenu.getItems().add(menu);
 		}
@@ -233,6 +252,7 @@ public class MainWindow extends MyStage {
 		}
 
 		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu);
+		menuBar.setUseSystemMenuBar(true);
 		this.mainMenuBar.set(menuBar);
 	}
 
@@ -243,6 +263,12 @@ public class MainWindow extends MyStage {
 
 		Button button = null;
 		{
+			button = GUIUtil.createCommandButton(this.viewModelList, "newStory", ResourceManager.getMessage("msg.new.story"));
+			button.setGraphic(ResourceManager.getIconNode("new.png"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "loadStory", ResourceManager.getMessage("msg.menu.load.story"));
+			button.setGraphic(ResourceManager.getIconNode("open.png"));
+			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "save", ResourceManager.getMessage("msg.save"));
 			button.setGraphic(ResourceManager.getIconNode("save.png"));
 			buttonList.add(button);
@@ -276,6 +302,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(NewStoryDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showNewStoryDialog();
 		});
+		this.messenger.apply(StorySettingDialogShowMessage.class, this, (ev) -> {
+			MainWindow.this.showStorySettingDialog();
+		});
 		this.messenger.apply(ProgressDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showProgress(((ProgressDialogShowMessage) ev));
 		});
@@ -305,6 +334,9 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(MainWindowResetMessage.class, this, (ev) -> {
 			this.resetTab();
+		});
+		this.messenger.apply(MainWindowClearMessage.class, this, (ev) -> {
+			this.clearTab();
 		});
 
 		this.messenger.apply(PersonListShowMessage.class, this, (ev) -> {
@@ -559,6 +591,11 @@ public class MainWindow extends MyStage {
 		dialog.showAndWait();
 	}
 
+	private void showStorySettingDialog () {
+		StorySettingDialog dialog = new StorySettingDialog(this, this.messenger);
+		dialog.showAndWait();
+	}
+
 	// -------------------------------------------------------
 
 	// 一般的なエラーメッセージを表示するダイアログ
@@ -580,6 +617,7 @@ public class MainWindow extends MyStage {
 	// ファイルを開くダイアログ
 	private void openFileDialog (OpenFileChooserMessage mes) {
 		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("jStorybook files (*.db)", "*.db"));
 		File file = fileChooser.showOpenDialog(this);
 		if (file != null) {
 			mes.fileNameProperty().set(file.getPath());
