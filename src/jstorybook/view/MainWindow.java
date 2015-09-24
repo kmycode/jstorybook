@@ -151,9 +151,6 @@ public class MainWindow extends MyStage {
 		this.titleCompleter.storyNameProperty().bind(this.viewModelList.getProperty("storyName"));
 		this.titleProperty().bind(this.titleCompleter.titleProperty());
 
-		// アイコン
-		this.getIcons().add(ResourceManager.getIconNode("appicon.png").getImage());
-
 		// -------------------------------------------------------
 		// シーンを設定
 		Scene scene = new Scene(root, (Integer) PreferenceKey.WINDOW_WIDTH.getDefaultValue(),

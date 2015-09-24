@@ -14,6 +14,7 @@
 package jstorybook.view;
 
 import javafx.stage.Stage;
+import jstorybook.common.manager.ResourceManager;
 
 /**
  *
@@ -25,6 +26,9 @@ public abstract class MyStage extends Stage {
 
 	public MyStage (Stage parent) {
 		this.parent = parent;
+
+		// アイコン
+		this.getIcons().add(ResourceManager.getIconNode("appicon.png").getImage());
 	}
 
 }
