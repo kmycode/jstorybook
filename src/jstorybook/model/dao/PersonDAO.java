@@ -79,7 +79,7 @@ public class PersonDAO extends DAO<Person> {
 	@Override
 	protected void createTable () throws SQLException {
 		this.getStoryFileModel().updateQuery(
-				"CREATE TABLE person (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), "
+				"CREATE TABLE person (id INTEGER PRIMARY KEY NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), "
 				+ "firstname TEXT, lastname TEXT, sex INTEGER, birthday TEXT, dayofdeath TEXT, color INTEGER, note TEXT)");
 	}
 

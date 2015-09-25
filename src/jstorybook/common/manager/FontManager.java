@@ -23,6 +23,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import jstorybook.common.contract.PreferenceKey;
 
 /**
  * フォントのマネージャ
@@ -49,9 +50,8 @@ public class FontManager {
 		this.fontSize.addListener((obj) -> {
 			FontManager.this.reloadFont();
 		});
-
-		this.fontName.set("Meiryo UI");
-		this.fontSize.set(14.0);
+		this.fontName.bind(PreferenceKey.FONT_FAMILY.getProperty());
+		this.fontSize.bind(PreferenceKey.FONT_SIZE.getProperty());
 	}
 
 	public static FontManager getInstance () {
@@ -63,7 +63,7 @@ public class FontManager {
 		this.boldFont.set(Font.font(this.fontName.get(), FontWeight.BOLD, this.fontSize.get()));
 		this.titleFont.set(Font.font(this.fontName.get(), FontWeight.BOLD, 18));
 
-		this.normalFontStyle.set("-fx-font-family:" + this.fontName.get() + ";-fx-font-size:" + this.fontSize.get() + ";");
+		this.normalFontStyle.set("-fx-font-family:'" + this.fontName.get() + "';-fx-font-size:" + this.fontSize.get() + ";");
 	}
 
 	public StringProperty fontNameProperty () {

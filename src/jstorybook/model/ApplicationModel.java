@@ -24,6 +24,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
+import jstorybook.viewtool.messenger.dialog.PreferenceDialogShowMessage;
 
 /**
  * アプリケーションモデル
@@ -44,6 +45,10 @@ public class ApplicationModel implements IUseMessenger {
 
 	public void newStory () {
 		this.messenger.send(new NewStoryDialogShowMessage());
+	}
+
+	public void preference () {
+		this.messenger.send(new PreferenceDialogShowMessage());
 	}
 
 	public void loadStory () {

@@ -13,6 +13,10 @@
  */
 package jstorybook.common.contract;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 /**
  * 設定のキー
  *
@@ -21,15 +25,47 @@ package jstorybook.common.contract;
 public enum PreferenceKey {
 
 	WINDOW_WIDTH(1366),
-	WINDOW_HEIGHT(768);
+	WINDOW_HEIGHT(768),
+	FONT_FAMILY("Meiryo UI"),
+	FONT_SIZE(14.0);
 
 	private final Object defaultValue;
+	private ObjectProperty value = new SimpleObjectProperty();
 
 	private PreferenceKey (Object defaultValue) {
 		this.defaultValue = defaultValue;
+		this.value.set(defaultValue);
 	}
 
 	public Object getDefaultValue () {
 		return this.defaultValue;
+	}
+
+	public Object getValue () {
+		return this.value.get();
+	}
+
+	public Double getDouble () {
+		return (Double) this.getValue();
+	}
+
+	public Boolean getBoolean () {
+		return (Boolean) this.getValue();
+	}
+
+	public Integer getInteger () {
+		return (Integer) this.getValue();
+	}
+
+	public String getString () {
+		return (String) this.getValue();
+	}
+
+	public ReadOnlyObjectProperty getProperty () {
+		return this.value;
+	}
+
+	public void setValue (Object val) {
+		this.value.set(val);
 	}
 }

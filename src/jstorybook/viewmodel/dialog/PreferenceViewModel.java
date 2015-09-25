@@ -11,22 +11,25 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewmodel;
+package jstorybook.viewmodel.dialog;
 
-import jstorybook.model.ApplicationModel;
+import jstorybook.model.PreferenceSettingModel;
+import jstorybook.viewmodel.ViewModel;
 import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * アプリの終了
+ * 環境設定のビューモデル
  *
-  * @author KMY
+ * @author KMY
  */
-public class ApplicationViewModel extends ViewModel {
+public class PreferenceViewModel extends ViewModel {
 
-	ApplicationModel model = new ApplicationModel();
+	private final PreferenceSettingModel model = new PreferenceSettingModel();
 
 	@Override
 	protected void storeProperty () {
+		this.applyProperty("fontFamily", model.fontFamilyProperty());
+		this.applyProperty("fontSize", model.fontSizeProperty());
 	}
 
 	@Override
@@ -36,11 +39,8 @@ public class ApplicationViewModel extends ViewModel {
 
 	@Override
 	protected void storeCommand () {
-		this.applyCommand("newStory", (ev) -> this.model.newStory());
-		this.applyCommand("loadStory", (ev) -> this.model.loadStory());
-		this.applyCommand("about", (ev) -> this.model.about());
-		this.applyCommand("preference", (ev) -> this.model.preference());
-		this.applyCommand("exit", (ev) -> this.model.exit());
+		this.applyCommand("save", (ev) -> model.save());
+		this.applyCommand("cancel", (ev) -> model.cancel());
 	}
 
 }

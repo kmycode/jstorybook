@@ -13,52 +13,73 @@
  */
 package jstorybook.view.dialog;
 
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.MyStage;
 import jstorybook.viewmodel.ViewModelList;
-import jstorybook.viewmodel.dialog.StorySettingViewModel;
-import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
+import jstorybook.viewmodel.dialog.PreferenceViewModel;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 
 /**
- * ストーリーを設定するダイアログ
+ * 環境設定ダイアログ
  *
  * @author KMY
  */
-public class StorySettingDialog extends MyStage {
+public class PreferenceDialog extends MyStage {
 
-	ViewModelList viewModelList = new ViewModelList(new StorySettingViewModel());
+	ViewModelList viewModelList = new ViewModelList(new PreferenceViewModel());
 
 	private final Messenger messenger = new Messenger();
-	private final Messenger parentMessenger;
 
-	TextField storyTitleText = new TextField();
-
-	public StorySettingDialog (Stage parent, Messenger messenger) {
+	public PreferenceDialog (Stage parent) {
 		super(parent);
 
-		this.parentMessenger = messenger;
-
 		AnchorPane root = new AnchorPane();
-		root.setPrefSize(500.0, 160.0);
+		root.setPrefSize(500.0, 240.0);
 
-		Label newLabel = new Label(ResourceManager.getMessage("msg.story.name"));
-		GUIUtil.setAnchor(newLabel, 20.0, null, null, 20.0);
-		GUIUtil.bindFontStyle(newLabel);
+		GridPane mainGrid = new GridPane();
+		GUIUtil.setAnchor(mainGrid, 10.0, 10.0, null, 10.0);
+		mainGrid.setVgap(16.0);
+		mainGrid.setHgap(8.0);
+		Label label;
 
-		GUIUtil.setAnchor(this.storyTitleText, 50.0, 20.0, null, 20.0);
-		this.viewModelList.getProperty("storyName").bindBidirectional(this.storyTitleText.textProperty());
-		GUIUtil.bindFontStyle(this.storyTitleText);
+		// フォント選択
+		label = new Label(ResourceManager.getMessage("msg.preference.font"));
+		GUIUtil.bindFontStyle(label);
+		ComboBox<String> fontChoice = new ComboBox<>(FXCollections.observableArrayList(Font.getFamilies()));
+		fontChoice.setEditable(true);
+		GUIUtil.bindFontStyle(fontChoice);
+		GridPane.setConstraints(label, 0, 0);
+		GridPane.setConstraints(fontChoice, 1, 0);
+		fontChoice.valueProperty().bindBidirectional(this.viewModelList.getProperty("fontFamily"));
+		mainGrid.getChildren().addAll(label, fontChoice);
+
+		// フォントサイズ
+		label = new Label(ResourceManager.getMessage("msg.preference.font.size"));
+		GUIUtil.bindFontStyle(label);
+		TextField fontSize = new TextField();
+		GUIUtil.bindFontStyle(fontSize);
+		GridPane.setConstraints(label, 0, 1);
+		GridPane.setConstraints(fontSize, 1, 1);
+		fontSize.textProperty().bindBidirectional(this.viewModelList.getProperty("fontSize"));
+		mainGrid.getChildren().addAll(label, fontSize);
+
+		label = new Label(ResourceManager.getMessage("msg.preference.alert.beta"));
+		GUIUtil.bindFontStyle(label);
+		mainGrid.add(label, 0, 2, 2, 1);
 
 		HBox commandBox = new HBox();
 		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "save");
@@ -72,17 +93,16 @@ public class StorySettingDialog extends MyStage {
 		commandBox.getChildren().addAll(okButton, cancelButton);
 		GUIUtil.setAnchor(commandBox, null, 30.0, 20.0, null);
 
-		root.getChildren().addAll(newLabel, this.storyTitleText, commandBox);
+		root.getChildren().addAll(mainGrid, commandBox);
 
 		Scene scene = new Scene(root);
 		this.setScene(scene);
-		this.setTitle(ResourceManager.getMessage("msg.story.setting"));
+		this.setTitle(ResourceManager.getMessage("msg.preference"));
 		this.setResizable(false);
 		this.initOwner(parent);
 		this.initModality(Modality.WINDOW_MODAL);
 
 		this.messenger.apply(CloseMessage.class, this, (ev) -> this.close());
-		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.parentMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 

@@ -100,7 +100,8 @@ public class NewStoryDialog extends MyStage {
 		this.setScene(scene);
 		this.setTitle(ResourceManager.getMessage("msg.new.story"));
 		this.setResizable(false);
-		this.initModality(Modality.APPLICATION_MODAL);
+		this.initOwner(parent);
+		this.initModality(Modality.WINDOW_MODAL);
 
 		this.viewModelList.storeMessenger(this.messenger);
 		this.messenger.apply(CloseMessage.class, this, (ev) -> this.close());

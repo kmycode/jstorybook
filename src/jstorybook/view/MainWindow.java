@@ -48,6 +48,7 @@ import jstorybook.view.control.DockableTab;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.dialog.AboutDialog;
 import jstorybook.view.dialog.NewStoryDialog;
+import jstorybook.view.dialog.PreferenceDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
 import jstorybook.view.pane.editor.EntityEditorPane;
@@ -70,6 +71,7 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
+import jstorybook.viewtool.messenger.dialog.PreferenceDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
@@ -170,7 +172,8 @@ public class MainWindow extends MyStage {
 		Menu appMenu = new Menu(ResourceManager.getMessage("msg.menu.app"));
 		GUIUtil.bindFontStyle(appMenu);
 		{
-			menu = new MenuItem(ResourceManager.getMessage("msg.preference"));
+			menu = GUIUtil.createMenuItem(this.viewModelList, "preference");
+			menu.setText(ResourceManager.getMessage("msg.preference"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("setting.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shortcut+."));
 			appMenu.getItems().add(menu);
@@ -301,6 +304,9 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(AboutDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showAboutDialog();
+		});
+		this.messenger.apply(PreferenceDialogShowMessage.class, this, (ev) -> {
+			MainWindow.this.showPreferenceDialog();
 		});
 		this.messenger.apply(NewStoryDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showNewStoryDialog();
@@ -591,6 +597,11 @@ public class MainWindow extends MyStage {
 	// -------------------------------------------------------
 	private void showAboutDialog () {
 		AboutDialog dialog = new AboutDialog(this);
+		dialog.showAndWait();
+	}
+
+	private void showPreferenceDialog () {
+		PreferenceDialog dialog = new PreferenceDialog(this);
 		dialog.showAndWait();
 	}
 

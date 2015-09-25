@@ -68,8 +68,9 @@ public class AboutDialog extends MyStage {
 		Scene scene = new Scene(root);
 		this.setScene(scene);
 		this.setTitle(ResourceManager.getMessage("msg.app.about"));
+		this.initOwner(parent);
 		this.setResizable(false);
-		this.initModality(Modality.APPLICATION_MODAL);
+		this.initModality(Modality.WINDOW_MODAL);
 
 		this.messenger.apply(CloseMessage.class, this, (ev) -> this.close());
 		this.viewModelList.storeMessenger(this.messenger);
