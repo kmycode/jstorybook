@@ -122,15 +122,16 @@ public class DockableAreaGroupPane extends SplitPane {
 		if (direction != DockingDirection.NONE && direction != DockingDirection.OVER) {
 			DockableTabPane tabPane = new DockableTabPane(this);
 			tabPane.getTabs().add(tab);
-			if (this.getOrientation() == Orientation.VERTICAL) {
-				if (direction == DockingDirection.BOTTOM) {
+			/* if (this.getOrientation() == Orientation.VERTICAL) {
+						if (direction == DockingDirection.BOTTOM) {
 					this.getItems().add(tabPane);
 				}
 				else if (direction == DockingDirection.TOP) {
 					this.getItems().add(0, tabPane);
 				}
 			}
-			else if (this.getOrientation() == Orientation.HORIZONTAL) {
+			 * else */
+			if (this.getOrientation() == Orientation.HORIZONTAL) {
 				if (direction == DockingDirection.RIGHT) {
 					this.getItems().add(tabPane);
 				}
@@ -234,7 +235,8 @@ public class DockableAreaGroupPane extends SplitPane {
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.RIGHT;
 		}
-		// Bottom
+		/*
+		 		// Bottom
 		else if (paneY + paneH - 60 < mouseY) {
 			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + paneH - 30 + tabPaneY);
 			DockableAreaGroupPane.dockingBorder.setSize(paneW, 50);
@@ -248,6 +250,7 @@ public class DockableAreaGroupPane extends SplitPane {
 			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
 			DockableAreaGroupPane.dockingDirection = DockingDirection.TOP;
 		}
+		 */
 		// Left
 		else if (paneX + 60 > mouseX) {
 			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30 + tabPaneY);
