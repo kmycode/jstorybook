@@ -18,6 +18,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -45,25 +47,31 @@ public class AboutDialog extends MyStage {
 		super(parent);
 
 		AnchorPane root = new AnchorPane();
-		root.setPrefSize(500.0, 380.0);
+		root.setMinWidth(500.0);
 
 		ImageView logoImageView = ResourceManager.getIconNode("splash.png");
-		GUIUtil.bindFontStyle(logoImageView);
 		Label informationLabel = new Label(SystemKey.SYSTEM_NAME.getValue() + " " + SystemKey.SYSTEM_VERSION.getValue());
 		GUIUtil.bindFontStyle(informationLabel);
 		Label licenceLabel = new Label("Designed by Martin(2008-2013), favdb(2014-), KMY(2015-)   GPL ver.2 later");
 		GUIUtil.bindFontStyle(licenceLabel);
+
 		VBox vBox = new VBox(logoImageView, informationLabel, licenceLabel);
+		vBox.setSpacing(10.0);
 		GUIUtil.setAnchor(vBox, 10.0, null, null, 15.0);
 
+		HBox commandBox = new HBox();
+		AnchorPane commandBoxSpacer = new AnchorPane();
+		HBox.setHgrow(commandBoxSpacer, Priority.ALWAYS);
 		Button closeButton = GUIUtil.createCommandButton(this.viewModelList, "close");
 		closeButton.setText(ResourceManager.getMessage("msg.ok"));
+		closeButton.setGraphic(ResourceManager.getIconNode("ok.png"));
 		closeButton.setCancelButton(true);
 		closeButton.setDefaultButton(true);
-		closeButton.setPrefSize(140.0, 36.0);
-		GUIUtil.setAnchor(closeButton, null, 20.0, 15.0, null);
+		closeButton.setMinSize(140.0, 36.0);
+		commandBox.getChildren().addAll(commandBoxSpacer, closeButton);
+		vBox.getChildren().add(commandBox);
 
-		root.getChildren().addAll(vBox, closeButton);
+		root.getChildren().addAll(vBox);
 
 		Scene scene = new Scene(root);
 		this.setScene(scene);

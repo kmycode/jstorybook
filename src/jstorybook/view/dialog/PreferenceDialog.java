@@ -22,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -48,7 +49,6 @@ public class PreferenceDialog extends MyStage {
 		super(parent);
 
 		AnchorPane root = new AnchorPane();
-		root.setPrefSize(500.0, 240.0);
 
 		GridPane mainGrid = new GridPane();
 		GUIUtil.setAnchor(mainGrid, 10.0, 10.0, null, 10.0);
@@ -82,18 +82,22 @@ public class PreferenceDialog extends MyStage {
 		mainGrid.add(label, 0, 2, 2, 1);
 
 		HBox commandBox = new HBox();
+		AnchorPane commandBoxSpacer = new AnchorPane();
+		HBox.setHgrow(commandBoxSpacer, Priority.ALWAYS);
 		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "save");
 		okButton.setText(ResourceManager.getMessage("msg.ok"));
+		okButton.setGraphic(ResourceManager.getIconNode("ok.png"));
 		okButton.setDefaultButton(true);
-		okButton.setPrefWidth(100);
+		okButton.setMinWidth(100);
 		Button cancelButton = GUIUtil.createCommandButton(this.viewModelList, "cancel");
 		cancelButton.setText(ResourceManager.getMessage("msg.cancel"));
+		cancelButton.setGraphic(ResourceManager.getIconNode("cancel.png"));
 		cancelButton.setCancelButton(true);
-		cancelButton.setPrefWidth(100);
-		commandBox.getChildren().addAll(okButton, cancelButton);
-		GUIUtil.setAnchor(commandBox, null, 30.0, 20.0, null);
+		cancelButton.setMinWidth(100);
+		commandBox.getChildren().addAll(commandBoxSpacer, okButton, cancelButton);
+		mainGrid.add(commandBox, 0, 3, 2, 1);
 
-		root.getChildren().addAll(mainGrid, commandBox);
+		root.getChildren().addAll(mainGrid);
 
 		Scene scene = new Scene(root);
 		this.setScene(scene);

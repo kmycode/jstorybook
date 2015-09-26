@@ -38,6 +38,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.manager.FontManager;
@@ -130,18 +131,24 @@ public class EntityEditorPane extends MyPane {
 		// タブ全体のコンテンツの設定
 		this.rootPane.setMaxWidth(365.0);
 		this.rootPane.setMinWidth(365.0);
-		this.setContent(this.rootPane);
+		//this.setContent(this.rootPane);
+
+		// レイアウトペイン
+		VBox layoutVbox = new VBox();
+		this.setContent(layoutVbox);
 
 		// タイトルラベル
 		Label titleLabel = new Label();
 		titleLabel.fontProperty().bind(FontManager.getInstance().titleFontProperty());
 		titleLabel.textProperty().bind(this.textProperty());
-		GUIUtil.setAnchor(titleLabel, 5.0, null, null, 10.0);
-		this.rootPane.getChildren().add(titleLabel);
+		//GUIUtil.setAnchor(titleLabel, 5.0, null, null, 10.0);
+		//this.rootPane.getChildren().add(titleLabel);
+		layoutVbox.getChildren().add(titleLabel);
 
 		// タブペイン
-		GUIUtil.setAnchor(this.tabPane, 40.0, 0.0, 40.0, 0.0);
-		this.rootPane.getChildren().add(this.tabPane);
+		GUIUtil.bindFontStyle(this.tabPane);
+		layoutVbox.getChildren().add(this.tabPane);
+		VBox.setVgrow(this.tabPane, Priority.ALWAYS);
 
 		// -------------------------------------------------------
 		// 基本タブの作成
@@ -168,38 +175,46 @@ public class EntityEditorPane extends MyPane {
 
 		// ノートペインの内容（テキストエリア）
 		GUIUtil.setAnchor(this.noteArea, 5.0, 5.0, 5.0, 5.0);
-		this.noteArea.setPrefSize(330.0, 460.0);
+		//this.noteArea.setPrefSize(330.0, 460.0);
 		this.noteArea.setWrapText(true);
 		this.noteArea.fontProperty().bind(FontManager.getInstance().fontProperty());
 
-		// スクロールペインのメインコンテンツとなるアンサーペイン
+		// テキストエリアを包むレイアウト（これがないとテキストエリアが画面全体に表示されない）
 		AnchorPane noteAnchorPane = new AnchorPane();
 		noteAnchorPane.getChildren().add(this.noteArea);
 		GUIUtil.setAnchor(noteAnchorPane, 0.0);
-
-		// ノートペイン用のスクロールペイン
-		ScrollPane noteScrollPane = new ScrollPane();
-		noteScrollPane.setContent(noteAnchorPane);
-		GUIUtil.setAnchor(noteScrollPane, 0.0);
-		noteTab.setContent(noteScrollPane);
+		noteTab.setContent(noteAnchorPane);
 
 		// -------------------------------------------------------
 		// 編集画面下のボタン
+		HBox commandBox = new HBox();
+		AnchorPane commandBoxSpacer = new AnchorPane();
+		commandBoxSpacer.setPrefWidth(120.0);
+		commandBox.getChildren().add(commandBoxSpacer);
 		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "save");
 		okButton.setText(ResourceManager.getMessage("msg.edit.ok"));
-		okButton.setPrefWidth(90.0);
+		okButton.setGraphic(ResourceManager.getIconNode("ok.png"));
+		okButton.setMinWidth(90.0);
 		GUIUtil.setAnchor(okButton, null, 195.0, 15.0, null);
-		this.rootPane.getChildren().add(okButton);
+		commandBox.getChildren().add(okButton);
 		Button cancelButton = GUIUtil.createCommandButton(this.viewModelList, "cancel");
 		cancelButton.setText(ResourceManager.getMessage("msg.edit.cancel"));
-		cancelButton.setPrefWidth(90.0);
+		cancelButton.setGraphic(ResourceManager.getIconNode("cancel.png"));
+		cancelButton.setMinWidth(90.0);
 		GUIUtil.setAnchor(cancelButton, null, 100.0, 15.0, null);
-		this.rootPane.getChildren().add(cancelButton);
+		commandBox.getChildren().add(cancelButton);
 		Button applyButton = GUIUtil.createCommandButton(this.viewModelList, "apply");
 		applyButton.setText(ResourceManager.getMessage("msg.edit.apply"));
-		applyButton.setPrefWidth(90.0);
+		applyButton.setGraphic(ResourceManager.getIconNode("apply.png"));
+		applyButton.setMinWidth(90.0);
 		GUIUtil.setAnchor(applyButton, null, 5.0, 15.0, null);
-		this.rootPane.getChildren().add(applyButton);
+		commandBox.getChildren().add(applyButton);
+		layoutVbox.getChildren().add(commandBox);
+
+		// コマンドボタンの下の余白
+		AnchorPane commandBoxUnderSpacer = new AnchorPane();
+		commandBoxUnderSpacer.setPrefHeight(15.0);
+		layoutVbox.getChildren().add(commandBoxUnderSpacer);
 
 		// メッセンジャを登録
 		this.applyMessenger();
@@ -478,13 +493,16 @@ public class EntityEditorPane extends MyPane {
 	}
 
 	// -------------------------------------------------------
+	// 基本タブの編集項目を追加
 
 	private void addEditControlRow (String title, Node editControl) {
 		Label label = new Label(title);
-		label.setPrefWidth(85.0);
+		label.setMinWidth(85.0);
+		GUIUtil.bindFontStyle(label);
+		GUIUtil.bindFontStyle(editControl);
 
 		if (editControl instanceof Control) {
-			((Control) editControl).setPrefWidth(240.0);
+			((Control) editControl).setMinWidth(240.0);
 		}
 
 		GridPane.

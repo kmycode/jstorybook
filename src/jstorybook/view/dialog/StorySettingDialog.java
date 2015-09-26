@@ -19,6 +19,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jstorybook.common.manager.ResourceManager;
@@ -50,7 +52,12 @@ public class StorySettingDialog extends MyStage {
 		this.parentMessenger = messenger;
 
 		AnchorPane root = new AnchorPane();
-		root.setPrefSize(500.0, 160.0);
+
+		VBox layoutVBox = new VBox();
+		GUIUtil.setAnchor(layoutVBox, 10.0, 20.0, 10.0, 20.0);
+		layoutVBox.setSpacing(10.0);
+		layoutVBox.setMinWidth(500.0);
+		root.getChildren().add(layoutVBox);
 
 		Label newLabel = new Label(ResourceManager.getMessage("msg.story.name"));
 		GUIUtil.setAnchor(newLabel, 20.0, null, null, 20.0);
@@ -61,18 +68,22 @@ public class StorySettingDialog extends MyStage {
 		GUIUtil.bindFontStyle(this.storyTitleText);
 
 		HBox commandBox = new HBox();
+		AnchorPane commandBoxSpacer = new AnchorPane();
+		HBox.setHgrow(commandBoxSpacer, Priority.ALWAYS);
 		Button okButton = GUIUtil.createCommandButton(this.viewModelList, "save");
 		okButton.setText(ResourceManager.getMessage("msg.ok"));
+		okButton.setGraphic(ResourceManager.getIconNode("ok.png"));
 		okButton.setDefaultButton(true);
-		okButton.setPrefWidth(100);
+		okButton.setMinWidth(100);
 		Button cancelButton = GUIUtil.createCommandButton(this.viewModelList, "cancel");
 		cancelButton.setText(ResourceManager.getMessage("msg.cancel"));
+		cancelButton.setGraphic(ResourceManager.getIconNode("cancel.png"));
 		cancelButton.setCancelButton(true);
-		cancelButton.setPrefWidth(100);
-		commandBox.getChildren().addAll(okButton, cancelButton);
+		cancelButton.setMinWidth(100);
+		commandBox.getChildren().addAll(commandBoxSpacer, okButton, cancelButton);
 		GUIUtil.setAnchor(commandBox, null, 30.0, 20.0, null);
 
-		root.getChildren().addAll(newLabel, this.storyTitleText, commandBox);
+		layoutVBox.getChildren().addAll(newLabel, this.storyTitleText, commandBox);
 
 		Scene scene = new Scene(root);
 		this.setScene(scene);

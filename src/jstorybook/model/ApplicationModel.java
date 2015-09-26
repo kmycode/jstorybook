@@ -19,7 +19,6 @@ import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.ApplicationQuitMessage;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
-import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
@@ -60,7 +59,6 @@ public class ApplicationModel implements IUseMessenger {
 			StoryModel storyModel = mes.storyModelProperty().get();
 			if (storyModel != null) {
 				storyModel.fileNameProperty().set(fileName.get());
-				this.messenger.send(new MainWindowResetMessage());
 			}
 		}
 	}

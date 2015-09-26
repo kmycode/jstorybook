@@ -59,19 +59,43 @@ public class StorySettingDAO extends DAO<StorySetting> {
 		return null;
 	}
 
+	private void addSetting (String key, String value) {
+		StorySetting model = new StorySetting();
+		model.keyProperty().set(key);
+		model.valueProperty().set(value);
+		this.addModel(model);
+	}
+
+	private void addSetting (String key, long value) {
+		StorySetting model = new StorySetting();
+		model.keyProperty().set(key);
+		model.intValueProperty().set(value);
+		this.addModel(model);
+	}
+
 	public void setSetting (String key, String value) {
+		boolean hit = false;
 		for (StorySetting model : this.modelList.get()) {
 			if (model.keyProperty().get().equals(key)) {
 				model.valueProperty().set(value);
+				hit = true;
 			}
+		}
+		if (!hit) {
+			this.addSetting(key, value);
 		}
 	}
 
-	public void setSetting (String key, int value) {
+	public void setSetting (String key, long value) {
+		boolean hit = false;
 		for (StorySetting model : this.modelList.get()) {
 			if (model.keyProperty().get().equals(key)) {
 				model.intValueProperty().set(value);
+				hit = true;
 			}
+		}
+		if (!hit) {
+			this.addSetting(key, value);
 		}
 	}
 

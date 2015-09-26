@@ -18,8 +18,9 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
@@ -58,13 +59,15 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		// テーブルビュー
 		this.tableView = new EntityTableView<>();
 		GUIUtil.setAnchor(this.tableView, 5.0, 5.0, 55.0, 5.0);
+		VBox.setVgrow(this.tableView, Priority.ALWAYS);
+		GUIUtil.bindFontStyle(this.tableView);
 
 		// コマンドボタンバー（新規とか編集とか）
 		this.commandButtonBar = new HBox();
 		GUIUtil.setAnchor(this.commandButtonBar, null, null, 10.0, 15.0);
 
 		// コンテンツを設定
-		this.setContent(new AnchorPane(this.tableView, this.commandButtonBar));
+		this.setContent(new VBox(this.tableView, this.commandButtonBar));
 	}
 
 	// 第二のコンストラクタ。ビューモデルを設定、ボタンとかも作る
@@ -82,13 +85,16 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		// ボタン作り
 		Button newButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "New");
 		newButton.setText(ResourceManager.getMessage("msg.new"));
-		newButton.setPrefSize(100.0, 45.0);
+		newButton.setGraphic(ResourceManager.getIconNode("new.png"));
+		newButton.setMinSize(100.0, 45.0);
 		Button editButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Edit");
 		editButton.setText(ResourceManager.getMessage("msg.edit"));
-		editButton.setPrefSize(100.0, 45.0);
+		editButton.setGraphic(ResourceManager.getIconNode("edit.png"));
+		editButton.setMinSize(100.0, 45.0);
 		Button delButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Delete");
 		delButton.setText(ResourceManager.getMessage("msg.delete"));
-		delButton.setPrefSize(100.0, 45.0);
+		delButton.setGraphic(ResourceManager.getIconNode("cancel.png"));
+		delButton.setMinSize(100.0, 45.0);
 		this.commandButtonBar.getChildren().addAll(newButton, editButton, delButton);
 
 		// テーブルビューを選択した時のイベント

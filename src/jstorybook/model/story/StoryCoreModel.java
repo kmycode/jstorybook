@@ -55,9 +55,13 @@ public class StoryCoreModel implements IUseMessenger {
 	public void save () {
 		if (this.baseModel != null) {
 			this.baseModel.storyName.set(this.storyName.get());
-			this.settingDAO.get().setSetting(StorySettingName.STORY_NAME.getKey(), this.storyName.get());
+			this.saveStorySetting();
 		}
 		this.messenger.send(new CloseMessage());
+	}
+
+	void saveStorySetting () {
+		this.settingDAO.get().setSetting(StorySettingName.STORY_NAME.getKey(), this.storyName.get());
 	}
 
 	public void cancel () {

@@ -134,9 +134,9 @@ public class StoryModel implements IUseMessenger {
 					this.setDAO();
 
 					this.canEdit.set(true);
+					this.messenger.send(new MainWindowResetMessage());
 				} catch (SQLException e) {
 					this.messenger.send(new StoryFileLoadFailedMessage(((StringProperty) obj).get()));
-					e.printStackTrace();
 				}
 			}
 			else {
@@ -185,6 +185,11 @@ public class StoryModel implements IUseMessenger {
 
 	// ストーリーモデル全体のファイルへの保存
 	public void save () {
+
+		// ストーリーの設定をDAOの中に保存
+		this.core.get().save();
+		this.core.get().saveStorySetting();
+
 		StorySaveSync.StorySaveService service = new StorySaveSync.StorySaveService(this);
 
 		// 進捗状況を表示
@@ -211,7 +216,7 @@ public class StoryModel implements IUseMessenger {
 		this.messenger.send(new MainWindowResetMessage());
 	}
 
-	// ストーリー新規作成・ファイルへの書き込み
+	// ストーリー新規作成・ファイルへの書き込み【後で非同期にする】
 	private void createDAO () {
 		try {
 			DAO.createStorySystemTable(this.getStoryFile());
