@@ -19,7 +19,7 @@ package jstorybook.common.contract;
  * @author KMY
  */
 public enum EntityType {
-
+	NONE,
 	PERSON,
 	GROUP,
 	PLACE,

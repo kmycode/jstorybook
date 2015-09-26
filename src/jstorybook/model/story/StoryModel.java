@@ -516,6 +516,10 @@ public class StoryModel implements IUseMessenger {
 		this.downEntity(this.personEntity.selectedEntityList.get(), this.personEntity.dao.get());
 	}
 
+	public void associationPerson () {
+		this.associationEntity(this.personEntity.selectedEntityList.get());
+	}
+
 	public void newGroup () {
 		this.newEntity(new Group(), this.groupEntity.dao.get(), GroupEditorShowMessage.getInstance(), GroupColumnFactory.
 					   getInstance());
@@ -538,6 +542,10 @@ public class StoryModel implements IUseMessenger {
 		this.downEntity(this.groupEntity.selectedEntityList.get(), this.groupEntity.dao.get());
 	}
 
+	public void associationGroup () {
+		this.associationEntity(this.groupEntity.selectedEntityList.get());
+	}
+
 	public void newPlace () {
 		this.newEntity(new Place(), this.placeEntity.dao.get(), PlaceEditorShowMessage.getInstance(), PlaceColumnFactory.
 					   getInstance());
@@ -558,6 +566,10 @@ public class StoryModel implements IUseMessenger {
 
 	public void downPlace () {
 		this.downEntity(this.placeEntity.selectedEntityList.get(), this.placeEntity.dao.get());
+	}
+
+	public void associationPlace () {
+		this.associationEntity(this.placeEntity.selectedEntityList.get());
 	}
 
 	public void newScene () {

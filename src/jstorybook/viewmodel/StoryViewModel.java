@@ -14,6 +14,7 @@
 package jstorybook.viewmodel;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.story.StoryApplicationModel;
 import jstorybook.model.story.StoryModel;
@@ -85,6 +86,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("personDown", (ev) -> this.storyModel.get().downPerson(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("personAssociation", (ev) -> this.storyModel.get().associationPerson(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showGroupList", (ev) -> this.applicationModel.showGroupList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("groupNew", (ev) -> this.storyModel.get().newGroup(), this.storyModel.get().canEditProperty());
@@ -96,6 +99,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("groupDown", (ev) -> this.storyModel.get().downGroup(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("groupAssociation", (ev) -> this.storyModel.get().associationGroup(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showPlaceList", (ev) -> this.applicationModel.showPlaceList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("placeNew", (ev) -> this.storyModel.get().newPlace(), this.storyModel.get().canEditProperty());
@@ -106,6 +111,8 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("placeUp", (ev) -> this.storyModel.get().upPlace(), this.storyModel.get().
 						  canEditProperty());
 		this.applyCommand("placeDown", (ev) -> this.storyModel.get().downPlace(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("placeAssociation", (ev) -> this.storyModel.get().associationPlace(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("showSceneList", (ev) -> this.applicationModel.showSceneList(), this.storyModel.get().canEditProperty());
@@ -131,6 +138,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("chapterDown", (ev) -> this.storyModel.get().downChapter(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("chapterAssociation", (ev) -> {
+		}, new SimpleBooleanProperty(false));
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());
 		this.applyCommand("close", (ev) -> this.storyModel.get().close(), this.storyModel.get().canEditProperty());

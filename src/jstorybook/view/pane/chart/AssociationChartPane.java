@@ -76,6 +76,7 @@ public class AssociationChartPane extends MyPane {
 
 		// メッセンジャ
 		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.mainMessenger);
+		this.messenger.relay(AssociationChartShowMessage.class, this, this.mainMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.getProperty("entity").bind(message.entityProperty());
 	}
@@ -86,6 +87,8 @@ public class AssociationChartPane extends MyPane {
 		if (this.isEmpty) {
 			GUIUtil.setAnchor(canvas, (this.canvasArea.getPrefHeight() - canvas.getHeight()) / 2, null, null, (this.canvasArea.
 							  getPrefWidth() - canvas.getWidth()) / 2);
+			this.setText(this.getText() + " [" + message.getName() + "]");
+			this.setGraphic(ResourceManager.getMiniIconNode(iconName));
 		}
 		else {
 			int cornerId = this.cornerList.indexOf(entityType);
