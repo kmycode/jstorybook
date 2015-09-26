@@ -21,6 +21,7 @@ import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
 
 /**
  * ストーリーのアプリケーションモデル
@@ -53,6 +54,10 @@ public class StoryApplicationModel implements IUseMessenger {
 
 	public void showStorySetting () {
 		this.messenger.send(new StorySettingDialogShowMessage());
+	}
+
+	public void showPersonUsingChart () {
+		this.messenger.send(new PersonUsingChartShowMessage());
 	}
 
 	@Override

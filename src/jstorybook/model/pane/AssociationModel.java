@@ -24,10 +24,22 @@ import javafx.event.EventHandler;
 import jstorybook.common.contract.EntityType;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Group;
+import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Place;
+import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.columnfactory.GroupColumnFactory;
+import jstorybook.model.entity.columnfactory.PersonColumnFactory;
+import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
+import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityRelateMessage;
@@ -77,16 +89,24 @@ public class AssociationModel implements IUseMessenger {
 			// 画面の中心に描画するもの
 			EntityDrawMessage message = null;
 			if (entity.getEntityType() == EntityType.SCENE) {
-				message = new SceneDrawMessage(entity.titleProperty().get(), null);
+				message = new SceneDrawMessage(entity.titleProperty().get(), (ev) -> this.messenger.send(new SceneEditorShowMessage(
+											   SceneColumnFactory.getInstance().createColumnList((Scene) entity.entityClone()),
+											   SceneColumnFactory.getInstance().createColumnList((Scene) entity))));
 			}
 			else if (entity.getEntityType() == EntityType.GROUP) {
-				message = new GroupDrawMessage(entity.titleProperty().get(), null);
+				message = new GroupDrawMessage(entity.titleProperty().get(), (ev) -> this.messenger.send(new GroupEditorShowMessage(
+											   GroupColumnFactory.getInstance().createColumnList((Group) entity.entityClone()),
+											   GroupColumnFactory.getInstance().createColumnList((Group) entity))));
 			}
 			else if (entity.getEntityType() == EntityType.PERSON) {
-				message = new PersonDrawMessage(entity.titleProperty().get(), null);
+				message = new PersonDrawMessage(entity.titleProperty().get(), (ev) -> this.messenger.send(new PersonEditorShowMessage(
+												PersonColumnFactory.getInstance().createColumnList((Person) entity.entityClone()),
+												PersonColumnFactory.getInstance().createColumnList((Person) entity))));
 			}
 			else if (entity.getEntityType() == EntityType.PLACE) {
-				message = new PlaceDrawMessage(entity.titleProperty().get(), null);
+				message = new PlaceDrawMessage(entity.titleProperty().get(), (ev) -> this.messenger.send(new PlaceEditorShowMessage(
+											   PlaceColumnFactory.getInstance().createColumnList((Place) entity.entityClone()),
+											   PlaceColumnFactory.getInstance().createColumnList((Place) entity))));
 			}
 			this.messenger.send(message);
 

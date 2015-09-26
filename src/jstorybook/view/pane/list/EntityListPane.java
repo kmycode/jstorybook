@@ -87,8 +87,6 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.viewModelList.getProperty(this.getEntityTypeName() + "Selected").bind(this.selectedItemList);
 
 		// コンテキストメニュー作り
-		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
-		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
 		MenuItem newMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "New");
 		newMenu.setText(ResourceManager.getMessage("msg.new"));
 		newMenu.setGraphic(ResourceManager.getMiniIconNode("new.png"));
@@ -98,7 +96,12 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		MenuItem delMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Delete");
 		delMenu.setText(ResourceManager.getMessage("msg.delete"));
 		delMenu.setGraphic(ResourceManager.getMiniIconNode("cancel.png"));
-		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), viewOnAssociation);
+		MenuItem resetOrder = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "OrderReset");
+		resetOrder.setText(ResourceManager.getMessage("msg.entity.order.reset"));
+		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
+		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
+		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), resetOrder, new SeparatorMenuItem(),
+										   viewOnAssociation);
 		this.tableView.setContextMenu(contextMenu);
 
 		// ボタン作り

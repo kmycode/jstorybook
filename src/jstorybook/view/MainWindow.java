@@ -52,6 +52,7 @@ import jstorybook.view.dialog.PreferenceDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
 import jstorybook.view.pane.chart.AssociationChartPane;
+import jstorybook.view.pane.chart.PersonUsingChartPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
@@ -92,6 +93,7 @@ import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -259,7 +261,16 @@ public class MainWindow extends MyStage {
 			editMenu.getItems().add(menu);
 		}
 
-		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu);
+		// チャートメニュー
+		Menu chartMenu = new Menu(ResourceManager.getMessage("msg.chart"));
+		GUIUtil.bindFontStyle(chartMenu);
+		{
+			menu = GUIUtil.createMenuItem(this.viewModelList, "personUsingChart");
+			menu.setText(ResourceManager.getMessage("msg.personusing"));
+			chartMenu.getItems().add(menu);
+		}
+
+		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu, chartMenu);
 		menuBar.useSystemMenuBarProperty().bind(PreferenceKey.MENUBAR_USESYSTEM.getProperty());
 		this.mainMenuBar.set(menuBar);
 	}
@@ -387,6 +398,9 @@ public class MainWindow extends MyStage {
 
 		this.messenger.apply(AssociationChartShowMessage.class, this, (ev) -> {
 			MainWindow.this.addAssociationChartTab((AssociationChartShowMessage) ev);
+		});
+		this.messenger.apply(PersonUsingChartShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPersonUsingChartTab((PersonUsingChartShowMessage) ev);
 		});
 
 		this.viewModelList.storeMessenger(this.messenger);
@@ -590,6 +604,11 @@ public class MainWindow extends MyStage {
 	// 関連図
 	private void addAssociationChartTab (AssociationChartShowMessage message) {
 		this.addTab(new AssociationChartPane(message, this.messenger));
+	}
+
+	// 登場人物の使用状況
+	private void addPersonUsingChartTab (PersonUsingChartShowMessage message) {
+		this.addTab(new PersonUsingChartPane(this.messenger));
 	}
 
 	// -------------------------------------------------------

@@ -30,6 +30,10 @@ import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.AssociationViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityRelateMessage;
@@ -77,6 +81,10 @@ public class AssociationChartPane extends MyPane {
 		// メッセンジャ
 		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.mainMessenger);
 		this.messenger.relay(AssociationChartShowMessage.class, this, this.mainMessenger);
+		this.messenger.relay(PersonEditorShowMessage.class, this, this.mainMessenger);
+		this.messenger.relay(GroupEditorShowMessage.class, this, this.mainMessenger);
+		this.messenger.relay(PlaceEditorShowMessage.class, this, this.mainMessenger);
+		this.messenger.relay(SceneEditorShowMessage.class, this, this.mainMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.getProperty("entity").bind(message.entityProperty());
 	}

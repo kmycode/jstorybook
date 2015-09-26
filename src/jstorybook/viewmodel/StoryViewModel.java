@@ -88,6 +88,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("personAssociation", (ev) -> this.storyModel.get().associationPerson(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("personOrderReset", (ev) -> this.storyModel.get().getPersonDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showGroupList", (ev) -> this.applicationModel.showGroupList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("groupNew", (ev) -> this.storyModel.get().newGroup(), this.storyModel.get().canEditProperty());
@@ -100,6 +102,8 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("groupDown", (ev) -> this.storyModel.get().downGroup(), this.storyModel.get().
 						  canEditProperty());
 		this.applyCommand("groupAssociation", (ev) -> this.storyModel.get().associationGroup(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("groupOrderReset", (ev) -> this.storyModel.get().getGroupDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("showPlaceList", (ev) -> this.applicationModel.showPlaceList(), this.storyModel.get().canEditProperty());
@@ -114,6 +118,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("placeAssociation", (ev) -> this.storyModel.get().associationPlace(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("placeOrderReset", (ev) -> this.storyModel.get().getPlaceDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showSceneList", (ev) -> this.applicationModel.showSceneList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("sceneNew", (ev) -> this.storyModel.get().newScene(), this.storyModel.get().canEditProperty());
@@ -126,6 +132,8 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("sceneDown", (ev) -> this.storyModel.get().downScene(), this.storyModel.get().
 						  canEditProperty());
 		this.applyCommand("sceneAssociation", (ev) -> this.storyModel.get().associationScene(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("sceneOrderReset", (ev) -> this.storyModel.get().getSceneDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("showChapterList", (ev) -> this.applicationModel.showChapterList(), this.storyModel.get().canEditProperty());
@@ -140,6 +148,11 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("chapterAssociation", (ev) -> {
 		}, new SimpleBooleanProperty(false));
+		this.applyCommand("chapterOrderReset", (ev) -> this.storyModel.get().getChapterDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
+		this.applyCommand("personUsingChart", (ev) -> this.applicationModel.showPersonUsingChart(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("save", (ev) -> this.storyModel.get().save(), this.storyModel.get().canSaveProperty());
 		this.applyCommand("close", (ev) -> this.storyModel.get().close(), this.storyModel.get().canEditProperty());
