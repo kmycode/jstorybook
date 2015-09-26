@@ -19,6 +19,7 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityType;
 
 // Place のエンティティを扱うクラス
 public class Place extends Entity implements Comparable<Entity>, ISortableEntity {
@@ -28,6 +29,11 @@ public class Place extends Entity implements Comparable<Entity>, ISortableEntity
 
 	public Place () {
 		this.title.bind(this.name);
+	}
+
+	@Override
+	public EntityType getEntityType () {
+		return EntityType.PLACE;
 	}
 
 	/*

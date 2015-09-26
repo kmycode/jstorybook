@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
+import jstorybook.common.contract.EntityType;
 import jstorybook.viewtool.completer.PersonNameCompleter;
 
 // ノート のエンティティを扱うクラス
@@ -39,6 +40,11 @@ public class Person extends Entity implements Comparable<Entity>, ISortableEntit
 	private PersonNameCompleter nameCompleter = null;
 
 	public Person () {
+	}
+
+	@Override
+	public EntityType getEntityType () {
+		return EntityType.PERSON;
 	}
 
 	/*

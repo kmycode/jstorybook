@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
+import jstorybook.common.contract.EntityType;
 
 // ID のエンティティを扱うクラス
 public abstract class Entity implements Comparable<Entity> {
@@ -45,9 +46,11 @@ public abstract class Entity implements Comparable<Entity> {
 		return this.id.get() == 0;
 	}
 
-	private boolean isSortable (Entity other) {
+	public boolean isSortable (Entity other) {
 		return this instanceof ISortableEntity;
 	}
+
+	abstract public EntityType getEntityType ();
 
 	protected int propertyHashCode (ObservableValue o) {
 		return o.getValue() != null ? o.getValue().hashCode() : 0;

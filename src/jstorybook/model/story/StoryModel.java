@@ -76,6 +76,7 @@ import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 
 /**
  * ストーリーファイルのモデル
@@ -281,6 +282,28 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	// -------------------------------------------------------
+	// DAO
+	public PersonDAO getPersonDAO () {
+		return this.personEntity.dao.get();
+	}
+
+	public GroupDAO getGroupDAO () {
+		return this.groupEntity.dao.get();
+	}
+
+	public PlaceDAO getPlaceDAO () {
+		return this.placeEntity.dao.get();
+	}
+
+	public SceneDAO getSceneDAO () {
+		return this.sceneEntity.dao.get();
+	}
+
+	public ChapterDAO getChapterDAO () {
+		return this.chapterEntity.dao.get();
+	}
+
+	// -------------------------------------------------------
 	// StoryModelそのものが持つプロパティ
 
 	public StringProperty fileNameProperty () {
@@ -463,6 +486,14 @@ public class StoryModel implements IUseMessenger {
 		}
 	}
 
+	private void associationEntity (List<? extends Entity> selectedList) {
+		if (selectedList != null && selectedList.size() > 0) {
+			for (Entity selected : selectedList) {
+				this.messenger.send(new AssociationChartShowMessage(selected));
+			}
+		}
+	}
+
 	public void newPerson () {
 		this.newEntity(new Person(), this.personEntity.dao.get(), PersonEditorShowMessage.getInstance(), PersonColumnFactory.
 					   getInstance());
@@ -549,6 +580,10 @@ public class StoryModel implements IUseMessenger {
 
 	public void downScene () {
 		this.downEntity(this.sceneEntity.selectedEntityList.get(), this.sceneEntity.dao.get());
+	}
+
+	public void associationScene () {
+		this.associationEntity(this.sceneEntity.selectedEntityList.get());
 	}
 
 	public void newChapter () {

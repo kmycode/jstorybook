@@ -19,6 +19,7 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityType;
 
 // Chapter のエンティティを扱うクラス
 public class Chapter extends Entity implements Comparable<Entity>, ISortableEntity {
@@ -28,6 +29,11 @@ public class Chapter extends Entity implements Comparable<Entity>, ISortableEnti
 
 	public Chapter () {
 		this.title.bind(this.name);
+	}
+
+	@Override
+	public EntityType getEntityType () {
+		return EntityType.CHAPTER;
 	}
 
 	/*

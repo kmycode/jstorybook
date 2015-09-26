@@ -17,6 +17,7 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import jstorybook.common.contract.EntityType;
 
 /**
  * エンティティ同士の関係を記録するためのエンティティ
@@ -47,6 +48,11 @@ public class EntityRelation<S extends Entity, T extends Entity> extends Entity {
 				entity2Id.set(0);
 			}
 		});
+	}
+
+	@Override
+	public EntityType getEntityType () {
+		return null;
 	}
 
 	public ObjectProperty<S> entity1Property () {

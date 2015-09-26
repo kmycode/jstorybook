@@ -51,6 +51,7 @@ import jstorybook.view.dialog.NewStoryDialog;
 import jstorybook.view.dialog.PreferenceDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
+import jstorybook.view.pane.chart.AssociationChartPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
@@ -90,6 +91,7 @@ import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -161,6 +163,9 @@ public class MainWindow extends MyStage {
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
 		scene.getStylesheets().add(ResourceManager.getCss("default.css"));
 		this.setScene(scene);
+
+		// テスト
+		this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
 	}
 
 	// メインメニューバーを作成
@@ -379,6 +384,11 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(ChapterEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addChapterEditorTab((ChapterEditorShowMessage) ev);
 		});
+
+		this.messenger.apply(AssociationChartShowMessage.class, this, (ev) -> {
+			MainWindow.this.addAssociationChartTab((AssociationChartShowMessage) ev);
+		});
+
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -574,6 +584,12 @@ public class MainWindow extends MyStage {
 	// 章編集タブ
 	private void addChapterEditorTab (ChapterEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.chapter"));
+	}
+
+	// -------------------------------------------------------
+	// 関連図
+	private void addAssociationChartTab (AssociationChartShowMessage message) {
+		this.addTab(new AssociationChartPane(message, this.messenger));
 	}
 
 	// -------------------------------------------------------

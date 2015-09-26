@@ -118,6 +118,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("sceneDown", (ev) -> this.storyModel.get().downScene(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("sceneAssociation", (ev) -> this.storyModel.get().associationScene(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showChapterList", (ev) -> this.applicationModel.showChapterList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("chapterNew", (ev) -> this.storyModel.get().newChapter(), this.storyModel.get().canEditProperty());

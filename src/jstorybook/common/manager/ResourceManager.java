@@ -66,6 +66,10 @@ public class ResourceManager {
 		return ResourceManager.class.getResource("/jstorybook/resource/stylesheet/" + resourceKey).toExternalForm();
 	}
 
+	public static String getIconResource (String resourceKey) {
+		return ResourceManager.class.getResource("/jstorybook/resource/icon/" + resourceKey).toExternalForm();
+	}
+
 	public static ImageView getIconNode (String resourceKey) {
 		return new ImageView(new Image(ResourceManager.class.getResource("/jstorybook/resource/icon/" + resourceKey).toExternalForm()));
 	}

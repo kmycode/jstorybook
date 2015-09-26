@@ -17,6 +17,7 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityType;
 
 /**
  * ストーリー個別の設定モデル
@@ -28,6 +29,11 @@ public class StorySetting extends Entity {
 	private final StringProperty key = new SimpleStringProperty();
 	private final StringProperty value = new SimpleStringProperty("");
 	private final LongProperty intValue = new SimpleLongProperty();
+
+	@Override
+	public EntityType getEntityType () {
+		return null;
+	}
 
 	public StringProperty keyProperty () {
 		return this.key;

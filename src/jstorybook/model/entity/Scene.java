@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jstorybook.common.contract.EntityType;
 
 // Scene のエンティティを扱うクラス
 public class Scene extends Entity implements Comparable<Entity>, ISortableEntity {
@@ -33,6 +34,11 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 
 	public Scene () {
 		this.title.bind(this.name);
+	}
+
+	@Override
+	public EntityType getEntityType () {
+		return EntityType.SCENE;
 	}
 
 	/*

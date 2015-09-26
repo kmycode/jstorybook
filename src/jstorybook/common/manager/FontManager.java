@@ -40,6 +40,7 @@ public class FontManager {
 	private final ObjectProperty<Font> normalFont = new SimpleObjectProperty<>();
 	private final ObjectProperty<Font> boldFont = new SimpleObjectProperty<>();
 	private final ObjectProperty<Font> titleFont = new SimpleObjectProperty<>();
+	private final ObjectProperty<Font> chartFont = new SimpleObjectProperty<>();
 
 	private final StringProperty normalFontStyle = new SimpleStringProperty("");
 
@@ -62,6 +63,7 @@ public class FontManager {
 		this.normalFont.set(Font.font(this.fontName.get(), this.fontSize.get()));
 		this.boldFont.set(Font.font(this.fontName.get(), FontWeight.BOLD, this.fontSize.get()));
 		this.titleFont.set(Font.font(this.fontName.get(), FontWeight.BOLD, 18));
+		this.chartFont.set(Font.font(this.fontName.get(), FontWeight.NORMAL, 14));
 
 		this.normalFontStyle.set("-fx-font-family:'" + this.fontName.get() + "';-fx-font-size:" + this.fontSize.get() + ";");
 	}
@@ -88,6 +90,10 @@ public class FontManager {
 
 	public ReadOnlyObjectProperty<Font> titleFontProperty () {
 		return this.titleFont;
+	}
+
+	public ReadOnlyObjectProperty<Font> chartFontProperty () {
+		return this.chartFont;
 	}
 
 	public Font orderSizeFont (double size) {

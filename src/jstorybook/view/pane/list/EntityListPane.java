@@ -18,6 +18,9 @@ import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -42,6 +45,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	private final EntityType entityType;
 	private final EntityTableView<T> tableView;
+	private final ContextMenu contextMenu = new ContextMenu();
 	protected final HBox commandButtonBar;
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
@@ -81,6 +85,21 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.columnList.bind(this.viewModelList.getProperty(this.getEntityTypeName() + "ColumnList"));
 		this.tableView.itemsProperty().bind(this.viewModelList.getProperty(this.getEntityTypeName() + "List"));
 		this.viewModelList.getProperty(this.getEntityTypeName() + "Selected").bind(this.selectedItemList);
+
+		// コンテキストメニュー作り
+		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
+		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
+		MenuItem newMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "New");
+		newMenu.setText(ResourceManager.getMessage("msg.new"));
+		newMenu.setGraphic(ResourceManager.getMiniIconNode("new.png"));
+		MenuItem editMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Edit");
+		editMenu.setText(ResourceManager.getMessage("msg.edit"));
+		editMenu.setGraphic(ResourceManager.getMiniIconNode("edit.png"));
+		MenuItem delMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Delete");
+		delMenu.setText(ResourceManager.getMessage("msg.delete"));
+		delMenu.setGraphic(ResourceManager.getMiniIconNode("cancel.png"));
+		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), viewOnAssociation);
+		this.tableView.setContextMenu(contextMenu);
 
 		// ボタン作り
 		Button newButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "New");
