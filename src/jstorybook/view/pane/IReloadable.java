@@ -11,15 +11,15 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.messenger.pane.relation;
-
-import jstorybook.viewtool.messenger.Message;
+package jstorybook.view.pane;
 
 /**
- * 現在表示されている全ての関連付け画面のチェック項目を更新するトリガー
+ * リロード可能なペイン
  *
  * @author KMY
  */
-public class RelationRenewTriggerMessage extends Message {
+public interface IReloadable {
+
+	public void reload ();
 
 }

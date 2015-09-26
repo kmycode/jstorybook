@@ -18,8 +18,6 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -27,6 +25,7 @@ import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
+import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.AssociationViewModel;
@@ -50,7 +49,7 @@ import jstorybook.viewtool.messenger.pane.chart.SceneDrawMessage;
  *
  * @author KMY
  */
-public class AssociationChartPane extends MyPane {
+public class AssociationChartPane extends MyPane implements IReloadable {
 
 	private AnchorPane canvasArea = new AnchorPane();
 	private Messenger messenger = new Messenger();
@@ -91,14 +90,9 @@ public class AssociationChartPane extends MyPane {
 		this.messenger.relay(SceneEditorShowMessage.class, this, this.mainMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.getProperty("entity").bind(message.entityProperty());
-
-		// コンテキストメニュー
-		MenuItem reloadMenu = GUIUtil.createMenuItem(this.viewModelList, "draw");
-		reloadMenu.setText(ResourceManager.getMessage("msg.reload"));
-		ContextMenu contextMenu = new ContextMenu(reloadMenu);
-		this.setContextMenu(contextMenu);
 	}
 
+	@Override
 	public void reload () {
 		this.reset();
 		this.viewModelList.executeCommand("draw");

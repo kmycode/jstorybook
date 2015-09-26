@@ -46,6 +46,7 @@ import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.control.editor.SexControl;
+import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.MyPane;
 import jstorybook.view.pane.editor.relation.ChapterRelationTab;
 import jstorybook.view.pane.editor.relation.EntityRelationTab;
@@ -59,6 +60,7 @@ import jstorybook.viewtool.converter.LocalDateCalendarConverter;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
+import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
@@ -77,7 +79,6 @@ import jstorybook.viewtool.messenger.pane.relation.PlaceRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PlaceRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PlaceRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.RelationRenewMessage;
-import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
 import jstorybook.viewtool.messenger.pane.relation.RelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationRenewMessage;
@@ -89,7 +90,7 @@ import jstorybook.viewtool.model.EditorColumnList;
  *
  * @author KMY
  */
-public class EntityEditorPane extends MyPane {
+public class EntityEditorPane extends MyPane implements IReloadable {
 
 	// 全ての編集画面
 	private static final List<WeakReference<EntityEditorPane>> paneList = new LinkedList<>();
@@ -100,8 +101,8 @@ public class EntityEditorPane extends MyPane {
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
 
-	// 独自のメッセンジャを持つ
 	protected final Messenger messenger = new Messenger();
+	private final Messenger mainMessenger;
 
 	// 基本となるコントロール
 	protected final AnchorPane rootPane = new AnchorPane();
@@ -121,7 +122,7 @@ public class EntityEditorPane extends MyPane {
 
 	private int mainVboxRow = 0;
 
-	public EntityEditorPane (String title) {
+	public EntityEditorPane (String title, Messenger messenger) {
 		super(title);
 
 		// モデルに値を渡す
@@ -217,14 +218,15 @@ public class EntityEditorPane extends MyPane {
 		layoutVbox.getChildren().add(commandBoxUnderSpacer);
 
 		// メッセンジャを登録
+		this.mainMessenger = messenger;
 		this.applyMessenger();
 
 		// 自身をstatic配列に登録
 		EntityEditorPane.paneList.add(new WeakReference<>(this));
 	}
 
-	public EntityEditorPane () {
-		this("No Titled");
+	public EntityEditorPane (Messenger messenger) {
+		this("", messenger);
 	}
 
 	public void setViewModelList (ViewModelList list) {
@@ -326,11 +328,6 @@ public class EntityEditorPane extends MyPane {
 			EntityEditorPane.this.renewChapterRelationTab(mes);
 		});
 
-		// 関連タブを更新するためのトリガー
-		this.messenger.apply(RelationRenewTriggerMessage.class, this, (ev) -> {
-			EntityEditorPane.renewRelationTab();
-		});
-
 		// ストーリーモデルを渡す
 		this.messenger.apply(CurrentStoryModelGetMessage.class, this, (ev) -> {
 			((CurrentStoryModelGetMessage) ev).storyModelProperty().bind(this.storyViewModelList.getProperty("storyModel"));
@@ -362,6 +359,8 @@ public class EntityEditorPane extends MyPane {
 			}
 		});
 
+		this.messenger.relay(AllTabReloadMessage.class, this, this.mainMessenger);
+
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
@@ -370,33 +369,25 @@ public class EntityEditorPane extends MyPane {
 	}
 
 	// -------------------------------------------------------
-	// すべての編集画面に一斉に出す処理
-	private static void renewRelationTab () {
-		List<WeakReference<EntityEditorPane>> deleteList = new ArrayList<>();
-		for (WeakReference<EntityEditorPane> pane : EntityEditorPane.paneList) {
-			if (pane.get() == null) {
-				deleteList.add(pane);
-			}
-			else {
-				pane.get().viewModelList.executeCommand("relationListRenew");
-				if (pane.get().personRelationTab != null) {
-					pane.get().personRelationTab.resetChanged();
-				}
-				if (pane.get().groupRelationTab != null) {
-					pane.get().groupRelationTab.resetChanged();
-				}
-				if (pane.get().placeRelationTab != null) {
-					pane.get().placeRelationTab.resetChanged();
-				}
-				if (pane.get().sceneRelationTab != null) {
-					pane.get().sceneRelationTab.resetChanged();
-				}
-				if (pane.get().chapterRelationTab != null) {
-					pane.get().chapterRelationTab.resetChanged();
-				}
-			}
+
+	@Override
+	public void reload () {
+		this.viewModelList.executeCommand("relationListRenew");
+		if (this.personRelationTab != null) {
+			this.personRelationTab.resetChanged();
 		}
-		EntityEditorPane.paneList.removeAll(deleteList);
+		if (this.groupRelationTab != null) {
+			this.groupRelationTab.resetChanged();
+		}
+		if (this.placeRelationTab != null) {
+			this.placeRelationTab.resetChanged();
+		}
+		if (this.sceneRelationTab != null) {
+			this.sceneRelationTab.resetChanged();
+		}
+		if (this.chapterRelationTab != null) {
+			this.chapterRelationTab.resetChanged();
+		}
 	}
 
 	// -------------------------------------------------------

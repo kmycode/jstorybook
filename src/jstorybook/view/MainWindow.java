@@ -51,6 +51,7 @@ import jstorybook.view.dialog.NewStoryDialog;
 import jstorybook.view.dialog.PreferenceDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
+import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.chart.AssociationChartPane;
 import jstorybook.view.pane.chart.PersonUsingChartPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
@@ -79,6 +80,7 @@ import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
+import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
@@ -315,6 +317,9 @@ public class MainWindow extends MyStage {
 
 	// メッセンジャを設定
 	private void applyMessenger () {
+		this.messenger.apply(AllTabReloadMessage.class, this, (ev) -> {
+			MainWindow.this.reloadTab();
+		});
 		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
 		});
@@ -456,6 +461,17 @@ public class MainWindow extends MyStage {
 		}
 	}
 
+	// タブを全部リロード
+	private void reloadTab () {
+		for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
+			for (Tab dtab : dtabPane.getTabs()) {
+				if (dtab instanceof IReloadable) {
+					((IReloadable) dtab).reload();
+				}
+			}
+		}
+	}
+
 	// エンティティリストタブを追加
 	private void addEntityListTab (EntityListPane tab) {
 		EntityListPane otherTab = this.findEntityListPane(tab.getEntityType());
@@ -528,17 +544,18 @@ public class MainWindow extends MyStage {
 	// エンティティ編集タブ
 	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName) {
 
-		EntityEditorPane tab = new EntityEditorPane();
-		tab.setViewModelList(this.viewModelList);
-		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
-		completer.setEntityTypeName(entityTypeName);
-
 		// すでに同じエンティティの編集タブが開いてないか？
 		EntityEditorPane otherTab = this.findEntityEditorPane(message.columnListProperty().get());
 		if (otherTab != null) {
 			otherTab.getTabPane().getSelectionModel().select(otherTab);
 			return;
 		}
+
+		// タブを作成
+		EntityEditorPane tab = new EntityEditorPane(this.messenger);
+		tab.setViewModelList(this.viewModelList);
+		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
+		completer.setEntityTypeName(entityTypeName);
 
 		// バインド
 		tab.columnListProperty().bind(message.columnListProperty());

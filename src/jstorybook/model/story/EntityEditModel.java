@@ -25,6 +25,7 @@ import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
+import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
@@ -42,7 +43,6 @@ import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PlaceRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PlaceRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PlaceRelationShowMessage;
-import jstorybook.viewtool.messenger.pane.relation.RelationRenewTriggerMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
@@ -301,8 +301,8 @@ public class EntityEditModel implements IUseMessenger {
 		this.baseColumnList.get().copyProperty(this.columnList.get());
 		this.isChanged.set(false);
 
-		// 他の編集画面の関連付け設定も全部変えに行く
-		this.messenger.send(new RelationRenewTriggerMessage());
+		// メインウィンドウのタブをリロードするメッセージ
+		this.messenger.send(new AllTabReloadMessage());
 	}
 
 	public void relationListRenew () {

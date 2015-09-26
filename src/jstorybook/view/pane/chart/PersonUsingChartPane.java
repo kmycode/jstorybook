@@ -17,10 +17,9 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
+import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.PersonUsingChartViewModel;
@@ -34,7 +33,7 @@ import jstorybook.viewtool.messenger.pane.chart.Data2DSendMessage;
  *
  * @author KMY
  */
-public class PersonUsingChartPane extends MyPane {
+public class PersonUsingChartPane extends MyPane implements IReloadable {
 
 	private final BarChart<String, Number> chart;
 	private XYChart.Series<String, Number> chartSeries = new XYChart.Series<>();
@@ -66,12 +65,6 @@ public class PersonUsingChartPane extends MyPane {
 
 		// チャートを作成
 		this.viewModelList.executeCommand("load");
-
-		// コンテキストメニュー
-		MenuItem reloadMenu = GUIUtil.createMenuItem(this.viewModelList, "load");
-		reloadMenu.setText(ResourceManager.getMessage("msg.reload"));
-		ContextMenu contextMenu = new ContextMenu(reloadMenu);
-		this.setContextMenu(contextMenu);
 	}
 
 	private void reset () {
@@ -83,6 +76,12 @@ public class PersonUsingChartPane extends MyPane {
 
 	private void addData (Data2DSendMessage<String, Number> message) {
 		this.chartSeries.getData().add(new XYChart.Data<String, Number>(message.getXData(), message.getYData()));
+	}
+
+	@Override
+	public void reload () {
+		this.reset();
+		this.viewModelList.executeCommand("load");
 	}
 
 }
