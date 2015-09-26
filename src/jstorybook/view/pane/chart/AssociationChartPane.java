@@ -18,6 +18,8 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -30,6 +32,7 @@ import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.AssociationViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.general.ResetMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
@@ -77,6 +80,7 @@ public class AssociationChartPane extends MyPane {
 		this.messenger.apply(GroupDrawMessage.class, this, (ev) -> this.drawGroup((GroupDrawMessage) ev));
 		this.messenger.apply(PlaceDrawMessage.class, this, (ev) -> this.drawPlace((PlaceDrawMessage) ev));
 		this.messenger.apply(SceneDrawMessage.class, this, (ev) -> this.drawScene((SceneDrawMessage) ev));
+		this.messenger.apply(ResetMessage.class, this, (ev) -> this.reset());
 
 		// メッセンジャ
 		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.mainMessenger);
@@ -87,6 +91,25 @@ public class AssociationChartPane extends MyPane {
 		this.messenger.relay(SceneEditorShowMessage.class, this, this.mainMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.getProperty("entity").bind(message.entityProperty());
+
+		// コンテキストメニュー
+		MenuItem reloadMenu = GUIUtil.createMenuItem(this.viewModelList, "draw");
+		reloadMenu.setText(ResourceManager.getMessage("msg.reload"));
+		ContextMenu contextMenu = new ContextMenu(reloadMenu);
+		this.setContextMenu(contextMenu);
+	}
+
+	public void reload () {
+		this.reset();
+		this.viewModelList.executeCommand("draw");
+	}
+
+	private void reset () {
+		this.canvasArea.getChildren().clear();
+		this.canvasList.clear();
+		this.cornerList.clear();
+		this.cornerNumList.clear();
+		this.isEmpty = true;
 	}
 
 	private Canvas drawNode (EntityDrawMessage message, int width, int height, String iconName, EntityType entityType) {
@@ -95,7 +118,7 @@ public class AssociationChartPane extends MyPane {
 		if (this.isEmpty) {
 			GUIUtil.setAnchor(canvas, (this.canvasArea.getPrefHeight() - canvas.getHeight()) / 2, null, null, (this.canvasArea.
 							  getPrefWidth() - canvas.getWidth()) / 2);
-			this.setText(this.getText() + " [" + message.getName() + "]");
+			this.setText(ResourceManager.getMessage("msg.association") + " [" + message.getName() + "]");
 			this.setGraphic(ResourceManager.getMiniIconNode(iconName));
 		}
 		else {

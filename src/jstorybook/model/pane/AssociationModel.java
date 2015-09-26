@@ -36,6 +36,7 @@ import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.general.ResetMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
@@ -76,6 +77,11 @@ public class AssociationModel implements IUseMessenger {
 	}
 
 	public void draw () {
+		this.messenger.send(new ResetMessage());
+		this.personIdList.clear();
+		this.groupIdList.clear();
+		this.placeIdList.clear();
+
 		Entity entity = this.entity.get();
 		long entityId = entity.idProperty().get();
 

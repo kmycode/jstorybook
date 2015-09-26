@@ -17,6 +17,8 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.pane.MyPane;
@@ -24,6 +26,7 @@ import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.PersonUsingChartViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.general.ResetMessage;
 import jstorybook.viewtool.messenger.pane.chart.Data2DSendMessage;
 
 /**
@@ -34,7 +37,7 @@ import jstorybook.viewtool.messenger.pane.chart.Data2DSendMessage;
 public class PersonUsingChartPane extends MyPane {
 
 	private final BarChart<String, Number> chart;
-	private final XYChart.Series<String, Number> chartSeries = new XYChart.Series<>();
+	private XYChart.Series<String, Number> chartSeries = new XYChart.Series<>();
 	private final Messenger mainMessenger;
 	private final Messenger messenger = new Messenger();
 	private final ViewModelList viewModelList = new ViewModelList(new PersonUsingChartViewModel());
@@ -44,7 +47,9 @@ public class PersonUsingChartPane extends MyPane {
 
 		this.mainMessenger = messenger;
 		this.messenger.apply(Data2DSendMessage.class, this, (ev) -> this.addData((Data2DSendMessage<String, Number>) ev));
+		this.messenger.apply(ResetMessage.class, this, (ev) -> this.reset());
 		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.mainMessenger);
+		this.viewModelList.storeMessenger(this.messenger);
 
 		// チャートの設定
 		CategoryAxis xAxis = new CategoryAxis();
@@ -60,8 +65,20 @@ public class PersonUsingChartPane extends MyPane {
 		this.setContent(this.chart);
 
 		// チャートを作成
-		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.executeCommand("load");
+
+		// コンテキストメニュー
+		MenuItem reloadMenu = GUIUtil.createMenuItem(this.viewModelList, "load");
+		reloadMenu.setText(ResourceManager.getMessage("msg.reload"));
+		ContextMenu contextMenu = new ContextMenu(reloadMenu);
+		this.setContextMenu(contextMenu);
+	}
+
+	private void reset () {
+		this.chartSeries.getData().clear();
+		this.chart.getData().clear();
+		this.chartSeries = new XYChart.Series<>();
+		this.chart.getData().add(this.chartSeries);
 	}
 
 	private void addData (Data2DSendMessage<String, Number> message) {

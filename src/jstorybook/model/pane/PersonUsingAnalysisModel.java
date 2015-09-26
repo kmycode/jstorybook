@@ -19,6 +19,7 @@ import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.general.ResetMessage;
 import jstorybook.viewtool.messenger.pane.chart.Data2DSendMessage;
 
 /**
@@ -31,6 +32,8 @@ public class PersonUsingAnalysisModel implements IUseMessenger {
 	private Messenger messenger = Messenger.getInstance();
 
 	public void load () {
+
+		this.messenger.send(new ResetMessage());
 
 		// データの取得
 		CurrentStoryModelGetMessage message = new CurrentStoryModelGetMessage();
