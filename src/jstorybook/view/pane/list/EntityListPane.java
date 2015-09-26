@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -63,12 +64,13 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		// テーブルビュー
 		this.tableView = new EntityTableView<>();
 		GUIUtil.setAnchor(this.tableView, 5.0, 5.0, 55.0, 5.0);
+		VBox.setMargin(this.tableView, new Insets(5.0, 5.0, 5.0, 5.0));
 		VBox.setVgrow(this.tableView, Priority.ALWAYS);
 		GUIUtil.bindFontStyle(this.tableView);
 
 		// コマンドボタンバー（新規とか編集とか）
 		this.commandButtonBar = new HBox();
-		GUIUtil.setAnchor(this.commandButtonBar, null, null, 10.0, 15.0);
+		VBox.setMargin(this.commandButtonBar, new Insets(0, 0, 10.0, 15.0));
 
 		// コンテンツを設定
 		this.setContent(new VBox(this.tableView, this.commandButtonBar));
@@ -96,12 +98,18 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		MenuItem delMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Delete");
 		delMenu.setText(ResourceManager.getMessage("msg.delete"));
 		delMenu.setGraphic(ResourceManager.getMiniIconNode("cancel.png"));
+
+		MenuItem upMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Up");
+		upMenu.setText(ResourceManager.getMessage("msg.order.up"));
+		MenuItem downMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Down");
+		downMenu.setText(ResourceManager.getMessage("msg.order.down"));
 		MenuItem resetOrder = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "OrderReset");
 		resetOrder.setText(ResourceManager.getMessage("msg.entity.order.reset"));
+
 		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
 		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
-		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), resetOrder, new SeparatorMenuItem(),
-										   viewOnAssociation);
+		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), upMenu, downMenu, resetOrder,
+										   new SeparatorMenuItem(), viewOnAssociation);
 		this.tableView.setContextMenu(contextMenu);
 
 		// ボタン作り

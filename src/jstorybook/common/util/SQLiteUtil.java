@@ -86,8 +86,7 @@ public class SQLiteUtil {
 
 	// コードフォーマットがあると見づらくなるので作ったメソッド
 	public static String updateQueryColumn (String columnName, String value, boolean isLast) {
-		value = value.replaceAll("\\\\", "\\\\\\\\");
-		value = value.replaceAll("'", "\\\\'");
+		value = value.replaceAll("\'", "''");
 		return "`" + columnName + "`='" + value + "'" + (isLast ? " " : ", ");
 	}
 

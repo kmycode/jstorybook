@@ -142,9 +142,8 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		Label titleLabel = new Label();
 		titleLabel.fontProperty().bind(FontManager.getInstance().titleFontProperty());
 		titleLabel.textProperty().bind(this.textProperty());
-		//GUIUtil.setAnchor(titleLabel, 5.0, null, null, 10.0);
-		//this.rootPane.getChildren().add(titleLabel);
 		layoutVbox.getChildren().add(titleLabel);
+		VBox.setMargin(titleLabel, new Insets(5.0, 0, 0, 10.0));
 
 		// タブペイン
 		GUIUtil.bindFontStyle(this.tabPane);
