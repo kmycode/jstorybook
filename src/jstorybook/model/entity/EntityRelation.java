@@ -48,6 +48,8 @@ public class EntityRelation<S extends Entity, T extends Entity> extends Entity {
 				entity2Id.set(0);
 			}
 		});
+
+		this.storeProperty(this.entity1Id, this.entity2Id);
 	}
 
 	@Override

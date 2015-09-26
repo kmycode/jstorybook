@@ -29,6 +29,7 @@ public class Place extends Entity implements Comparable<Entity>, ISortableEntity
 
 	public Place () {
 		this.title.bind(this.name);
+		this.storeProperty(this.name, this.order);
 	}
 
 	@Override

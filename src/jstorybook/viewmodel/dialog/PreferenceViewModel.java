@@ -30,6 +30,7 @@ public class PreferenceViewModel extends ViewModel {
 	protected void storeProperty () {
 		this.applyProperty("fontFamily", model.fontFamilyProperty());
 		this.applyProperty("fontSize", model.fontSizeProperty());
+		this.applyProperty("isUseSystemMenu", model.isUseSystemMenuProperty());
 	}
 
 	@Override

@@ -16,6 +16,7 @@ package jstorybook.view.dialog;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -77,9 +78,19 @@ public class PreferenceDialog extends MyStage {
 		fontSize.textProperty().bindBidirectional(this.viewModelList.getProperty("fontSize"));
 		mainGrid.getChildren().addAll(label, fontSize);
 
+		// メニューバー
+		label = new Label("");
+		GUIUtil.bindFontStyle(label);
+		CheckBox isUseSystemMenu = new CheckBox(ResourceManager.getMessage("msg.preference.menubar.usesystem"));
+		GUIUtil.bindFontStyle(isUseSystemMenu);
+		GridPane.setConstraints(label, 0, 2);
+		GridPane.setConstraints(isUseSystemMenu, 1, 2);
+		isUseSystemMenu.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isUseSystemMenu"));
+		mainGrid.getChildren().addAll(label, isUseSystemMenu);
+
 		label = new Label(ResourceManager.getMessage("msg.preference.alert.beta"));
 		GUIUtil.bindFontStyle(label);
-		mainGrid.add(label, 0, 2, 2, 1);
+		mainGrid.add(label, 0, 3, 2, 1);
 
 		HBox commandBox = new HBox();
 		AnchorPane commandBoxSpacer = new AnchorPane();
@@ -95,7 +106,7 @@ public class PreferenceDialog extends MyStage {
 		cancelButton.setCancelButton(true);
 		cancelButton.setMinWidth(100);
 		commandBox.getChildren().addAll(commandBoxSpacer, okButton, cancelButton);
-		mainGrid.add(commandBox, 0, 3, 2, 1);
+		mainGrid.add(commandBox, 0, 4, 2, 1);
 
 		root.getChildren().addAll(mainGrid);
 

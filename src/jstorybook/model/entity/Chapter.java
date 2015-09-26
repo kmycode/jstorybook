@@ -29,6 +29,7 @@ public class Chapter extends Entity implements Comparable<Entity>, ISortableEnti
 
 	public Chapter () {
 		this.title.bind(this.name);
+		this.storeProperty(name, order);
 	}
 
 	@Override

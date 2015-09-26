@@ -13,6 +13,8 @@
  */
 package jstorybook.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.PreferenceKey;
@@ -31,11 +33,13 @@ public class PreferenceSettingModel implements IUseMessenger {
 
 	private final StringProperty fontFamily = new SimpleStringProperty(PreferenceKey.FONT_FAMILY.getString());
 	private final StringProperty fontSize = new SimpleStringProperty(PreferenceKey.FONT_SIZE.getDouble().toString());
+	private final BooleanProperty isUseSystemMenu = new SimpleBooleanProperty(PreferenceKey.MENUBAR_USESYSTEM.getBoolean());
 
 	public void save () {
 		try {
 			PreferenceKey.FONT_FAMILY.setValue(this.fontFamily.get());
 			PreferenceKey.FONT_SIZE.setValue(Double.parseDouble(this.fontSize.get()));
+			PreferenceKey.MENUBAR_USESYSTEM.setValue(this.isUseSystemMenu.get());
 		} catch (NumberFormatException e) {
 		}
 		this.messenger.send(new CloseMessage());
@@ -51,6 +55,10 @@ public class PreferenceSettingModel implements IUseMessenger {
 
 	public StringProperty fontSizeProperty () {
 		return this.fontSize;
+	}
+
+	public BooleanProperty isUseSystemMenuProperty () {
+		return this.isUseSystemMenu;
 	}
 
 	@Override

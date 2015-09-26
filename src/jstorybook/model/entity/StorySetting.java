@@ -30,6 +30,10 @@ public class StorySetting extends Entity {
 	private final StringProperty value = new SimpleStringProperty("");
 	private final LongProperty intValue = new SimpleLongProperty();
 
+	public StorySetting () {
+		this.storeProperty(this.key, this.value, this.intValue);
+	}
+
 	@Override
 	public EntityType getEntityType () {
 		return null;

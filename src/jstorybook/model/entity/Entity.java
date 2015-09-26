@@ -15,8 +15,11 @@
 // author: KMY
 package jstorybook.model.entity;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -29,8 +32,10 @@ public abstract class Entity implements Comparable<Entity> {
 	protected LongProperty id = new SimpleLongProperty(0);
 	protected final StringProperty title = new SimpleStringProperty();
 	protected StringProperty note = new SimpleStringProperty("");
+	private final BooleanProperty isChanged = new SimpleBooleanProperty(false);
 
 	public Entity () {
+		this.storeProperty(this.note);
 	}
 
 	public Entity (Long id) {
@@ -48,6 +53,22 @@ public abstract class Entity implements Comparable<Entity> {
 
 	public boolean isSortable (Entity other) {
 		return this instanceof ISortableEntity;
+	}
+
+	public void save () {
+		this.isChanged.set(false);
+	}
+
+	protected void storeProperty (ReadOnlyProperty... args) {
+		for (ReadOnlyProperty p : args) {
+			p.addListener((ev) -> {
+				this.isChanged.set(true);
+			});
+		}
+	}
+
+	public boolean isChanged () {
+		return this.isChanged.get();
 	}
 
 	abstract public EntityType getEntityType ();

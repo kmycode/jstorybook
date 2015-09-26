@@ -65,6 +65,7 @@ public class GUIUtil {
 
 	public static MenuItem createMenuItem (ViewModelList vmlist, String commandName) {
 		MenuItem menuItem = new MenuItem();
+		GUIUtil.bindFontStyle(menuItem);
 
 		BooleanReverseConverter converter = new BooleanReverseConverter();
 		converter.bindValue(vmlist.canExecuteCommandProperty(commandName));

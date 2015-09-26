@@ -701,6 +701,10 @@ public class StoryModel implements IUseMessenger {
 			this.dao.deleteModel(this.entity);
 			this.isDid = true;
 		}
+
+		public void resetOrder () {
+			this.dao.resetOrder();
+		}
 	}
 
 }

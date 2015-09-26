@@ -40,6 +40,7 @@ public class Person extends Entity implements Comparable<Entity>, ISortableEntit
 	private PersonNameCompleter nameCompleter = null;
 
 	public Person () {
+		this.storeProperty(this.firstName, this.lastName, this.order, this.sexId, this.birthday, this.dayOfDeath, this.color);
 	}
 
 	@Override

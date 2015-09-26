@@ -120,14 +120,16 @@ public abstract class DAO<E extends Entity> {
 		ObservableList<E> result = FXCollections.observableArrayList();
 		rs = this.getStoryFileModel().executeQuery("select * from `" + this.getTableName() + "`;");
 		while (rs.next()) {
-			result.add(this.loadModel(rs));
+			E entity = this.loadModel(rs);
+			entity.save();		// 変更フラグをオフにする
+			result.add(entity);
 			this.saveStep.set(++saveCount);
 		}
 
-		this.modelList.set(result);
-
 		// ソート・順番振り直し
-		this.resetOrder();
+		Collections.sort(result);
+
+		this.modelList.set(result);
 	}
 
 	// ソートして、順番を一から振り直す
@@ -152,7 +154,10 @@ public abstract class DAO<E extends Entity> {
 		// 保存処理
 		ObservableList<E> list = this.modelList.get();
 		for (E model : list) {
-			this.saveModel(model);
+			if (model.isChanged()) {
+				model.save();
+				this.saveModel(model);
+			}
 			this.saveStep.set(++saveCount);
 		}
 

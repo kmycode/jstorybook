@@ -27,7 +27,8 @@ public enum PreferenceKey {
 	WINDOW_WIDTH(1366),
 	WINDOW_HEIGHT(768),
 	FONT_FAMILY("Meiryo UI"),
-	FONT_SIZE(14.0);
+	FONT_SIZE(14.0),
+	MENUBAR_USESYSTEM(false);
 
 	private final Object defaultValue;
 	private ObjectProperty value = new SimpleObjectProperty();

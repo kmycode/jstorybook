@@ -260,7 +260,7 @@ public class MainWindow extends MyStage {
 		}
 
 		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu);
-		menuBar.setUseSystemMenuBar(true);
+		menuBar.useSystemMenuBarProperty().bind(PreferenceKey.MENUBAR_USESYSTEM.getProperty());
 		this.mainMenuBar.set(menuBar);
 	}
 

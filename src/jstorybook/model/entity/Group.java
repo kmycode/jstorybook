@@ -29,6 +29,7 @@ public class Group extends Entity implements Comparable<Entity>, ISortableEntity
 
 	public Group () {
 		this.title.bind(this.name);
+		this.storeProperty(this.name, this.order);
 	}
 
 	@Override

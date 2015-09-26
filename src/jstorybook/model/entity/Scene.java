@@ -34,6 +34,7 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 
 	public Scene () {
 		this.title.bind(this.name);
+		this.storeProperty(this.name, this.starttime, this.endtime, this.order);
 	}
 
 	@Override
