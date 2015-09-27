@@ -151,7 +151,6 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 	// 何も選択しない
 	public void noSelect () {
 		this.tableView.getSelectionModel().clearSelection();
-		System.out.println(this.tableView.getSelectionModel().getSelectedItem());
 	}
 
 	public boolean isEqualPane (EntityListPane other) {

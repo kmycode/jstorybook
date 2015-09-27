@@ -50,7 +50,7 @@ public abstract class DAO<E extends Entity> {
 		this.reset();
 		this.storyFileModel = storyFileModel;
 		if (isCreate) {
-			this.getStoryFileModel().updateQuery("insert into idtable(key,value) values ('" + this.getTableName() + "',1);");
+			this.getStoryFileModel().updateQuery("insert into idtable(key,value) values ('" + this.getTableName() + "',0);");
 			this.createTable();
 		}
 		this.storyFileModelSet();

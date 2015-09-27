@@ -46,7 +46,7 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
-		columnList.idProperty().bind(model.idProperty());
+		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.entityTypeProperty().set(EntityType.GROUP);
 		columnList.addRelation(EntityRelation.GROUP_PERSON);

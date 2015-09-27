@@ -47,7 +47,7 @@ public class SceneColumnFactory extends ColumnFactory<Scene> {
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
-		columnList.idProperty().bind(model.idProperty());
+		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.addRelation(EntityRelation.CHAPTER_SCENE);
 		columnList.addRelation(EntityRelation.SCENE_PERSON);

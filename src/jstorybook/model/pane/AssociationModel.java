@@ -87,6 +87,8 @@ public class AssociationModel implements IUseMessenger {
 		this.personIdList.clear();
 		this.groupIdList.clear();
 		this.placeIdList.clear();
+		this.sceneIdList.clear();
+		this.chapterIdList.clear();
 
 		Entity entity = this.entity.get();
 		long entityId = entity.idProperty().get();

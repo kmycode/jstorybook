@@ -230,6 +230,10 @@ public class EntityEditModel implements IUseMessenger {
 	}
 
 	public void apply () {
+
+		// エンティティそのものの値をコピー
+		this.baseColumnList.get().copyProperty(this.columnList.get());
+
 		// エンティティ同士の関連を保存
 		StoryModel storyModel = this.getStoryModel();
 		EntityType entityType = this.columnList.get().getEntityType();
@@ -297,12 +301,10 @@ public class EntityEditModel implements IUseMessenger {
 			}
 		}
 
-		// エンティティそのものの値をコピー
-		this.baseColumnList.get().copyProperty(this.columnList.get());
-		this.isChanged.set(false);
-
 		// メインウィンドウのタブをリロードするメッセージ
 		this.messenger.send(new AllTabReloadMessage());
+
+		this.isChanged.set(false);
 	}
 
 	public void relationListRenew () {

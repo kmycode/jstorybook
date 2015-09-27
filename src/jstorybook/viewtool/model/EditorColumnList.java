@@ -90,6 +90,7 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 
 			if (this.entityAdapter != null) {
 				this.entityAdapter.addEntity();
+				from.idProperty().set(this.idProperty().get());
 				this.entityAdapter = null;
 			}
 		} catch (Throwable e) {

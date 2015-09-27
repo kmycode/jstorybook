@@ -46,7 +46,7 @@ public class PlaceColumnFactory extends ColumnFactory<Place> {
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
-		columnList.idProperty().bind(model.idProperty());
+		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.addRelation(EntityRelation.SCENE_PLACE);
 		columnList.entityTypeProperty().set(EntityType.PLACE);
