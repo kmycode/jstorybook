@@ -23,11 +23,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import jstorybook.common.contract.EntityType;
 import jstorybook.model.dao.DAO;
+import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Group;
 import jstorybook.model.entity.Person;
 import jstorybook.model.entity.Place;
 import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
@@ -37,11 +39,13 @@ import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.ResetMessage;
+import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.ChapterDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityRelateMessage;
 import jstorybook.viewtool.messenger.pane.chart.GroupDrawMessage;
@@ -64,6 +68,8 @@ public class AssociationModel implements IUseMessenger {
 	private final Map<Long, Integer> personIdList = new HashMap<>();
 	private final Map<Long, Integer> groupIdList = new HashMap<>();
 	private final Map<Long, Integer> placeIdList = new HashMap<>();
+	private final Map<Long, Integer> sceneIdList = new HashMap<>();
+	private final Map<Long, Integer> chapterIdList = new HashMap<>();
 
 	private StoryModel storyModel;
 
@@ -114,12 +120,19 @@ public class AssociationModel implements IUseMessenger {
 											   PlaceColumnFactory.getInstance().createColumnList((Place) entity.entityClone()),
 											   PlaceColumnFactory.getInstance().createColumnList((Place) entity))));
 			}
+			else if (entity.getEntityType() == EntityType.CHAPTER) {
+				message = new ChapterDrawMessage(entity.titleProperty().get(), (ev) -> this.messenger.send(
+												  new ChapterEditorShowMessage(ChapterColumnFactory.getInstance().createColumnList(
+																  (Chapter) entity.entityClone()), ChapterColumnFactory.getInstance().
+																			   createColumnList((Chapter) entity))));
+			}
 			this.messenger.send(message);
 
 			// まわりに描画するもの
 			if (entity.getEntityType() == EntityType.SCENE) {
 				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.PERSON, EntityType.GROUP);
 				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.PLACE);
+				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.CHAPTER);
 			}
 			else if (entity.getEntityType() == EntityType.GROUP) {
 				this.drawArea(EntityType.GROUP, entityId, EntityType.GROUP, entityId, -1, EntityType.PERSON, EntityType.SCENE);
@@ -130,6 +143,9 @@ public class AssociationModel implements IUseMessenger {
 			}
 			else if (entity.getEntityType() == EntityType.PLACE) {
 				this.drawArea(EntityType.PLACE, entityId, EntityType.PLACE, entityId, -1, EntityType.SCENE, EntityType.PERSON);
+			}
+			else if (entity.getEntityType() == EntityType.CHAPTER) {
+				this.drawArea(EntityType.CHAPTER, entityId, EntityType.CHAPTER, entityId, -1, EntityType.SCENE, EntityType.PERSON);
 			}
 		}
 	}
@@ -161,6 +177,12 @@ public class AssociationModel implements IUseMessenger {
 		else if (from == EntityType.PLACE && to == EntityType.SCENE) {
 			list = storyModel.getScenePlaceRelation_Scene(fromId);
 		}
+		else if (from == EntityType.CHAPTER && to == EntityType.SCENE) {
+			list = storyModel.getChapterSceneRelation_Scene(fromId);
+		}
+		else if (from == EntityType.SCENE && to == EntityType.CHAPTER) {
+			list = storyModel.getChapterSceneRelation_Chapter(fromId);
+		}
 		if (to == EntityType.GROUP) {
 			map = this.groupIdList;
 			dao = this.storyModel.getGroupDAO();
@@ -174,8 +196,12 @@ public class AssociationModel implements IUseMessenger {
 			dao = this.storyModel.getPlaceDAO();
 		}
 		else if (to == EntityType.SCENE) {
-			map = this.placeIdList;
+			map = this.sceneIdList;
 			dao = this.storyModel.getSceneDAO();
+		}
+		else if (to == EntityType.CHAPTER) {
+			map = this.chapterIdList;
+			dao = this.storyModel.getChapterDAO();
 		}
 		if (list != null && map != null) {
 
@@ -212,6 +238,9 @@ public class AssociationModel implements IUseMessenger {
 						}
 						else if (to == EntityType.SCENE) {
 							ddMessage = new SceneDrawMessage(toEntity.titleProperty().get(), ev);
+						}
+						else if (to == EntityType.CHAPTER) {
+							ddMessage = new ChapterDrawMessage(toEntity.titleProperty().get(), ev);
 						}
 						if (ddMessage != null) {
 							if (fromDrawId >= 0) {

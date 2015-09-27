@@ -169,7 +169,7 @@ public class MainWindow extends MyStage {
 		this.setScene(scene);
 
 		// テスト
-		//this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
+		this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
 	}
 
 	// メインメニューバーを作成

@@ -32,11 +32,13 @@ import jstorybook.viewmodel.pane.chart.AssociationViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.ResetMessage;
+import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.ChapterDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityRelateMessage;
 import jstorybook.viewtool.messenger.pane.chart.GroupDrawMessage;
@@ -79,6 +81,7 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 		this.messenger.apply(GroupDrawMessage.class, this, (ev) -> this.drawGroup((GroupDrawMessage) ev));
 		this.messenger.apply(PlaceDrawMessage.class, this, (ev) -> this.drawPlace((PlaceDrawMessage) ev));
 		this.messenger.apply(SceneDrawMessage.class, this, (ev) -> this.drawScene((SceneDrawMessage) ev));
+		this.messenger.apply(ChapterDrawMessage.class, this, (ev) -> this.drawChapter((ChapterDrawMessage) ev));
 		this.messenger.apply(ResetMessage.class, this, (ev) -> this.reset());
 
 		// メッセンジャ
@@ -88,6 +91,7 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 		this.messenger.relay(GroupEditorShowMessage.class, this, this.mainMessenger);
 		this.messenger.relay(PlaceEditorShowMessage.class, this, this.mainMessenger);
 		this.messenger.relay(SceneEditorShowMessage.class, this, this.mainMessenger);
+		this.messenger.relay(ChapterEditorShowMessage.class, this, this.mainMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.getProperty("entity").bind(message.entityProperty());
 	}
@@ -211,19 +215,23 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 	}
 
 	private void drawPerson (PersonDrawMessage message) {
-		this.canvasArea.getChildren().add(this.addNode(message, "person.png", EntityType.PERSON));
+		this.canvasArea.getChildren().add(this.addNode(message, "person_large.png", EntityType.PERSON));
 	}
 
 	private void drawGroup (GroupDrawMessage message) {
-		this.canvasArea.getChildren().add(this.addNode(message, "group.png", EntityType.GROUP));
+		this.canvasArea.getChildren().add(this.addNode(message, "group_large.png", EntityType.GROUP));
 	}
 
 	private void drawPlace (PlaceDrawMessage message) {
-		this.canvasArea.getChildren().add(this.addNode(message, "place.png", EntityType.PLACE));
+		this.canvasArea.getChildren().add(this.addNode(message, "place_large.png", EntityType.PLACE));
 	}
 
 	private void drawScene (SceneDrawMessage message) {
-		this.canvasArea.getChildren().add(this.addNode(message, "scene.png", EntityType.SCENE));
+		this.canvasArea.getChildren().add(this.addNode(message, "scene_large.png", EntityType.SCENE));
+	}
+
+	private void drawChapter (ChapterDrawMessage message) {
+		this.canvasArea.getChildren().add(this.addNode(message, "chapter_large.png", EntityType.CHAPTER));
 	}
 
 }

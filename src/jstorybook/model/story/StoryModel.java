@@ -622,6 +622,10 @@ public class StoryModel implements IUseMessenger {
 		this.downEntity(this.chapterEntity.selectedEntityList.get(), this.chapterEntity.dao.get());
 	}
 
+	public void associationChapter () {
+		this.associationEntity(this.chapterEntity.selectedEntityList.get());
+	}
+
 	// -------------------------------------------------------
 	// 設定を取得
 	public StorySetting getSetting (StorySettingName key) {

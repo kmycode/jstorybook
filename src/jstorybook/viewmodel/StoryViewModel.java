@@ -14,7 +14,6 @@
 package jstorybook.viewmodel;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.story.StoryApplicationModel;
 import jstorybook.model.story.StoryModel;
@@ -146,8 +145,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("chapterDown", (ev) -> this.storyModel.get().downChapter(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("chapterAssociation", (ev) -> {
-		}, new SimpleBooleanProperty(false));
+		this.applyCommand("chapterAssociation", (ev) -> this.storyModel.get().associationChapter(), this.storyModel.get().
+						  canEditProperty());
 		this.applyCommand("chapterOrderReset", (ev) -> this.storyModel.get().getChapterDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 

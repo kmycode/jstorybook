@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import jstorybook.common.contract.SystemKey;
+import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.MyStage;
@@ -51,8 +52,9 @@ public class AboutDialog extends MyStage {
 
 		ImageView logoImageView = ResourceManager.getIconNode("splash.png");
 		Label informationLabel = new Label(SystemKey.SYSTEM_NAME.getValue() + " " + SystemKey.SYSTEM_VERSION.getValue());
-		GUIUtil.bindFontStyle(informationLabel);
-		Label licenceLabel = new Label("Designed by Martin(2008-2013), favdb(2014-), KMY(2015-)   GPL ver.2 later");
+		informationLabel.fontProperty().bind(FontManager.getInstance().boldFontProperty());
+		Label licenceLabel = new Label(
+				"Designed by\n		Martin(2008-2013) : Storybook,\n		favdb(2014-) : oStorybook,\n		KMY(2015-) : jStorybook\n	GPL ver.2 later");
 		GUIUtil.bindFontStyle(licenceLabel);
 
 		VBox vBox = new VBox(logoImageView, informationLabel, licenceLabel);
