@@ -40,6 +40,7 @@ import jstorybook.common.contract.DialogResult;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.contract.PreferenceKey;
 import jstorybook.common.contract.SystemKey;
+import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.view.control.DockableAreaGroupPane;
@@ -122,6 +123,13 @@ public class MainWindow extends MyStage {
 		// メインメニューを作成
 		this.modelingMainMenuBar();
 		root.getChildren().add(this.mainMenuBar.get());
+		FontManager.getInstance().fontStyleProperty().addListener((obj) -> {
+			int lastIndex = root.getChildren().indexOf(this.mainMenuBar.get());
+			if (lastIndex >= 0) {
+				this.modelingMainMenuBar();
+				root.getChildren().set(lastIndex, this.mainMenuBar.get());
+			}
+		});
 
 		// -------------------------------------------------------
 

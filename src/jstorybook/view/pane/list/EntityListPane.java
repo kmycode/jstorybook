@@ -26,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.contract.EntityType;
+import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.model.entity.Entity;
@@ -89,28 +90,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		this.viewModelList.getProperty(this.getEntityTypeName() + "Selected").bind(this.selectedItemList);
 
 		// コンテキストメニュー作り
-		MenuItem newMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "New");
-		newMenu.setText(ResourceManager.getMessage("msg.new"));
-		newMenu.setGraphic(ResourceManager.getMiniIconNode("new.png"));
-		MenuItem editMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Edit");
-		editMenu.setText(ResourceManager.getMessage("msg.edit"));
-		editMenu.setGraphic(ResourceManager.getMiniIconNode("edit.png"));
-		MenuItem delMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Delete");
-		delMenu.setText(ResourceManager.getMessage("msg.delete"));
-		delMenu.setGraphic(ResourceManager.getMiniIconNode("cancel.png"));
-
-		MenuItem upMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Up");
-		upMenu.setText(ResourceManager.getMessage("msg.order.up"));
-		MenuItem downMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Down");
-		downMenu.setText(ResourceManager.getMessage("msg.order.down"));
-		MenuItem resetOrder = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "OrderReset");
-		resetOrder.setText(ResourceManager.getMessage("msg.entity.order.reset"));
-
-		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
-		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
-		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), upMenu, downMenu, resetOrder,
-										   new SeparatorMenuItem(), viewOnAssociation);
-		this.tableView.setContextMenu(contextMenu);
+		this.modelingContextMenu();
+		FontManager.getInstance().fontStyleProperty().addListener((obj) -> {
+			this.modelingContextMenu();
+		});
 
 		// ボタン作り
 		Button newButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "New");
@@ -135,6 +118,33 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 				this.viewModelList.executeCommand(this.getEntityTypeName() + "Edit");
 			}
 		});
+	}
+
+	private void modelingContextMenu () {
+		this.contextMenu.getItems().clear();
+
+		MenuItem newMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "New");
+		newMenu.setText(ResourceManager.getMessage("msg.new"));
+		newMenu.setGraphic(ResourceManager.getMiniIconNode("new.png"));
+		MenuItem editMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Edit");
+		editMenu.setText(ResourceManager.getMessage("msg.edit"));
+		editMenu.setGraphic(ResourceManager.getMiniIconNode("edit.png"));
+		MenuItem delMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Delete");
+		delMenu.setText(ResourceManager.getMessage("msg.delete"));
+		delMenu.setGraphic(ResourceManager.getMiniIconNode("cancel.png"));
+
+		MenuItem upMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Up");
+		upMenu.setText(ResourceManager.getMessage("msg.order.up"));
+		MenuItem downMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Down");
+		downMenu.setText(ResourceManager.getMessage("msg.order.down"));
+		MenuItem resetOrder = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "OrderReset");
+		resetOrder.setText(ResourceManager.getMessage("msg.entity.order.reset"));
+
+		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
+		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
+		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), upMenu, downMenu, resetOrder,
+										   new SeparatorMenuItem(), viewOnAssociation);
+		this.tableView.setContextMenu(contextMenu);
 	}
 
 	// ならべ替えのボタン
