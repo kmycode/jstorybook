@@ -13,6 +13,7 @@
  */
 package jstorybook.model.story;
 
+import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,6 +22,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
+import jstorybook.model.entity.Sex;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
@@ -28,6 +30,7 @@ import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexAddMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
@@ -151,6 +154,14 @@ public class EntityEditModel implements IUseMessenger {
 		StoryModel storyModel = this.getStoryModel();
 
 		if (storyModel != null) {
+
+			// 性選択コントロールにデータを追加
+			List<Sex> sexList = storyModel.getSexDAO().modelListProperty().get();
+			for (Sex sex : sexList) {
+				this.messenger.send(new EditorColumnSexAddMessage(sex.idProperty().get(), sex.nameProperty().get(), sex.
+																  colorProperty().get()));
+			}
+
 			// 関連エンティティを選択するためのタブを設定
 			for (EntityRelation relation : list.getEntityRelationList()) {
 				if (relation == EntityRelation.PERSON_PERSON) {

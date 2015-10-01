@@ -16,6 +16,7 @@ package jstorybook.view.pane.editor.relation;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Group;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 関係する集団を設定するタブ
@@ -24,8 +25,8 @@ import jstorybook.model.entity.columnfactory.GroupColumnFactory;
  */
 public class GroupRelationTab extends EntityRelationTab<Group> {
 
-	public GroupRelationTab (long entityId) {
-		super(ResourceManager.getMessage("msg.relation.group"), entityId);
+	public GroupRelationTab (long entityId, Messenger messenger) {
+		super(ResourceManager.getMessage("msg.relation.group"), entityId, messenger);
 		this.tableView.setColumnList(GroupColumnFactory.getInstance().createColumnList());
 	}
 

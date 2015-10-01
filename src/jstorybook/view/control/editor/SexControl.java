@@ -13,62 +13,65 @@
  */
 package jstorybook.view.control.editor;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
-import jstorybook.common.manager.ResourceManager;
 
 /**
  * 性別を選択するコントロール
  *
   * @author KMY
  */
-public class SexControl extends HBox {
+public class SexControl extends FlowPane {
 
 	private final LongProperty value = new SimpleLongProperty(0);
 	private boolean inListener = false;
+	private final List<ToggleButton> buttons = new ArrayList<>();
+	private final ToggleGroup group = new ToggleGroup();
 
 	public SexControl () {
-		ToggleButton male = new ToggleButton(ResourceManager.getMessage("msg.person.sex.male"));
-		male.setSelected(true);
-		male.setTextFill(Color.BLUE);
-		ToggleButton female = new ToggleButton(ResourceManager.getMessage("msg.person.sex.female"));
-		female.setTextFill(Color.RED);
-		ToggleGroup group = new ToggleGroup();
-		male.setToggleGroup(group);
-		female.setToggleGroup(group);
+		this.value.addListener((obj) -> {
+			if (!SexControl.this.inListener) {
+				SexControl.this.inListener = true;
+				SexControl.this.selectValue();
+				SexControl.this.inListener = false;
+			}
+		});
+	}
 
-		this.getChildren().addAll(male, female);
+	private void selectValue () {
+		for (ToggleButton button : this.buttons) {
+			if ((Long) button.getUserData() == this.value.get()) {
+				button.setSelected(true);
+			}
+		}
+	}
 
-		male.selectedProperty().addListener((obj) -> {
+	public void addButton (long id, String name, Color color) {
+		ToggleButton button = new ToggleButton(name);
+		button.setUserData(id);
+		button.setTextFill(color);
+		button.setToggleGroup(this.group);
+		this.getChildren().add(button);
+		this.buttons.add(button);
+		button.selectedProperty().addListener((obj) -> {
 			if (!SexControl.this.inListener) {
 				SexControl.this.inListener = true;
-				SexControl.this.value.set(0);
+				SexControl.this.value.set(id);
 				SexControl.this.inListener = false;
 			}
 		});
-		female.selectedProperty().addListener((obj) -> {
-			if (!SexControl.this.inListener) {
-				SexControl.this.inListener = true;
-				SexControl.this.value.set(1);
-				SexControl.this.inListener = false;
-			}
-		});
-		value.addListener((obj) -> {
-			if (!SexControl.this.inListener) {
-				SexControl.this.inListener = true;
-				if (value.get() == 0L) {
-					male.setSelected(true);
-				}
-				else {
-					female.setSelected(true);
-				}
-				SexControl.this.inListener = false;
-			}
-		});
+
+		this.selectValue();
+	}
+
+	public void clear () {
+		this.buttons.clear();
 	}
 
 	public LongProperty valueProperty () {

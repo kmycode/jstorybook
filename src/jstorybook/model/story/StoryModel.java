@@ -38,6 +38,7 @@ import jstorybook.model.dao.PlaceDAO;
 import jstorybook.model.dao.SceneDAO;
 import jstorybook.model.dao.ScenePersonRelationDAO;
 import jstorybook.model.dao.ScenePlaceRelationDAO;
+import jstorybook.model.dao.SexDAO;
 import jstorybook.model.dao.StorySettingDAO;
 import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.ChapterSceneRelation;
@@ -51,6 +52,7 @@ import jstorybook.model.entity.Place;
 import jstorybook.model.entity.Scene;
 import jstorybook.model.entity.ScenePersonRelation;
 import jstorybook.model.entity.ScenePlaceRelation;
+import jstorybook.model.entity.Sex;
 import jstorybook.model.entity.StorySetting;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
@@ -58,6 +60,7 @@ import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
+import jstorybook.model.entity.columnfactory.SexColumnFactory;
 import jstorybook.model.story.sync.StoryLoadSync;
 import jstorybook.model.story.sync.StorySaveSync;
 import jstorybook.viewtool.messenger.ExceptionMessage;
@@ -76,6 +79,7 @@ import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SexEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 
 /**
@@ -99,6 +103,7 @@ public class StoryModel implements IUseMessenger {
 	private final StoryEntityModel<Place, PlaceDAO> placeEntity = new StoryEntityModel<>(new PlaceDAO());
 	private final StoryEntityModel<Scene, SceneDAO> sceneEntity = new StoryEntityModel<>(new SceneDAO());
 	private final StoryEntityModel<Chapter, ChapterDAO> chapterEntity = new StoryEntityModel<>(new ChapterDAO());
+	private final StoryEntityModel<Sex, SexDAO> sexEntity = new StoryEntityModel<>(new SexDAO());
 	private final StoryEntityModel<PersonPersonRelation, PersonPersonRelationDAO> personPersonEntity = new StoryEntityModel<>(
 			new PersonPersonRelationDAO());
 	private final StoryEntityModel<GroupPersonRelation, GroupPersonRelationDAO> groupPersonEntity = new StoryEntityModel<>(
@@ -243,6 +248,7 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.placeEntity.dao.get());
 		daoList.add(this.sceneEntity.dao.get());
 		daoList.add(this.chapterEntity.dao.get());
+		daoList.add(this.sexEntity.dao.get());
 		daoList.add(this.personPersonEntity.dao.get());
 		daoList.add(this.groupPersonEntity.dao.get());
 		daoList.add(this.chapterSceneEntity.dao.get());
@@ -303,6 +309,10 @@ public class StoryModel implements IUseMessenger {
 		return this.chapterEntity.dao.get();
 	}
 
+	public SexDAO getSexDAO () {
+		return this.sexEntity.dao.get();
+	}
+
 	// -------------------------------------------------------
 	// StoryModelそのものが持つプロパティ
 
@@ -330,6 +340,10 @@ public class StoryModel implements IUseMessenger {
 
 	public StoryEntityModel<Chapter, ChapterDAO> getChapterEntity () {
 		return this.chapterEntity;
+	}
+
+	public StoryEntityModel<Sex, SexDAO> getSexEntity () {
+		return this.sexEntity;
 	}
 
 	// -------------------------------------------------------
@@ -624,6 +638,30 @@ public class StoryModel implements IUseMessenger {
 
 	public void associationChapter () {
 		this.associationEntity(this.chapterEntity.selectedEntityList.get());
+	}
+
+	public void newSex () {
+		this.newEntity(new Sex(), this.sexEntity.dao.get(), SexEditorShowMessage.getInstance(), SexColumnFactory.
+					   getInstance());
+	}
+
+	public void editSex () {
+		this.editEntity(this.sexEntity.selectedEntityList.get(), SexEditorShowMessage.getInstance(), SexColumnFactory.
+						getInstance());
+	}
+
+	public void deleteSex () {
+		this.
+				deleteEntity(this.sexEntity.selectedEntityList.get(), SexColumnFactory.getInstance(), this.sexEntity.dao.
+							 get());
+	}
+
+	public void upSex () {
+		this.upEntity(this.sexEntity.selectedEntityList.get(), this.sexEntity.dao.get());
+	}
+
+	public void downSex () {
+		this.downEntity(this.sexEntity.selectedEntityList.get(), this.sexEntity.dao.get());
 	}
 
 	// -------------------------------------------------------

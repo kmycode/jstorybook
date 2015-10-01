@@ -22,6 +22,8 @@ import jstorybook.view.control.tablecell.ColorCell;
 import jstorybook.view.control.tablecell.DateCell;
 import jstorybook.view.control.tablecell.NormalCell;
 import jstorybook.view.control.tablecell.SexCell;
+import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
+import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -32,7 +34,10 @@ import jstorybook.viewtool.model.EditorColumnList;
  */
 public class EntityTableView<E extends Entity> extends TableView<E> {
 
-	public EntityTableView () {
+	private final Messenger mainMessenger;
+
+	public EntityTableView (Messenger messenger) {
+		this.mainMessenger = messenger;
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	}
 
@@ -61,8 +66,13 @@ public class EntityTableView<E extends Entity> extends TableView<E> {
 			});
 		}
 		else if (columnData.getCellType() == EditorColumn.CellType.SEX) {
+
+			// ストーリーモデルを取得（ロジックをビュー内に書き込んでいるため、ビューからメッセージを発行している）
+			CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
+			this.mainMessenger.send(mes);
+
 			column.setCellFactory((arg) -> {
-				return new SexCell();
+				return new SexCell(mes.storyModelProperty().get().getSexDAO().modelListProperty().get());
 			});
 		}
 		else {

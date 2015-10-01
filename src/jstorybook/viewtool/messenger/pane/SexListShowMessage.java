@@ -11,34 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.list;
-
-import jstorybook.common.contract.EntityType;
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Place;
-import jstorybook.viewmodel.ViewModelList;
-import jstorybook.viewtool.messenger.Messenger;
+package jstorybook.viewtool.messenger.pane;
 
 /**
- * 集団のリスト
+ * 性のリストを表示するメッセージ
  *
-  * @author KMY
+ * @author KMY
  */
-public class PlaceListPane extends EntityListPane<Place> {
-
-	public PlaceListPane (Messenger messenger) {
-		super(ResourceManager.getMessage("msg.place"), EntityType.PLACE, messenger);
-	}
-
-	@Override
-	public void setViewModelList (ViewModelList viewModelList) {
-		super.setViewModelList(viewModelList);
-		this.setOrderButton();
-	}
-
-	@Override
-	protected String getEntityTypeName () {
-		return "place";
-	}
+public class SexListShowMessage extends EntityListShowMessage {
 
 }

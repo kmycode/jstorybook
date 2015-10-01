@@ -14,6 +14,7 @@
 package jstorybook.viewmodel;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.story.StoryApplicationModel;
 import jstorybook.model.story.StoryModel;
@@ -66,6 +67,12 @@ public class StoryViewModel extends ViewModel {
 		this.applyProperty("chapterList", this.storyModel.get().getChapterEntity().DAOProperty().get().
 						   modelListProperty());
 		this.applyProperty("chapterSelected", this.storyModel.get().getChapterEntity().selectedEntityProperty());
+
+		this.applyProperty("sexColumnList", this.storyModel.get().entityColumnProperty().get().
+						   sexColumnListProperty());
+		this.applyProperty("sexList", this.storyModel.get().getSexEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("sexSelected", this.storyModel.get().getSexEntity().selectedEntityProperty());
 	}
 
 	@Override
@@ -148,6 +155,20 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("chapterAssociation", (ev) -> this.storyModel.get().associationChapter(), this.storyModel.get().
 						  canEditProperty());
 		this.applyCommand("chapterOrderReset", (ev) -> this.storyModel.get().getChapterDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
+		this.applyCommand("showSexList", (ev) -> this.applicationModel.showSexList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("sexNew", (ev) -> this.storyModel.get().newSex(), this.storyModel.get().canEditProperty());
+		this.applyCommand("sexEdit", (ev) -> this.storyModel.get().editSex(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("sexDelete", (ev) -> this.storyModel.get().deleteSex(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("sexUp", (ev) -> this.storyModel.get().upSex(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("sexDown", (ev) -> this.storyModel.get().downSex(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("sexAssociation", null, new SimpleBooleanProperty(false));
+		this.applyCommand("sexOrderReset", (ev) -> this.storyModel.get().getSexDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("personUsingChart", (ev) -> this.applicationModel.showPersonUsingChart(), this.storyModel.get().

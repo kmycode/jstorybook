@@ -16,7 +16,6 @@ package jstorybook.view.pane.editor;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -41,6 +40,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
@@ -63,6 +63,7 @@ import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexAddMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
@@ -92,14 +93,13 @@ import jstorybook.viewtool.model.EditorColumnList;
  */
 public class EntityEditorPane extends MyPane implements IReloadable {
 
-	// 全ての編集画面
-	private static final List<WeakReference<EntityEditorPane>> paneList = new LinkedList<>();
-
 	private final ViewModelList viewModelList = new ViewModelList(new EntityEditViewModel());
 	private ViewModelList storyViewModelList;
 
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<EditorColumnList> baseColumnList = new SimpleObjectProperty<>();
+
+	private final List<SexControl> sexControlList = new ArrayList<>();
 
 	protected final Messenger messenger = new Messenger();
 	private final Messenger mainMessenger;
@@ -219,9 +219,6 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		// メッセンジャを登録
 		this.mainMessenger = messenger;
 		this.applyMessenger();
-
-		// 自身をstatic配列に登録
-		EntityEditorPane.paneList.add(new WeakReference<>(this));
 	}
 
 	public EntityEditorPane (Messenger messenger) {
@@ -269,6 +266,11 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		this.messenger.apply(EditorColumnSexMessage.class, this, (ev) -> {
 			EditorColumnSexMessage mes = (EditorColumnSexMessage) ev;
 			EntityEditorPane.this.addSexEdit(mes.getColumnTitle(), mes.getProperty());
+		});
+		// 性選択コントロールに性を追加
+		this.messenger.apply(EditorColumnSexAddMessage.class, this, (ev) -> {
+			EditorColumnSexAddMessage mes = (EditorColumnSexAddMessage) ev;
+			EntityEditorPane.this.addSexEditButton(mes.getId(), mes.getName(), mes.getColor());
 		});
 
 		// ノートのテキストを設定
@@ -327,10 +329,6 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			EntityEditorPane.this.renewChapterRelationTab(mes);
 		});
 
-		// ストーリーモデルを渡す
-		this.messenger.apply(CurrentStoryModelGetMessage.class, this, (ev) -> {
-			((CurrentStoryModelGetMessage) ev).storyModelProperty().bind(this.storyViewModelList.getProperty("storyModel"));
-		});
 		// 関連するエンティティのリストを渡す
 		this.messenger.apply(PersonRelationListGetMessage.class, this, (ev) -> {
 			if (this.personRelationTab != null) {
@@ -358,6 +356,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			}
 		});
 
+		this.messenger.relay(CurrentStoryModelGetMessage.class, this, this.mainMessenger);
 		this.messenger.relay(AllTabReloadMessage.class, this, this.mainMessenger);
 
 		this.viewModelList.storeMessenger(this.messenger);
@@ -437,7 +436,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	}
 
 	private void addPersonRelationTab (PersonRelationShowMessage mes) {
-		this.personRelationTab = new PersonRelationTab(this.columnList.get().idProperty().get());
+		this.personRelationTab = new PersonRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
 		this.addRelationTab(mes, this.personRelationTab, "personList");
 	}
 
@@ -446,7 +445,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	}
 
 	private void addGroupRelationTab (GroupRelationShowMessage mes) {
-		this.groupRelationTab = new GroupRelationTab(this.columnList.get().idProperty().get());
+		this.groupRelationTab = new GroupRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
 		this.addRelationTab(mes, this.groupRelationTab, "groupList");
 	}
 
@@ -455,7 +454,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	}
 
 	private void addPlaceRelationTab (PlaceRelationShowMessage mes) {
-		this.placeRelationTab = new PlaceRelationTab(this.columnList.get().idProperty().get());
+		this.placeRelationTab = new PlaceRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
 		this.addRelationTab(mes, this.placeRelationTab, "placeList");
 	}
 
@@ -464,7 +463,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	}
 
 	private void addSceneRelationTab (SceneRelationShowMessage mes) {
-		this.sceneRelationTab = new SceneRelationTab(this.columnList.get().idProperty().get());
+		this.sceneRelationTab = new SceneRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
 		this.addRelationTab(mes, this.sceneRelationTab, "sceneList");
 	}
 
@@ -473,7 +472,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	}
 
 	private void addChapterRelationTab (ChapterRelationShowMessage mes) {
-		this.chapterRelationTab = new ChapterRelationTab(this.columnList.get().idProperty().get());
+		this.chapterRelationTab = new ChapterRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
 		this.chapterRelationTab.setSingleSelect(mes.isSingleSelect());
 		this.addRelationTab(mes, this.chapterRelationTab, "chapterList");
 	}
@@ -492,7 +491,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		GUIUtil.bindFontStyle(editControl);
 
 		if (editControl instanceof Control) {
-			((Control) editControl).setMinWidth(240.0);
+			((Control) editControl).setMaxWidth(240.0);
 		}
 
 		GridPane.
@@ -545,6 +544,16 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		node.valueProperty().bindBidirectional(property);
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.addEditControlRow(title, node);
+
+		// リストに追加
+		this.sexControlList.add(node);
+	}
+
+	// 性コントロールにボタンを追加
+	private void addSexEditButton (long id, String name, Color color) {
+		for (SexControl control : this.sexControlList) {
+			control.addButton(id, name, color);
+		}
 	}
 
 	// -------------------------------------------------------

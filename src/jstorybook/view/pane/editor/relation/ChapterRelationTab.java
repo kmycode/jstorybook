@@ -16,6 +16,7 @@ package jstorybook.view.pane.editor.relation;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 関係する章を設定するタブ
@@ -24,8 +25,8 @@ import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
  */
 public class ChapterRelationTab extends EntityRelationTab<Chapter> {
 
-	public ChapterRelationTab (long entityId) {
-		super(ResourceManager.getMessage("msg.relation.chapter"), entityId);
+	public ChapterRelationTab (long entityId, Messenger messenger) {
+		super(ResourceManager.getMessage("msg.relation.chapter"), entityId, messenger);
 		this.tableView.setColumnList(ChapterColumnFactory.getInstance().createColumnList());
 	}
 

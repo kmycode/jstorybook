@@ -17,6 +17,7 @@ import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Scene;
 import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * シーンのリスト
@@ -25,8 +26,8 @@ import jstorybook.viewmodel.ViewModelList;
  */
 public class SceneListPane extends EntityListPane<Scene> {
 
-	public SceneListPane () {
-		super(ResourceManager.getMessage("msg.scene"), EntityType.SCENE);
+	public SceneListPane (Messenger messenger) {
+		super(ResourceManager.getMessage("msg.scene"), EntityType.SCENE, messenger);
 	}
 
 	@Override

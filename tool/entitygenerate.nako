@@ -1,8 +1,9 @@
 親クラスは「Entity」
-クラス名は「Chapter」。
+クラス名は「Sex」。
 データは、
 「String,name,名前,,,1
 Long,order,順番,
+Integer,color,色,
 」。
 # 型, 名前, 説明, 新名前, フィールド権限, toStringフラグ, hasフラグ
 

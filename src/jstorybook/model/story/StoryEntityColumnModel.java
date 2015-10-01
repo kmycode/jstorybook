@@ -20,6 +20,7 @@ import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
+import jstorybook.model.entity.columnfactory.SexColumnFactory;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -38,6 +39,8 @@ public class StoryEntityColumnModel {
 	private final ObjectProperty<EditorColumnList> sceneColumnList = new SimpleObjectProperty<>(SceneColumnFactory.
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> chapterColumnList = new SimpleObjectProperty<>(ChapterColumnFactory.
+			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> sexColumnList = new SimpleObjectProperty<>(SexColumnFactory.
 			getInstance().createColumnList());
 
 	public ObjectProperty<EditorColumnList> personColumnListProperty () {
@@ -58,6 +61,10 @@ public class StoryEntityColumnModel {
 
 	public ObjectProperty<EditorColumnList> chapterColumnListProperty () {
 		return this.chapterColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> sexColumnListProperty () {
+		return this.sexColumnList;
 	}
 
 }

@@ -13,10 +13,10 @@
  */
 package jstorybook.view.control.tablecell;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
-import javafx.scene.paint.Color;
 import jstorybook.common.manager.FontManager;
-import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Sex;
 
 /**
  * TableViewで性を表示する
@@ -25,15 +25,32 @@ import jstorybook.common.manager.ResourceManager;
  */
 public class SexCell<E> extends TableCell<E, Long> {
 
-	public SexCell () {
+	private final ObservableList<Sex> sexList;
+
+	public SexCell (ObservableList<Sex> sexList) {
+		this.sexList = sexList;
 		this.fontProperty().bind(FontManager.getInstance().fontProperty());
 	}
 
 	@Override
 	protected void updateItem (Long item, boolean empty) {
 		super.updateItem(item, empty);
-		this.setText(item == null ? "" : item == 0L ? ResourceManager.getMessage("msg.person.sex.male") : ResourceManager.getMessage(
-				"msg.person.sex.female"));
-		this.setTextFill(item == null ? null : item == 0L ? Color.BLUE : Color.RED);
+		if (item == null || empty) {
+			this.setText("");
+		}
+		else {
+			boolean hit = false;
+			for (Sex sex : this.sexList) {
+				if (sex.idProperty().get() == item) {
+					this.setText(sex.nameProperty().get());
+					this.setTextFill(sex.colorProperty().get());
+					hit = true;
+					break;
+				}
+			}
+			if (!hit) {
+				this.setText("");
+			}
+		}
 	}
 }

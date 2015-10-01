@@ -16,6 +16,7 @@ package jstorybook.view.pane.editor.relation;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Scene;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 関係するシーンを設定するタブ
@@ -24,8 +25,8 @@ import jstorybook.model.entity.columnfactory.SceneColumnFactory;
  */
 public class SceneRelationTab extends EntityRelationTab<Scene> {
 
-	public SceneRelationTab (long entityId) {
-		super(ResourceManager.getMessage("msg.relation.scene"), entityId);
+	public SceneRelationTab (long entityId, Messenger messenger) {
+		super(ResourceManager.getMessage("msg.relation.scene"), entityId, messenger);
 		this.tableView.setColumnList(SceneColumnFactory.getInstance().createColumnList());
 	}
 

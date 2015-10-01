@@ -1,0 +1,5 @@
+6.0.0 alpha1から6.0.0 alpha2への変更点
+
+・sexテーブルを追加
+・idtableにsexの行を追加
+・personテーブルで、sexの数値を1ずつ増やす

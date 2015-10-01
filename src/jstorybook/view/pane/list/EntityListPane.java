@@ -33,6 +33,7 @@ import jstorybook.model.entity.Entity;
 import jstorybook.view.control.EntityTableView;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -53,17 +54,20 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
 	private final ObjectProperty<List<T>> selectedItemList = new SimpleObjectProperty<>(new ArrayList<T>());
 
-	protected EntityListPane (String title, EntityType entityType) {
+	private final Messenger mainMessenger;
+
+	protected EntityListPane (String title, EntityType entityType, Messenger messenger) {
 		super(title);
 
 		this.entityType = entityType;
+		this.mainMessenger = messenger;
 
 		this.columnList.addListener((obj) -> {
 			EntityListPane.this.tableView.setColumnList(((ObjectProperty<EditorColumnList>) obj).get());
 		});
 
 		// テーブルビュー
-		this.tableView = new EntityTableView<>();
+		this.tableView = new EntityTableView<>(this.mainMessenger);
 		GUIUtil.setAnchor(this.tableView, 5.0, 5.0, 55.0, 5.0);
 		VBox.setMargin(this.tableView, new Insets(5.0, 5.0, 5.0, 5.0));
 		VBox.setVgrow(this.tableView, Priority.ALWAYS);

@@ -17,6 +17,7 @@ import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Person;
 import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 登場人物のリスト
@@ -25,8 +26,8 @@ import jstorybook.viewmodel.ViewModelList;
  */
 public class PersonListPane extends EntityListPane<Person> {
 
-	public PersonListPane () {
-		super(ResourceManager.getMessage("msg.person"), EntityType.PERSON);
+	public PersonListPane (Messenger messenger) {
+		super(ResourceManager.getMessage("msg.person"), EntityType.PERSON, messenger);
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 import jstorybook.model.entity.Entity;
+import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -41,7 +42,8 @@ public class SelectableEntityTableView<E extends Entity> extends EntityTableView
 	private boolean lockIsChanged = false;
 	private final BooleanProperty singleSelect = new SimpleBooleanProperty(false);
 
-	public SelectableEntityTableView () {
+	public SelectableEntityTableView (Messenger messenger) {
+		super(messenger);
 		this.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 	}
 

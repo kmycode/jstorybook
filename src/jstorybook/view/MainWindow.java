@@ -62,6 +62,7 @@ import jstorybook.view.pane.list.GroupListPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.view.pane.list.PlaceListPane;
 import jstorybook.view.pane.list.SceneListPane;
+import jstorybook.view.pane.list.SexListPane;
 import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
 import jstorybook.viewmodel.ViewModelList;
@@ -95,6 +96,8 @@ import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
+import jstorybook.viewtool.messenger.pane.SexEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.SexListShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
@@ -177,7 +180,7 @@ public class MainWindow extends MyStage {
 		this.setScene(scene);
 
 		// テスト
-		//this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
+		this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
 	}
 
 	// メインメニューバーを作成
@@ -245,6 +248,10 @@ public class MainWindow extends MyStage {
 			menu.setText(ResourceManager.getMessage("msg.person"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("person.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+P"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showSexList");
+			menu.setText(ResourceManager.getMessage("msg.person.sex"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+E"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showGroupList");
 			menu.setText(ResourceManager.getMessage("msg.group"));
@@ -392,6 +399,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(ChapterListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addChapterListTab();
 		});
+		this.messenger.apply(SexListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addSexListTab();
+		});
 
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
@@ -407,6 +417,9 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(ChapterEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addChapterEditorTab((ChapterEditorShowMessage) ev);
+		});
+		this.messenger.apply(SexEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addSexEditorTab((SexEditorShowMessage) ev);
 		});
 
 		this.messenger.apply(AssociationChartShowMessage.class, this, (ev) -> {
@@ -516,36 +529,42 @@ public class MainWindow extends MyStage {
 
 	// 登場人物リストタブを追加
 	private void addPersonListTab () {
-		EntityListPane tab = new PersonListPane();
+		EntityListPane tab = new PersonListPane(this.messenger);
 		tab.setGraphic(ResourceManager.getMiniIconNode("person.png"));
 		this.addEntityListTab(tab);
 	}
 
 	// 集団リストタブを追加
 	private void addGroupListTab () {
-		EntityListPane tab = new GroupListPane();
+		EntityListPane tab = new GroupListPane(this.messenger);
 		tab.setGraphic(ResourceManager.getMiniIconNode("group.png"));
 		this.addEntityListTab(tab);
 	}
 
 	// 場所リストタブを追加
 	private void addPlaceListTab () {
-		EntityListPane tab = new PlaceListPane();
+		EntityListPane tab = new PlaceListPane(this.messenger);
 		tab.setGraphic(ResourceManager.getMiniIconNode("place.png"));
 		this.addEntityListTab(tab);
 	}
 
 	// シーンリストタブを追加
 	private void addSceneListTab () {
-		EntityListPane tab = new SceneListPane();
+		EntityListPane tab = new SceneListPane(this.messenger);
 		tab.setGraphic(ResourceManager.getMiniIconNode("scene.png"));
 		this.addEntityListTab(tab);
 	}
 
 	// 章リストタブを追加
 	private void addChapterListTab () {
-		EntityListPane tab = new ChapterListPane();
+		EntityListPane tab = new ChapterListPane(this.messenger);
 		tab.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
+		this.addEntityListTab(tab);
+	}
+
+	// 性リストタブを追加
+	private void addSexListTab () {
+		EntityListPane tab = new SexListPane(this.messenger);
 		this.addEntityListTab(tab);
 	}
 
@@ -623,6 +642,11 @@ public class MainWindow extends MyStage {
 	// 章編集タブ
 	private void addChapterEditorTab (ChapterEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.chapter"));
+	}
+
+	// 性編集タブ
+	private void addSexEditorTab (SexEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.sex"));
 	}
 
 	// -------------------------------------------------------

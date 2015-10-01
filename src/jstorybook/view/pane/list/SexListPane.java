@@ -15,19 +15,19 @@ package jstorybook.view.pane.list;
 
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Place;
+import jstorybook.model.entity.Sex;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * 集団のリスト
+ * 性のリスト
  *
   * @author KMY
  */
-public class PlaceListPane extends EntityListPane<Place> {
+public class SexListPane extends EntityListPane<Sex> {
 
-	public PlaceListPane (Messenger messenger) {
-		super(ResourceManager.getMessage("msg.place"), EntityType.PLACE, messenger);
+	public SexListPane (Messenger messenger) {
+		super(ResourceManager.getMessage("msg.person.sex"), EntityType.SEX, messenger);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class PlaceListPane extends EntityListPane<Place> {
 
 	@Override
 	protected String getEntityTypeName () {
-		return "place";
+		return "sex";
 	}
 
 }

@@ -11,34 +11,38 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane.list;
+package jstorybook.viewtool.messenger.pane.editor;
 
-import jstorybook.common.contract.EntityType;
-import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Place;
-import jstorybook.viewmodel.ViewModelList;
-import jstorybook.viewtool.messenger.Messenger;
+import javafx.scene.paint.Color;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * 集団のリスト
+ * 性選択ボタンを増やすメッセージ
  *
-  * @author KMY
+ * @author KMY
  */
-public class PlaceListPane extends EntityListPane<Place> {
+public class EditorColumnSexAddMessage extends Message {
 
-	public PlaceListPane (Messenger messenger) {
-		super(ResourceManager.getMessage("msg.place"), EntityType.PLACE, messenger);
+	private final long id;
+	private final String name;
+	private final Color color;
+
+	public EditorColumnSexAddMessage (long id, String name, Color color) {
+		this.id = id;
+		this.name = name;
+		this.color = color;
 	}
 
-	@Override
-	public void setViewModelList (ViewModelList viewModelList) {
-		super.setViewModelList(viewModelList);
-		this.setOrderButton();
+	public long getId () {
+		return this.id;
 	}
 
-	@Override
-	protected String getEntityTypeName () {
-		return "place";
+	public String getName () {
+		return this.name;
+	}
+
+	public Color getColor () {
+		return this.color;
 	}
 
 }

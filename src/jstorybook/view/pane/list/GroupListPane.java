@@ -17,6 +17,7 @@ import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Group;
 import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * 集団のリスト
@@ -25,8 +26,8 @@ import jstorybook.viewmodel.ViewModelList;
  */
 public class GroupListPane extends EntityListPane<Group> {
 
-	public GroupListPane () {
-		super(ResourceManager.getMessage("msg.group"), EntityType.GROUP);
+	public GroupListPane (Messenger messenger) {
+		super(ResourceManager.getMessage("msg.group"), EntityType.GROUP, messenger);
 	}
 
 	@Override

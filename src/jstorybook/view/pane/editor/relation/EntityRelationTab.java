@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.SelectableEntityTableView;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
  * エンティティの関係を設定するタブ
@@ -32,11 +33,11 @@ public abstract class EntityRelationTab<E extends Entity> extends Tab {
 
 	protected final SelectableEntityTableView<E> tableView;
 
-	protected EntityRelationTab (String title, long entityId) {
+	protected EntityRelationTab (String title, long entityId, Messenger messenger) {
 		super(title);
 		this.setClosable(false);
 
-		this.tableView = new SelectableEntityTableView<>();
+		this.tableView = new SelectableEntityTableView<>(messenger);
 		GUIUtil.setAnchor(this.tableView, 5.0, 5.0, 5.0, 5.0);
 
 		this.setContent(new AnchorPane(this.tableView));
