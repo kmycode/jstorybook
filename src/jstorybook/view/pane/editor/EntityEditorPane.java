@@ -51,9 +51,11 @@ import jstorybook.view.pane.MyPane;
 import jstorybook.view.pane.editor.relation.ChapterRelationTab;
 import jstorybook.view.pane.editor.relation.EntityRelationTab;
 import jstorybook.view.pane.editor.relation.GroupRelationTab;
+import jstorybook.view.pane.editor.relation.KeywordRelationTab;
 import jstorybook.view.pane.editor.relation.PersonRelationTab;
 import jstorybook.view.pane.editor.relation.PlaceRelationTab;
 import jstorybook.view.pane.editor.relation.SceneRelationTab;
+import jstorybook.view.pane.editor.relation.TagRelationTab;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.EntityEditViewModel;
 import jstorybook.viewtool.converter.LocalDateCalendarConverter;
@@ -73,6 +75,9 @@ import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.KeywordRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.KeywordRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.KeywordRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
@@ -84,6 +89,9 @@ import jstorybook.viewtool.messenger.pane.relation.RelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.TagRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.TagRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.TagRelationShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
 
 /**
@@ -119,6 +127,8 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	protected PlaceRelationTab placeRelationTab;
 	protected SceneRelationTab sceneRelationTab;
 	protected ChapterRelationTab chapterRelationTab;
+	protected KeywordRelationTab keywordRelationTab;
+	protected TagRelationTab tagRelationTab;
 
 	private int mainVboxRow = 0;
 
@@ -329,6 +339,26 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			EntityEditorPane.this.renewChapterRelationTab(mes);
 		});
 
+		// 関連キーワードタブを設定
+		this.messenger.apply(KeywordRelationShowMessage.class, this, (ev) -> {
+			KeywordRelationShowMessage mes = (KeywordRelationShowMessage) ev;
+			EntityEditorPane.this.addKeywordRelationTab(mes);
+		});
+		this.messenger.apply(KeywordRelationRenewMessage.class, this, (ev) -> {
+			KeywordRelationRenewMessage mes = (KeywordRelationRenewMessage) ev;
+			EntityEditorPane.this.renewKeywordRelationTab(mes);
+		});
+
+		// 関連タグタブを設定
+		this.messenger.apply(TagRelationShowMessage.class, this, (ev) -> {
+			TagRelationShowMessage mes = (TagRelationShowMessage) ev;
+			EntityEditorPane.this.addTagRelationTab(mes);
+		});
+		this.messenger.apply(TagRelationRenewMessage.class, this, (ev) -> {
+			TagRelationRenewMessage mes = (TagRelationRenewMessage) ev;
+			EntityEditorPane.this.renewTagRelationTab(mes);
+		});
+
 		// 関連するエンティティのリストを渡す
 		this.messenger.apply(PersonRelationListGetMessage.class, this, (ev) -> {
 			if (this.personRelationTab != null) {
@@ -353,6 +383,16 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		this.messenger.apply(ChapterRelationListGetMessage.class, this, (ev) -> {
 			if (this.chapterRelationTab != null) {
 				((ChapterRelationListGetMessage) ev).setRelationList(this.chapterRelationTab.getSelectedIdList());
+			}
+		});
+		this.messenger.apply(KeywordRelationListGetMessage.class, this, (ev) -> {
+			if (this.keywordRelationTab != null) {
+				((KeywordRelationListGetMessage) ev).setRelationList(this.keywordRelationTab.getSelectedIdList());
+			}
+		});
+		this.messenger.apply(TagRelationListGetMessage.class, this, (ev) -> {
+			if (this.chapterRelationTab != null) {
+				((TagRelationListGetMessage) ev).setRelationList(this.tagRelationTab.getSelectedIdList());
 			}
 		});
 
@@ -386,6 +426,12 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		if (this.chapterRelationTab != null) {
 			this.chapterRelationTab.resetChanged();
 		}
+		if (this.keywordRelationTab != null) {
+			this.keywordRelationTab.resetChanged();
+		}
+		if (this.tagRelationTab != null) {
+			this.tagRelationTab.resetChanged();
+		}
 	}
 
 	// -------------------------------------------------------
@@ -417,6 +463,12 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		}
 		if (this.chapterRelationTab != null) {
 			result |= this.chapterRelationTab.changedProperty().get();
+		}
+		if (this.keywordRelationTab != null) {
+			result |= this.keywordRelationTab.changedProperty().get();
+		}
+		if (this.tagRelationTab != null) {
+			result |= this.tagRelationTab.changedProperty().get();
 		}
 		return result;
 	}
@@ -479,6 +531,24 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 	private void renewChapterRelationTab (ChapterRelationRenewMessage mes) {
 		this.renewRelationTab(mes, this.chapterRelationTab);
+	}
+
+	private void addKeywordRelationTab (KeywordRelationShowMessage mes) {
+		this.keywordRelationTab = new KeywordRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
+		this.addRelationTab(mes, this.keywordRelationTab, "keywordList");
+	}
+
+	private void renewKeywordRelationTab (KeywordRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.keywordRelationTab);
+	}
+
+	private void addTagRelationTab (TagRelationShowMessage mes) {
+		this.tagRelationTab = new TagRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
+		this.addRelationTab(mes, this.tagRelationTab, "tagList");
+	}
+
+	private void renewTagRelationTab (TagRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.tagRelationTab);
 	}
 
 	// -------------------------------------------------------

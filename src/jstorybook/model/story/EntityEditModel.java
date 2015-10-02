@@ -40,6 +40,7 @@ import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.KeywordRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
@@ -49,6 +50,7 @@ import jstorybook.viewtool.messenger.pane.relation.PlaceRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.TagRelationListGetMessage;
 import jstorybook.viewtool.model.EditorColumn;
 import jstorybook.viewtool.model.EditorColumnList;
 
@@ -253,11 +255,15 @@ public class EntityEditModel implements IUseMessenger {
 		PlaceRelationListGetMessage placeRelationListMessage = new PlaceRelationListGetMessage();
 		SceneRelationListGetMessage sceneRelationListMessage = new SceneRelationListGetMessage();
 		ChapterRelationListGetMessage chapterRelationListMessage = new ChapterRelationListGetMessage();
+		KeywordRelationListGetMessage keywordRelationListMessage = new KeywordRelationListGetMessage();
+		TagRelationListGetMessage tagRelationListMessage = new TagRelationListGetMessage();
 		this.messenger.send(personRelationListMessage);
 		this.messenger.send(groupRelationListMessage);
 		this.messenger.send(placeRelationListMessage);
 		this.messenger.send(sceneRelationListMessage);
 		this.messenger.send(chapterRelationListMessage);
+		this.messenger.send(keywordRelationListMessage);
+		this.messenger.send(tagRelationListMessage);
 		if (personRelationListMessage.getRelationList() != null) {
 			if (entityType == EntityType.PERSON) {
 				storyModel.setPersonPersonRelation(this.columnList.get().idProperty().get(), personRelationListMessage.
