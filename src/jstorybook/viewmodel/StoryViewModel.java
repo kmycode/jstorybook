@@ -73,6 +73,18 @@ public class StoryViewModel extends ViewModel {
 		this.applyProperty("sexList", this.storyModel.get().getSexEntity().DAOProperty().get().
 						   modelListProperty());
 		this.applyProperty("sexSelected", this.storyModel.get().getSexEntity().selectedEntityProperty());
+
+		this.applyProperty("keywordColumnList", this.storyModel.get().entityColumnProperty().get().
+						   keywordColumnListProperty());
+		this.applyProperty("keywordList", this.storyModel.get().getKeywordEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("keywordSelected", this.storyModel.get().getKeywordEntity().selectedEntityProperty());
+
+		this.applyProperty("tagColumnList", this.storyModel.get().entityColumnProperty().get().
+						   tagColumnListProperty());
+		this.applyProperty("tagList", this.storyModel.get().getTagEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("tagSelected", this.storyModel.get().getTagEntity().selectedEntityProperty());
 	}
 
 	@Override
@@ -169,6 +181,34 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("sexAssociation", null, new SimpleBooleanProperty(false));
 		this.applyCommand("sexOrderReset", (ev) -> this.storyModel.get().getSexDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
+		this.applyCommand("showKeywordList", (ev) -> this.applicationModel.showKeywordList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("keywordNew", (ev) -> this.storyModel.get().newKeyword(), this.storyModel.get().canEditProperty());
+		this.applyCommand("keywordEdit", (ev) -> this.storyModel.get().editKeyword(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("keywordDelete", (ev) -> this.storyModel.get().deleteKeyword(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("keywordUp", (ev) -> this.storyModel.get().upKeyword(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("keywordDown", (ev) -> this.storyModel.get().downKeyword(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("keywordAssociation", null, new SimpleBooleanProperty(false));
+		this.applyCommand("keywordOrderReset", (ev) -> this.storyModel.get().getKeywordDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
+		this.applyCommand("showTagList", (ev) -> this.applicationModel.showTagList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("tagNew", (ev) -> this.storyModel.get().newTag(), this.storyModel.get().canEditProperty());
+		this.applyCommand("tagEdit", (ev) -> this.storyModel.get().editTag(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("tagDelete", (ev) -> this.storyModel.get().deleteTag(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("tagUp", (ev) -> this.storyModel.get().upTag(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("tagDown", (ev) -> this.storyModel.get().downTag(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("tagAssociation", null, new SimpleBooleanProperty(false));
+		this.applyCommand("tagOrderReset", (ev) -> this.storyModel.get().getTagDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("personUsingChart", (ev) -> this.applicationModel.showPersonUsingChart(), this.storyModel.get().

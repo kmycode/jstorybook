@@ -185,7 +185,7 @@ public class EntityEditModel implements IUseMessenger {
 					}
 					else if (list.getEntityType() == EntityType.SCENE) {
 						this.messenger.send(new ChapterRelationShowMessage(storyModel.getChapterSceneRelation_Chapter(
-								this.columnList.get().idProperty().get()), true));
+								this.columnList.get().idProperty().get()), false));
 					}
 				}
 				else if (relation == EntityRelation.SCENE_PERSON) {
@@ -284,7 +284,8 @@ public class EntityEditModel implements IUseMessenger {
 		if (placeRelationListMessage.getRelationList() != null) {
 			if (entityType == EntityType.SCENE) {
 				storyModel.
-						setScenePlaceRelation_Scene(this.columnList.get().idProperty().get(), placeRelationListMessage.													 getRelationList());
+						setScenePlaceRelation_Place(this.columnList.get().idProperty().get(), placeRelationListMessage.
+													getRelationList());
 			}
 		}
 		if (sceneRelationListMessage.getRelationList() != null) {

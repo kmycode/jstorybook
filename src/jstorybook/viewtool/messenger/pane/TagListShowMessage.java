@@ -11,26 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.pane;
 
 /**
- * システムの定数を設定
+ * タグのリストを表示するメッセージ
  *
  * @author KMY
  */
-public enum SystemKey {
+public class TagListShowMessage extends EntityListShowMessage {
 
-	SYSTEM_NAME("jStorybook"),
-	SYSTEM_VERSION("6.0.0 alpha2");
-
-	private final Object value;
-
-
-	private SystemKey (Object value) {
-		this.value = value;
-	}
-
-	public Object getValue () {
-		return this.value;
-	}
 }

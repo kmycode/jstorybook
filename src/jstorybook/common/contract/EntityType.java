@@ -25,6 +25,8 @@ public enum EntityType {
 	PLACE,
 	SCENE,
 	CHAPTER,
-	SEX,;
+	SEX,
+	KEYWORD,
+	TAG,;
 
 }

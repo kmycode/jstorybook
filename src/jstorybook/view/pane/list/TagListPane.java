@@ -11,26 +11,34 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.view.pane.list;
+
+import jstorybook.common.contract.EntityType;
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Tag;
+import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * システムの定数を設定
+ * タグのリスト
  *
- * @author KMY
+  * @author KMY
  */
-public enum SystemKey {
+public class TagListPane extends EntityListPane<Tag> {
 
-	SYSTEM_NAME("jStorybook"),
-	SYSTEM_VERSION("6.0.0 alpha2");
-
-	private final Object value;
-
-
-	private SystemKey (Object value) {
-		this.value = value;
+	public TagListPane (Messenger messenger) {
+		super(ResourceManager.getMessage("msg.tag"), EntityType.TAG, messenger);
 	}
 
-	public Object getValue () {
-		return this.value;
+	@Override
+	public void setViewModelList (ViewModelList viewModelList) {
+		super.setViewModelList(viewModelList);
+		this.setOrderButton();
 	}
+
+	@Override
+	protected String getEntityTypeName () {
+		return "tag";
+	}
+
 }

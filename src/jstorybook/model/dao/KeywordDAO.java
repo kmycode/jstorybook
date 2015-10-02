@@ -16,61 +16,51 @@ package jstorybook.model.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import jstorybook.common.util.SQLiteUtil;
-import jstorybook.model.entity.Person;
+import jstorybook.model.entity.Keyword;
 
 /**
- * 登場人物のDAO
+ * キーワードのDAO
  *
  * @author KMY
  */
-public class PersonDAO extends DAO<Person> {
+public class KeywordDAO extends DAO<Keyword> {
 
 	@Override
 	protected String getTableName () {
-		return "person";
+		return "keyword";
 	}
 
 	// -------------------------------------------------------
 	// データベースに対する操作
 	@Override
-	protected Person loadModel (ResultSet rs) throws SQLException {
-		Person model = new Person();
+	protected Keyword loadModel (ResultSet rs) throws SQLException {
+		Keyword model = new Keyword();
 		model.idProperty().set(rs.getLong("id"));
 		model.orderProperty().set(rs.getLong("order"));
-		model.firstNameProperty().set(rs.getString("firstname"));
-		model.lastNameProperty().set(rs.getString("lastname"));
-		model.sexIdProperty().set(rs.getLong("sex"));
-		model.birthdayProperty().set(SQLiteUtil.getCalendar(rs.getString("birthday")));
-		model.dayOfDeathProperty().set(SQLiteUtil.getCalendar(rs.getString("dayofdeath")));
-		model.colorProperty().set(SQLiteUtil.getColor(rs.getInt("color")));
+		model.nameProperty().set(rs.getString("name"));
 		model.noteProperty().set(rs.getString("note"));
 		return model;
 	}
 
 	@Override
-	protected void saveModel (Person model) throws SQLException {
+	protected void saveModel (Keyword model) throws SQLException {
 
 		if (model.idProperty().get() > this.lastIdSaved) {
 
 			// 最新の最大IDを保存（modelのidとは限らない）
 			this.getStoryFileModel().
-					updateQuery("update idtable set value = " + this.lastId + " where key = 'person';");
+					updateQuery("update idtable set value = " + this.lastId + " where key = '" + this.getTableName() + "';");
 
 			// 行を追加
 			this.getStoryFileModel().updateQuery(
-					"insert into person(id,firstname,lastname,`order`,sex,birthday,dayofdeath,color,note) values(" + model.
-					idProperty().get() + ",'','',0,0,'','',0,'');");
+					"insert into `" + this.getTableName() + "`(id,name,`order`,note) values(" + model.
+					idProperty().get() + ",'',0,'');");
 		}
 
 		// 保存
-		StringBuilder query = new StringBuilder("update person set ");
-		query.append(SQLiteUtil.updateQueryColumn("firstname", model.firstNameProperty().get(), false));
-		query.append(SQLiteUtil.updateQueryColumn("lastname", model.lastNameProperty().get(), false));
+		StringBuilder query = new StringBuilder("update `" + this.getTableName() + "` set ");
+		query.append(SQLiteUtil.updateQueryColumn("name", model.nameProperty().get(), false));
 		query.append(SQLiteUtil.updateQueryColumn("order", model.orderProperty().get(), false));
-		query.append(SQLiteUtil.updateQueryColumn("sex", model.sexIdProperty().get(), false));
-		query.append(SQLiteUtil.updateQueryColumn("birthday", SQLiteUtil.getString(model.birthdayProperty().get()), false));
-		query.append(SQLiteUtil.updateQueryColumn("dayofdeath", SQLiteUtil.getString(model.dayOfDeathProperty().get()), false));
-		query.append(SQLiteUtil.updateQueryColumn("color", SQLiteUtil.getInteger(model.colorProperty().get()), false));
 		query.append(SQLiteUtil.updateQueryColumn("note", model.noteProperty().get(), true));
 		query.append("where id = " + model.idProperty().get() + ";");
 		this.getStoryFileModel().updateQuery(query.toString());
@@ -79,8 +69,7 @@ public class PersonDAO extends DAO<Person> {
 	@Override
 	protected void createTable () throws SQLException {
 		this.getStoryFileModel().updateQuery(
-				"CREATE TABLE person (id INTEGER PRIMARY KEY NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), "
-				+ "firstname TEXT, lastname TEXT, sex INTEGER, birthday TEXT, dayofdeath TEXT, color INTEGER NOT NULL DEFAULT (0), note TEXT)");
+				"CREATE TABLE keyword (id INTEGER PRIMARY KEY NOT NULL, note TEXT, `order` INTEGER NOT NULL, name TEXT NOT NULL);");
 	}
 
 }

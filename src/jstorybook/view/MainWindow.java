@@ -59,10 +59,12 @@ import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
 import jstorybook.view.pane.list.GroupListPane;
+import jstorybook.view.pane.list.KeywordListPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.view.pane.list.PlaceListPane;
 import jstorybook.view.pane.list.SceneListPane;
 import jstorybook.view.pane.list.SexListPane;
+import jstorybook.view.pane.list.TagListPane;
 import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
 import jstorybook.viewmodel.ViewModelList;
@@ -90,6 +92,8 @@ import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
+import jstorybook.viewtool.messenger.pane.KeywordEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.KeywordListShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
 import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
@@ -98,6 +102,8 @@ import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
 import jstorybook.viewtool.messenger.pane.SexEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.SexListShowMessage;
+import jstorybook.viewtool.messenger.pane.TagEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.TagListShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
 import jstorybook.viewtool.model.EditorColumnList;
@@ -263,6 +269,14 @@ public class MainWindow extends MyStage {
 			menu.setGraphic(ResourceManager.getMiniIconNode("place.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+L"));
 			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showKeywordList");
+			menu.setText(ResourceManager.getMessage("msg.keyword"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+W"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showTagList");
+			menu.setText(ResourceManager.getMessage("msg.tag"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+T"));
+			editMenu.getItems().add(menu);
 
 			editMenu.getItems().add(new SeparatorMenuItem());
 
@@ -402,6 +416,12 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(SexListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSexListTab();
 		});
+		this.messenger.apply(KeywordListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addKeywordListTab();
+		});
+		this.messenger.apply(TagListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addTagListTab();
+		});
 
 		this.messenger.apply(PersonEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonEditorTab((PersonEditorShowMessage) ev);
@@ -420,6 +440,12 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(SexEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSexEditorTab((SexEditorShowMessage) ev);
+		});
+		this.messenger.apply(KeywordEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addKeywordEditorTab((KeywordEditorShowMessage) ev);
+		});
+		this.messenger.apply(TagEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addTagEditorTab((TagEditorShowMessage) ev);
 		});
 
 		this.messenger.apply(AssociationChartShowMessage.class, this, (ev) -> {
@@ -568,6 +594,18 @@ public class MainWindow extends MyStage {
 		this.addEntityListTab(tab);
 	}
 
+	// キーワードリストタブを追加
+	private void addKeywordListTab () {
+		EntityListPane tab = new KeywordListPane(this.messenger);
+		this.addEntityListTab(tab);
+	}
+
+	// タグリストタブを追加
+	private void addTagListTab () {
+		EntityListPane tab = new TagListPane(this.messenger);
+		this.addEntityListTab(tab);
+	}
+
 	// エンティティ編集タブ
 	private void addEntityEditorTab (EntityEditorShowMessage<?> message, String entityTypeName) {
 
@@ -647,6 +685,16 @@ public class MainWindow extends MyStage {
 	// 性編集タブ
 	private void addSexEditorTab (SexEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.sex"));
+	}
+
+	// キーワード編集タブ
+	private void addKeywordEditorTab (KeywordEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.keyword"));
+	}
+
+	// タグ編集タブ
+	private void addTagEditorTab (TagEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.tag"));
 	}
 
 	// -------------------------------------------------------
