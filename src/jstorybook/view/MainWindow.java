@@ -274,11 +274,6 @@ public class MainWindow extends MyStage {
 			menu.setGraphic(ResourceManager.getMiniIconNode("keyword.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+W"));
 			editMenu.getItems().add(menu);
-			menu = GUIUtil.createMenuItem(this.viewModelList, "showTagList");
-			menu.setText(ResourceManager.getMessage("msg.tag"));
-			menu.setGraphic(ResourceManager.getMiniIconNode("tag.png"));
-			menu.setAccelerator(KeyCombination.valueOf("Shift+T"));
-			editMenu.getItems().add(menu);
 
 			editMenu.getItems().add(new SeparatorMenuItem());
 
@@ -291,6 +286,14 @@ public class MainWindow extends MyStage {
 			menu.setText(ResourceManager.getMessage("msg.chapter"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+C"));
+			editMenu.getItems().add(menu);
+
+			editMenu.getItems().add(new SeparatorMenuItem());
+
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showTagList");
+			menu.setText(ResourceManager.getMessage("msg.tag"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("tag.png"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+T"));
 			editMenu.getItems().add(menu);
 		}
 
@@ -337,14 +340,16 @@ public class MainWindow extends MyStage {
 			button = GUIUtil.createCommandButton(this.viewModelList, "showKeywordList", ResourceManager.getMessage("msg.keyword"));
 			button.setGraphic(ResourceManager.getIconNode("keyword.png"));
 			buttonList.add(button);
-			button = GUIUtil.createCommandButton(this.viewModelList, "showTagList", ResourceManager.getMessage("msg.tag"));
-			button.setGraphic(ResourceManager.getIconNode("tag.png"));
-			buttonList.add(button);
+			buttonList.add(new Separator());
 			button = GUIUtil.createCommandButton(this.viewModelList, "showSceneList", ResourceManager.getMessage("msg.scene"));
 			button.setGraphic(ResourceManager.getIconNode("scene.png"));
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showChapterList", ResourceManager.getMessage("msg.chapter"));
 			button.setGraphic(ResourceManager.getIconNode("chapter.png"));
+			buttonList.add(button);
+			buttonList.add(new Separator());
+			button = GUIUtil.createCommandButton(this.viewModelList, "showTagList", ResourceManager.getMessage("msg.tag"));
+			button.setGraphic(ResourceManager.getIconNode("tag.png"));
 			buttonList.add(button);
 		}
 

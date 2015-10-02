@@ -73,20 +73,18 @@ public class SexDAO extends DAO<Sex> {
 	@Override
 	protected void createTable () throws SQLException {
 		this.getStoryFileModel().updateQuery(
-				"CREATE TABLE color (id INTEGER PRIMARY KEY NOT NULL, note TEXT, `order` INTEGER NOT NULL, name TEXT NOT NULL, color INTEGER NOT NULL);");
+				"CREATE TABLE sex (id INTEGER PRIMARY KEY NOT NULL, note TEXT, `order` INTEGER NOT NULL, name TEXT NOT NULL, color INTEGER NOT NULL);");
 
 		// デフォルトのデータ
 		Sex male = new Sex();
 		Sex female = new Sex();
-		male.idProperty().set(1);
-		female.idProperty().set(2);
 		male.nameProperty().set(ResourceManager.getMessage("msg.person.sex.male"));
 		female.nameProperty().set(ResourceManager.getMessage("msg.person.sex.female"));
 		male.colorProperty().set(Color.BLUE);
 		female.colorProperty().set(Color.RED);
-		this.lastId = 2;
-		this.saveModel(male);
-		this.saveModel(female);
+		this.addModel(male);
+		this.addModel(female);
+		this.saveList();
 	}
 
 }
