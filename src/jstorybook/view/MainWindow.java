@@ -271,10 +271,12 @@ public class MainWindow extends MyStage {
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showKeywordList");
 			menu.setText(ResourceManager.getMessage("msg.keyword"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("keyword.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+W"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showTagList");
 			menu.setText(ResourceManager.getMessage("msg.tag"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("tag.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+T"));
 			editMenu.getItems().add(menu);
 
@@ -331,6 +333,12 @@ public class MainWindow extends MyStage {
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showPlaceList", ResourceManager.getMessage("msg.place"));
 			button.setGraphic(ResourceManager.getIconNode("place.png"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showKeywordList", ResourceManager.getMessage("msg.keyword"));
+			button.setGraphic(ResourceManager.getIconNode("keyword.png"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showTagList", ResourceManager.getMessage("msg.tag"));
+			button.setGraphic(ResourceManager.getIconNode("tag.png"));
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showSceneList", ResourceManager.getMessage("msg.scene"));
 			button.setGraphic(ResourceManager.getIconNode("scene.png"));
@@ -597,12 +605,14 @@ public class MainWindow extends MyStage {
 	// キーワードリストタブを追加
 	private void addKeywordListTab () {
 		EntityListPane tab = new KeywordListPane(this.messenger);
+		tab.setGraphic(ResourceManager.getMiniIconNode("keyword.png"));
 		this.addEntityListTab(tab);
 	}
 
 	// タグリストタブを追加
 	private void addTagListTab () {
 		EntityListPane tab = new TagListPane(this.messenger);
+		tab.setGraphic(ResourceManager.getMiniIconNode("tag.png"));
 		this.addEntityListTab(tab);
 	}
 

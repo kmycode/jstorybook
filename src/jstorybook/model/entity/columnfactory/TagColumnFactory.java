@@ -56,8 +56,8 @@ public class TagColumnFactory extends ColumnFactory<Tag> {
 		column.setProperty(model.orderProperty());
 		columnList.add(column);
 
-		column = new StringColumn(ResourceManager.getMessage("msg.chapter.name"), "name");
-		column.setColumnWidth(240);
+		column = new StringColumn(ResourceManager.getMessage("msg.tag"), "name");
+		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());
 		columnList.add(column);
