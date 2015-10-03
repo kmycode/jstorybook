@@ -38,12 +38,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
+import jstorybook.model.column.EditorColumnList;
 import jstorybook.view.control.DockableTabPane;
 import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.IReloadable;
@@ -92,7 +94,6 @@ import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationShowMessage;
-import jstorybook.model.column.EditorColumnList;
 
 /**
  * 編集画面のパネル
@@ -562,6 +563,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 		if (editControl instanceof Control) {
 			((Control) editControl).setMaxWidth(240.0);
+		}
+		else if (editControl instanceof Pane) {
+			((Pane) editControl).setMaxWidth(240.0);
 		}
 
 		GridPane.
