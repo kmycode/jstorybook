@@ -11,25 +11,31 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.SceneTagRelation;
 
 /**
- * エンティティの関連の組み合わせ
+ * シーンのタグのDAO
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class SceneTagRelationDAO extends EntityRelationDAO<SceneTagRelation> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
+	@Override
+	protected String getTableName () {
+		return "scenetag";
+	}
+
+	public void readSceneDAO (SceneDAO dao) {
+		for (SceneTagRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected SceneTagRelation newEntityRelationInstance () {
+		return new SceneTagRelation();
+	}
+
 }

@@ -391,7 +391,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			}
 		});
 		this.messenger.apply(TagRelationListGetMessage.class, this, (ev) -> {
-			if (this.chapterRelationTab != null) {
+			if (this.tagRelationTab != null) {
 				((TagRelationListGetMessage) ev).setRelationList(this.tagRelationTab.getSelectedIdList());
 			}
 		});

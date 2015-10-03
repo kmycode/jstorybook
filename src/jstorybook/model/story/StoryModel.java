@@ -29,35 +29,49 @@ import jstorybook.common.contract.StorySettingName;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.dao.ChapterDAO;
 import jstorybook.model.dao.ChapterSceneRelationDAO;
+import jstorybook.model.dao.ChapterTagRelationDAO;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.GroupDAO;
 import jstorybook.model.dao.GroupPersonRelationDAO;
+import jstorybook.model.dao.GroupTagRelationDAO;
 import jstorybook.model.dao.KeywordDAO;
+import jstorybook.model.dao.KeywordTagRelationDAO;
 import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.dao.PersonPersonRelationDAO;
+import jstorybook.model.dao.PersonTagRelationDAO;
 import jstorybook.model.dao.PlaceDAO;
+import jstorybook.model.dao.PlaceTagRelationDAO;
 import jstorybook.model.dao.SceneDAO;
 import jstorybook.model.dao.ScenePersonRelationDAO;
 import jstorybook.model.dao.ScenePlaceRelationDAO;
+import jstorybook.model.dao.SceneTagRelationDAO;
 import jstorybook.model.dao.SexDAO;
 import jstorybook.model.dao.StorySettingDAO;
 import jstorybook.model.dao.TagDAO;
+import jstorybook.model.dao.TagTagRelationDAO;
 import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.ChapterSceneRelation;
+import jstorybook.model.entity.ChapterTagRelation;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Group;
 import jstorybook.model.entity.GroupPersonRelation;
+import jstorybook.model.entity.GroupTagRelation;
 import jstorybook.model.entity.ISortableEntity;
 import jstorybook.model.entity.Keyword;
+import jstorybook.model.entity.KeywordTagRelation;
 import jstorybook.model.entity.Person;
 import jstorybook.model.entity.PersonPersonRelation;
+import jstorybook.model.entity.PersonTagRelation;
 import jstorybook.model.entity.Place;
+import jstorybook.model.entity.PlaceTagRelation;
 import jstorybook.model.entity.Scene;
 import jstorybook.model.entity.ScenePersonRelation;
 import jstorybook.model.entity.ScenePlaceRelation;
+import jstorybook.model.entity.SceneTagRelation;
 import jstorybook.model.entity.Sex;
 import jstorybook.model.entity.StorySetting;
 import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.TagTagRelation;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
@@ -124,6 +138,20 @@ public class StoryModel implements IUseMessenger {
 			new ScenePersonRelationDAO());
 	private final StoryEntityModel<ScenePlaceRelation, ScenePlaceRelationDAO> scenePlaceEntity = new StoryEntityModel<>(
 			new ScenePlaceRelationDAO());
+	private final StoryEntityModel<PersonTagRelation, PersonTagRelationDAO> personTagEntity = new StoryEntityModel<>(
+			new PersonTagRelationDAO());
+	private final StoryEntityModel<GroupTagRelation, GroupTagRelationDAO> groupTagEntity = new StoryEntityModel<>(
+			new GroupTagRelationDAO());
+	private final StoryEntityModel<PlaceTagRelation, PlaceTagRelationDAO> placeTagEntity = new StoryEntityModel<>(
+			new PlaceTagRelationDAO());
+	private final StoryEntityModel<SceneTagRelation, SceneTagRelationDAO> sceneTagEntity = new StoryEntityModel<>(
+			new SceneTagRelationDAO());
+	private final StoryEntityModel<ChapterTagRelation, ChapterTagRelationDAO> chapterTagEntity = new StoryEntityModel<>(
+			new ChapterTagRelationDAO());
+	private final StoryEntityModel<KeywordTagRelation, KeywordTagRelationDAO> keywordTagEntity = new StoryEntityModel<>(
+			new KeywordTagRelationDAO());
+	private final StoryEntityModel<TagTagRelation, TagTagRelationDAO> tagTagEntity = new StoryEntityModel<>(
+			new TagTagRelationDAO());
 
 	// 非公開のプロパティ
 	private final ObjectProperty<StoryFileModel> storyFile = new SimpleObjectProperty<>();
@@ -266,6 +294,13 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.chapterSceneEntity.dao.get());
 		daoList.add(this.scenePersonEntity.dao.get());
 		daoList.add(this.scenePlaceEntity.dao.get());
+		daoList.add(this.personTagEntity.dao.get());
+		daoList.add(this.groupTagEntity.dao.get());
+		daoList.add(this.placeTagEntity.dao.get());
+		daoList.add(this.sceneTagEntity.dao.get());
+		daoList.add(this.chapterTagEntity.dao.get());
+		daoList.add(this.keywordTagEntity.dao.get());
+		daoList.add(this.tagTagEntity.dao.get());
 
 		// 設定は最後
 		daoList.add(this.storySettingEntity.dao.get());
@@ -447,6 +482,111 @@ public class StoryModel implements IUseMessenger {
 	public void setScenePlaceRelation_Scene (long sceneId, List<Long> list) {
 		this.scenePlaceEntity.dao.get().setRelatedIdList(sceneId, list, false);
 	}
+
+	public List<Long> getPersonTagRelation_Tag (long tagId) {
+		return this.personTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setPersonTagRelation_Tag (long tagId, List<Long> list) {
+		this.personTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getPersonTagRelation_Person (long personId) {
+		return this.personTagEntity.dao.get().getRelatedIdList(personId, false);
+	}
+
+	public void setPersonTagRelation_Person (long personId, List<Long> list) {
+		this.personTagEntity.dao.get().setRelatedIdList(personId, list, false);
+	}
+
+	public List<Long> getGroupTagRelation_Tag (long tagId) {
+		return this.groupTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setGroupTagRelation_Tag (long tagId, List<Long> list) {
+		this.groupTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getGroupTagRelation_Group (long groupId) {
+		return this.groupTagEntity.dao.get().getRelatedIdList(groupId, false);
+	}
+
+	public void setGroupTagRelation_Group (long groupId, List<Long> list) {
+		this.groupTagEntity.dao.get().setRelatedIdList(groupId, list, false);
+	}
+
+	public List<Long> getPlaceTagRelation_Tag (long tagId) {
+		return this.placeTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setPlaceTagRelation_Tag (long tagId, List<Long> list) {
+		this.placeTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getPlaceTagRelation_Place (long placeId) {
+		return this.placeTagEntity.dao.get().getRelatedIdList(placeId, false);
+	}
+
+	public void setPlaceTagRelation_Place (long placeId, List<Long> list) {
+		this.placeTagEntity.dao.get().setRelatedIdList(placeId, list, false);
+	}
+
+	public List<Long> getSceneTagRelation_Tag (long tagId) {
+		return this.sceneTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setSceneTagRelation_Tag (long tagId, List<Long> list) {
+		this.sceneTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getSceneTagRelation_Scene (long sceneId) {
+		return this.sceneTagEntity.dao.get().getRelatedIdList(sceneId, false);
+	}
+
+	public void setSceneTagRelation_Scene (long sceneId, List<Long> list) {
+		this.sceneTagEntity.dao.get().setRelatedIdList(sceneId, list, false);
+	}
+
+	public List<Long> getChapterTagRelation_Tag (long tagId) {
+		return this.chapterTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setChapterTagRelation_Tag (long tagId, List<Long> list) {
+		this.chapterTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getChapterTagRelation_Chapter (long chapterId) {
+		return this.chapterTagEntity.dao.get().getRelatedIdList(chapterId, false);
+	}
+
+	public void setChapterTagRelation_Chapter (long chapterId, List<Long> list) {
+		this.chapterTagEntity.dao.get().setRelatedIdList(chapterId, list, false);
+	}
+
+	public List<Long> getKeywordTagRelation_Tag (long tagId) {
+		return this.keywordTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setKeywordTagRelation_Tag (long tagId, List<Long> list) {
+		this.keywordTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getKeywordTagRelation_Keyword (long keywordId) {
+		return this.keywordTagEntity.dao.get().getRelatedIdList(keywordId, false);
+	}
+
+	public void setKeywordTagRelation_Keyword (long keywordId, List<Long> list) {
+		this.keywordTagEntity.dao.get().setRelatedIdList(keywordId, list, false);
+	}
+
+	public List<Long> getTagTagRelation (long tagId) {
+		return this.tagTagEntity.dao.get().getRelatedIdList(tagId);
+	}
+
+	public void setTagTagRelation (long tagId, List<Long> list) {
+		this.tagTagEntity.dao.get().setRelatedIdList(tagId, list);
+	}
+
 
 	// -------------------------------------------------------
 	// それぞれのエンティティの新規作成、編集、削除など

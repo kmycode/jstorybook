@@ -31,10 +31,11 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 	private final ObjectProperty<Calendar> starttime = new SimpleObjectProperty<Calendar>();
 	private final ObjectProperty<Calendar> endtime = new SimpleObjectProperty<Calendar>();
 	private final LongProperty order = new SimpleLongProperty();
+	private final StringProperty text = new SimpleStringProperty("");
 
 	public Scene () {
 		this.title.bind(this.name);
-		this.storeProperty(this.name, this.starttime, this.endtime, this.order);
+		this.storeProperty(this.name, this.starttime, this.endtime, this.order, this.text);
 	}
 
 	@Override
@@ -70,6 +71,13 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 		return this.order;
 	}
 
+	/*
+	 * テキスト
+	 */
+	public StringProperty textProperty () {
+		return this.text;
+	}
+
 	// -------------------------------------------------------
 	@Override
 	public boolean equals (Object obj) {
@@ -80,6 +88,7 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 			ret &= this.equalsProperty(this.starttime, test.starttime);
 			ret &= this.equalsProperty(this.endtime, test.endtime);
 			ret &= this.equalsProperty(this.order, test.order);
+			ret &= this.equalsProperty(this.text, test.text);
 		}
 		return ret;
 	}
@@ -91,6 +100,7 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 		hash = hash * 31 + this.propertyHashCode(this.starttime);
 		hash = hash * 31 + this.propertyHashCode(this.endtime);
 		hash = hash * 31 + this.propertyHashCode(this.order);
+		hash = hash * 31 + this.propertyHashCode(this.text);
 		return hash;
 	}
 
@@ -117,6 +127,7 @@ public class Scene extends Entity implements Comparable<Entity>, ISortableEntity
 			obj.endtime.set((Calendar) this.endtime.get().clone());
 		}
 		obj.order.set(this.order.get());
+		obj.text.set(this.text.get());
 
 		return obj;
 	}

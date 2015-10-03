@@ -13,6 +13,7 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Tag;
@@ -48,6 +49,13 @@ public class TagColumnFactory extends ColumnFactory<Tag> {
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.entityTypeProperty().set(EntityType.TAG);
+		columnList.addRelation(EntityRelation.PERSON_TAG);
+		columnList.addRelation(EntityRelation.GROUP_TAG);
+		columnList.addRelation(EntityRelation.PLACE_TAG);
+		columnList.addRelation(EntityRelation.KEYWORD_TAG);
+		columnList.addRelation(EntityRelation.SCENE_TAG);
+		columnList.addRelation(EntityRelation.CHAPTER_TAG);
+		columnList.addRelation(EntityRelation.TAG_TAG);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");

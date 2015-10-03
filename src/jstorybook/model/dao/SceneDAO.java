@@ -55,8 +55,8 @@ public class SceneDAO extends DAO<Scene> {
 
 			// 行を追加
 			this.getStoryFileModel().updateQuery(
-					"insert into `" + this.getTableName() + "`(id,name,`order`,starttime,endtime,note) values(" + model.
-					idProperty().get() + ",'',0,'','','');");
+					"insert into `" + this.getTableName() + "`(id,name,`order`,starttime,endtime,note,`text`) values(" + model.
+					idProperty().get() + ",'',0,'','','','');");
 		}
 
 		// 保存
@@ -65,7 +65,8 @@ public class SceneDAO extends DAO<Scene> {
 		query.append(SQLiteUtil.updateQueryColumn("order", model.orderProperty().get(), false));
 		query.append(SQLiteUtil.updateQueryColumn("starttime", SQLiteUtil.getString(model.starttimeProperty().get()), false));
 		query.append(SQLiteUtil.updateQueryColumn("endtime", SQLiteUtil.getString(model.endtimeProperty().get()), false));
-		query.append(SQLiteUtil.updateQueryColumn("note", model.noteProperty().get(), true));
+		query.append(SQLiteUtil.updateQueryColumn("note", model.noteProperty().get(), false));
+		query.append(SQLiteUtil.updateQueryColumn("text", model.textProperty().get(), true));
 		query.append("where id = " + model.idProperty().get() + ";");
 		this.getStoryFileModel().updateQuery(query.toString());
 	}
@@ -73,7 +74,7 @@ public class SceneDAO extends DAO<Scene> {
 	@Override
 	protected void createTable () throws SQLException {
 		this.getStoryFileModel().updateQuery(
-				"CREATE TABLE scene (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), starttime TEXT, endtime TEXT, note TEXT)");
+				"CREATE TABLE scene (id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, [order] INTEGER NOT NULL DEFAULT (1), starttime TEXT, endtime TEXT, note TEXT, [text] TEXT)");
 	}
 
 }

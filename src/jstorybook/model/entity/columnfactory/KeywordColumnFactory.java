@@ -13,6 +13,7 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Keyword;
@@ -47,6 +48,7 @@ public class KeywordColumnFactory extends ColumnFactory<Keyword> {
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
+		columnList.addRelation(EntityRelation.KEYWORD_TAG);
 		columnList.entityTypeProperty().set(EntityType.KEYWORD);
 		EditorColumn column;
 

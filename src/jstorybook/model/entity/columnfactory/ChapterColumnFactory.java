@@ -50,6 +50,7 @@ public class ChapterColumnFactory extends ColumnFactory<Chapter> {
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.entityTypeProperty().set(EntityType.CHAPTER);
 		columnList.addRelation(EntityRelation.CHAPTER_SCENE);
+		columnList.addRelation(EntityRelation.CHAPTER_TAG);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");

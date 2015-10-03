@@ -50,6 +50,7 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.entityTypeProperty().set(EntityType.GROUP);
 		columnList.addRelation(EntityRelation.GROUP_PERSON);
+		columnList.addRelation(EntityRelation.GROUP_TAG);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");

@@ -11,25 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.entity;
 
 /**
- * エンティティの関連の組み合わせ
+ * シーンのタグ
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class SceneTagRelation extends TagRelation<Scene> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
 }
