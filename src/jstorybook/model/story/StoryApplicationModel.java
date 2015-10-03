@@ -16,15 +16,16 @@ package jstorybook.model.story;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
-import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
-import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
-import jstorybook.viewtool.messenger.pane.KeywordListShowMessage;
-import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
-import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
-import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
-import jstorybook.viewtool.messenger.pane.SexListShowMessage;
-import jstorybook.viewtool.messenger.pane.TagListShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
+import jstorybook.viewtool.messenger.pane.list.ChapterListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.GroupListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.KeywordListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.PersonListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.PlaceListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.SceneListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.SexListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.TagListShowMessage;
+import jstorybook.viewtool.messenger.pane.pane.SearchEntityPaneShowMessage;
 
 /**
  * ストーリーのアプリケーションモデル
@@ -69,6 +70,10 @@ public class StoryApplicationModel implements IUseMessenger {
 
 	public void showStorySetting () {
 		this.messenger.send(new StorySettingDialogShowMessage());
+	}
+
+	public void showSearchEntityPane () {
+		this.messenger.send(new SearchEntityPaneShowMessage());
 	}
 
 	public void showPersonUsingChart () {

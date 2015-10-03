@@ -28,7 +28,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 import jstorybook.model.entity.Entity;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.model.column.EditorColumnList;
 
 /**
  * 選択可能な、エンティティ専用テーブルビュー

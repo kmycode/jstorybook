@@ -17,15 +17,16 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import jstorybook.model.column.EditorColumn;
+import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.tablecell.ColorCell;
 import jstorybook.view.control.tablecell.DateCell;
+import jstorybook.view.control.tablecell.EntityCell;
 import jstorybook.view.control.tablecell.NormalCell;
 import jstorybook.view.control.tablecell.SexCell;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.model.EditorColumn;
-import jstorybook.viewtool.model.EditorColumnList;
 
 /**
  * エンティティ専用テーブルビュー
@@ -65,13 +66,17 @@ public class EntityTableView<E extends Entity> extends TableView<E> {
 				return new ColorCell();
 			});
 		}
+		else if (columnData.getCellType() == EditorColumn.CellType.ENTITY) {
+			column.setCellFactory((arg) -> {
+				return new EntityCell();
+			});
+		}
 		else if (columnData.getCellType() == EditorColumn.CellType.SEX) {
 
 			// ストーリーモデルを取得（ロジックをビュー内に書き込んでいるため、ビューからメッセージを発行している）
-			CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
-			this.mainMessenger.send(mes);
-
 			column.setCellFactory((arg) -> {
+				CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
+				this.mainMessenger.send(mes);
 				return new SexCell(mes.storyModelProperty().get().getSexDAO().modelListProperty().get());
 			});
 		}

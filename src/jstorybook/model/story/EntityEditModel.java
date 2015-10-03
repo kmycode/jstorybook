@@ -28,12 +28,12 @@ import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
-import jstorybook.viewtool.messenger.pane.editor.EditorColumnColorMessage;
-import jstorybook.viewtool.messenger.pane.editor.EditorColumnDateMessage;
-import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexAddMessage;
-import jstorybook.viewtool.messenger.pane.editor.EditorColumnSexMessage;
-import jstorybook.viewtool.messenger.pane.editor.EditorColumnTextMessage;
-import jstorybook.viewtool.messenger.pane.editor.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnColorMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnSexAddMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnSexMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnTextMessage;
+import jstorybook.viewtool.messenger.pane.column.PropertyNoteSetMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
@@ -55,8 +55,8 @@ import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationShowMessage;
-import jstorybook.viewtool.model.EditorColumn;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.model.column.EditorColumn;
+import jstorybook.model.column.EditorColumnList;
 
 /**
  * エンティティ編集に利用するモデル

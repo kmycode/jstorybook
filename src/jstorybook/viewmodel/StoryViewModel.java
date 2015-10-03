@@ -211,6 +211,9 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("tagOrderReset", (ev) -> this.storyModel.get().getTagDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
+		this.applyCommand("searchEntityPane", (ev) -> this.applicationModel.showSearchEntityPane(), this.storyModel.get().
+						  canEditProperty());
+
 		this.applyCommand("personUsingChart", (ev) -> this.applicationModel.showPersonUsingChart(), this.storyModel.get().
 						  canEditProperty());
 

@@ -34,7 +34,7 @@ import jstorybook.view.control.EntityTableView;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.model.column.EditorColumnList;
 
 /**
  * エンティティのリストを表示するパネル

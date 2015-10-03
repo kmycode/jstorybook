@@ -16,7 +16,7 @@ package jstorybook.model.entity.columnfactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.story.StoryModel;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.model.column.EditorColumnList;
 
 /**
  * カラムファクトリを扱う抽象クラス

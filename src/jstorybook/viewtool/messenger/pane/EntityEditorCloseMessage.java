@@ -14,7 +14,7 @@
 package jstorybook.viewtool.messenger.pane;
 
 import jstorybook.viewtool.messenger.Message;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.model.column.EditorColumnList;
 
 /**
  * エンティティ編集タブを閉じるメッセージ

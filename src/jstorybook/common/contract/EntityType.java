@@ -19,14 +19,24 @@ package jstorybook.common.contract;
  * @author KMY
  */
 public enum EntityType {
-	NONE,
-	PERSON,
-	GROUP,
-	PLACE,
-	SCENE,
-	CHAPTER,
-	SEX,
-	KEYWORD,
-	TAG,;
+	NONE(""),
+	PERSON("person"),
+	GROUP("group"),
+	PLACE("place"),
+	SCENE("scene"),
+	CHAPTER("chapter"),
+	SEX("sex"),
+	KEYWORD("keyword"),
+	TAG("tag"),;
+
+	private final String iconName;
+
+	private EntityType (String iconName) {
+		this.iconName = iconName;
+	}
+
+	public String getIconName () {
+		return this.iconName;
+	}
 
 }

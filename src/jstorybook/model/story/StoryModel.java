@@ -91,17 +91,17 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
-import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
-import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
-import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.KeywordEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.SexEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.TagEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.SexEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.TagEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 
 /**

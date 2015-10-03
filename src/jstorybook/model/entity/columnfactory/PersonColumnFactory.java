@@ -17,13 +17,13 @@ import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Person;
-import jstorybook.viewtool.model.ColorColumn;
-import jstorybook.viewtool.model.DateColumn;
-import jstorybook.viewtool.model.EditorColumn;
-import jstorybook.viewtool.model.EditorColumnList;
-import jstorybook.viewtool.model.ListOnlyColumn;
-import jstorybook.viewtool.model.SexColumn;
-import jstorybook.viewtool.model.StringColumn;
+import jstorybook.model.column.ColorColumn;
+import jstorybook.model.column.DateColumn;
+import jstorybook.model.column.EditorColumn;
+import jstorybook.model.column.EditorColumnList;
+import jstorybook.model.column.ListOnlyColumn;
+import jstorybook.model.column.SexColumn;
+import jstorybook.model.column.StringColumn;
 
 /**
  * 登場人物リストのカラム

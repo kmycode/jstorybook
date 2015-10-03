@@ -43,6 +43,7 @@ import jstorybook.common.contract.SystemKey;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
+import jstorybook.model.column.EditorColumnList;
 import jstorybook.view.control.DockableAreaGroupPane;
 import jstorybook.view.control.DockablePane;
 import jstorybook.view.control.DockableTab;
@@ -53,6 +54,7 @@ import jstorybook.view.dialog.PreferenceDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
 import jstorybook.view.pane.IReloadable;
+import jstorybook.view.pane.SearchEntityPane;
 import jstorybook.view.pane.chart.AssociationChartPane;
 import jstorybook.view.pane.chart.PersonUsingChartPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
@@ -85,28 +87,28 @@ import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
-import jstorybook.viewtool.messenger.pane.ChapterEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
-import jstorybook.viewtool.messenger.pane.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
-import jstorybook.viewtool.messenger.pane.GroupEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.GroupListShowMessage;
-import jstorybook.viewtool.messenger.pane.KeywordEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.KeywordListShowMessage;
-import jstorybook.viewtool.messenger.pane.PersonEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.PersonListShowMessage;
-import jstorybook.viewtool.messenger.pane.PlaceEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.PlaceListShowMessage;
-import jstorybook.viewtool.messenger.pane.SceneEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.SceneListShowMessage;
-import jstorybook.viewtool.messenger.pane.SexEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.SexListShowMessage;
-import jstorybook.viewtool.messenger.pane.TagEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.TagListShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.SexEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.TagEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.list.ChapterListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.GroupListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.KeywordListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.PersonListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.PlaceListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.SceneListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.SexListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.TagListShowMessage;
+import jstorybook.viewtool.messenger.pane.pane.SearchEntityPaneShowMessage;
 
 /**
  *
@@ -297,6 +299,15 @@ public class MainWindow extends MyStage {
 			editMenu.getItems().add(menu);
 		}
 
+		// ペインメニュー
+		Menu paneMenu = new Menu(ResourceManager.getMessage("msg.pane"));
+		GUIUtil.bindFontStyle(paneMenu);
+		{
+			menu = GUIUtil.createMenuItem(this.viewModelList, "searchEntityPane");
+			menu.setText(ResourceManager.getMessage("msg.search.entity"));
+			paneMenu.getItems().add(menu);
+		}
+
 		// チャートメニュー
 		Menu chartMenu = new Menu(ResourceManager.getMessage("msg.chart"));
 		GUIUtil.bindFontStyle(chartMenu);
@@ -306,7 +317,7 @@ public class MainWindow extends MyStage {
 			chartMenu.getItems().add(menu);
 		}
 
-		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu, chartMenu);
+		menuBar.getMenus().addAll(appMenu, fileMenu, editMenu, paneMenu, chartMenu);
 		menuBar.useSystemMenuBarProperty().bind(PreferenceKey.MENUBAR_USESYSTEM.getProperty());
 		this.mainMenuBar.set(menuBar);
 	}
@@ -461,6 +472,9 @@ public class MainWindow extends MyStage {
 			MainWindow.this.addTagEditorTab((TagEditorShowMessage) ev);
 		});
 
+		this.messenger.apply(SearchEntityPaneShowMessage.class, this, (ev) -> {
+			MainWindow.this.addSearchEntityTab((SearchEntityPaneShowMessage) ev);
+		});
 		this.messenger.apply(AssociationChartShowMessage.class, this, (ev) -> {
 			MainWindow.this.addAssociationChartTab((AssociationChartShowMessage) ev);
 		});
@@ -713,6 +727,11 @@ public class MainWindow extends MyStage {
 	}
 
 	// -------------------------------------------------------
+	// エンティティ検索
+	private void addSearchEntityTab (SearchEntityPaneShowMessage message) {
+		this.addTab(new SearchEntityPane(this.messenger));
+	}
+
 	// 関連図
 	private void addAssociationChartTab (AssociationChartShowMessage message) {
 		this.addTab(new AssociationChartPane(message, this.messenger));

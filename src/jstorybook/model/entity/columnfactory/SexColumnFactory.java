@@ -16,11 +16,11 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Sex;
-import jstorybook.viewtool.model.ColorColumn;
-import jstorybook.viewtool.model.EditorColumn;
-import jstorybook.viewtool.model.EditorColumnList;
-import jstorybook.viewtool.model.ListOnlyColumn;
-import jstorybook.viewtool.model.StringColumn;
+import jstorybook.model.column.ColorColumn;
+import jstorybook.model.column.EditorColumn;
+import jstorybook.model.column.EditorColumnList;
+import jstorybook.model.column.ListOnlyColumn;
+import jstorybook.model.column.StringColumn;
 
 /**
  * 性リストのカラム

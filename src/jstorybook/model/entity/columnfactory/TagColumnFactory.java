@@ -17,10 +17,10 @@ import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.entity.Tag;
-import jstorybook.viewtool.model.EditorColumn;
-import jstorybook.viewtool.model.EditorColumnList;
-import jstorybook.viewtool.model.ListOnlyColumn;
-import jstorybook.viewtool.model.StringColumn;
+import jstorybook.model.column.EditorColumn;
+import jstorybook.model.column.EditorColumnList;
+import jstorybook.model.column.ListOnlyColumn;
+import jstorybook.model.column.StringColumn;
 
 /**
  * タグリストのカラム

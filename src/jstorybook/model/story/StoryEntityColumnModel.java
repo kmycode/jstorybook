@@ -23,7 +23,7 @@ import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.model.entity.columnfactory.SexColumnFactory;
 import jstorybook.model.entity.columnfactory.TagColumnFactory;
-import jstorybook.viewtool.model.EditorColumnList;
+import jstorybook.model.column.EditorColumnList;
 
 /**
  * 各エンティティのカラムをまとめたモデル
