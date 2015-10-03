@@ -16,14 +16,14 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Group;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Group;
 
 /**
- * 登場人物リストのカラム
+ * 集団リストのカラム
  *
  * @author KMY
  */
@@ -50,6 +50,7 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.entityTypeProperty().set(EntityType.GROUP);
 		columnList.addRelation(EntityRelation.GROUP_PERSON);
+		columnList.addRelation(EntityRelation.GROUP_KEYWORD);
 		columnList.addRelation(EntityRelation.GROUP_TAG);
 		EditorColumn column;
 

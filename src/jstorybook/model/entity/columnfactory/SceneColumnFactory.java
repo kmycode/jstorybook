@@ -16,12 +16,12 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Scene;
 import jstorybook.model.column.DateColumn;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Scene;
 
 /**
  * シーンリストのカラム
@@ -52,6 +52,7 @@ public class SceneColumnFactory extends ColumnFactory<Scene> {
 		columnList.addRelation(EntityRelation.CHAPTER_SCENE);
 		columnList.addRelation(EntityRelation.SCENE_PERSON);
 		columnList.addRelation(EntityRelation.SCENE_PLACE);
+		columnList.addRelation(EntityRelation.SCENE_KEYWORD);
 		columnList.addRelation(EntityRelation.SCENE_TAG);
 		columnList.entityTypeProperty().set(EntityType.SCENE);
 		EditorColumn column;

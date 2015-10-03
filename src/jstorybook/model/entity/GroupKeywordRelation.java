@@ -11,29 +11,20 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.entity;
+
+import jstorybook.model.entity.EntityRelation;
+import jstorybook.model.entity.Group;
+import jstorybook.model.entity.Keyword;
 
 /**
- * エンティティの関連の組み合わせ
+ * 集団とキーワードの関係
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class GroupKeywordRelation extends EntityRelation<Group, Keyword> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_KEYWORD,
-	GROUP_KEYWORD,
-	PLACE_KEYWORD,
-	SCENE_KEYWORD,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
+	public GroupKeywordRelation () {
+	}
+
 }

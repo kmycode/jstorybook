@@ -16,7 +16,6 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Person;
 import jstorybook.model.column.ColorColumn;
 import jstorybook.model.column.DateColumn;
 import jstorybook.model.column.EditorColumn;
@@ -24,6 +23,7 @@ import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.SexColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Person;
 
 /**
  * 登場人物リストのカラム
@@ -54,6 +54,7 @@ public class PersonColumnFactory extends ColumnFactory<Person> {
 		columnList.addRelation(EntityRelation.PERSON_PERSON);
 		columnList.addRelation(EntityRelation.GROUP_PERSON);
 		columnList.addRelation(EntityRelation.SCENE_PERSON);
+		columnList.addRelation(EntityRelation.PERSON_KEYWORD);
 		columnList.addRelation(EntityRelation.PERSON_TAG);
 		columnList.entityTypeProperty().set(EntityType.PERSON);
 		EditorColumn column;

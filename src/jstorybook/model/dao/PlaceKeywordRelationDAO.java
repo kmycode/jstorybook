@@ -11,29 +11,37 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.PlaceKeywordRelation;
 
 /**
- * エンティティの関連の組み合わせ
+ * 場所とキーワードの関係のDAO
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class PlaceKeywordRelationDAO extends EntityRelationDAO<PlaceKeywordRelation> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_KEYWORD,
-	GROUP_KEYWORD,
-	PLACE_KEYWORD,
-	SCENE_KEYWORD,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
+	@Override
+	protected String getTableName () {
+		return "placekeyword";
+	}
+
+	public void readPlaceDAO (PlaceDAO dao) {
+		for (PlaceKeywordRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	public void readKeywordDAO (KeywordDAO dao) {
+		for (PlaceKeywordRelation model : this.modelList.get()) {
+			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected PlaceKeywordRelation newEntityRelationInstance () {
+		return new PlaceKeywordRelation();
+	}
+
 }

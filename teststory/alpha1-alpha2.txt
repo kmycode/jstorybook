@@ -1,9 +1,6 @@
 ﻿6.0.0 alpha1から6.0.0 alpha2への変更点
 
 ・sexテーブルを追加
-・idtableにsexの行を追加
-・personテーブルで、sexの数値を1ずつ増やす
-・personテーブルで、colorにNOT NULLとDEFAULT (0)を追加
 ・persontagテーブルを追加
 ・grouptagテーブルを追加
 ・placetagテーブルを追加
@@ -11,4 +8,10 @@
 ・chaptertagテーブルを追加
 ・keywordtagテーブルを追加
 ・tagtagテーブルを追加
+・personkeywordテーブルを追加
+・groupkeywordテーブルを追加
+・placekeywordテーブルを追加
+・scenekeywordテーブルを追加
 ・sceneテーブルに、`text` TEXTの列を追加
+・personテーブルで、sexの数値を1ずつ増やす
+・personテーブルで、colorにNOT NULLとDEFAULT (0)を追加

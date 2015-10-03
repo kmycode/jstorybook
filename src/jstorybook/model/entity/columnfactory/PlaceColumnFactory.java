@@ -16,11 +16,11 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Place;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Place;
 
 /**
  * 場所リストのカラム
@@ -49,6 +49,7 @@ public class PlaceColumnFactory extends ColumnFactory<Place> {
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.addRelation(EntityRelation.SCENE_PLACE);
+		columnList.addRelation(EntityRelation.PLACE_KEYWORD);
 		columnList.addRelation(EntityRelation.PLACE_TAG);
 		columnList.entityTypeProperty().set(EntityType.PLACE);
 		EditorColumn column;

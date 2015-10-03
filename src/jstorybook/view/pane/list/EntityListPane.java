@@ -29,12 +29,12 @@ import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
+import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.EntityTableView;
 import jstorybook.view.pane.MyPane;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.messenger.Messenger;
-import jstorybook.model.column.EditorColumnList;
 
 /**
  * エンティティのリストを表示するパネル
@@ -139,8 +139,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 		MenuItem upMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Up");
 		upMenu.setText(ResourceManager.getMessage("msg.order.up"));
+		upMenu.setGraphic(ResourceManager.getMiniIconNode("up.png"));
 		MenuItem downMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Down");
 		downMenu.setText(ResourceManager.getMessage("msg.order.down"));
+		downMenu.setGraphic(ResourceManager.getMiniIconNode("down.png"));
 		MenuItem resetOrder = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "OrderReset");
 		resetOrder.setText(ResourceManager.getMessage("msg.entity.order.reset"));
 
@@ -154,10 +156,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 	// ならべ替えのボタン
 	protected void setOrderButton () {
 		Button upButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Up");
-		upButton.setText(ResourceManager.getMessage("msg.order.up"));
+		upButton.setGraphic(ResourceManager.getIconNode("up.png"));
 		upButton.setPrefSize(50.0, 45.0);
 		Button downButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Down");
-		downButton.setText(ResourceManager.getMessage("msg.order.down"));
+		downButton.setGraphic(ResourceManager.getIconNode("down.png"));
 		downButton.setPrefSize(50.0, 45.0);
 		this.commandButtonBar.getChildren().addAll(upButton, downButton);
 	}

@@ -22,6 +22,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
+import jstorybook.model.column.EditorColumn;
+import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Sex;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
@@ -55,8 +57,6 @@ import jstorybook.viewtool.messenger.pane.relation.SceneRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.TagRelationShowMessage;
-import jstorybook.model.column.EditorColumn;
-import jstorybook.model.column.EditorColumnList;
 
 /**
  * エンティティ編集に利用するモデル
@@ -214,6 +214,46 @@ public class EntityEditModel implements IUseMessenger {
 								this.columnList.get().idProperty().get())));
 					}
 				}
+				else if (relation == EntityRelation.PERSON_KEYWORD) {
+					if (list.getEntityType() == EntityType.PERSON) {
+						this.messenger.send(new KeywordRelationShowMessage(storyModel.getPersonKeywordRelation_Keyword(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.KEYWORD) {
+						this.messenger.send(new PersonRelationShowMessage(storyModel.getPersonKeywordRelation_Person(
+								this.columnList.get().idProperty().get())));
+					}
+				}
+				else if (relation == EntityRelation.GROUP_KEYWORD) {
+					if (list.getEntityType() == EntityType.GROUP) {
+						this.messenger.send(new KeywordRelationShowMessage(storyModel.getGroupKeywordRelation_Keyword(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.KEYWORD) {
+						this.messenger.send(new GroupRelationShowMessage(storyModel.getGroupKeywordRelation_Group(
+								this.columnList.get().idProperty().get())));
+					}
+				}
+				else if (relation == EntityRelation.PLACE_KEYWORD) {
+					if (list.getEntityType() == EntityType.PLACE) {
+						this.messenger.send(new KeywordRelationShowMessage(storyModel.getPlaceKeywordRelation_Keyword(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.KEYWORD) {
+						this.messenger.send(new PlaceRelationShowMessage(storyModel.getPlaceKeywordRelation_Place(
+								this.columnList.get().idProperty().get())));
+					}
+				}
+				else if (relation == EntityRelation.SCENE_KEYWORD) {
+					if (list.getEntityType() == EntityType.SCENE) {
+						this.messenger.send(new KeywordRelationShowMessage(storyModel.getSceneKeywordRelation_Keyword(
+								this.columnList.get().idProperty().get())));
+					}
+					else if (list.getEntityType() == EntityType.KEYWORD) {
+						this.messenger.send(new SceneRelationShowMessage(storyModel.getSceneKeywordRelation_Scene(
+								this.columnList.get().idProperty().get())));
+					}
+				}
 				else if (relation == EntityRelation.PERSON_TAG) {
 					if (list.getEntityType() == EntityType.PERSON) {
 						this.messenger.send(new TagRelationShowMessage(storyModel.getPersonTagRelation_Tag(
@@ -347,6 +387,11 @@ public class EntityEditModel implements IUseMessenger {
 						setScenePersonRelation_Person(this.columnList.get().idProperty().get(), personRelationListMessage.
 													  getRelationList());
 			}
+			else if (entityType == EntityType.KEYWORD) {
+				storyModel.
+						setPersonKeywordRelation_Person(this.columnList.get().idProperty().get(), personRelationListMessage.
+														getRelationList());
+			}
 			else if (entityType == EntityType.TAG) {
 				storyModel.
 						setPersonTagRelation_Person(this.columnList.get().idProperty().get(), personRelationListMessage.
@@ -359,6 +404,11 @@ public class EntityEditModel implements IUseMessenger {
 						setGroupPersonRelation_Group(this.columnList.get().idProperty().get(), groupRelationListMessage.
 													 getRelationList());
 			}
+			else if (entityType == EntityType.KEYWORD) {
+				storyModel.
+						setGroupKeywordRelation_Group(this.columnList.get().idProperty().get(), groupRelationListMessage.
+													  getRelationList());
+			}
 			else if (entityType == EntityType.TAG) {
 				storyModel.
 						setGroupTagRelation_Group(this.columnList.get().idProperty().get(), groupRelationListMessage.
@@ -370,6 +420,11 @@ public class EntityEditModel implements IUseMessenger {
 				storyModel.
 						setScenePlaceRelation_Place(this.columnList.get().idProperty().get(), placeRelationListMessage.
 													getRelationList());
+			}
+			else if (entityType == EntityType.KEYWORD) {
+				storyModel.
+						setPlaceKeywordRelation_Place(this.columnList.get().idProperty().get(), placeRelationListMessage.
+													  getRelationList());
 			}
 			else if (entityType == EntityType.TAG) {
 				storyModel.
@@ -393,6 +448,11 @@ public class EntityEditModel implements IUseMessenger {
 						setScenePlaceRelation_Scene(this.columnList.get().idProperty().get(), sceneRelationListMessage.
 													getRelationList());
 			}
+			else if (entityType == EntityType.KEYWORD) {
+				storyModel.
+						setSceneKeywordRelation_Scene(this.columnList.get().idProperty().get(), sceneRelationListMessage.
+													  getRelationList());
+			}
 			else if (entityType == EntityType.TAG) {
 				storyModel.
 						setSceneTagRelation_Scene(this.columnList.get().idProperty().get(), sceneRelationListMessage.
@@ -412,7 +472,27 @@ public class EntityEditModel implements IUseMessenger {
 			}
 		}
 		if (keywordRelationListMessage.getRelationList() != null) {
-			if (entityType == EntityType.TAG) {
+			if (entityType == EntityType.PERSON) {
+				storyModel.
+						setPersonKeywordRelation_Keyword(this.columnList.get().idProperty().get(), keywordRelationListMessage.
+													  getRelationList());
+			}
+			else if (entityType == EntityType.GROUP) {
+				storyModel.
+						setGroupKeywordRelation_Keyword(this.columnList.get().idProperty().get(), keywordRelationListMessage.
+														getRelationList());
+			}
+			else if (entityType == EntityType.PLACE) {
+				storyModel.
+						setPlaceKeywordRelation_Keyword(this.columnList.get().idProperty().get(), keywordRelationListMessage.
+														getRelationList());
+			}
+			else if (entityType == EntityType.SCENE) {
+				storyModel.
+						setSceneKeywordRelation_Keyword(this.columnList.get().idProperty().get(), keywordRelationListMessage.
+														getRelationList());
+			}
+			else if (entityType == EntityType.TAG) {
 				storyModel.
 						setKeywordTagRelation_Keyword(this.columnList.get().idProperty().get(), keywordRelationListMessage.
 													  getRelationList());
@@ -506,6 +586,46 @@ public class EntityEditModel implements IUseMessenger {
 				}
 				else if (this.columnList.get().getEntityType() == EntityType.PLACE) {
 					this.messenger.send(new SceneRelationRenewMessage(storyModel.getScenePlaceRelation_Scene(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.PERSON_KEYWORD)) {
+				if (this.columnList.get().getEntityType() == EntityType.PERSON) {
+					this.messenger.send(new KeywordRelationRenewMessage(storyModel.getPersonKeywordRelation_Keyword(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.KEYWORD) {
+					this.messenger.send(new PersonRelationRenewMessage(storyModel.getPersonKeywordRelation_Person(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.GROUP_KEYWORD)) {
+				if (this.columnList.get().getEntityType() == EntityType.GROUP) {
+					this.messenger.send(new KeywordRelationRenewMessage(storyModel.getGroupKeywordRelation_Keyword(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.KEYWORD) {
+					this.messenger.send(new GroupRelationRenewMessage(storyModel.getGroupKeywordRelation_Group(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.PLACE_KEYWORD)) {
+				if (this.columnList.get().getEntityType() == EntityType.PLACE) {
+					this.messenger.send(new PlaceRelationRenewMessage(storyModel.getPlaceKeywordRelation_Keyword(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.KEYWORD) {
+					this.messenger.send(new KeywordRelationRenewMessage(storyModel.getPlaceKeywordRelation_Place(
+							this.columnList.get().idProperty().get())));
+				}
+			}
+			if (this.columnList.get().isRelation(EntityRelation.SCENE_KEYWORD)) {
+				if (this.columnList.get().getEntityType() == EntityType.SCENE) {
+					this.messenger.send(new KeywordRelationRenewMessage(storyModel.getSceneKeywordRelation_Keyword(
+							this.columnList.get().idProperty().get())));
+				}
+				else if (this.columnList.get().getEntityType() == EntityType.KEYWORD) {
+					this.messenger.send(new SceneRelationRenewMessage(storyModel.getSceneKeywordRelation_Scene(
 							this.columnList.get().idProperty().get())));
 				}
 			}
