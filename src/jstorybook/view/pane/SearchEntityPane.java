@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.FontManager;
@@ -31,6 +32,7 @@ import jstorybook.common.util.GUIUtil;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.EntityTableView;
+import jstorybook.view.control.SelectableEntityTableView;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.SearchEntityViewModel;
 import jstorybook.viewtool.messenger.Messenger;
@@ -40,13 +42,14 @@ import jstorybook.viewtool.messenger.Messenger;
  *
  * @author KMY
  */
-public class SearchEntityPane extends MyPane {
+public class SearchEntityPane extends MyPane implements IReloadable {
 
 	private final Messenger mainMessenger;
 	private final ViewModelList viewModelList = new ViewModelList(new SearchEntityViewModel());
 
 	// 検索条件
-	private final ObjectProperty<List<EntityType>> entityTypeList = new SimpleObjectProperty<>(new ArrayList<>());
+	private final ObjectProperty<List<EntityType>> entityTypeList = new SimpleObjectProperty<>(new ArrayList<EntityType>());
+	private final ObjectProperty<List<Long>> tagList = new SimpleObjectProperty<>(new ArrayList<Long>());
 
 	public SearchEntityPane (Messenger messenger) {
 		super(ResourceManager.getMessage("msg.search.entity"));
@@ -73,6 +76,7 @@ public class SearchEntityPane extends MyPane {
 		TabPane searchWayTabPane = new TabPane();
 		searchPaneVBox.getChildren().add(searchWayTabPane);
 		VBox.getVgrow(searchWayTabPane);
+		VBox.setVgrow(searchWayTabPane, Priority.ALWAYS);
 
 		// 検索条件：エンティティの種類
 		Tab entityTypeTab = new Tab(ResourceManager.getMessage("msg.entity.type"));
@@ -80,17 +84,36 @@ public class SearchEntityPane extends MyPane {
 		VBox entityTypeVBox = new VBox();
 		entityTypeVBox.setSpacing(6.0);
 		entityTypeVBox.getChildren()
-				.addAll(this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.person"), EntityType.PERSON),											this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.group"), EntityType.GROUP),
+				.addAll(this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.person"), EntityType.PERSON),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.group"), EntityType.GROUP),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.place"), EntityType.PLACE),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.keyword"), EntityType.KEYWORD),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.scene"), EntityType.SCENE),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.chapter"), EntityType.CHAPTER),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.keyword"), EntityType.KEYWORD),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.tag"), EntityType.TAG));
 		entityTypeTab.setContent(entityTypeVBox);
+		entityTypeTab.setClosable(false);
 		searchWayTabPane.getTabs().add(entityTypeTab);
+
+		// 検索条件：タグ
+		Tab tagTab = new Tab(ResourceManager.getMessage("msg.tag"));
+		SelectableEntityTableView tagTableView = new SelectableEntityTableView(this.mainMessenger);
+		tagTableView.setColumnList(this.viewModelList.getProperty("tagColumnList", EditorColumnList.class).getValue());
+		tagTableView.itemsProperty().bind(this.viewModelList.getProperty("tagList"));
+		tagTableView.resetChanged();
+		tagTableView.changedProperty().addListener((obj) -> {
+			if (((BooleanProperty) obj).get()) {
+				SearchEntityPane.this.tagList.set(tagTableView.getSelectedList());
+				tagTableView.resetChanged();
+			}
+		});
+		tagTab.setContent(tagTableView);
+		tagTab.setClosable(false);
+		searchWayTabPane.getTabs().add(tagTab);
 
 		// データをリンク
 		this.viewModelList.getProperty("entityType").bind(this.entityTypeList);
+		this.viewModelList.getProperty("tagIdList").bind(this.tagList);
 
 		// 検索
 		this.viewModelList.executeCommand("search");
@@ -110,6 +133,11 @@ public class SearchEntityPane extends MyPane {
 		});
 		check.setSelected(true);
 		return check;
+	}
+
+	@Override
+	public void reload () {
+		this.viewModelList.executeCommand("search");
 	}
 
 }

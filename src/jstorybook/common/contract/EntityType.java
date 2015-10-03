@@ -23,10 +23,10 @@ public enum EntityType {
 	PERSON("person"),
 	GROUP("group"),
 	PLACE("place"),
+	KEYWORD("keyword"),
 	SCENE("scene"),
 	CHAPTER("chapter"),
 	SEX("sex"),
-	KEYWORD("keyword"),
 	TAG("tag"),;
 
 	private final String iconName;

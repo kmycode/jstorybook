@@ -91,10 +91,11 @@ import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
-import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
-import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
+import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
@@ -102,7 +103,6 @@ import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SexEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.TagEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 
 /**
  * ストーリーファイルのモデル
@@ -587,6 +587,24 @@ public class StoryModel implements IUseMessenger {
 		this.tagTagEntity.dao.get().setRelatedIdList(tagId, list);
 	}
 
+	// -------------------------------------------------------
+	// タグを持っているか
+	public boolean hasTag (Entity entity, long tagId) {
+		List<Long> tagIdList;
+		switch (entity.getEntityType()) {
+		case PERSON:
+			tagIdList = this.getPersonTagRelation_Person(tagId);
+			break;
+		default:
+			tagIdList = null;
+		}
+		if (tagIdList == null) {
+			return false;
+		}
+		else {
+			return tagIdList.indexOf(entity.idProperty().get()) >= 0;
+		}
+	}
 
 	// -------------------------------------------------------
 	// それぞれのエンティティの新規作成、編集、削除など

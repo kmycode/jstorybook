@@ -31,6 +31,9 @@ public class SearchEntityViewModel extends ViewModel {
 		this.applyProperty("searchResult", this.model.searchResultListProperty());
 		this.applyProperty("entityType", this.model.entityTypeListProperty());
 		this.applyProperty("columnList", SearchEntityModel.columnListProperty());
+		this.applyProperty("tagColumnList", SearchEntityModel.tagColumnListProperty());
+		this.applyProperty("tagList", this.model.tagListProperty());
+		this.applyProperty("tagIdList", this.model.tagIdListProperty());
 	}
 
 	@Override

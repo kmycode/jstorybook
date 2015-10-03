@@ -27,6 +27,8 @@ import jstorybook.model.column.EntityColumn;
 import jstorybook.model.column.StringColumn;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Tag;
+import jstorybook.model.entity.columnfactory.TagColumnFactory;
 import jstorybook.model.story.StoryModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.ExceptionMessage;
@@ -42,6 +44,11 @@ public class SearchEntityModel implements IUseMessenger {
 
 	private Messenger messenger;
 	private StoryModel storyModel;
+
+	// タグ選択
+	private static final ObjectProperty<EditorColumnList> tagColumnList = new SimpleObjectProperty<>(TagColumnFactory.getInstance().
+			createColumnList());
+	private final ObjectProperty<ObservableList<Tag>> tagList = new SimpleObjectProperty<>();
 
 	// 検索結果のテーブルセル
 	private static final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>(new EditorColumnList());
@@ -62,6 +69,7 @@ public class SearchEntityModel implements IUseMessenger {
 
 	// 検索条件
 	private final ObjectProperty<List<EntityType>> entityTypeList = new SimpleObjectProperty<>(new ArrayList());
+	private final ObjectProperty<List<Long>> tagIdList = new SimpleObjectProperty<>(new ArrayList());
 
 	// 検索結果
 	private final ObjectProperty<ObservableList<Entity>> searchResultList = new SimpleObjectProperty<>(FXCollections.
@@ -69,6 +77,7 @@ public class SearchEntityModel implements IUseMessenger {
 
 	public SearchEntityModel () {
 		this.entityTypeList.addListener((obj) -> this.search());
+		this.tagIdList.addListener((obj) -> this.search());
 	}
 
 	public void search () {
@@ -111,7 +120,24 @@ public class SearchEntityModel implements IUseMessenger {
 				if (dao != null) {
 					List<Entity> entityList = (List<Entity>) dao.modelListProperty().get();
 					for (Entity entity : entityList) {
-						result.add(entity);
+						boolean hit = false;
+
+						// タグ検索
+						if (this.tagIdList.get().isEmpty()) {
+							hit = true;
+						}
+						else {
+							for (Long tagId : this.tagIdList.get()) {
+								if (this.storyModel.hasTag(entity, tagId)) {
+									hit = true;
+									break;
+								}
+							}
+						}
+
+						if (hit) {
+							result.add(entity);
+						}
 					}
 				}
 			}
@@ -130,6 +156,18 @@ public class SearchEntityModel implements IUseMessenger {
 		return SearchEntityModel.columnList;
 	}
 
+	public static ObjectProperty<EditorColumnList> tagColumnListProperty () {
+		return SearchEntityModel.tagColumnList;
+	}
+
+	public ObjectProperty<ObservableList<Tag>> tagListProperty () {
+		return this.tagList;
+	}
+
+	public ObjectProperty<List<Long>> tagIdListProperty () {
+		return this.tagIdList;
+	}
+
 	@Override
 	public void setMessenger (Messenger messenger) {
 		this.messenger = messenger;
@@ -138,6 +176,7 @@ public class SearchEntityModel implements IUseMessenger {
 			CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
 			this.messenger.send(mes);
 			this.storyModel = mes.storyModelProperty().get();
+			this.tagList.bind(this.storyModel.getTagDAO().modelListProperty());
 		}
 	}
 
