@@ -18,11 +18,13 @@ import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.contract.EntityType;
@@ -72,26 +74,29 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 		Label paneTitle = new Label(ResourceManager.getMessage("msg.search.entity"));
 		paneTitle.fontProperty().bind(FontManager.getInstance().titleFontProperty());
 		searchPaneVBox.getChildren().add(paneTitle);
+		VBox.setMargin(paneTitle, new Insets(5.0, 10.0, 5.0, 10.0));
 
 		TabPane searchWayTabPane = new TabPane();
 		searchPaneVBox.getChildren().add(searchWayTabPane);
-		VBox.getVgrow(searchWayTabPane);
 		VBox.setVgrow(searchWayTabPane, Priority.ALWAYS);
 
 		// 検索条件：エンティティの種類
 		Tab entityTypeTab = new Tab(ResourceManager.getMessage("msg.entity.type"));
 		GUIUtil.bindFontStyle(entityTypeTab);
+		AnchorPane entityTypeListPane = new AnchorPane();
 		VBox entityTypeVBox = new VBox();
-		entityTypeVBox.setSpacing(6.0);
+		entityTypeVBox.setSpacing(9.0);
 		entityTypeVBox.getChildren()
-				.addAll(this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.person"), EntityType.PERSON),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.group"), EntityType.GROUP),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.place"), EntityType.PLACE),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.keyword"), EntityType.KEYWORD),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.scene"), EntityType.SCENE),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.chapter"), EntityType.CHAPTER),
-						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.tag"), EntityType.TAG));
-		entityTypeTab.setContent(entityTypeVBox);
+				.addAll(this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.person"), "person", EntityType.PERSON),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.group"), "group", EntityType.GROUP),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.place"), "place", EntityType.PLACE),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.keyword"), "keyword", EntityType.KEYWORD),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.scene"), "scene", EntityType.SCENE),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.chapter"), "chapter", EntityType.CHAPTER),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.tag"), "tag", EntityType.TAG));
+		entityTypeListPane.getChildren().add(entityTypeVBox);
+		GUIUtil.setAnchor(entityTypeVBox, 10.0);
+		entityTypeTab.setContent(entityTypeListPane);
 		entityTypeTab.setClosable(false);
 		searchWayTabPane.getTabs().add(entityTypeTab);
 
@@ -119,7 +124,7 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 		this.viewModelList.executeCommand("search");
 	}
 
-	private CheckBox createEntityTypeCheckBox (String name, EntityType entityType) {
+	private CheckBox createEntityTypeCheckBox (String name, String iconName, EntityType entityType) {
 		CheckBox check = new CheckBox(name);
 		check.fontProperty().bind(FontManager.getInstance().fontProperty());
 		check.selectedProperty().addListener((obj) -> {
@@ -131,6 +136,7 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 			this.entityTypeList.get().sort(null);
 			SearchEntityPane.this.viewModelList.executeCommand("search");
 		});
+		check.setGraphic(ResourceManager.getMiniIconNode(iconName + ".png"));
 		check.setSelected(true);
 		return check;
 	}

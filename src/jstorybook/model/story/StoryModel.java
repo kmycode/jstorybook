@@ -595,6 +595,24 @@ public class StoryModel implements IUseMessenger {
 		case PERSON:
 			tagIdList = this.getPersonTagRelation_Person(tagId);
 			break;
+		case GROUP:
+			tagIdList = this.getGroupTagRelation_Group(tagId);
+			break;
+		case PLACE:
+			tagIdList = this.getPlaceTagRelation_Place(tagId);
+			break;
+		case SCENE:
+			tagIdList = this.getSceneTagRelation_Scene(tagId);
+			break;
+		case CHAPTER:
+			tagIdList = this.getChapterTagRelation_Chapter(tagId);
+			break;
+		case KEYWORD:
+			tagIdList = this.getKeywordTagRelation_Keyword(tagId);
+			break;
+		case TAG:
+			tagIdList = this.getTagTagRelation(tagId);
+			break;
 		default:
 			tagIdList = null;
 		}

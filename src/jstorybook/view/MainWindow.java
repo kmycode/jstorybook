@@ -305,6 +305,7 @@ public class MainWindow extends MyStage {
 		{
 			menu = GUIUtil.createMenuItem(this.viewModelList, "searchEntityPane");
 			menu.setText(ResourceManager.getMessage("msg.search.entity"));
+			menu.setAccelerator(KeyCombination.valueOf("Shortcut+F"));
 			paneMenu.getItems().add(menu);
 		}
 
