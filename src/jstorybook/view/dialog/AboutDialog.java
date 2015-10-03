@@ -54,7 +54,7 @@ public class AboutDialog extends MyStage {
 		Label informationLabel = new Label(SystemKey.SYSTEM_NAME.getValue() + " " + SystemKey.SYSTEM_VERSION.getValue());
 		informationLabel.fontProperty().bind(FontManager.getInstance().boldFontProperty());
 		Label licenceLabel = new Label(
-				"Designed by\n		Martin(2008-2013) : Storybook,\n		favdb(2014-) : oStorybook,\n		KMY(2015-) : jStorybook\n	GPL ver.2 later");
+				"Designed by\n		Martin(2008-2013) : Storybook,\n		favdb(2014-) : oStorybook,\n		KMY+favdb(2015-) : jStorybook\n	GPL ver.2 later");
 		GUIUtil.bindFontStyle(licenceLabel);
 
 		VBox vBox = new VBox(logoImageView, informationLabel, licenceLabel);
