@@ -13,12 +13,9 @@
  */
 package jstorybook.view.control;
 
-import javafx.scene.control.Dialog;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 /**

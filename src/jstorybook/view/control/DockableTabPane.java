@@ -15,10 +15,8 @@ package jstorybook.view.control;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
 import java.awt.Rectangle;
-import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
@@ -61,15 +59,23 @@ public class DockableTabPane extends TabPane {
 		Point2D pos = this.parent.getPosition();
 		double x = pos.getX();
 		double y = pos.getY();
-		for (Node node : this.parent.getItems()) {
+		outside:
+		for (Node node : this.parent.getRootPane().getItems()) {
 			if (node != this) {
-				if (node instanceof Control) {
-					if (this.parent.getOrientation() == Orientation.VERTICAL) {
-						y += ((Control) node).getHeight();
+				y = 0;
+
+				// VerticalなSplitPane
+				if (node instanceof DockableAreaGroupPane) {
+					DockableAreaGroupPane pane = (DockableAreaGroupPane) node;
+					for (DockableTabPane tabPane : pane.getTabPaneList()) {
+						if (tabPane != this) {
+							y += tabPane.getHeight();
+						}
+						else {
+							break outside;
+						}
 					}
-					else {
-						x += ((Control) node).getWidth();
-					}
+					x += pane.getWidth();
 				}
 			}
 			else {
@@ -78,6 +84,7 @@ public class DockableTabPane extends TabPane {
 		}
 		double w = this.getWidth();
 		double h = this.getHeight();
+		//System.out.println("x:" + x + "  y:" + y + "  w:" + w + "  h:" + h);
 		Rectangle rect = new Rectangle();
 		rect.x = (int) x;
 		rect.y = (int) y;
@@ -109,11 +116,14 @@ public class DockableTabPane extends TabPane {
 	}
 
 	public void insertTab (int index, DockableTab tab) {
+		if (index < 0) {
+			index = 0;
+		}
 		this.getTabs().add(index, tab);
 	}
 
 	public void insertTab (DockableTab tab) {
-		this.getTabs().add(this.getSelectionModel().getSelectedIndex(), tab);
+		this.insertTab(this.getSelectionModel().getSelectedIndex(), tab);
 	}
 
 	public boolean moveTabBack () {
@@ -176,7 +186,7 @@ public class DockableTabPane extends TabPane {
 	}
 
 	private void mouseDragged (MouseEvent ev) {
-		if (this.mouseDragging) {
+		if (this.mouseDragging && this.getSelectionModel().getSelectedItem() != null) {
 
 			double currentMouseX = ev.getX();
 			double currentMouseY = ev.getY();
@@ -226,8 +236,10 @@ public class DockableTabPane extends TabPane {
 		// ドッキング方向が指定されていれば、新しいパネルを作る
 		if (direction != DockingDirection.NONE) {
 			DockableTab currentTab = this.cutTab();
-			this.parent.moveTab(direction, currentTab);
-			currentTab.getTabPane().getSelectionModel().select(currentTab);
+			if (currentTab != null) {
+				this.parent.moveTab(direction, currentTab);
+				currentTab.getTabPane().getSelectionModel().select(currentTab);
+			}
 		}
 	}
 

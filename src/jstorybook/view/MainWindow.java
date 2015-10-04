@@ -561,7 +561,7 @@ public class MainWindow extends MyStage {
 
 	// 指定したエンティティリストと同じリストタブを探す
 	private EntityListPane findEntityListPane (EntityType entityType) {
-		for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
+		for (DockableTabPane dtabPane : this.mainPane.get().getTabPaneList()) {
 			for (Tab dtab : dtabPane.getTabs()) {
 				if (dtab instanceof EntityListPane) {
 					if (((EntityListPane) dtab).getEntityType() == entityType) {
