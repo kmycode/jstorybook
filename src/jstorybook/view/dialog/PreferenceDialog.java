@@ -88,9 +88,19 @@ public class PreferenceDialog extends MyStage {
 		isUseSystemMenu.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isUseSystemMenu"));
 		mainGrid.getChildren().addAll(label, isUseSystemMenu);
 
+		// エンティティ検索の画面レイアウト
+		label = new Label("");
+		GUIUtil.bindFontStyle(label);
+		CheckBox isSearchEntityOrientation = new CheckBox(ResourceManager.getMessage("msg.preference.search.entity.orientation"));
+		GUIUtil.bindFontStyle(isSearchEntityOrientation);
+		GridPane.setConstraints(label, 0, 3);
+		GridPane.setConstraints(isSearchEntityOrientation, 1, 3);
+		isSearchEntityOrientation.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isSearchEntityOrientation"));
+		mainGrid.getChildren().addAll(label, isSearchEntityOrientation);
+
 		label = new Label(ResourceManager.getMessage("msg.preference.alert.beta"));
 		GUIUtil.bindFontStyle(label);
-		mainGrid.add(label, 0, 3, 2, 1);
+		mainGrid.add(label, 0, 4, 2, 1);
 
 		HBox commandBox = new HBox();
 		AnchorPane commandBoxSpacer = new AnchorPane();
@@ -106,7 +116,7 @@ public class PreferenceDialog extends MyStage {
 		cancelButton.setCancelButton(true);
 		cancelButton.setMinWidth(100);
 		commandBox.getChildren().addAll(commandBoxSpacer, okButton, cancelButton);
-		mainGrid.add(commandBox, 0, 4, 2, 1);
+		mainGrid.add(commandBox, 0, 5, 2, 1);
 
 		root.getChildren().addAll(mainGrid);
 

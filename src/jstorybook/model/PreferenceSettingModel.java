@@ -17,6 +17,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Orientation;
 import jstorybook.common.contract.PreferenceKey;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
@@ -34,12 +35,16 @@ public class PreferenceSettingModel implements IUseMessenger {
 	private final StringProperty fontFamily = new SimpleStringProperty(PreferenceKey.FONT_FAMILY.getString());
 	private final StringProperty fontSize = new SimpleStringProperty(PreferenceKey.FONT_SIZE.getDouble().toString());
 	private final BooleanProperty isUseSystemMenu = new SimpleBooleanProperty(PreferenceKey.MENUBAR_USESYSTEM.getBoolean());
+	private final BooleanProperty isSearchEntityOrientation = new SimpleBooleanProperty(PreferenceKey.SEARCH_ENTITY_ORIENTATION.
+			getValue() == Orientation.VERTICAL);
 
 	public void save () {
 		try {
 			PreferenceKey.FONT_FAMILY.setValue(this.fontFamily.get());
 			PreferenceKey.FONT_SIZE.setValue(Double.parseDouble(this.fontSize.get()));
 			PreferenceKey.MENUBAR_USESYSTEM.setValue(this.isUseSystemMenu.get());
+			PreferenceKey.SEARCH_ENTITY_ORIENTATION.setValue(this.isSearchEntityOrientation.get() ? Orientation.VERTICAL
+															 : Orientation.HORIZONTAL);
 		} catch (NumberFormatException e) {
 		}
 		this.messenger.send(new CloseMessage());
@@ -59,6 +64,10 @@ public class PreferenceSettingModel implements IUseMessenger {
 
 	public BooleanProperty isUseSystemMenuProperty () {
 		return this.isUseSystemMenu;
+	}
+
+	public BooleanProperty isSearchEntityOrientationProperty () {
+		return this.isSearchEntityOrientation;
 	}
 
 	@Override

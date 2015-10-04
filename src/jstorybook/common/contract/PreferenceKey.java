@@ -16,6 +16,7 @@ package jstorybook.common.contract;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Orientation;
 
 /**
  * 設定のキー
@@ -28,7 +29,8 @@ public enum PreferenceKey {
 	WINDOW_HEIGHT(768),
 	FONT_FAMILY("Meiryo UI"),
 	FONT_SIZE(14.0),
-	MENUBAR_USESYSTEM(false);
+	MENUBAR_USESYSTEM(false),
+	SEARCH_ENTITY_ORIENTATION(Orientation.HORIZONTAL);
 
 	private final Object defaultValue;
 	private ObjectProperty value = new SimpleObjectProperty();

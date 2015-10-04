@@ -19,15 +19,17 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import jstorybook.common.contract.EntityType;
+import jstorybook.common.contract.PreferenceKey;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
@@ -61,6 +63,7 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 		// 画面を作成
 		SplitPane rootPane = new SplitPane();
 		this.setContent(rootPane);
+		rootPane.orientationProperty().bind(PreferenceKey.SEARCH_ENTITY_ORIENTATION.getProperty());
 
 		EntityTableView<Entity> tableView = new EntityTableView(this.mainMessenger);
 		GUIUtil.bindFontStyle(tableView);
@@ -84,8 +87,7 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 		Tab entityTypeTab = new Tab(ResourceManager.getMessage("msg.entity.type"));
 		GUIUtil.bindFontStyle(entityTypeTab);
 		AnchorPane entityTypeListPane = new AnchorPane();
-		VBox entityTypeVBox = new VBox();
-		entityTypeVBox.setSpacing(9.0);
+		FlowPane entityTypeVBox = new FlowPane();
 		entityTypeVBox.getChildren()
 				.addAll(this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.person"), "person", EntityType.PERSON),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.group"), "group", EntityType.GROUP),
@@ -124,8 +126,8 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 		this.viewModelList.executeCommand("search");
 	}
 
-	private CheckBox createEntityTypeCheckBox (String name, String iconName, EntityType entityType) {
-		CheckBox check = new CheckBox(name);
+	private ToggleButton createEntityTypeCheckBox (String name, String iconName, EntityType entityType) {
+		ToggleButton check = new ToggleButton(name);
 		check.fontProperty().bind(FontManager.getInstance().fontProperty());
 		check.selectedProperty().addListener((obj) -> {
 			boolean selected = ((BooleanProperty) obj).get();
