@@ -529,7 +529,7 @@ public class MainWindow extends MyStage {
 
 	// タブを全部消す
 	private void clearTab () {
-		for (Node node : this.rootGroupPane.get().getItems()) {
+		for (Node node : this.mainPane.get().getTabPaneList()) {
 			if (node instanceof DockableTabPane) {
 				((DockableTabPane) node).removeTabPane();
 			}
@@ -538,7 +538,7 @@ public class MainWindow extends MyStage {
 
 	// タブを全部リロード
 	private void reloadTab () {
-		for (DockableTabPane dtabPane : this.rootGroupPane.get().getTabPaneList()) {
+		for (DockableTabPane dtabPane : this.mainPane.get().getTabPaneList()) {
 			for (Tab dtab : dtabPane.getTabs()) {
 				if (dtab instanceof IReloadable) {
 					((IReloadable) dtab).reload();
