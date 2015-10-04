@@ -1,12 +1,10 @@
 #jStorybook
 
-##jStorybookとはなにか？
+##jStorybookとは
+Language: Japanese, English and French<br>
 jStorybookとは、もともとはStorybookを日本語化することを主な目的とし、oStorybook ver 4.10.0をフォークして新たに作ったプロジェクトでした。<br>
 今は、jStorybook 6として、一から作り直しています。<br>
-![スクリーンショット](https://raw.githubusercontent.com/kmycode/jstorybook/develop/image/windows.png)
-
-##for English
-You can use jStorybook in English. When you run jStorybook in English OS, it will become English. Try it!
+![スクリーンショット](https://raw.githubusercontent.com/kmycode/jstorybook/develop/image/image.png)
 
 ##もっと詳しく
 * [概要](https://github.com/kmycode/jstorybook/wiki/About_New)
