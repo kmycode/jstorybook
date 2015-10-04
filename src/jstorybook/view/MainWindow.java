@@ -490,13 +490,11 @@ public class MainWindow extends MyStage {
 	private void resetTab () {
 		this.clearTab();
 		this.addPersonListTab();
-		/*
-		 		this.addGroupListTab();
+		this.addGroupListTab();
 		this.addPlaceListTab();
 		this.addSceneListTab();
 		this.addChapterListTab();
 		this.addPersonListTab();
-		 */
 	}
 
 	// タブを追加
@@ -530,11 +528,7 @@ public class MainWindow extends MyStage {
 
 	// タブを全部消す
 	private void clearTab () {
-		for (Node node : this.mainPane.get().getTabPaneList()) {
-			if (node instanceof DockableTabPane) {
-				((DockableTabPane) node).removeTabPane();
-			}
-		}
+		this.mainPane.get().clearTab();
 	}
 
 	// タブを全部リロード

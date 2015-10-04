@@ -112,6 +112,10 @@ public class DockablePane extends AnchorPane {
 		this.activeTabPane = tabPane;
 	}
 
+	void setRootGroup (DockableAreaGroupPane pane) {
+		this.rootGroup.set(pane);
+	}
+
 	public List<DockableTabPane> getTabPaneList () {
 		List<DockableTabPane> result = new ArrayList<>();
 		for (DockablePane pane : this.mainPane.childPane) {
@@ -138,6 +142,15 @@ public class DockablePane extends AnchorPane {
 			}
 		}
 		return result;
+	}
+
+	public void clearTab () {
+		for (Node node : this.getTabPaneList()) {
+			if (node instanceof DockableTabPane) {
+				((DockableTabPane) node).removeTabPane();
+			}
+		}
+		this.activeTabPane = null;
 	}
 
 	public boolean isEmpty () {
