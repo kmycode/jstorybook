@@ -14,6 +14,7 @@
 package jstorybook.view.control;
 
 import java.awt.Rectangle;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -55,6 +56,7 @@ public class DockableAreaGroupPane extends SplitPane {
 	private DockableAreaGroupPane parent = null;
 	private DockableAreaGroupPane rootPane = null;		// 取得時は必ずgetRootPaneを使用
 	private DockablePane rootParent;
+	private WeakReference<DockableAreaGroupPane> parentPane = new WeakReference<>(null);
 	private DockableAreaGroupPane childPane = null;
 	private static DockableTabPane lockTabPane = null;
 	private static DockingBorder dockingBorder;
@@ -92,6 +94,7 @@ public class DockableAreaGroupPane extends SplitPane {
 	private void setChildPane () {
 		if (this.getOrientation() == Orientation.HORIZONTAL) {
 			this.childPane = new DockableAreaGroupPane(this, Orientation.VERTICAL);
+			this.childPane.parentPane = new WeakReference<>(this);
 			this.getItems().add(this.childPane);
 		}
 	}
@@ -105,18 +108,8 @@ public class DockableAreaGroupPane extends SplitPane {
 	}
 
 	DockableAreaGroupPane getParentArea () {
-		return this.childPane != null ? this : this.parent;
+		return this.childPane != null ? this : this.parentPane.get();
 	}
-
-	/*
-	 * public ObservableList<Node> getTabPaneItems () {
-	 * return this.childPane == null ? super.getTabPaneItems() : this.childPane.getTabPaneItems();
-	 *	}
-
-	public ObservableList<Node> getParentItems () {
-		return this.childPane != null ? super.getTabPaneItems() : this.parent.getTabPaneItems();
-	 *	}
-	 */
 
 	// コンストラクタ内でのthisリークを防ぐ
 	// rootPaneを利用するときは、必ずこのメソッドを経由すること
@@ -189,15 +182,27 @@ public class DockableAreaGroupPane extends SplitPane {
 				else if (direction == DockingDirection.TOP) {
 					this.add(0, tabPane);
 				}
-			}
-			else if (this.getOrientation() == Orientation.HORIZONTAL) {
-				DockableAreaGroupPane groupPane = new DockableAreaGroupPane(this, Orientation.VERTICAL);
-				groupPane.add(tabPane);
-				if (direction == DockingDirection.RIGHT) {
-					this.getParentArea().getItems().add(groupPane);
+				else if (direction == DockingDirection.RIGHT) {
+					DockableAreaGroupPane groupPane = new DockableAreaGroupPane(this, Orientation.VERTICAL);
+					groupPane.add(tabPane);
+					this.rootParent.rootGroupProperty().get().getItems().add(groupPane);
 				}
 				else if (direction == DockingDirection.LEFT) {
-					this.getParentArea().getItems().add(0, groupPane);
+					DockableAreaGroupPane groupPane = new DockableAreaGroupPane(this, Orientation.VERTICAL);
+					groupPane.add(tabPane);
+					this.rootParent.rootGroupProperty().get().getItems().add(0, groupPane);
+				}
+			}
+			else if (this.getOrientation() == Orientation.HORIZONTAL) {
+				if (direction == DockingDirection.RIGHT) {
+					DockableAreaGroupPane groupPane = new DockableAreaGroupPane(this, Orientation.VERTICAL);
+					groupPane.add(tabPane);
+					this.rootParent.rootGroupProperty().get().getItems().add(groupPane);
+				}
+				else if (direction == DockingDirection.LEFT) {
+					DockableAreaGroupPane groupPane = new DockableAreaGroupPane(this, Orientation.VERTICAL);
+					groupPane.add(tabPane);
+					this.rootParent.rootGroupProperty().get().getItems().add(0, groupPane);
 				}
 			}
 		}
@@ -333,7 +338,9 @@ public class DockableAreaGroupPane extends SplitPane {
 			this.rootParent.setActiveTabPane(canUseTabPane);
 		}
 
-		this.getParentArea().getItems().removeAll(removeNodeList);
+		if (this.getParentArea() != null) {
+			this.getParentArea().getItems().removeAll(removeNodeList);
+		}
 		this.getChildArea().getItems().removeAll(removeNodeList);
 	}
 
@@ -362,61 +369,65 @@ public class DockableAreaGroupPane extends SplitPane {
 		// 結果は決まったか？
 		boolean hit = false;
 
-		// Right
-		if (paneX + paneW - 60 < mouseX && paneX + paneW + 60 > mouseX) {
-			DockableAreaGroupPane.dockingBorder.setPosition(paneX + paneW - 50, paneY + 30 + tabPaneY);
-			DockableAreaGroupPane.dockingBorder.setSize(50, paneH);
-			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
-			DockableAreaGroupPane.dockingDirection = DockingDirection.RIGHT;
-			hit = true;
-		}
-		// Left
-		else if (paneX + 60 > mouseX && paneX - 60 < mouseX) {
-			DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30 + tabPaneY);
-			DockableAreaGroupPane.dockingBorder.setSize(50, paneH);
-			DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
-			DockableAreaGroupPane.dockingDirection = DockingDirection.LEFT;
-			hit = true;
-		}
-		// Over or Floating
-		else {
+		// シフトキーを押していれば、強制的にFloatingになる
+		if (!ev.isShiftDown()) {
 
-			List<DockableTabPane> tabPaneList = this.rootParent.rootGroupProperty().get().getTabPaneList();
-			for (DockableTabPane tabPane : tabPaneList) {
-				Rectangle rect = tabPane.getLocalRectangle();
-				if (localMouseX > rect.x && localMouseX < rect.x + rect.width && localMouseY > rect.y && localMouseY
-						< rect.y + rect.height) {
+			// Right
+			if (paneX + paneW - 60 < mouseX && paneX + paneW + 60 > mouseX) {
+				DockableAreaGroupPane.dockingBorder.setPosition(paneX + paneW - 50, paneY + 30 + tabPaneY);
+				DockableAreaGroupPane.dockingBorder.setSize(50, paneH);
+				DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
+				DockableAreaGroupPane.dockingDirection = DockingDirection.RIGHT;
+				hit = true;
+			}
+			// Left
+			else if (paneX + 60 > mouseX && paneX - 60 < mouseX) {
+				DockableAreaGroupPane.dockingBorder.setPosition(paneX + 10, paneY + 30 + tabPaneY);
+				DockableAreaGroupPane.dockingBorder.setSize(50, paneH);
+				DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
+				DockableAreaGroupPane.dockingDirection = DockingDirection.LEFT;
+				hit = true;
+			}
+			// Over
+			else {
 
-					// Bottom
-					if (paneY + paneH - 60 < mouseY) {
-						DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.height + rect.y + windowY - 30
-																		+ tabPaneY);
-						DockableAreaGroupPane.dockingBorder.setSize(rect.width, 50);
-						DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
-						DockableAreaGroupPane.dockingDirection = DockingDirection.OVER_BOTTOM;
+				List<DockableTabPane> tabPaneList = this.rootParent.rootGroupProperty().get().getTabPaneList();
+				for (DockableTabPane tabPane : tabPaneList) {
+					Rectangle rect = tabPane.getLocalRectangle();
+					if (localMouseX > rect.x && localMouseX < rect.x + rect.width && localMouseY > rect.y && localMouseY
+							< rect.y + rect.height) {
+
+						// Bottom
+						if (paneY + paneH - 60 < mouseY) {
+							DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.height + rect.y + windowY - 30
+																			+ tabPaneY);
+							DockableAreaGroupPane.dockingBorder.setSize(rect.width, 50);
+							DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
+							DockableAreaGroupPane.dockingDirection = DockingDirection.OVER_BOTTOM;
+						}
+						// Top
+						else if (paneY + 100 > mouseY) {
+							DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.y + windowY + 30 + tabPaneY);
+							DockableAreaGroupPane.dockingBorder.setSize(rect.width, 50);
+							DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
+							DockableAreaGroupPane.dockingDirection = DockingDirection.OVER_TOP;
+						}
+
+						// Over
+						else {
+							DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.y + windowY + 30
+																			+ tabPaneY);
+							DockableAreaGroupPane.dockingBorder.setSize(rect.width, rect.height);
+							DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
+							DockableAreaGroupPane.dockingDirection = DockingDirection.OVER;
+						}
+
+						DockableAreaGroupPane.overTabPane = tabPane;
+						DockableAreaGroupPane.lockTabPane = tabPane;
+						hit = true;
+
+						break;
 					}
-					// Top
-					else if (paneY + 100 > mouseY) {
-						DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.y + windowY + 30 + tabPaneY);
-						DockableAreaGroupPane.dockingBorder.setSize(rect.width, 50);
-						DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
-						DockableAreaGroupPane.dockingDirection = DockingDirection.OVER_TOP;
-					}
-
-					// Over
-					else {
-						DockableAreaGroupPane.dockingBorder.setPosition(rect.x + windowX + 10, rect.y + windowY + 30
-																		+ tabPaneY);
-						DockableAreaGroupPane.dockingBorder.setSize(rect.width, rect.height);
-						DockableAreaGroupPane.dockingBorder.show(this.getRootPane().rootParent.getWindow());
-						DockableAreaGroupPane.dockingDirection = DockingDirection.OVER;
-					}
-
-					DockableAreaGroupPane.overTabPane = tabPane;
-					DockableAreaGroupPane.lockTabPane = tabPane;
-					hit = true;
-
-					break;
 				}
 			}
 		}
