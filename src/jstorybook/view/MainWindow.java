@@ -122,7 +122,6 @@ public class MainWindow extends MyStage {
 	private final ViewModelList viewModelList = new ViewModelList(new StoryViewModel(), new ApplicationViewModel());
 	private final ObjectProperty<DockablePane> mainPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<DockableAreaGroupPane> rootGroupPane = new SimpleObjectProperty<>();
-	private final ObjectProperty<DockableTabPane> activeTabPane = new SimpleObjectProperty<>();
 	private final ObjectProperty<MenuBar> mainMenuBar = new SimpleObjectProperty<>();
 	private final ObjectProperty<ToolBar> mainToolBar = new SimpleObjectProperty<>();
 
@@ -491,11 +490,13 @@ public class MainWindow extends MyStage {
 	private void resetTab () {
 		this.clearTab();
 		this.addPersonListTab();
-		this.addGroupListTab();
+		/*
+		 		this.addGroupListTab();
 		this.addPlaceListTab();
 		this.addSceneListTab();
 		this.addChapterListTab();
 		this.addPersonListTab();
+		 */
 	}
 
 	// タブを追加
@@ -506,25 +507,25 @@ public class MainWindow extends MyStage {
 
 		// アクティブなTabPaneを探す、なければてきとーなTabPaneをアクティブにする
 		// そもそもTabPaneが全く無ければ、新しく作ってしまう
-		if (this.activeTabPane.get() == null) {
+		if (this.mainPane.get().getActiveTabPane() == null) {
 			// 何かTabPaneがないか探す
 			for (Node node : this.rootGroupPane.get().getItems()) {
 				if (node instanceof DockableTabPane) {
-					this.activeTabPane.set((DockableTabPane) node);
+					this.mainPane.get().setActiveTabPane((DockableTabPane) node);
 					break;
 				}
 			}
 		}
-		if (this.activeTabPane.get() == null) {
-			this.activeTabPane.set(this.rootGroupPane.get().add(0));
+		if (this.mainPane.get().getActiveTabPane() == null) {
+			this.mainPane.get().setActiveTabPane(this.rootGroupPane.get().add(0));
 		}
 
 		// タブを作って、一番前に表示する
-		this.activeTabPane.get().getTabs().add(tab);
-		this.activeTabPane.get().setOnMouseClicked((obj) -> {
-			MainWindow.this.activeTabPane.set((DockableTabPane) obj.getSource());
+		this.mainPane.get().getActiveTabPane().getTabs().add(tab);
+		this.mainPane.get().getActiveTabPane().setOnMouseClicked((obj) -> {
+			MainWindow.this.mainPane.get().setActiveTabPane((DockableTabPane) obj.getSource());
 		});
-		this.activeTabPane.get().getSelectionModel().select(tab);
+		this.mainPane.get().getActiveTabPane().getSelectionModel().select(tab);
 	}
 
 	// タブを全部消す

@@ -38,6 +38,7 @@ public class DockablePane extends AnchorPane {
 	private Window parent;
 	private Stage window;
 	private DockablePane mainPane;
+	private DockableTabPane activeTabPane = null;
 	private List<DockablePane> childPane = new LinkedList<>();
 
 	public DockablePane (Window parent) {
@@ -101,6 +102,14 @@ public class DockablePane extends AnchorPane {
 
 	public List<DockablePane> getChildPane () {
 		return this.childPane;
+	}
+
+	public DockableTabPane getActiveTabPane () {
+		return this.activeTabPane;
+	}
+
+	public void setActiveTabPane (DockableTabPane tabPane) {
+		this.activeTabPane = tabPane;
 	}
 
 	public List<DockableTabPane> getTabPaneList () {
