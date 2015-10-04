@@ -26,6 +26,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import jstorybook.common.manager.ResourceManager;
 
 /**
  * ドッキング可能なエリア
@@ -64,6 +65,7 @@ public class DockablePane extends AnchorPane {
 		floatingStage.setY(y);
 		floatingStage.initOwner(mainPane.getWindow());
 		floatingStage.setOnCloseRequest((ev) -> ev.consume());
+		floatingScene.getStylesheets().add(ResourceManager.getCss("default.css"));
 		floatingStage.show();
 		this.rootGroup.set(groupPane);
 		AnchorPane.setTopAnchor(rootGroup.get(), 0.0);
