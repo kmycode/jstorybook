@@ -14,12 +14,14 @@
 package jstorybook.view.pane.editor;
 
 import java.lang.ref.WeakReference;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -42,6 +44,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import jstorybook.common.manager.DateTimeManager;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
@@ -597,6 +600,18 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		node.valueProperty().bindBidirectional(converter.localDateProperty());
 		converter.calendarProperty().set((Calendar) property.getValue());
 		property.bind(converter.calendarProperty());
+
+		// フォーマットにあってるかで色を変える
+		node.getEditor().textProperty().addListener((obj) -> {
+			StringProperty text = (StringProperty) obj;
+			try {
+				converter.calendarProperty().set(DateTimeManager.getInstance().stringToDate(text.get()));
+				node.getEditor().setStyle("-fx-text-fill:black");
+			} catch (ParseException e) {
+				// エラーが起きてもともと
+				node.getEditor().setStyle("-fx-text-fill:red");
+			}
+		});
 
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.editPropertyList.add(new WeakReference<>(converter.calendarProperty()));

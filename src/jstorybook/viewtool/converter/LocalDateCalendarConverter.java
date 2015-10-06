@@ -40,8 +40,11 @@ public class LocalDateCalendarConverter {
 				if (ld != null) {
 					Date date = Date.from(ld.atTime(0, 0).toInstant(ZoneOffset.UTC));
 					Calendar cal = Calendar.getInstance();
-					cal.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
 					cal.setTime(date);
+
+					// 時差を潰す
+					cal.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset() * -1);
+
 					this.calendar.set(cal);
 				}
 				LocalDateCalendarConverter.this.inListener = false;
@@ -51,6 +54,10 @@ public class LocalDateCalendarConverter {
 			if (!LocalDateCalendarConverter.this.inListener) {
 				LocalDateCalendarConverter.this.inListener = true;
 				Calendar cal = ((ObjectProperty<Calendar>) obj).get();
+
+				// 時差を潰す
+				cal.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset());
+
 				if (cal != null) {
 					LocalDate ld = LocalDateTime.ofInstant(cal.getTime().toInstant(), ZoneOffset.UTC).toLocalDate();
 					this.localDate.set(ld);

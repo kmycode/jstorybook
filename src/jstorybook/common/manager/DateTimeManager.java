@@ -14,8 +14,11 @@
 package jstorybook.common.manager;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -29,6 +32,7 @@ public final class DateTimeManager {
 	private static final DateTimeManager defaultInstance = new DateTimeManager();
 
 	private ObjectProperty<DateFormat> dateFormat = new SimpleObjectProperty<>(new SimpleDateFormat("yyyy/MM/dd"));
+	private ObjectProperty<DateFormat> dateTimeFormat = new SimpleObjectProperty<>(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"));
 
 	private DateTimeManager () {
 	}
@@ -44,6 +48,34 @@ public final class DateTimeManager {
 		else {
 			return "";
 		}
+	}
+
+	public String dateTimeToString (Calendar cal) {
+		if (cal != null) {
+			return this.dateTimeFormat.get().format(cal.getTime());
+		}
+		else {
+			return "";
+		}
+	}
+
+	public Calendar stringToDate (String str) throws ParseException {
+		Date date = new java.util.Date(this.dateFormat.get().parse(str).getTime());
+		Calendar cal_created = Calendar.getInstance();
+		cal_created.setTimeZone(TimeZone.getTimeZone("UTC"));
+		cal_created.setTime(date);
+		return cal_created;
+	}
+
+	public boolean isMatchDateFormat (String str) {
+		String month = "((0[1-9])|(1[0-2]))";
+		String day = "((0[1-9])|(1[0-9])|(2[0-9])|(3[0-1]))";
+		String year = "([0-9]{1,4})";
+		return (str.matches("()|(" + year + "\\/" + month + "\\/" + day + ")"));
+	}
+
+	public String getDateFormatterDefaultText () {
+		return "2000/01/01";
 	}
 
 }
