@@ -104,6 +104,7 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 
 		// 検索条件：タグ
 		Tab tagTab = new Tab(ResourceManager.getMessage("msg.tag"));
+		GUIUtil.bindFontStyle(tagTab);
 		SelectableEntityTableView tagTableView = new SelectableEntityTableView(this.mainMessenger);
 		tagTableView.setColumnList(this.viewModelList.getProperty("tagColumnList", EditorColumnList.class).getValue());
 		tagTableView.itemsProperty().bind(this.viewModelList.getProperty("tagList"));

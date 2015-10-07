@@ -32,6 +32,7 @@ import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnDateTimeMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnSexAddMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnTextMessage;
@@ -136,6 +137,9 @@ public class EntityEditModel implements IUseMessenger {
 			}
 			else if (column.getColumnType() == EditorColumn.ColumnType.DATE) {
 				this.messenger.send(new EditorColumnDateMessage(column.getColumnName(), column.getProperty()));
+			}
+			else if (column.getColumnType() == EditorColumn.ColumnType.DATETIME) {
+				this.messenger.send(new EditorColumnDateTimeMessage(column.getColumnName(), column.getProperty()));
 			}
 			else if (column.getColumnType() == EditorColumn.ColumnType.COLOR) {
 				this.messenger.send(new EditorColumnColorMessage(column.getColumnName(), column.getProperty()));

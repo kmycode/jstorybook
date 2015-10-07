@@ -14,14 +14,12 @@
 package jstorybook.view.pane.editor;
 
 import java.lang.ref.WeakReference;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -44,12 +42,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import jstorybook.common.manager.DateTimeManager;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.view.control.DockableTabPane;
+import jstorybook.view.control.editor.DateControl;
+import jstorybook.view.control.editor.DateTimeControl;
 import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.MyPane;
@@ -63,13 +62,13 @@ import jstorybook.view.pane.editor.relation.SceneRelationTab;
 import jstorybook.view.pane.editor.relation.TagRelationTab;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.EntityEditViewModel;
-import jstorybook.viewtool.converter.LocalDateCalendarConverter;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnDateMessage;
+import jstorybook.viewtool.messenger.pane.column.EditorColumnDateTimeMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnSexAddMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnTextMessage;
@@ -270,6 +269,11 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		this.messenger.apply(EditorColumnDateMessage.class, this, (ev) -> {
 			EditorColumnDateMessage mes = (EditorColumnDateMessage) ev;
 			EntityEditorPane.this.addDateEdit(mes.getColumnTitle(), mes.getProperty());
+		});
+		// 日付と時刻ピッカーコントロールを追加
+		this.messenger.apply(EditorColumnDateTimeMessage.class, this, (ev) -> {
+			EditorColumnDateTimeMessage mes = (EditorColumnDateTimeMessage) ev;
+			EntityEditorPane.this.addDateTimeEdit(mes.getColumnTitle(), mes.getProperty());
 		});
 		// カラーピッカーコントロールを追加
 		this.messenger.apply(EditorColumnColorMessage.class, this, (ev) -> {
@@ -593,30 +597,28 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 	// ColumnType.DATE
 	private void addDateEdit (String title, Property property) {
-		DatePicker node = new DatePicker();
-		node.setPromptText("yyyy/MM/dd");
-		
-		LocalDateCalendarConverter converter = new LocalDateCalendarConverter();
-		node.valueProperty().bindBidirectional(converter.localDateProperty());
-		converter.calendarProperty().set((Calendar) property.getValue());
-		property.bind(converter.calendarProperty());
+		DatePicker node = this.getDatePicker(property);
+		this.addEditControlRow(title, node);
+	}
 
-		// フォーマットにあってるかで色を変える
-		node.getEditor().textProperty().addListener((obj) -> {
-			StringProperty text = (StringProperty) obj;
-			try {
-				converter.calendarProperty().set(DateTimeManager.getInstance().stringToDate(text.get()));
-				node.getEditor().setStyle("-fx-text-fill:black");
-			} catch (ParseException e) {
-				// エラーが起きてもともと
-				node.getEditor().setStyle("-fx-text-fill:red");
-			}
-		});
+	// ColumnType.DATETIME
+	private void addDateTimeEdit (String title, Property property) {
+		DateTimeControl node = new DateTimeControl();
+		node.calendarProperty().bindBidirectional(property);
+		//property.bindBidirectional(node.calendarProperty());
+		this.editPropertyList.add(new WeakReference<>(node.calendarProperty()));
+		this.addEditControlRow(title, node);
+	}
+
+	// 日付記入コントロールを取得
+	private DatePicker getDatePicker (Property property) {
+		DateControl node = new DateControl();
+		node.setCalendar((Calendar) property.getValue());
+		property.bind(node.calendarProperty());
 
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
-		this.editPropertyList.add(new WeakReference<>(converter.calendarProperty()));
 
-		this.addEditControlRow(title, node);
+		return node;
 	}
 
 	// ColumnType.COLOR

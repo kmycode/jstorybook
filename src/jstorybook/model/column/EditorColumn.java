@@ -37,6 +37,7 @@ public abstract class EditorColumn<T> {
 		LISTONLY,
 		TEXT,
 		DATE,
+		DATETIME,
 		COLOR,
 		SEX,
 		ENTITY,;

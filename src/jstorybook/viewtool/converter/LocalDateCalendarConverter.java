@@ -47,6 +47,9 @@ public class LocalDateCalendarConverter {
 
 					this.calendar.set(cal);
 				}
+				else {
+					this.calendar.set(null);
+				}
 				LocalDateCalendarConverter.this.inListener = false;
 			}
 		});
@@ -55,12 +58,15 @@ public class LocalDateCalendarConverter {
 				LocalDateCalendarConverter.this.inListener = true;
 				Calendar cal = ((ObjectProperty<Calendar>) obj).get();
 
-				// 時差を潰す
-				cal.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset());
-
 				if (cal != null) {
+					// 時差を潰す
+					cal.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset());
+
 					LocalDate ld = LocalDateTime.ofInstant(cal.getTime().toInstant(), ZoneOffset.UTC).toLocalDate();
 					this.localDate.set(ld);
+				}
+				else {
+					this.localDate.set(null);
 				}
 				LocalDateCalendarConverter.this.inListener = false;
 			}
