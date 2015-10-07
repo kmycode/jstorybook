@@ -70,6 +70,7 @@ public class TimeControl extends HBox {
 		input = new Spinner<>(0, 23, 0);
 		input.setEditable(true);
 		this.hour.bindBidirectional(input.getValueFactory().valueProperty());
+		this.setSpinnerListener(input);
 		this.getChildren().addAll(input, label);
 
 		label = new Label(ResourceManager.getMessage("msg.time.minute"));
@@ -77,6 +78,7 @@ public class TimeControl extends HBox {
 		input = new Spinner<>(0, 59, 5);
 		input.setEditable(true);
 		this.minute.bindBidirectional(input.getValueFactory().valueProperty());
+		this.setSpinnerListener(input);
 		this.getChildren().addAll(input, label);
 
 		label = new Label(ResourceManager.getMessage("msg.time.second"));
@@ -84,7 +86,20 @@ public class TimeControl extends HBox {
 		input = new Spinner<>(0, 59, 0);
 		input.setEditable(true);
 		this.second.bindBidirectional(input.getValueFactory().valueProperty());
+		this.setSpinnerListener(input);
 		this.getChildren().addAll(input, label);
+	}
+
+	private void setSpinnerListener (Spinner node) {
+		node.getEditor().textProperty().addListener((obj) -> {
+			try {
+				int value = Integer.parseInt(node.getEditor().getText());
+				node.getEditor().setStyle("-fx-text-fill:black");
+				node.getValueFactory().setValue(value);
+			} catch (NumberFormatException e) {
+				node.getEditor().setStyle("-fx-text-fill:red");
+			}
+		});
 	}
 
 	private void selectValue () {

@@ -61,11 +61,10 @@ public class DateTimeControl extends VBox {
 		this.calendar.addListener((obj) -> {
 			if (this.isCalendarSet()) {
 				Calendar cal = this.calendar.get();
-				cal.setTimeZone(TimeZone.getDefault());
 				this.timeControl.hourProperty().set(cal.get(Calendar.HOUR_OF_DAY));
 				this.timeControl.minuteProperty().set(cal.get(Calendar.MINUTE));
 				this.timeControl.secondProperty().set(cal.get(Calendar.SECOND));
-				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+				cal.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset() * -1);
 				this.dateControl.setCalendar(cal);
 			}
 		});

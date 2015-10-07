@@ -16,7 +16,7 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.column.DateColumn;
+import jstorybook.model.column.DateTimeColumn;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
@@ -69,14 +69,14 @@ public class SceneColumnFactory extends ColumnFactory<Scene> {
 		column.setProperty(model.nameProperty());
 		columnList.add(column);
 
-		column = new DateColumn(ResourceManager.getMessage("msg.scene.starttime"), "starttime");
+		column = new DateTimeColumn(ResourceManager.getMessage("msg.scene.starttime"), "starttime");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.starttimeProperty());
 		column.setCellType(EditorColumn.CellType.DATE);
 		columnList.add(column);
 
-		column = new DateColumn(ResourceManager.getMessage("msg.scene.endtime"), "endtime");
+		column = new DateTimeColumn(ResourceManager.getMessage("msg.scene.endtime"), "endtime");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.endtimeProperty());
