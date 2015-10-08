@@ -30,15 +30,23 @@ public class DateTimeControl extends VBox {
 	private final DateControl dateControl = new DateControl();
 	private final TimeControl timeControl = new TimeControl();
 	private final ObjectProperty<Calendar> calendar = new SimpleObjectProperty<>();
+	private boolean isListener = false;
 
 	public DateTimeControl () {
 		// 日付変更時
 		this.dateControl.calendarProperty().addListener((obj) -> {
-			if (this.isCalendarSet()) {
+			if (this.isCalendarSet() && !this.isListener) {
+				this.isListener = true;
 				Calendar cal = this.calendar.get();
-				Calendar dst = this.dateControl.calendarProperty().get();
-				cal.set(Calendar.YEAR, dst.get(Calendar.YEAR));
-				cal.set(Calendar.DAY_OF_YEAR, dst.get(Calendar.DAY_OF_YEAR));
+				if (cal != null) {
+					Calendar dst = this.dateControl.calendarProperty().get();
+					if (dst != null) {
+						cal.set(Calendar.YEAR, dst.get(Calendar.YEAR));
+						cal.set(Calendar.DAY_OF_YEAR, dst.get(Calendar.DAY_OF_YEAR));
+						this.calendar.set((Calendar) cal.clone());
+					}
+				}
+				this.isListener = false;
 			}
 		});
 		// 時刻変更時
@@ -59,13 +67,15 @@ public class DateTimeControl extends VBox {
 		});
 		// カレンダーオブジェクト変更時
 		this.calendar.addListener((obj) -> {
-			if (this.isCalendarSet()) {
+			if (this.isCalendarSet() && !this.isListener) {
+				this.isListener = true;
 				Calendar cal = this.calendar.get();
 				this.timeControl.hourProperty().set(cal.get(Calendar.HOUR_OF_DAY));
 				this.timeControl.minuteProperty().set(cal.get(Calendar.MINUTE));
 				this.timeControl.secondProperty().set(cal.get(Calendar.SECOND));
 				cal.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset() * -1);
 				this.dateControl.setCalendar(cal);
+				this.isListener = false;
 			}
 		});
 

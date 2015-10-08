@@ -68,9 +68,9 @@ public final class DateTimeManager {
 	}
 
 	public boolean isMatchDateFormat (String str) {
-		String month = "((0[1-9])|(1[0-2]))";
-		String day = "((0[1-9])|(1[0-9])|(2[0-9])|(3[0-1]))";
-		String year = "([0-9]{1,4})";
+		String month = "(([1-9])|(0[1-9])|(1[0-2]))";
+		String day = "(([1-9])|(0[1-9])|(1[0-9])|(2[0-9])|(3[0-1]))";
+		String year = "(([0-9]{1,6})|(-[0-9]{1,6}))";
 		return (str.matches("()|(" + year + "\\/" + month + "\\/" + day + ")"));
 	}
 

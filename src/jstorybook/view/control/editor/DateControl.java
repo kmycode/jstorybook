@@ -38,7 +38,12 @@ public class DateControl extends DatePicker {
 
 		converter = new LocalDateCalendarConverter();
 		converter.localDateProperty().bindBidirectional(this.valueProperty());
-		this.calendar.bind(converter.calendarProperty());
+		//this.calendar.bind(converter.calendarProperty());
+		converter.calendarProperty().addListener((obj) -> {
+			// GETバグ
+			this.calendar.get();
+			this.calendar.set(converter.calendarProperty().get());
+		});
 
 		// フォーマットにあってるかで色を変える
 		this.getEditor().textProperty().addListener((obj) -> {
@@ -48,11 +53,19 @@ public class DateControl extends DatePicker {
 				this.getEditor().setStyle("-fx-text-fill:black");
 			}
 			else {
-				try {
-					converter.calendarProperty().set(DateTimeManager.getInstance().stringToDate(text.get()));
-					this.getEditor().setStyle("-fx-text-fill:black");
-				} catch (ParseException e) {
-					// エラーが起きてもともと
+				if (DateTimeManager.getInstance().isMatchDateFormat(text.get())) {
+					try {
+						Calendar cal = DateTimeManager.getInstance().stringToDate(text.get());
+						if (cal.equals(converter.calendarProperty().get())) {
+							converter.calendarProperty().set(cal);
+							this.getEditor().setStyle("-fx-text-fill:black");
+						}
+					} catch (ParseException e) {
+						// エラーが起きてもともと
+						this.getEditor().setStyle("-fx-text-fill:red");
+					}
+				}
+				else {
 					this.getEditor().setStyle("-fx-text-fill:red");
 				}
 			}

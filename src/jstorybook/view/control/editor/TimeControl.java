@@ -75,7 +75,7 @@ public class TimeControl extends HBox {
 
 		label = new Label(ResourceManager.getMessage("msg.time.minute"));
 		label.fontProperty().bind(FontManager.getInstance().fontProperty());
-		input = new Spinner<>(0, 59, 5);
+		input = new Spinner<>(0, 59, 0);
 		input.setEditable(true);
 		this.minute.bindBidirectional(input.getValueFactory().valueProperty());
 		this.setSpinnerListener(input);
