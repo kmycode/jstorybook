@@ -35,17 +35,29 @@ public class DateTimeControl extends VBox {
 	public DateTimeControl () {
 		// 日付変更時
 		this.dateControl.calendarProperty().addListener((obj) -> {
+			
+				// すでに日付が設定されていた場合
 			if (this.isCalendarSet() && !this.isListener) {
 				this.isListener = true;
 				Calendar cal = this.calendar.get();
+				Calendar dst = this.dateControl.calendarProperty().get();
+
 				if (cal != null) {
-					Calendar dst = this.dateControl.calendarProperty().get();
 					if (dst != null) {
 						cal.set(Calendar.YEAR, dst.get(Calendar.YEAR));
 						cal.set(Calendar.DAY_OF_YEAR, dst.get(Calendar.DAY_OF_YEAR));
 						this.calendar.set((Calendar) cal.clone());
 					}
 				}
+
+				this.isListener = false;
+			}
+
+			// 日付を初めて設定する場合
+			else if (!this.isListener) {
+				this.isListener = true;
+				this.calendar.set(this.dateControl.calendarProperty().get());
+				this.calendar.get().setTimeZone(TimeZone.getTimeZone("UTC"));
 				this.isListener = false;
 			}
 		});
