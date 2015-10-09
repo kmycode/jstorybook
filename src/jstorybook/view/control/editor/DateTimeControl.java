@@ -53,16 +53,19 @@ public class DateTimeControl extends VBox {
 		this.timeControl.hourProperty().addListener((obj) -> {
 			if (this.isCalendarSet()) {
 				this.calendar.get().set(Calendar.HOUR_OF_DAY, ((IntegerProperty) obj).get());
+				this.calendar.set((Calendar) this.calendar.get().clone());
 			}
 		});
 		this.timeControl.minuteProperty().addListener((obj) -> {
 			if (this.isCalendarSet()) {
 				this.calendar.get().set(Calendar.MINUTE, ((IntegerProperty) obj).get());
+				this.calendar.set((Calendar) this.calendar.get().clone());
 			}
 		});
 		this.timeControl.secondProperty().addListener((obj) -> {
 			if (this.isCalendarSet()) {
 				this.calendar.get().set(Calendar.SECOND, ((IntegerProperty) obj).get());
+				this.calendar.set((Calendar) this.calendar.get().clone());
 			}
 		});
 		// カレンダーオブジェクト変更時

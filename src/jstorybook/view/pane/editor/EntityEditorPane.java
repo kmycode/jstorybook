@@ -604,7 +604,8 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	// ColumnType.DATETIME
 	private void addDateTimeEdit (String title, Property property) {
 		DateTimeControl node = new DateTimeControl();
-		node.calendarProperty().bindBidirectional(property);
+		node.calendarProperty().set((Calendar) property.getValue());
+		property.bind(node.calendarProperty());
 		this.editPropertyList.add(new WeakReference<>(node.calendarProperty()));
 		this.addEditControlRow(title, node);
 	}
