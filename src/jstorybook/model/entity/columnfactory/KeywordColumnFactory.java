@@ -16,11 +16,11 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Keyword;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Keyword;
 
 /**
  * キーワードリストのカラム
@@ -48,6 +48,10 @@ public class KeywordColumnFactory extends ColumnFactory<Keyword> {
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
+		columnList.addRelation(EntityRelation.PERSON_KEYWORD);
+		columnList.addRelation(EntityRelation.GROUP_KEYWORD);
+		columnList.addRelation(EntityRelation.PLACE_KEYWORD);
+		columnList.addRelation(EntityRelation.SCENE_KEYWORD);
 		columnList.addRelation(EntityRelation.KEYWORD_TAG);
 		columnList.entityTypeProperty().set(EntityType.KEYWORD);
 		EditorColumn column;

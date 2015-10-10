@@ -26,11 +26,13 @@ import jstorybook.model.dao.DAO;
 import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Group;
+import jstorybook.model.entity.Keyword;
 import jstorybook.model.entity.Person;
 import jstorybook.model.entity.Place;
 import jstorybook.model.entity.Scene;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
+import jstorybook.model.entity.columnfactory.KeywordColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
@@ -44,11 +46,13 @@ import jstorybook.viewtool.messenger.pane.chart.ChapterDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityRelateMessage;
 import jstorybook.viewtool.messenger.pane.chart.GroupDrawMessage;
+import jstorybook.viewtool.messenger.pane.chart.KeywordDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PlaceDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.SceneDrawMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
@@ -70,6 +74,7 @@ public class AssociationModel implements IUseMessenger {
 	private final Map<Long, Integer> placeIdList = new HashMap<>();
 	private final Map<Long, Integer> sceneIdList = new HashMap<>();
 	private final Map<Long, Integer> chapterIdList = new HashMap<>();
+	private final Map<Long, Integer> keywordIdList = new HashMap<>();
 
 	private StoryModel storyModel;
 
@@ -89,6 +94,7 @@ public class AssociationModel implements IUseMessenger {
 		this.placeIdList.clear();
 		this.sceneIdList.clear();
 		this.chapterIdList.clear();
+		this.keywordIdList.clear();
 
 		Entity entity = this.entity.get();
 		long entityId = entity.idProperty().get();
@@ -128,27 +134,46 @@ public class AssociationModel implements IUseMessenger {
 																  (Chapter) entity.entityClone()), ChapterColumnFactory.getInstance().
 																			   createColumnList((Chapter) entity))));
 			}
+			else if (entity.getEntityType() == EntityType.KEYWORD) {
+				message = new KeywordDrawMessage(entity.titleProperty().get(), (ev) -> this.messenger.send(
+												 new KeywordEditorShowMessage(KeywordColumnFactory.getInstance().createColumnList(
+																 (Keyword) entity.entityClone()), KeywordColumnFactory.getInstance().
+																			  createColumnList((Keyword) entity))));
+			}
 			this.messenger.send(message);
 
 			// まわりに描画するもの
 			if (entity.getEntityType() == EntityType.SCENE) {
 				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.PERSON, EntityType.GROUP);
 				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.PLACE);
-				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.CHAPTER);
+				this.drawArea(EntityType.SCENE, entityId, EntityType.SCENE, entityId, -1, EntityType.KEYWORD, EntityType.GROUP);
 			}
 			else if (entity.getEntityType() == EntityType.GROUP) {
 				this.drawArea(EntityType.GROUP, entityId, EntityType.GROUP, entityId, -1, EntityType.PERSON, EntityType.SCENE);
+				this.drawArea(EntityType.GROUP, entityId, EntityType.GROUP, entityId, -1, EntityType.KEYWORD, EntityType.PERSON);
+				this.drawArea(EntityType.GROUP, entityId, EntityType.GROUP, entityId, -1, EntityType.KEYWORD, EntityType.SCENE);
 			}
 			else if (entity.getEntityType() == EntityType.PERSON) {
 				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.GROUP, EntityType.PERSON);
 				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.PERSON);
 				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.SCENE, EntityType.PERSON);
+				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.KEYWORD, EntityType.SCENE);
+				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.KEYWORD, EntityType.GROUP);
+				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.KEYWORD, EntityType.PERSON);
 			}
 			else if (entity.getEntityType() == EntityType.PLACE) {
 				this.drawArea(EntityType.PLACE, entityId, EntityType.PLACE, entityId, -1, EntityType.SCENE, EntityType.PERSON);
+				this.drawArea(EntityType.PLACE, entityId, EntityType.PLACE, entityId, -1, EntityType.KEYWORD, EntityType.SCENE);
+				this.drawArea(EntityType.PLACE, entityId, EntityType.PLACE, entityId, -1, EntityType.KEYWORD, EntityType.PERSON);
 			}
 			else if (entity.getEntityType() == EntityType.CHAPTER) {
 				this.drawArea(EntityType.CHAPTER, entityId, EntityType.CHAPTER, entityId, -1, EntityType.SCENE, EntityType.PERSON);
+			}
+			else if (entity.getEntityType() == EntityType.KEYWORD) {
+				this.drawArea(EntityType.KEYWORD, entityId, EntityType.KEYWORD, entityId, -1, EntityType.PERSON);
+				this.drawArea(EntityType.KEYWORD, entityId, EntityType.KEYWORD, entityId, -1, EntityType.GROUP);
+				this.drawArea(EntityType.KEYWORD, entityId, EntityType.KEYWORD, entityId, -1, EntityType.SCENE);
+				this.drawArea(EntityType.KEYWORD, entityId, EntityType.KEYWORD, entityId, -1, EntityType.PLACE);
 			}
 		}
 	}
@@ -186,6 +211,30 @@ public class AssociationModel implements IUseMessenger {
 		else if (from == EntityType.SCENE && to == EntityType.CHAPTER) {
 			list = storyModel.getChapterSceneRelation_Chapter(fromId);
 		}
+		else if (from == EntityType.KEYWORD && to == EntityType.PERSON) {
+			list = storyModel.getPersonKeywordRelation_Person(fromId);
+		}
+		else if (from == EntityType.PERSON && to == EntityType.KEYWORD) {
+			list = storyModel.getPersonKeywordRelation_Keyword(fromId);
+		}
+		else if (from == EntityType.KEYWORD && to == EntityType.SCENE) {
+			list = storyModel.getSceneKeywordRelation_Scene(fromId);
+		}
+		else if (from == EntityType.SCENE && to == EntityType.KEYWORD) {
+			list = storyModel.getSceneKeywordRelation_Keyword(fromId);
+		}
+		else if (from == EntityType.KEYWORD && to == EntityType.GROUP) {
+			list = storyModel.getGroupKeywordRelation_Group(fromId);
+		}
+		else if (from == EntityType.GROUP && to == EntityType.KEYWORD) {
+			list = storyModel.getGroupKeywordRelation_Keyword(fromId);
+		}
+		else if (from == EntityType.KEYWORD && to == EntityType.PLACE) {
+			list = storyModel.getPlaceKeywordRelation_Place(fromId);
+		}
+		else if (from == EntityType.PLACE && to == EntityType.KEYWORD) {
+			list = storyModel.getPlaceKeywordRelation_Keyword(fromId);
+		}
 		if (to == EntityType.GROUP) {
 			map = this.groupIdList;
 			dao = this.storyModel.getGroupDAO();
@@ -205,6 +254,10 @@ public class AssociationModel implements IUseMessenger {
 		else if (to == EntityType.CHAPTER) {
 			map = this.chapterIdList;
 			dao = this.storyModel.getChapterDAO();
+		}
+		else if (to == EntityType.KEYWORD) {
+			map = this.keywordIdList;
+			dao = this.storyModel.getKeywordDAO();
 		}
 		if (list != null && map != null) {
 
@@ -259,6 +312,12 @@ public class AssociationModel implements IUseMessenger {
 									ChapterColumnFactory.getInstance().createColumnList((Chapter) toEntity.entityClone()),
 									ChapterColumnFactory.getInstance().createColumnList((Chapter) toEntity)));
 							ddMessage = new ChapterDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
+						}
+						else if (to == EntityType.KEYWORD) {
+							EventHandler ev_opt = (evs) -> this.messenger.send(new KeywordEditorShowMessage(
+									KeywordColumnFactory.getInstance().createColumnList((Keyword) toEntity.entityClone()),
+									KeywordColumnFactory.getInstance().createColumnList((Keyword) toEntity)));
+							ddMessage = new KeywordDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
 						}
 						if (ddMessage != null) {
 							if (fromDrawId >= 0) {

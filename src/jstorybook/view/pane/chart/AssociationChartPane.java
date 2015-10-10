@@ -40,11 +40,13 @@ import jstorybook.viewtool.messenger.pane.chart.ChapterDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityRelateMessage;
 import jstorybook.viewtool.messenger.pane.chart.GroupDrawMessage;
+import jstorybook.viewtool.messenger.pane.chart.KeywordDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PlaceDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.SceneDrawMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
@@ -85,6 +87,7 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 		this.messenger.apply(PlaceDrawMessage.class, this, (ev) -> this.drawPlace((PlaceDrawMessage) ev));
 		this.messenger.apply(SceneDrawMessage.class, this, (ev) -> this.drawScene((SceneDrawMessage) ev));
 		this.messenger.apply(ChapterDrawMessage.class, this, (ev) -> this.drawChapter((ChapterDrawMessage) ev));
+		this.messenger.apply(KeywordDrawMessage.class, this, (ev) -> this.drawKeyword((KeywordDrawMessage) ev));
 		this.messenger.apply(ResetMessage.class, this, (ev) -> this.reset());
 
 		// メッセンジャ
@@ -95,6 +98,7 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 		this.messenger.relay(PlaceEditorShowMessage.class, this, this.mainMessenger);
 		this.messenger.relay(SceneEditorShowMessage.class, this, this.mainMessenger);
 		this.messenger.relay(ChapterEditorShowMessage.class, this, this.mainMessenger);
+		this.messenger.relay(KeywordEditorShowMessage.class, this, this.mainMessenger);
 		this.viewModelList.storeMessenger(this.messenger);
 		this.viewModelList.getProperty("entity").bind(message.entityProperty());
 	}
@@ -256,6 +260,10 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 
 	private void drawChapter (ChapterDrawMessage message) {
 		this.canvasArea.getChildren().add(this.addNode(message, "chapter_large.png", EntityType.CHAPTER));
+	}
+
+	private void drawKeyword (KeywordDrawMessage message) {
+		this.canvasArea.getChildren().add(this.addNode(message, "keyword_large.png", EntityType.KEYWORD));
 	}
 
 }

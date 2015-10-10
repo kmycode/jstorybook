@@ -193,7 +193,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("keywordDown", (ev) -> this.storyModel.get().downKeyword(), this.storyModel.get().
 						  canEditProperty());
-		this.applyCommand("keywordAssociation", null, new SimpleBooleanProperty(false));
+		this.applyCommand("keywordAssociation", (ev) -> this.storyModel.get().associationKeyword(), this.storyModel.get().
+						  canEditProperty());
 		this.applyCommand("keywordOrderReset", (ev) -> this.storyModel.get().getKeywordDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
