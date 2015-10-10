@@ -28,6 +28,8 @@ public class ApplicationViewModel extends ViewModel {
 	@Override
 	protected void storeProperty () {
 		this.applyProperty("isExitable", this.model.isExitableProperty());
+		this.applyProperty("windowWidth", this.model.windowWidthProperty());
+		this.applyProperty("windowHeight", this.model.windowHeightProperty());
 	}
 
 	@Override

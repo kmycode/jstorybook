@@ -16,7 +16,9 @@ package jstorybook.model;
 import java.io.IOException;
 import java.sql.SQLException;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.PreferenceKey;
@@ -31,6 +33,7 @@ import jstorybook.viewtool.messenger.dialog.AskExitDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 import jstorybook.viewtool.messenger.dialog.PreferenceDialogShowMessage;
+import jstorybook.viewtool.messenger.general.WindowResizeMessage;
 
 /**
  * アプリケーションモデル
@@ -43,11 +46,19 @@ public class ApplicationModel implements IUseMessenger {
 	private PreferenceFileModel preferenceFile;
 	private final BooleanProperty isExitable = new SimpleBooleanProperty(true);
 
+	private final DoubleProperty windowWidth = new SimpleDoubleProperty();
+	private final DoubleProperty windowHeight = new SimpleDoubleProperty();
+
 	public ApplicationModel () {
-		// 設定ファイルの読込
 		try {
+			// 設定ファイルの読込
 			this.preferenceFile = new PreferenceFileModel();
-			this.preferenceFile.loadSettingsSync();
+			this.preferenceFile.loadSettingsSync((ev) -> {
+				// 読込終了時
+				this.messenger.send(new WindowResizeMessage(PreferenceKey.WINDOW_WIDTH.getDouble(), PreferenceKey.WINDOW_HEIGHT.
+															getDouble()));
+			});
+
 		} catch (SQLException | IOException e) {
 
 			// 設定ファイルの読込に失敗した場合
@@ -71,6 +82,10 @@ public class ApplicationModel implements IUseMessenger {
 
 		if (doExit) {
 			this.isExitable.set(true);
+
+			// 設定データを保存
+			PreferenceKey.WINDOW_WIDTH.setValue(this.windowWidth.getValue());
+			PreferenceKey.WINDOW_HEIGHT.setValue(this.windowHeight.getValue());
 
 			// 設定ファイルを保存
 			this.preferenceFile.saveSettingsSync();
@@ -109,6 +124,14 @@ public class ApplicationModel implements IUseMessenger {
 
 	public BooleanProperty isExitableProperty () {
 		return this.isExitable;
+	}
+
+	public DoubleProperty windowWidthProperty () {
+		return this.windowWidth;
+	}
+
+	public DoubleProperty windowHeightProperty () {
+		return this.windowHeight;
 	}
 
 	@Override

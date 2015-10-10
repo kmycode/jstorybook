@@ -88,6 +88,7 @@ import jstorybook.viewtool.messenger.exception.PreferenceFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
+import jstorybook.viewtool.messenger.general.WindowResizeMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
@@ -190,6 +191,11 @@ public class MainWindow extends MyStage {
 								(Integer) PreferenceKey.WINDOW_HEIGHT.getDefaultValue());
 		scene.getStylesheets().add(ResourceManager.getCss("default.css"));
 		this.setScene(scene);
+
+		// -------------------------------------------------------
+		// データをバインド
+		this.viewModelList.getProperty("windowWidth").bind(this.widthProperty());
+		this.viewModelList.getProperty("windowHeight").bind(this.heightProperty());
 
 		// テスト
 		this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
@@ -431,6 +437,9 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(MainWindowClearMessage.class, this, (ev) -> {
 			this.clearTab();
+		});
+		this.messenger.apply(WindowResizeMessage.class, this, (ev) -> {
+			MainWindow.this.resize((WindowResizeMessage) ev);
 		});
 
 		this.messenger.apply(PersonListShowMessage.class, this, (ev) -> {
@@ -772,6 +781,12 @@ public class MainWindow extends MyStage {
 		if (this.askYesNo(ResourceManager.getMessage("msg.confirm.exit")) == DialogResult.YES) {
 			message.setExitable(true);
 		}
+	}
+
+	// ウィンドウをリサイズ
+	private void resize (WindowResizeMessage message) {
+		this.setWidth(message.getWidth());
+		this.setHeight(message.getHeight());
 	}
 
 	// -------------------------------------------------------

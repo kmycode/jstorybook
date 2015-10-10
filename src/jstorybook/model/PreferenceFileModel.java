@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import jstorybook.common.contract.PreferenceKey;
 import jstorybook.model.db.SQLiteFile;
@@ -88,7 +89,11 @@ public class PreferenceFileModel implements IUseMessenger {
 	}
 
 	public void loadSettingsSync () {
-		this.loadSettingsSync(PreferenceKey.getList());
+		this.loadSettingsSync(PreferenceKey.getList(), null);
+	}
+
+	public void loadSettingsSync (EventHandler succeed) {
+		this.loadSettingsSync(PreferenceKey.getList(), succeed);
 	}
 
 	public void saveSettings () throws SQLException {
@@ -99,7 +104,7 @@ public class PreferenceFileModel implements IUseMessenger {
 		this.saveSettingsSync(PreferenceKey.getList());
 	}
 
-	public void loadSettingsSync (List<PreferenceKey> keys) {
+	public void loadSettingsSync (List<PreferenceKey> keys, EventHandler succeed) {
 
 		PreferenceLoadSync.PreferenceLoadService service = new PreferenceLoadSync.PreferenceLoadService(this.db, keys);
 
@@ -111,6 +116,9 @@ public class PreferenceFileModel implements IUseMessenger {
 			// getバグ
 			service.stepProperty().get();
 		});
+
+		service.setOnSucceeded(succeed);
+
 		service.start();
 	}
 

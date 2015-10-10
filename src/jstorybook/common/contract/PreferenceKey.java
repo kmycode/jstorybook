@@ -28,8 +28,8 @@ import javafx.geometry.Orientation;
 public enum PreferenceKey {
 
 	CONFIRM_EXIT("confirm_exit", PreferenceType.BOOLEAN, true),
-	WINDOW_WIDTH("window_width", PreferenceType.INTEGER, 1366),
-	WINDOW_HEIGHT("window_height", PreferenceType.INTEGER, 768),
+	WINDOW_WIDTH("window_width", PreferenceType.DOUBLE, 1100),
+	WINDOW_HEIGHT("window_height", PreferenceType.DOUBLE, 600),
 	FONT_FAMILY("font_family", PreferenceType.STRING, "Meiryo UI"),
 	FONT_SIZE("font_size", PreferenceType.DOUBLE, 14.0),
 	MENUBAR_USESYSTEM("menubar_usesystem", PreferenceType.BOOLEAN, false),
