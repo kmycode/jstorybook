@@ -78,11 +78,13 @@ import jstorybook.viewtool.messenger.MainWindowClearMessage;
 import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
+import jstorybook.viewtool.messenger.dialog.AskExitDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 import jstorybook.viewtool.messenger.dialog.PreferenceDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
+import jstorybook.viewtool.messenger.exception.PreferenceFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileSaveFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
@@ -164,7 +166,10 @@ public class MainWindow extends MyStage {
 		// -------------------------------------------------------
 		// プログラム終了時の処理を登録
 		this.setOnCloseRequest((ev) -> {
-			this.quitApplication();
+			MainWindow.this.viewModelList.executeCommand("exit");
+			if (MainWindow.this.viewModelList.getProperty("isExitable").getValue() == Boolean.FALSE) {
+				ev.consume();
+			}
 		});
 
 		// -------------------------------------------------------
@@ -375,6 +380,12 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(ApplicationQuitMessage.class, this, (ev) -> {
 			MainWindow.this.quitApplication();
+		});
+		this.messenger.apply(AskExitDialogShowMessage.class, this, (ev) -> {
+			MainWindow.this.showAskExitDialog((AskExitDialogShowMessage) ev);
+		});
+		this.messenger.apply(PreferenceFileLoadFailedMessage.class, this, (ev) -> {
+			MainWindow.this.showErrorMessage(ResourceManager.getMessage("msg.preferencefile.failed"));
 		});
 		this.messenger.apply(AboutDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showAboutDialog();
@@ -756,6 +767,13 @@ public class MainWindow extends MyStage {
 		this.close();
 	}
 
+	// 終了確認
+	private void showAskExitDialog (AskExitDialogShowMessage message) {
+		if (this.askYesNo(ResourceManager.getMessage("msg.confirm.exit")) == DialogResult.YES) {
+			message.setExitable(true);
+		}
+	}
+
 	// -------------------------------------------------------
 	private void showAboutDialog () {
 		AboutDialog dialog = new AboutDialog(this);
@@ -814,6 +832,7 @@ public class MainWindow extends MyStage {
 		alert.getButtonTypes().clear();
 		alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 		((Button) alert.getDialogPane().lookupButton(ButtonType.YES)).setDefaultButton(true);
+		alert.initOwner(this);
 		alert.showAndWait();
 		if (alert.getResult() == ButtonType.YES) {
 			return DialogResult.YES;

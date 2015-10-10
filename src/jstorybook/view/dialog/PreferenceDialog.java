@@ -98,9 +98,15 @@ public class PreferenceDialog extends MyStage {
 		isSearchEntityOrientation.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isSearchEntityOrientation"));
 		mainGrid.getChildren().addAll(label, isSearchEntityOrientation);
 
-		label = new Label(ResourceManager.getMessage("msg.preference.alert.beta"));
+		// 終了確認
+		label = new Label("");
 		GUIUtil.bindFontStyle(label);
-		mainGrid.add(label, 0, 4, 2, 1);
+		CheckBox isConfirmExit = new CheckBox(ResourceManager.getMessage("msg.preference.confirm.exit"));
+		GUIUtil.bindFontStyle(isConfirmExit);
+		GridPane.setConstraints(label, 0, 4);
+		GridPane.setConstraints(isConfirmExit, 1, 4);
+		isConfirmExit.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isConfirmExit"));
+		mainGrid.getChildren().addAll(label, isConfirmExit);
 
 		HBox commandBox = new HBox();
 		AnchorPane commandBoxSpacer = new AnchorPane();

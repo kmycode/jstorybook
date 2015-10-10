@@ -31,6 +31,7 @@ public class PreferenceViewModel extends ViewModel {
 		this.applyProperty("fontFamily", model.fontFamilyProperty());
 		this.applyProperty("fontSize", model.fontSizeProperty());
 		this.applyProperty("isUseSystemMenu", model.isUseSystemMenuProperty());
+		this.applyProperty("isConfirmExit", model.isConfirmExitProperty());
 		this.applyProperty("isSearchEntityOrientation", model.isSearchEntityOrientationProperty());
 	}
 

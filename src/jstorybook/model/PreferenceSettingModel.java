@@ -37,14 +37,17 @@ public class PreferenceSettingModel implements IUseMessenger {
 	private final BooleanProperty isUseSystemMenu = new SimpleBooleanProperty(PreferenceKey.MENUBAR_USESYSTEM.getBoolean());
 	private final BooleanProperty isSearchEntityOrientation = new SimpleBooleanProperty(PreferenceKey.SEARCH_ENTITY_ORIENTATION.
 			getValue() == Orientation.VERTICAL);
+	private final BooleanProperty isConfirmExit = new SimpleBooleanProperty(PreferenceKey.CONFIRM_EXIT.getBoolean());
 
 	public void save () {
 		try {
 			PreferenceKey.FONT_FAMILY.setValue(this.fontFamily.get());
-			PreferenceKey.FONT_SIZE.setValue(Double.parseDouble(this.fontSize.get()));
 			PreferenceKey.MENUBAR_USESYSTEM.setValue(this.isUseSystemMenu.get());
+			PreferenceKey.CONFIRM_EXIT.setValue(this.isConfirmExit.get());
 			PreferenceKey.SEARCH_ENTITY_ORIENTATION.setValue(this.isSearchEntityOrientation.get() ? Orientation.VERTICAL
-															 : Orientation.HORIZONTAL);
+																	 : Orientation.HORIZONTAL);
+
+			PreferenceKey.FONT_SIZE.setValue(Double.parseDouble(this.fontSize.get()));
 		} catch (NumberFormatException e) {
 		}
 		this.messenger.send(new CloseMessage());
@@ -68,6 +71,10 @@ public class PreferenceSettingModel implements IUseMessenger {
 
 	public BooleanProperty isSearchEntityOrientationProperty () {
 		return this.isSearchEntityOrientation;
+	}
+
+	public BooleanProperty isConfirmExitProperty () {
+		return this.isConfirmExit;
 	}
 
 	@Override

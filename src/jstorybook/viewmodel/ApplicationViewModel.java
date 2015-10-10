@@ -27,6 +27,7 @@ public class ApplicationViewModel extends ViewModel {
 
 	@Override
 	protected void storeProperty () {
+		this.applyProperty("isExitable", this.model.isExitableProperty());
 	}
 
 	@Override

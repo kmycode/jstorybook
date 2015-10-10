@@ -13,6 +13,8 @@
  */
 package jstorybook.common.contract;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,19 +27,44 @@ import javafx.geometry.Orientation;
  */
 public enum PreferenceKey {
 
-	WINDOW_WIDTH(1366),
-	WINDOW_HEIGHT(768),
-	FONT_FAMILY("Meiryo UI"),
-	FONT_SIZE(14.0),
-	MENUBAR_USESYSTEM(false),
-	SEARCH_ENTITY_ORIENTATION(Orientation.HORIZONTAL);
+	CONFIRM_EXIT("confirm_exit", PreferenceType.BOOLEAN, true),
+	WINDOW_WIDTH("window_width", PreferenceType.INTEGER, 1366),
+	WINDOW_HEIGHT("window_height", PreferenceType.INTEGER, 768),
+	FONT_FAMILY("font_family", PreferenceType.STRING, "Meiryo UI"),
+	FONT_SIZE("font_size", PreferenceType.DOUBLE, 14.0),
+	MENUBAR_USESYSTEM("menubar_usesystem", PreferenceType.BOOLEAN, false),
+	SEARCH_ENTITY_ORIENTATION("search_entity_orientation", PreferenceType.ORIENTATION, Orientation.HORIZONTAL);
 
+	public static List<PreferenceKey> getList () {
+		List<PreferenceKey> list = new ArrayList<>();
+		list.add(CONFIRM_EXIT);
+		list.add(WINDOW_WIDTH);
+		list.add(WINDOW_HEIGHT);
+		list.add(FONT_FAMILY);
+		list.add(FONT_SIZE);
+		list.add(MENUBAR_USESYSTEM);
+		list.add(SEARCH_ENTITY_ORIENTATION);
+		return list;
+	}
+
+	public enum PreferenceType {
+		INTEGER,
+		STRING,
+		DOUBLE,
+		BOOLEAN,
+		ORIENTATION,;
+	}
+
+	private final String name;
 	private final Object defaultValue;
+	private final PreferenceType type;
 	private ObjectProperty value = new SimpleObjectProperty();
 
-	private PreferenceKey (Object defaultValue) {
+	private PreferenceKey (String name, PreferenceType type, Object defaultValue) {
 		this.defaultValue = defaultValue;
 		this.value.set(defaultValue);
+		this.name = name;
+		this.type = type;
 	}
 
 	public Object getDefaultValue () {
@@ -62,6 +89,14 @@ public enum PreferenceKey {
 
 	public String getString () {
 		return (String) this.getValue();
+	}
+
+	public String getName () {
+		return this.name;
+	}
+
+	public PreferenceType getType () {
+		return this.type;
 	}
 
 	public ReadOnlyObjectProperty getProperty () {
