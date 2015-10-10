@@ -18,8 +18,11 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.FontManager;
@@ -32,11 +35,6 @@ import jstorybook.viewmodel.pane.chart.AssociationViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.ResetMessage;
-import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.ChapterDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
@@ -45,6 +43,11 @@ import jstorybook.viewtool.messenger.pane.chart.GroupDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PlaceDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.SceneDrawMessage;
+import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 
 /**
  * 関連図
@@ -113,12 +116,16 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 	private Canvas drawNode (EntityDrawMessage message, int width, int height, String iconName, EntityType entityType) {
 
 		Canvas canvas = new Canvas(width, height);
+
+		// 中心となるオブジェクト
 		if (this.isEmpty) {
 			GUIUtil.setAnchor(canvas, (this.canvasArea.getPrefHeight() - canvas.getHeight()) / 2, null, null, (this.canvasArea.
 							  getPrefWidth() - canvas.getWidth()) / 2);
 			this.setText(ResourceManager.getMessage("msg.association") + " [" + message.getName() + "]");
 			this.setGraphic(ResourceManager.getMiniIconNode(iconName));
 		}
+
+		// まわりのオブジェクト
 		else {
 			int cornerId = this.cornerList.indexOf(entityType);
 			if (cornerId < 0) {
@@ -126,6 +133,18 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 				cornerId = this.cornerList.size() - 1;
 				this.cornerNumList.add(0);
 			}
+
+			// コンテキストメニュー
+			MenuItem showMenu = new MenuItem(ResourceManager.getMessage("msg.association"));
+			showMenu.setOnAction(message.getEvent());
+			GUIUtil.bindFontStyle(showMenu);
+			showMenu.setGraphic(ResourceManager.getMiniIconNode(iconName));
+			MenuItem editMenu = new MenuItem(ResourceManager.getMessage("msg.edit"));
+			editMenu.setOnAction(message.getOptionEvent());
+			GUIUtil.bindFontStyle(editMenu);
+			editMenu.setGraphic(ResourceManager.getMiniIconNode("edit.png"));
+			ContextMenu menu = new ContextMenu(showMenu, editMenu);
+			canvas.setOnContextMenuRequested((ev) -> menu.show(canvas, ev.getScreenX(), ev.getScreenY()));
 
 			// すでに配置されているエンティティ数
 			int cornerNum = this.cornerNumList.get(cornerId);
@@ -155,7 +174,12 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 				GUIUtil.setAnchor(canvas, null, null, y, x);
 			}
 		}
-		canvas.setOnMouseClicked(message.getEvent());
+		canvas.setOnMouseClicked((ev) -> {
+			// 左クリック
+			if (ev.getButton() == MouseButton.PRIMARY) {
+				message.getEvent().handle(ev);
+			}
+		});
 		canvas.setOnMouseEntered((ev) -> {
 			canvas.setOpacity(0.5);
 		});

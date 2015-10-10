@@ -26,4 +26,8 @@ public class PlaceDrawMessage extends EntityDrawMessage {
 		super(name, event);
 	}
 
+	public PlaceDrawMessage (String name, EventHandler event, EventHandler event_opt) {
+		super(name, event, event_opt);
+	}
+
 }

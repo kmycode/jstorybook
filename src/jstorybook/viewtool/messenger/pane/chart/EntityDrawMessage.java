@@ -25,14 +25,20 @@ public abstract class EntityDrawMessage extends Message {
 
 	private final String name;
 	private final EventHandler ev;
+	private final EventHandler ev_opt;
 	private int releatedId;
 	private boolean isReleated = false;
 	private int drawId;
 	private boolean isDrawn = false;
 
 	public EntityDrawMessage (String name, EventHandler event) {
+		this(name, event, null);
+	}
+
+	public EntityDrawMessage (String name, EventHandler event, EventHandler event_opt) {
 		this.name = name;
 		this.ev = event;
+		this.ev_opt = event_opt;
 	}
 
 	public String getName () {
@@ -41,6 +47,10 @@ public abstract class EntityDrawMessage extends Message {
 
 	public EventHandler getEvent () {
 		return this.ev;
+	}
+
+	public EventHandler getOptionEvent () {
+		return this.ev_opt;
 	}
 
 	public void setReleatedId (int id) {

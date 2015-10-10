@@ -39,11 +39,6 @@ import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.ResetMessage;
-import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
-import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.ChapterDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.EntityDrawMessage;
@@ -52,6 +47,11 @@ import jstorybook.viewtool.messenger.pane.chart.GroupDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.PlaceDrawMessage;
 import jstorybook.viewtool.messenger.pane.chart.SceneDrawMessage;
+import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 
 /**
  * エンティティ同士の関連
@@ -142,6 +142,7 @@ public class AssociationModel implements IUseMessenger {
 			else if (entity.getEntityType() == EntityType.PERSON) {
 				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.GROUP, EntityType.PERSON);
 				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.PERSON);
+				this.drawArea(EntityType.PERSON, entityId, EntityType.PERSON, entityId, -1, EntityType.SCENE, EntityType.PERSON);
 			}
 			else if (entity.getEntityType() == EntityType.PLACE) {
 				this.drawArea(EntityType.PLACE, entityId, EntityType.PLACE, entityId, -1, EntityType.SCENE, EntityType.PERSON);
@@ -230,19 +231,34 @@ public class AssociationModel implements IUseMessenger {
 							this.messenger.send(new AssociationChartShowMessage(toEntity));
 						};
 						if (to == EntityType.GROUP) {
-							ddMessage = new GroupDrawMessage(toEntity.titleProperty().get(), ev);
+							EventHandler ev_opt = (evs) -> this.messenger.send(new GroupEditorShowMessage(
+									GroupColumnFactory.getInstance().createColumnList((Group) toEntity.entityClone()),
+									GroupColumnFactory.getInstance().createColumnList((Group) toEntity)));
+							ddMessage = new GroupDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
 						}
 						else if (to == EntityType.PERSON) {
-							ddMessage = new PersonDrawMessage(toEntity.titleProperty().get(), ev);
+							EventHandler ev_opt = (evs) -> this.messenger.send(new PersonEditorShowMessage(
+									PersonColumnFactory.getInstance().createColumnList((Person) toEntity.entityClone()),
+									PersonColumnFactory.getInstance().createColumnList((Person) toEntity)));
+							ddMessage = new PersonDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
 						}
 						else if (to == EntityType.PLACE) {
-							ddMessage = new PlaceDrawMessage(toEntity.titleProperty().get(), ev);
+							EventHandler ev_opt = (evs) -> this.messenger.send(new PlaceEditorShowMessage(
+									PlaceColumnFactory.getInstance().createColumnList((Place) toEntity.entityClone()),
+									PlaceColumnFactory.getInstance().createColumnList((Place) toEntity)));
+							ddMessage = new PlaceDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
 						}
 						else if (to == EntityType.SCENE) {
-							ddMessage = new SceneDrawMessage(toEntity.titleProperty().get(), ev);
+							EventHandler ev_opt = (evs) -> this.messenger.send(new SceneEditorShowMessage(
+									SceneColumnFactory.getInstance().createColumnList((Scene) toEntity.entityClone()),
+									SceneColumnFactory.getInstance().createColumnList((Scene) toEntity)));
+							ddMessage = new SceneDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
 						}
 						else if (to == EntityType.CHAPTER) {
-							ddMessage = new ChapterDrawMessage(toEntity.titleProperty().get(), ev);
+							EventHandler ev_opt = (evs) -> this.messenger.send(new ChapterEditorShowMessage(
+									ChapterColumnFactory.getInstance().createColumnList((Chapter) toEntity.entityClone()),
+									ChapterColumnFactory.getInstance().createColumnList((Chapter) toEntity)));
+							ddMessage = new ChapterDrawMessage(toEntity.titleProperty().get(), ev, ev_opt);
 						}
 						if (ddMessage != null) {
 							if (fromDrawId >= 0) {

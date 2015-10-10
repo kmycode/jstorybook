@@ -26,4 +26,8 @@ public class SceneDrawMessage extends EntityDrawMessage {
 		super(name, event);
 	}
 
+	public SceneDrawMessage (String name, EventHandler event, EventHandler event_opt) {
+		super(name, event, event_opt);
+	}
+
 }

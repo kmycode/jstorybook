@@ -26,4 +26,8 @@ public class GroupDrawMessage extends EntityDrawMessage {
 		super(name, event);
 	}
 
+	public GroupDrawMessage (String name, EventHandler event, EventHandler event_opt) {
+		super(name, event, event_opt);
+	}
+
 }

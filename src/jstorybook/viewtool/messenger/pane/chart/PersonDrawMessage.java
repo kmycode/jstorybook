@@ -26,4 +26,8 @@ public class PersonDrawMessage extends EntityDrawMessage {
 		super(name, event);
 	}
 
+	public PersonDrawMessage (String name, EventHandler event, EventHandler event_opt) {
+		super(name, event, event_opt);
+	}
+
 }

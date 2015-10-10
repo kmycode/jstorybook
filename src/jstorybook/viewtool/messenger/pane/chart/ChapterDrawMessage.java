@@ -26,4 +26,8 @@ public class ChapterDrawMessage extends EntityDrawMessage {
 		super(name, event);
 	}
 
+	public ChapterDrawMessage (String name, EventHandler event, EventHandler event_opt) {
+		super(name, event, event_opt);
+	}
+
 }
