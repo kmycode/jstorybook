@@ -15,6 +15,7 @@ package jstorybook.viewtool.messenger.pane.chart;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.StringProperty;
 import jstorybook.viewtool.messenger.Message;
 
 /**
@@ -25,13 +26,19 @@ import jstorybook.viewtool.messenger.Message;
 public class SceneNovelChartShowMessage extends Message {
 
 	private final LongProperty chapterId = new SimpleLongProperty();
+	private final StringProperty name;
 
-	public SceneNovelChartShowMessage (long chapterId) {
+	public SceneNovelChartShowMessage (long chapterId, StringProperty chapterName) {
 		this.chapterId.set(chapterId);
+		this.name = chapterName;
 	}
 
 	public LongProperty chapterIdProperty () {
 		return this.chapterId;
+	}
+
+	public StringProperty chapterNameProperty () {
+		return this.name;
 	}
 
 }

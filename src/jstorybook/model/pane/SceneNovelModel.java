@@ -13,7 +13,9 @@
  */
 package jstorybook.model.pane;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
@@ -75,7 +77,18 @@ public class SceneNovelModel implements IUseMessenger {
 				List<Long> keywordIdList = this.storyModel.getSceneKeywordRelation_Keyword(sceneId);
 
 				// シーンの箱を作る
-				SceneNovelBoxCreateMessage message = new SceneNovelBoxCreateMessage(scene.nameProperty(), scene.textProperty());
+				Calendar startTime = scene.starttimeProperty().get();
+				if (startTime != null) {
+					startTime = (Calendar) startTime.clone();
+					startTime.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset() * -1);
+				}
+				Calendar endTime = scene.endtimeProperty().get();
+				if (endTime != null) {
+					endTime = (Calendar) endTime.clone();
+					endTime.add(Calendar.MILLISECOND, TimeZone.getDefault().getRawOffset() * -1);
+				}
+				SceneNovelBoxCreateMessage message = new SceneNovelBoxCreateMessage(scene.nameProperty(), scene.textProperty(),
+																					startTime, endTime);
 				for (long personId : personIdList) {
 					Person person = this.storyModel.getPersonDAO().getModelById(personId);
 					if (person != null) {

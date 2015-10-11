@@ -14,6 +14,7 @@
 package jstorybook.viewtool.messenger.pane.chart;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javafx.beans.property.StringProperty;
 import jstorybook.viewtool.messenger.Message;
@@ -27,14 +28,18 @@ public class SceneNovelBoxCreateMessage extends Message {
 
 	private final StringProperty sceneName;
 	private final StringProperty sceneText;
+	private final Calendar startTime;
+	private final Calendar endTime;
 
 	private final List<PersonDrawMessage> personDrawMessageList = new ArrayList<>();
 	private final List<PlaceDrawMessage> placeDrawMessageList = new ArrayList<>();
 	private final List<KeywordDrawMessage> keywordDrawMessageList = new ArrayList<>();
 
-	public SceneNovelBoxCreateMessage (StringProperty sceneName, StringProperty sceneText) {
+	public SceneNovelBoxCreateMessage (StringProperty sceneName, StringProperty sceneText, Calendar startTime, Calendar endTime) {
 		this.sceneName = sceneName;
 		this.sceneText = sceneText;
+		this.startTime = startTime;
+		this.endTime = endTime;
 	}
 
 	public List<PersonDrawMessage> getPersonList () {
@@ -47,6 +52,14 @@ public class SceneNovelBoxCreateMessage extends Message {
 
 	public List<KeywordDrawMessage> getKeywordList () {
 		return this.keywordDrawMessageList;
+	}
+
+	public Calendar getStartTime () {
+		return this.startTime;
+	}
+
+	public Calendar getEndTime () {
+		return this.endTime;
 	}
 
 	public StringProperty sceneNameProperty () {

@@ -14,6 +14,9 @@
 package jstorybook.view.pane.chart;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -23,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import jstorybook.common.manager.DateTimeManager;
 import jstorybook.common.manager.FontManager;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.view.pane.IComparablePane;
@@ -31,6 +35,7 @@ import jstorybook.view.pane.MyPane;
 import jstorybook.view.pane.PaneType;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.SceneNovelChartViewModel;
+import jstorybook.viewtool.completer.EditorPaneTitleCompleter;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.ResetMessage;
@@ -48,14 +53,23 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 	private Messenger messenger = new Messenger();
 	private Messenger mainMessenger = Messenger.getInstance();
 	private ViewModelList viewModelList = new ViewModelList(new SceneNovelChartViewModel());
+	private final StringProperty chapterName;
 
 	private VBox mainVBox = new VBox();
 
 	public SceneNovelChartPane (SceneNovelChartShowMessage message, Messenger messenger) {
 		super(ResourceManager.getMessage("msg.scenenovel"));
 
+		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
+		completer.setEntityTypeName(ResourceManager.getMessage("msg.scenenovel"));
+		completer.bindEntityTitle(message.chapterNameProperty());
+		this.textProperty().bind(completer.titleProperty());
+		this.chapterName = message.chapterNameProperty();
+
 		ScrollPane scrollPane = new ScrollPane(this.mainVBox);
 		this.setContent(scrollPane);
+
+		this.mainVBox.setSpacing(10.0);
 
 		// 真ん中に置く
 		this.tabPaneProperty().addListener((obj) -> {
@@ -63,13 +77,10 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 
 				if (this.getTabPane() != null) {
 					// タブの幅に合わせて横の長さを調整
-					double width = 800;
 					double tabWidth = this.getTabPane().getWidth();
-					if (tabWidth > 1300) {
-						width = 1200;
-					}
-					else if (tabWidth > 1100) {
-						width = 1000;
+					double width = tabWidth - 300;
+					if (width < 600) {
+						width = 600;
 					}
 					this.mainVBox.setPrefWidth(width);
 
@@ -101,6 +112,14 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 	@Override
 	public void reload () {
 		this.reset();
+
+		// タイトルの設定
+		Label chapterName = new Label();
+		chapterName.textProperty().bind(this.chapterName);
+		chapterName.fontProperty().bind(FontManager.getInstance().titleFontProperty());
+		VBox.setMargin(chapterName, new Insets(10, 5, 10, 5));
+		this.mainVBox.getChildren().add(chapterName);
+
 		this.viewModelList.executeCommand("draw");
 	}
 
@@ -136,10 +155,33 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 			VBox vBox = new VBox();
 			vBox.setSpacing(10.0);
 
+			HBox sceneNameHBox = new HBox();
+			sceneNameHBox.setAlignment(Pos.CENTER);
+			vBox.getChildren().add(sceneNameHBox);
+
+			ImageView sceneIcon = ResourceManager.getIconNode("scene.png");
+			sceneNameHBox.getChildren().add(sceneIcon);
+
 			TextField sceneName = new TextField();
 			sceneName.fontProperty().bind(FontManager.getInstance().fontProperty());
 			sceneName.textProperty().bindBidirectional(message.sceneNameProperty());
-			vBox.getChildren().add(sceneName);
+			sceneNameHBox.getChildren().add(sceneName);
+			HBox.setHgrow(sceneName, Priority.ALWAYS);
+
+			VBox timeVBox = new VBox();
+			vBox.getChildren().add(timeVBox);
+
+			Label startTime = new Label();
+			startTime.fontProperty().bind(FontManager.getInstance().fontProperty());
+			startTime.setText(ResourceManager.getMessage("msg.scene.starttime") + ": " + DateTimeManager.getInstance().
+					dateTimeToString(message.getStartTime()));
+			timeVBox.getChildren().add(startTime);
+
+			Label endTime = new Label();
+			endTime.fontProperty().bind(FontManager.getInstance().fontProperty());
+			endTime.setText(ResourceManager.getMessage("msg.scene.endtime") + ": " + DateTimeManager.getInstance().dateTimeToString(
+					message.getEndTime()));
+			timeVBox.getChildren().add(endTime);
 
 			HBox hBox = new HBox();
 			hBox.setSpacing(10.0);
@@ -147,16 +189,17 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 			// 関連エンティティをリストアップ
 			ScrollPane relateScrollPane = new ScrollPane();
 			VBox relateList = new VBox();
-			for (EntityDrawMessage mes : message.getPersonList()) {
-				relateList.getChildren().add(this.getRelate(mes, "person.png"));
-			}
 			for (EntityDrawMessage mes : message.getPlaceList()) {
 				relateList.getChildren().add(this.getRelate(mes, "place.png"));
+			}
+			for (EntityDrawMessage mes : message.getPersonList()) {
+				relateList.getChildren().add(this.getRelate(mes, "person.png"));
 			}
 			for (EntityDrawMessage mes : message.getKeywordList()) {
 				relateList.getChildren().add(this.getRelate(mes, "keyword.png"));
 			}
 			relateScrollPane.setMaxWidth(200.0);
+			relateScrollPane.setMinWidth(200.0);
 			relateScrollPane.setPrefWidth(200.0);
 			relateList.setSpacing(6.0);
 			relateScrollPane.setContent(relateList);

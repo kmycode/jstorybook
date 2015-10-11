@@ -931,7 +931,9 @@ public class StoryModel implements IUseMessenger {
 
 	public void sceneNovelEditorChapter () {
 		if (this.chapterEntity.selectedEntityList.get().size() > 0) {
-			this.messenger.send(new SceneNovelChartShowMessage(this.chapterEntity.selectedEntityList.get().get(0).idProperty().get()));
+			long chapterId = this.chapterEntity.selectedEntityList.get().get(0).idProperty().get();
+			this.messenger.send(new SceneNovelChartShowMessage(chapterId, this.chapterEntity.dao.get().getModelById(chapterId).
+															   nameProperty()));
 		}
 	}
 
