@@ -53,10 +53,13 @@ import jstorybook.view.dialog.NewStoryDialog;
 import jstorybook.view.dialog.PreferenceDialog;
 import jstorybook.view.dialog.ProgressDialog;
 import jstorybook.view.dialog.StorySettingDialog;
+import jstorybook.view.pane.IComparablePane;
 import jstorybook.view.pane.IReloadable;
+import jstorybook.view.pane.MyPane;
 import jstorybook.view.pane.SearchEntityPane;
 import jstorybook.view.pane.chart.AssociationChartPane;
 import jstorybook.view.pane.chart.PersonUsingChartPane;
+import jstorybook.view.pane.chart.SceneNovelChartPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
@@ -94,6 +97,7 @@ import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.SceneNovelChartShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
@@ -496,6 +500,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(AssociationChartShowMessage.class, this, (ev) -> {
 			MainWindow.this.addAssociationChartTab((AssociationChartShowMessage) ev);
 		});
+		this.messenger.apply(SceneNovelChartShowMessage.class, this, (ev) -> {
+			MainWindow.this.addSceneNovelChartTab((SceneNovelChartShowMessage) ev);
+		});
 		this.messenger.apply(PersonUsingChartShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPersonUsingChartTab((PersonUsingChartShowMessage) ev);
 		});
@@ -520,6 +527,15 @@ public class MainWindow extends MyStage {
 
 		// フォントを設定
 		GUIUtil.bindFontStyle(tab);
+
+		// 同じタブがないか？
+		if (tab instanceof IComparablePane) {
+			MyPane other = this.findEqualPane((IComparablePane) tab);
+			if (other != null) {
+				other.getTabPane().getSelectionModel().select(other);
+				return;
+			}
+		}
 
 		// アクティブなTabPaneを探す、なければてきとーなTabPaneをアクティブにする
 		// そもそもTabPaneが全く無ければ、新しく作ってしまう
@@ -549,6 +565,20 @@ public class MainWindow extends MyStage {
 		this.mainPane.get().clearTab();
 	}
 
+	// 同じタブがないか探す
+	private MyPane findEqualPane (IComparablePane pane) {
+		for (DockableTabPane dtabPane : this.mainPane.get().getTabPaneList()) {
+			for (Tab dtab : dtabPane.getTabs()) {
+				if (dtab instanceof IComparablePane) {
+					if (((IComparablePane) dtab).isEqualPane(pane)) {
+						return (MyPane) pane;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	// タブを全部リロード
 	private void reloadTab () {
 		for (DockableTabPane dtabPane : this.mainPane.get().getTabPaneList()) {
@@ -573,6 +603,7 @@ public class MainWindow extends MyStage {
 	}
 
 	// 指定したエンティティリストと同じリストタブを探す
+	@Deprecated
 	private EntityListPane findEntityListPane (EntityType entityType) {
 		for (DockableTabPane dtabPane : this.mainPane.get().getTabPaneList()) {
 			for (Tab dtab : dtabPane.getTabs()) {
@@ -749,6 +780,11 @@ public class MainWindow extends MyStage {
 	// 関連図
 	private void addAssociationChartTab (AssociationChartShowMessage message) {
 		this.addTab(new AssociationChartPane(message, this.messenger));
+	}
+
+	// シーン一括編集
+	private void addSceneNovelChartTab (SceneNovelChartShowMessage message) {
+		this.addTab(new SceneNovelChartPane(message, this.messenger));
 	}
 
 	// 登場人物の使用状況

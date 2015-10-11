@@ -11,27 +11,15 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.messenger.pane.chart;
-
-import javafx.event.EventHandler;
+package jstorybook.view.pane;
 
 /**
- * チャートにシーンを描画するメッセージ
+ * ペインの種類
  *
  * @author KMY
  */
-public class SceneDrawMessage extends EntityDrawMessage {
+public enum PaneType {
 
-	public SceneDrawMessage (String name) {
-		super(name);
-	}
-
-	public SceneDrawMessage (String name, EventHandler event) {
-		super(name, event);
-	}
-
-	public SceneDrawMessage (String name, EventHandler event, EventHandler event_opt) {
-		super(name, event, event_opt);
-	}
-
+	ENTITY_EDITOR,
+	SCENE_NOVEL,;
 }

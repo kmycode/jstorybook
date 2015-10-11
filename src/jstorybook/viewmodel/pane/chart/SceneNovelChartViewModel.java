@@ -11,27 +11,34 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.viewtool.messenger.pane.chart;
+package jstorybook.viewmodel.pane.chart;
 
-import javafx.event.EventHandler;
+import jstorybook.model.pane.SceneNovelModel;
+import jstorybook.viewmodel.ViewModel;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * チャートにシーンを描画するメッセージ
+ * シーン一括編集のビューモデル
  *
  * @author KMY
  */
-public class SceneDrawMessage extends EntityDrawMessage {
+public class SceneNovelChartViewModel extends ViewModel {
 
-	public SceneDrawMessage (String name) {
-		super(name);
+	private final SceneNovelModel model = new SceneNovelModel();
+
+	@Override
+	protected void storeProperty () {
+		this.applyProperty("chapterId", this.model.chapterIdProperty());
 	}
 
-	public SceneDrawMessage (String name, EventHandler event) {
-		super(name, event);
+	@Override
+	public void storeMessenger (Messenger messenger) {
+		this.model.setMessenger(messenger);
 	}
 
-	public SceneDrawMessage (String name, EventHandler event, EventHandler event_opt) {
-		super(name, event, event_opt);
+	@Override
+	protected void storeCommand () {
+		this.applyCommand("draw", (ev) -> this.model.draw());
 	}
 
 }

@@ -13,8 +13,11 @@
  */
 package jstorybook.view.pane.list;
 
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.common.util.GUIUtil;
 import jstorybook.model.entity.Chapter;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.messenger.Messenger;
@@ -28,6 +31,16 @@ public class ChapterListPane extends EntityListPane<Chapter> {
 
 	public ChapterListPane (Messenger messenger) {
 		super(ResourceManager.getMessage("msg.chapter"), EntityType.CHAPTER, messenger);
+	}
+
+	@Override
+	protected void addContextMenu (ViewModelList viewModelList, ContextMenu contextMenu) {
+
+		// シーン一括編集メニューの設定
+		MenuItem editMenu = GUIUtil.createMenuItem(viewModelList, "chapterSceneNovel");
+		editMenu.setText(ResourceManager.getMessage("msg.scenenovel"));
+
+		contextMenu.getItems().addAll(editMenu);
 	}
 
 	@Override

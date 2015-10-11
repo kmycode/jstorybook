@@ -102,6 +102,7 @@ import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
 import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
+import jstorybook.viewtool.messenger.pane.chart.SceneNovelChartShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
@@ -926,6 +927,12 @@ public class StoryModel implements IUseMessenger {
 
 	public void associationChapter () {
 		this.associationEntity(this.chapterEntity.selectedEntityList.get());
+	}
+
+	public void sceneNovelEditorChapter () {
+		if (this.chapterEntity.selectedEntityList.get().size() > 0) {
+			this.messenger.send(new SceneNovelChartShowMessage(this.chapterEntity.selectedEntityList.get().get(0).idProperty().get()));
+		}
 	}
 
 	public void newSex () {

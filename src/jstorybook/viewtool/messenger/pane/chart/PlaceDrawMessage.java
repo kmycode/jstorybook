@@ -22,6 +22,10 @@ import javafx.event.EventHandler;
  */
 public class PlaceDrawMessage extends EntityDrawMessage {
 
+	public PlaceDrawMessage (String name) {
+		super(name);
+	}
+
 	public PlaceDrawMessage (String name, EventHandler event) {
 		super(name, event);
 	}

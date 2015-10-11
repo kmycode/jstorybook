@@ -22,6 +22,10 @@ import javafx.event.EventHandler;
  */
 public class ChapterDrawMessage extends EntityDrawMessage {
 
+	public ChapterDrawMessage (String name) {
+		super(name);
+	}
+
 	public ChapterDrawMessage (String name, EventHandler event) {
 		super(name, event);
 	}

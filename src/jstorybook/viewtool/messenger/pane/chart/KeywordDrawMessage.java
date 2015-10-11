@@ -22,6 +22,10 @@ import javafx.event.EventHandler;
  */
 public class KeywordDrawMessage extends EntityDrawMessage {
 
+	public KeywordDrawMessage (String name) {
+		super(name);
+	}
+
 	public KeywordDrawMessage (String name, EventHandler event) {
 		super(name, event);
 	}

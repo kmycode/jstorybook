@@ -31,6 +31,10 @@ public abstract class EntityDrawMessage extends Message {
 	private int drawId;
 	private boolean isDrawn = false;
 
+	public EntityDrawMessage (String name) {
+		this(name, null, null);
+	}
+
 	public EntityDrawMessage (String name, EventHandler event) {
 		this(name, event, null);
 	}

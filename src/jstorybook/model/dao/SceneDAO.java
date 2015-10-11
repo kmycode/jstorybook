@@ -41,6 +41,7 @@ public class SceneDAO extends DAO<Scene> {
 		model.starttimeProperty().set(SQLiteUtil.getCalendar(rs.getString("starttime")));
 		model.endtimeProperty().set(SQLiteUtil.getCalendar(rs.getString("endtime")));
 		model.noteProperty().set(rs.getString("note"));
+		model.textProperty().set(rs.getString("text"));
 		return model;
 	}
 

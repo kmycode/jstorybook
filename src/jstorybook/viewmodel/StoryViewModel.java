@@ -168,6 +168,8 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("chapterOrderReset", (ev) -> this.storyModel.get().getChapterDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
+		this.applyCommand("chapterSceneNovel", (ev) -> this.storyModel.get().sceneNovelEditorChapter(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showSexList", (ev) -> this.applicationModel.showSexList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("sexNew", (ev) -> this.storyModel.get().newSex(), this.storyModel.get().canEditProperty());

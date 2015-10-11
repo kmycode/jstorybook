@@ -13,25 +13,25 @@
  */
 package jstorybook.viewtool.messenger.pane.chart;
 
-import javafx.event.EventHandler;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * チャートにシーンを描画するメッセージ
+ * シーン一括編集画面を開くメッセージ
  *
  * @author KMY
  */
-public class SceneDrawMessage extends EntityDrawMessage {
+public class SceneNovelChartShowMessage extends Message {
 
-	public SceneDrawMessage (String name) {
-		super(name);
+	private final LongProperty chapterId = new SimpleLongProperty();
+
+	public SceneNovelChartShowMessage (long chapterId) {
+		this.chapterId.set(chapterId);
 	}
 
-	public SceneDrawMessage (String name, EventHandler event) {
-		super(name, event);
-	}
-
-	public SceneDrawMessage (String name, EventHandler event, EventHandler event_opt) {
-		super(name, event, event_opt);
+	public LongProperty chapterIdProperty () {
+		return this.chapterId;
 	}
 
 }

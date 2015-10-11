@@ -150,7 +150,15 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
 		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), upMenu, downMenu, resetOrder,
 										   new SeparatorMenuItem(), viewOnAssociation);
+
+		// サブクラス独自のメニュー項目
+		this.addContextMenu(this.viewModelList, this.contextMenu);
+
 		this.tableView.setContextMenu(contextMenu);
+	}
+
+	// コンテキストメニューを設定（サブクラス専用）
+	protected void addContextMenu (ViewModelList viewModelList, ContextMenu contextMenu) {
 	}
 
 	// ならべ替えのボタン

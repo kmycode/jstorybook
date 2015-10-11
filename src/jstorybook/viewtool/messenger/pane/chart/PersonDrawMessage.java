@@ -22,6 +22,10 @@ import javafx.event.EventHandler;
  */
 public class PersonDrawMessage extends EntityDrawMessage {
 
+	public PersonDrawMessage (String name) {
+		super(name);
+	}
+
 	public PersonDrawMessage (String name, EventHandler event) {
 		super(name, event);
 	}
