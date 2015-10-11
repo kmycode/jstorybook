@@ -11,17 +11,19 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane;
+package jstorybook.viewtool.messenger.pane.relation;
+
+import java.util.List;
 
 /**
- * ペインの種類
+ * 関連属性リストのチェックを更新
  *
  * @author KMY
  */
-public enum PaneType {
+public class AttributeRelationRenewMessage extends RelationRenewMessage {
 
-	ENTITY_EDITOR,
-	ENTITY_LIST,
-	SCENE_NOVEL,
-	PERSON_USING_CHART,;
+	public AttributeRelationRenewMessage (List<Long> entityIdList) {
+		super(entityIdList);
+	}
+
 }

@@ -19,8 +19,10 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
+import jstorybook.view.pane.IComparablePane;
 import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.PaneType;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewmodel.pane.chart.PersonUsingChartViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
@@ -33,7 +35,7 @@ import jstorybook.viewtool.messenger.pane.chart.Data2DSendMessage;
  *
  * @author KMY
  */
-public class PersonUsingChartPane extends MyPane implements IReloadable {
+public class PersonUsingChartPane extends MyPane implements IReloadable, IComparablePane {
 
 	private final BarChart<String, Number> chart;
 	private XYChart.Series<String, Number> chartSeries = new XYChart.Series<>();
@@ -82,6 +84,16 @@ public class PersonUsingChartPane extends MyPane implements IReloadable {
 	public void reload () {
 		this.reset();
 		this.viewModelList.executeCommand("load");
+	}
+
+	@Override
+	public PaneType getPaneType () {
+		return PaneType.PERSON_USING_CHART;
+	}
+
+	@Override
+	public long getPaneId () {
+		return 0;
 	}
 
 }

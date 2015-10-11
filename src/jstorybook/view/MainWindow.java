@@ -61,6 +61,7 @@ import jstorybook.view.pane.chart.AssociationChartPane;
 import jstorybook.view.pane.chart.PersonUsingChartPane;
 import jstorybook.view.pane.chart.SceneNovelChartPane;
 import jstorybook.view.pane.editor.EntityEditorPane;
+import jstorybook.view.pane.list.AttributeListPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
 import jstorybook.view.pane.list.GroupListPane;
@@ -98,6 +99,7 @@ import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.SceneNovelChartShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.AttributeEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
@@ -107,6 +109,7 @@ import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SexEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.TagEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.list.AttributeListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.KeywordListShowMessage;
@@ -272,6 +275,10 @@ public class MainWindow extends MyStage {
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showSexList");
 			menu.setText(ResourceManager.getMessage("msg.person.sex"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+E"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showAttributeList");
+			menu.setText(ResourceManager.getMessage("msg.attribute"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+A"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showGroupList");
 			menu.setText(ResourceManager.getMessage("msg.group"));
@@ -462,6 +469,9 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(SexListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSexListTab();
 		});
+		this.messenger.apply(AttributeListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addAttributeListTab();
+		});
 		this.messenger.apply(KeywordListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addKeywordListTab();
 		});
@@ -486,6 +496,9 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(SexEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSexEditorTab((SexEditorShowMessage) ev);
+		});
+		this.messenger.apply(AttributeEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addAttributeEditorTab((AttributeEditorShowMessage) ev);
 		});
 		this.messenger.apply(KeywordEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addKeywordEditorTab((KeywordEditorShowMessage) ev);
@@ -523,7 +536,7 @@ public class MainWindow extends MyStage {
 	}
 
 	// タブを追加
-	private void addTab (DockableTab tab) {
+	private boolean addTab (DockableTab tab) {
 
 		// フォントを設定
 		GUIUtil.bindFontStyle(tab);
@@ -533,7 +546,7 @@ public class MainWindow extends MyStage {
 			MyPane other = this.findEqualPane((IComparablePane) tab);
 			if (other != null) {
 				other.getTabPane().getSelectionModel().select(other);
-				return;
+				return false;
 			}
 		}
 
@@ -558,6 +571,8 @@ public class MainWindow extends MyStage {
 			MainWindow.this.mainPane.get().setActiveTabPane((DockableTabPane) obj.getSource());
 		});
 		this.mainPane.get().getActiveTabPane().getSelectionModel().select(tab);
+
+		return true;
 	}
 
 	// タブを全部消す
@@ -571,7 +586,7 @@ public class MainWindow extends MyStage {
 			for (Tab dtab : dtabPane.getTabs()) {
 				if (dtab instanceof IComparablePane) {
 					if (((IComparablePane) dtab).isEqualPane(pane)) {
-						return (MyPane) pane;
+						return (MyPane) dtab;
 					}
 				}
 			}
@@ -592,13 +607,8 @@ public class MainWindow extends MyStage {
 
 	// エンティティリストタブを追加
 	private void addEntityListTab (EntityListPane tab) {
-		EntityListPane otherTab = this.findEntityListPane(tab.getEntityType());
-		if (otherTab != null) {
-			otherTab.getTabPane().getSelectionModel().select(otherTab);
-		}
-		else {
+		if (this.addTab(tab)) {
 			tab.setViewModelList(this.viewModelList);
-			this.addTab(tab);
 		}
 	}
 
@@ -663,6 +673,12 @@ public class MainWindow extends MyStage {
 	// 性リストタブを追加
 	private void addSexListTab () {
 		EntityListPane tab = new SexListPane(this.messenger);
+		this.addEntityListTab(tab);
+	}
+
+	// 属性リストタブを追加
+	private void addAttributeListTab () {
+		EntityListPane tab = new AttributeListPane(this.messenger);
 		this.addEntityListTab(tab);
 	}
 
@@ -759,6 +775,11 @@ public class MainWindow extends MyStage {
 	// 性編集タブ
 	private void addSexEditorTab (SexEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.sex"));
+	}
+
+	// 属性編集タブ
+	private void addAttributeEditorTab (AttributeEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.attribute"));
 	}
 
 	// キーワード編集タブ

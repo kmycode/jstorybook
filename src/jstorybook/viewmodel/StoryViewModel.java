@@ -74,6 +74,12 @@ public class StoryViewModel extends ViewModel {
 						   modelListProperty());
 		this.applyProperty("sexSelected", this.storyModel.get().getSexEntity().selectedEntityProperty());
 
+		this.applyProperty("attributeColumnList", this.storyModel.get().entityColumnProperty().get().
+						   attributeColumnListProperty());
+		this.applyProperty("attributeList", this.storyModel.get().getAttributeEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("attributeSelected", this.storyModel.get().getAttributeEntity().selectedEntityProperty());
+
 		this.applyProperty("keywordColumnList", this.storyModel.get().entityColumnProperty().get().
 						   keywordColumnListProperty());
 		this.applyProperty("keywordList", this.storyModel.get().getKeywordEntity().DAOProperty().get().
@@ -183,6 +189,21 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("sexAssociation", null, new SimpleBooleanProperty(false));
 		this.applyCommand("sexOrderReset", (ev) -> this.storyModel.get().getSexDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
+		this.applyCommand("showAttributeList", (ev) -> this.applicationModel.showAttributeList(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("attributeNew", (ev) -> this.storyModel.get().newAttribute(), this.storyModel.get().canEditProperty());
+		this.applyCommand("attributeEdit", (ev) -> this.storyModel.get().editAttribute(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("attributeDelete", (ev) -> this.storyModel.get().deleteAttribute(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("attributeUp", (ev) -> this.storyModel.get().upAttribute(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("attributeDown", (ev) -> this.storyModel.get().downAttribute(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("attributeAssociation", null, new SimpleBooleanProperty(false));
+		this.applyCommand("attributeOrderReset", (ev) -> this.storyModel.get().getAttributeDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
 		this.applyCommand("showKeywordList", (ev) -> this.applicationModel.showKeywordList(), this.storyModel.get().canEditProperty());

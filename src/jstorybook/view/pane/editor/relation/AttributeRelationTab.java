@@ -11,17 +11,23 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane;
+package jstorybook.view.pane.editor.relation;
+
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Attribute;
+import jstorybook.model.entity.columnfactory.AttributeColumnFactory;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * ペインの種類
+ * 関係する属性を設定するタブ
  *
  * @author KMY
  */
-public enum PaneType {
+public class AttributeRelationTab extends EntityRelationTab<Attribute> {
 
-	ENTITY_EDITOR,
-	ENTITY_LIST,
-	SCENE_NOVEL,
-	PERSON_USING_CHART,;
+	public AttributeRelationTab (long entityId, Messenger messenger) {
+		super(ResourceManager.getMessage("msg.relation.attribute"), entityId, messenger);
+		this.tableView.setColumnList(AttributeColumnFactory.getInstance().createColumnList());
+	}
+
 }

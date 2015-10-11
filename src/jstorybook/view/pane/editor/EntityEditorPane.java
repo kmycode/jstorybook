@@ -52,6 +52,7 @@ import jstorybook.view.control.editor.DateTimeControl;
 import jstorybook.view.control.editor.SexControl;
 import jstorybook.view.pane.IReloadable;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.editor.relation.AttributeRelationTab;
 import jstorybook.view.pane.editor.relation.ChapterRelationTab;
 import jstorybook.view.pane.editor.relation.EntityRelationTab;
 import jstorybook.view.pane.editor.relation.GroupRelationTab;
@@ -73,6 +74,9 @@ import jstorybook.viewtool.messenger.pane.column.EditorColumnSexAddMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnSexMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnTextMessage;
 import jstorybook.viewtool.messenger.pane.column.PropertyNoteSetMessage;
+import jstorybook.viewtool.messenger.pane.relation.AttributeRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.AttributeRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.AttributeRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
@@ -130,6 +134,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	protected PlaceRelationTab placeRelationTab;
 	protected SceneRelationTab sceneRelationTab;
 	protected ChapterRelationTab chapterRelationTab;
+	protected AttributeRelationTab attributeRelationTab;
 	protected KeywordRelationTab keywordRelationTab;
 	protected TagRelationTab tagRelationTab;
 
@@ -347,6 +352,16 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			EntityEditorPane.this.renewChapterRelationTab(mes);
 		});
 
+		// 関連属性タブを設定
+		this.messenger.apply(AttributeRelationShowMessage.class, this, (ev) -> {
+			AttributeRelationShowMessage mes = (AttributeRelationShowMessage) ev;
+			EntityEditorPane.this.addAttributeRelationTab(mes);
+		});
+		this.messenger.apply(AttributeRelationRenewMessage.class, this, (ev) -> {
+			AttributeRelationRenewMessage mes = (AttributeRelationRenewMessage) ev;
+			EntityEditorPane.this.renewAttributeRelationTab(mes);
+		});
+
 		// 関連キーワードタブを設定
 		this.messenger.apply(KeywordRelationShowMessage.class, this, (ev) -> {
 			KeywordRelationShowMessage mes = (KeywordRelationShowMessage) ev;
@@ -393,6 +408,11 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 				((ChapterRelationListGetMessage) ev).setRelationList(this.chapterRelationTab.getSelectedIdList());
 			}
 		});
+		this.messenger.apply(AttributeRelationListGetMessage.class, this, (ev) -> {
+			if (this.attributeRelationTab != null) {
+				((AttributeRelationListGetMessage) ev).setRelationList(this.attributeRelationTab.getSelectedIdList());
+			}
+		});
 		this.messenger.apply(KeywordRelationListGetMessage.class, this, (ev) -> {
 			if (this.keywordRelationTab != null) {
 				((KeywordRelationListGetMessage) ev).setRelationList(this.keywordRelationTab.getSelectedIdList());
@@ -434,6 +454,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		if (this.chapterRelationTab != null) {
 			this.chapterRelationTab.resetChanged();
 		}
+		if (this.attributeRelationTab != null) {
+			this.attributeRelationTab.resetChanged();
+		}
 		if (this.keywordRelationTab != null) {
 			this.keywordRelationTab.resetChanged();
 		}
@@ -471,6 +494,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		}
 		if (this.chapterRelationTab != null) {
 			result |= this.chapterRelationTab.changedProperty().get();
+		}
+		if (this.attributeRelationTab != null) {
+			result |= this.attributeRelationTab.changedProperty().get();
 		}
 		if (this.keywordRelationTab != null) {
 			result |= this.keywordRelationTab.changedProperty().get();
@@ -539,6 +565,15 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 	private void renewChapterRelationTab (ChapterRelationRenewMessage mes) {
 		this.renewRelationTab(mes, this.chapterRelationTab);
+	}
+
+	private void addAttributeRelationTab (AttributeRelationShowMessage mes) {
+		this.attributeRelationTab = new AttributeRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
+		this.addRelationTab(mes, this.attributeRelationTab, "attributeList");
+	}
+
+	private void renewAttributeRelationTab (AttributeRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.attributeRelationTab);
 	}
 
 	private void addKeywordRelationTab (KeywordRelationShowMessage mes) {

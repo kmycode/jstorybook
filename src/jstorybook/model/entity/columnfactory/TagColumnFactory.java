@@ -16,11 +16,11 @@ package jstorybook.model.entity.columnfactory;
 import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Tag;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Tag;
 
 /**
  * タグリストのカラム
@@ -55,6 +55,7 @@ public class TagColumnFactory extends ColumnFactory<Tag> {
 		columnList.addRelation(EntityRelation.KEYWORD_TAG);
 		columnList.addRelation(EntityRelation.SCENE_TAG);
 		columnList.addRelation(EntityRelation.CHAPTER_TAG);
+		columnList.addRelation(EntityRelation.ATTRIBUTE_TAG);
 		columnList.addRelation(EntityRelation.TAG_TAG);
 		EditorColumn column;
 

@@ -11,17 +11,16 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane;
+package jstorybook.model.entity;
 
 /**
- * ペインの種類
+ * 集団と属性の関係
  *
  * @author KMY
  */
-public enum PaneType {
+public class GroupAttributeRelation extends EntityRelation<Group, Attribute> {
 
-	ENTITY_EDITOR,
-	ENTITY_LIST,
-	SCENE_NOVEL,
-	PERSON_USING_CHART,;
+	public GroupAttributeRelation () {
+	}
+
 }

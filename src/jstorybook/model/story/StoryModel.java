@@ -27,16 +27,20 @@ import javafx.beans.property.StringProperty;
 import jstorybook.common.contract.DialogResult;
 import jstorybook.common.contract.StorySettingName;
 import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.dao.AttributeDAO;
+import jstorybook.model.dao.AttributeTagRelationDAO;
 import jstorybook.model.dao.ChapterDAO;
 import jstorybook.model.dao.ChapterSceneRelationDAO;
 import jstorybook.model.dao.ChapterTagRelationDAO;
 import jstorybook.model.dao.DAO;
+import jstorybook.model.dao.GroupAttributeRelationDAO;
 import jstorybook.model.dao.GroupDAO;
 import jstorybook.model.dao.GroupKeywordRelationDAO;
 import jstorybook.model.dao.GroupPersonRelationDAO;
 import jstorybook.model.dao.GroupTagRelationDAO;
 import jstorybook.model.dao.KeywordDAO;
 import jstorybook.model.dao.KeywordTagRelationDAO;
+import jstorybook.model.dao.PersonAttributeRelationDAO;
 import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.dao.PersonKeywordRelationDAO;
 import jstorybook.model.dao.PersonPersonRelationDAO;
@@ -53,11 +57,14 @@ import jstorybook.model.dao.SexDAO;
 import jstorybook.model.dao.StorySettingDAO;
 import jstorybook.model.dao.TagDAO;
 import jstorybook.model.dao.TagTagRelationDAO;
+import jstorybook.model.entity.Attribute;
+import jstorybook.model.entity.AttributeTagRelation;
 import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.ChapterSceneRelation;
 import jstorybook.model.entity.ChapterTagRelation;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Group;
+import jstorybook.model.entity.GroupAttributeRelation;
 import jstorybook.model.entity.GroupKeywordRelation;
 import jstorybook.model.entity.GroupPersonRelation;
 import jstorybook.model.entity.GroupTagRelation;
@@ -65,6 +72,7 @@ import jstorybook.model.entity.ISortableEntity;
 import jstorybook.model.entity.Keyword;
 import jstorybook.model.entity.KeywordTagRelation;
 import jstorybook.model.entity.Person;
+import jstorybook.model.entity.PersonAttributeRelation;
 import jstorybook.model.entity.PersonKeywordRelation;
 import jstorybook.model.entity.PersonPersonRelation;
 import jstorybook.model.entity.PersonTagRelation;
@@ -80,6 +88,7 @@ import jstorybook.model.entity.Sex;
 import jstorybook.model.entity.StorySetting;
 import jstorybook.model.entity.Tag;
 import jstorybook.model.entity.TagTagRelation;
+import jstorybook.model.entity.columnfactory.AttributeColumnFactory;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
@@ -103,6 +112,7 @@ import jstorybook.viewtool.messenger.pane.EntityEditorCloseMessage;
 import jstorybook.viewtool.messenger.pane.EntityListNoSelectMessage;
 import jstorybook.viewtool.messenger.pane.chart.AssociationChartShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.SceneNovelChartShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.AttributeEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
@@ -135,6 +145,7 @@ public class StoryModel implements IUseMessenger {
 	private final StoryEntityModel<Scene, SceneDAO> sceneEntity = new StoryEntityModel<>(new SceneDAO());
 	private final StoryEntityModel<Chapter, ChapterDAO> chapterEntity = new StoryEntityModel<>(new ChapterDAO());
 	private final StoryEntityModel<Sex, SexDAO> sexEntity = new StoryEntityModel<>(new SexDAO());
+	private final StoryEntityModel<Attribute, AttributeDAO> attributeEntity = new StoryEntityModel<>(new AttributeDAO());
 	private final StoryEntityModel<Keyword, KeywordDAO> keywordEntity = new StoryEntityModel<>(new KeywordDAO());
 	private final StoryEntityModel<Tag, TagDAO> tagEntity = new StoryEntityModel<>(new TagDAO());
 	private final StoryEntityModel<PersonPersonRelation, PersonPersonRelationDAO> personPersonEntity = new StoryEntityModel<>(
@@ -147,6 +158,10 @@ public class StoryModel implements IUseMessenger {
 			new ScenePersonRelationDAO());
 	private final StoryEntityModel<ScenePlaceRelation, ScenePlaceRelationDAO> scenePlaceEntity = new StoryEntityModel<>(
 			new ScenePlaceRelationDAO());
+	private final StoryEntityModel<PersonAttributeRelation, PersonAttributeRelationDAO> personAttributeEntity = new StoryEntityModel<>(
+			new PersonAttributeRelationDAO());
+	private final StoryEntityModel<GroupAttributeRelation, GroupAttributeRelationDAO> groupAttributeEntity = new StoryEntityModel<>(
+			new GroupAttributeRelationDAO());
 	private final StoryEntityModel<PersonKeywordRelation, PersonKeywordRelationDAO> personKeywordEntity = new StoryEntityModel<>(
 			new PersonKeywordRelationDAO());
 	private final StoryEntityModel<GroupKeywordRelation, GroupKeywordRelationDAO> groupKeywordEntity = new StoryEntityModel<>(
@@ -165,6 +180,8 @@ public class StoryModel implements IUseMessenger {
 			new SceneTagRelationDAO());
 	private final StoryEntityModel<ChapterTagRelation, ChapterTagRelationDAO> chapterTagEntity = new StoryEntityModel<>(
 			new ChapterTagRelationDAO());
+	private final StoryEntityModel<AttributeTagRelation, AttributeTagRelationDAO> attributeTagEntity = new StoryEntityModel<>(
+			new AttributeTagRelationDAO());
 	private final StoryEntityModel<KeywordTagRelation, KeywordTagRelationDAO> keywordTagEntity = new StoryEntityModel<>(
 			new KeywordTagRelationDAO());
 	private final StoryEntityModel<TagTagRelation, TagTagRelationDAO> tagTagEntity = new StoryEntityModel<>(
@@ -304,6 +321,7 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.sceneEntity.dao.get());
 		daoList.add(this.chapterEntity.dao.get());
 		daoList.add(this.sexEntity.dao.get());
+		daoList.add(this.attributeEntity.dao.get());
 		daoList.add(this.keywordEntity.dao.get());
 		daoList.add(this.tagEntity.dao.get());
 		daoList.add(this.personPersonEntity.dao.get());
@@ -311,6 +329,8 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.chapterSceneEntity.dao.get());
 		daoList.add(this.scenePersonEntity.dao.get());
 		daoList.add(this.scenePlaceEntity.dao.get());
+		daoList.add(this.personAttributeEntity.dao.get());
+		daoList.add(this.groupAttributeEntity.dao.get());
 		daoList.add(this.personKeywordEntity.dao.get());
 		daoList.add(this.groupKeywordEntity.dao.get());
 		daoList.add(this.placeKeywordEntity.dao.get());
@@ -320,6 +340,7 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.placeTagEntity.dao.get());
 		daoList.add(this.sceneTagEntity.dao.get());
 		daoList.add(this.chapterTagEntity.dao.get());
+		daoList.add(this.attributeTagEntity.dao.get());
 		daoList.add(this.keywordTagEntity.dao.get());
 		daoList.add(this.tagTagEntity.dao.get());
 
@@ -381,6 +402,10 @@ public class StoryModel implements IUseMessenger {
 		return this.sexEntity.dao.get();
 	}
 
+	public AttributeDAO getAttributeDAO () {
+		return this.attributeEntity.dao.get();
+	}
+
 	public KeywordDAO getKeywordDAO () {
 		return this.keywordEntity.dao.get();
 	}
@@ -420,6 +445,10 @@ public class StoryModel implements IUseMessenger {
 
 	public StoryEntityModel<Sex, SexDAO> getSexEntity () {
 		return this.sexEntity;
+	}
+
+	public StoryEntityModel<Attribute, AttributeDAO> getAttributeEntity () {
+		return this.attributeEntity;
 	}
 
 	public StoryEntityModel<Keyword, KeywordDAO> getKeywordEntity () {
@@ -502,6 +531,38 @@ public class StoryModel implements IUseMessenger {
 
 	public void setScenePlaceRelation_Scene (long sceneId, List<Long> list) {
 		this.scenePlaceEntity.dao.get().setRelatedIdList(sceneId, list, false);
+	}
+
+	public List<Long> getPersonAttributeRelation_Attribute (long attributeId) {
+		return this.personAttributeEntity.dao.get().getRelatedIdList(attributeId, true);
+	}
+
+	public void setPersonAttributeRelation_Attribute (long attributeId, List<Long> list) {
+		this.personAttributeEntity.dao.get().setRelatedIdList(attributeId, list, true);
+	}
+
+	public List<Long> getPersonAttributeRelation_Person (long personId) {
+		return this.personAttributeEntity.dao.get().getRelatedIdList(personId, false);
+	}
+
+	public void setPersonAttributeRelation_Person (long personId, List<Long> list) {
+		this.personAttributeEntity.dao.get().setRelatedIdList(personId, list, false);
+	}
+
+	public List<Long> getGroupAttributeRelation_Attribute (long attributeId) {
+		return this.groupAttributeEntity.dao.get().getRelatedIdList(attributeId, true);
+	}
+
+	public void setGroupAttributeRelation_Attribute (long attributeId, List<Long> list) {
+		this.groupAttributeEntity.dao.get().setRelatedIdList(attributeId, list, true);
+	}
+
+	public List<Long> getGroupAttributeRelation_Group (long groupId) {
+		return this.groupAttributeEntity.dao.get().getRelatedIdList(groupId, false);
+	}
+
+	public void setGroupAttributeRelation_Group (long groupId, List<Long> list) {
+		this.groupAttributeEntity.dao.get().setRelatedIdList(groupId, list, false);
 	}
 
 	public List<Long> getPersonKeywordRelation_Keyword (long keywordId) {
@@ -648,6 +709,22 @@ public class StoryModel implements IUseMessenger {
 		this.chapterTagEntity.dao.get().setRelatedIdList(chapterId, list, false);
 	}
 
+	public List<Long> getAttributeTagRelation_Tag (long tagId) {
+		return this.attributeTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setAttributeTagRelation_Tag (long tagId, List<Long> list) {
+		this.attributeTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getAttributeTagRelation_Attribute (long attributeId) {
+		return this.attributeTagEntity.dao.get().getRelatedIdList(attributeId, false);
+	}
+
+	public void setAttributeTagRelation_Attribute (long attributeId, List<Long> list) {
+		this.attributeTagEntity.dao.get().setRelatedIdList(attributeId, list, false);
+	}
+
 	public List<Long> getKeywordTagRelation_Tag (long tagId) {
 		return this.keywordTagEntity.dao.get().getRelatedIdList(tagId, true);
 	}
@@ -691,6 +768,9 @@ public class StoryModel implements IUseMessenger {
 			break;
 		case CHAPTER:
 			tagIdList = this.getChapterTagRelation_Chapter(tagId);
+			break;
+		case ATTRIBUTE:
+			tagIdList = this.getAttributeTagRelation_Attribute(tagId);
 			break;
 		case KEYWORD:
 			tagIdList = this.getKeywordTagRelation_Keyword(tagId);
@@ -959,6 +1039,29 @@ public class StoryModel implements IUseMessenger {
 
 	public void downSex () {
 		this.downEntity(this.sexEntity.selectedEntityList.get(), this.sexEntity.dao.get());
+	}
+
+	public void newAttribute () {
+		this.newEntity(new Attribute(), this.attributeEntity.dao.get(), AttributeEditorShowMessage.getInstance(),
+					   AttributeColumnFactory.getInstance());
+	}
+
+	public void editAttribute () {
+		this.editEntity(this.attributeEntity.selectedEntityList.get(), AttributeEditorShowMessage.getInstance(),
+						AttributeColumnFactory.getInstance());
+	}
+
+	public void deleteAttribute () {
+		this.deleteEntity(this.attributeEntity.selectedEntityList.get(), AttributeColumnFactory.getInstance(),
+							 this.attributeEntity.dao.get());
+	}
+
+	public void upAttribute () {
+		this.upEntity(this.attributeEntity.selectedEntityList.get(), this.attributeEntity.dao.get());
+	}
+
+	public void downAttribute () {
+		this.downEntity(this.attributeEntity.selectedEntityList.get(), this.attributeEntity.dao.get());
 	}
 
 	public void newKeyword () {

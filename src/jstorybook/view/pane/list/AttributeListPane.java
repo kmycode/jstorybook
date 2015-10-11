@@ -11,17 +11,34 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane;
+package jstorybook.view.pane.list;
+
+import jstorybook.common.contract.EntityType;
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Attribute;
+import jstorybook.viewmodel.ViewModelList;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * ペインの種類
+ * 属性のリスト
  *
- * @author KMY
+  * @author KMY
  */
-public enum PaneType {
+public class AttributeListPane extends EntityListPane<Attribute> {
 
-	ENTITY_EDITOR,
-	ENTITY_LIST,
-	SCENE_NOVEL,
-	PERSON_USING_CHART,;
+	public AttributeListPane (Messenger messenger) {
+		super(ResourceManager.getMessage("msg.attribute"), EntityType.ATTRIBUTE, messenger);
+	}
+
+	@Override
+	public void setViewModelList (ViewModelList viewModelList) {
+		super.setViewModelList(viewModelList);
+		this.setOrderButton();
+	}
+
+	@Override
+	protected String getEntityTypeName () {
+		return "attribute";
+	}
+
 }

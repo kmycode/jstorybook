@@ -32,7 +32,9 @@ import jstorybook.common.util.GUIUtil;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.EntityTableView;
+import jstorybook.view.pane.IComparablePane;
 import jstorybook.view.pane.MyPane;
+import jstorybook.view.pane.PaneType;
 import jstorybook.viewmodel.ViewModelList;
 import jstorybook.viewtool.messenger.Messenger;
 
@@ -42,7 +44,7 @@ import jstorybook.viewtool.messenger.Messenger;
  *
  * @author KMY
  */
-public abstract class EntityListPane<T extends Entity> extends MyPane {
+public abstract class EntityListPane<T extends Entity> extends MyPane implements IComparablePane {
 
 	private ViewModelList viewModelList;
 
@@ -185,6 +187,16 @@ public abstract class EntityListPane<T extends Entity> extends MyPane {
 
 	public EntityType getEntityType () {
 		return this.entityType;
+	}
+
+	@Override
+	public PaneType getPaneType () {
+		return PaneType.ENTITY_LIST;
+	}
+
+	@Override
+	public long getPaneId () {
+		return this.entityType.hashCode();
 	}
 
 }

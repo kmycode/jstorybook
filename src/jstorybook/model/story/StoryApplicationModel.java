@@ -17,6 +17,7 @@ import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
+import jstorybook.viewtool.messenger.pane.list.AttributeListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.ChapterListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.KeywordListShowMessage;
@@ -58,6 +59,10 @@ public class StoryApplicationModel implements IUseMessenger {
 
 	public void showSexList () {
 		this.messenger.send(new SexListShowMessage());
+	}
+
+	public void showAttributeList () {
+		this.messenger.send(new AttributeListShowMessage());
 	}
 
 	public void showKeywordList () {

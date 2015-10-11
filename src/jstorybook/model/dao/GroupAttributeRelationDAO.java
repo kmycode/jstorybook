@@ -11,17 +11,37 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.GroupAttributeRelation;
 
 /**
- * ペインの種類
+ * 集団と属性の関係のDAO
  *
  * @author KMY
  */
-public enum PaneType {
+public class GroupAttributeRelationDAO extends EntityRelationDAO<GroupAttributeRelation> {
 
-	ENTITY_EDITOR,
-	ENTITY_LIST,
-	SCENE_NOVEL,
-	PERSON_USING_CHART,;
+	@Override
+	protected String getTableName () {
+		return "groupattribute";
+	}
+
+	public void readGroupDAO (GroupDAO dao) {
+		for (GroupAttributeRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	public void readAttributeDAO (AttributeDAO dao) {
+		for (GroupAttributeRelation model : this.modelList.get()) {
+			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected GroupAttributeRelation newEntityRelationInstance () {
+		return new GroupAttributeRelation();
+	}
+
 }

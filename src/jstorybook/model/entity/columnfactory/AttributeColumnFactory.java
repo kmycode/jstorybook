@@ -20,39 +20,37 @@ import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
-import jstorybook.model.entity.Group;
+import jstorybook.model.entity.Attribute;
 
 /**
- * 集団リストのカラム
+ * 属性リストのカラム
  *
  * @author KMY
  */
-public class GroupColumnFactory extends ColumnFactory<Group> {
+public class AttributeColumnFactory extends ColumnFactory<Attribute> {
 
-	private static final GroupColumnFactory defaultInstance = new GroupColumnFactory();
+	private static final AttributeColumnFactory defaultInstance = new AttributeColumnFactory();
 
-	private GroupColumnFactory () {
+	private AttributeColumnFactory () {
 	}
 
-	public static GroupColumnFactory getInstance () {
-		return GroupColumnFactory.defaultInstance;
+	public static AttributeColumnFactory getInstance () {
+		return AttributeColumnFactory.defaultInstance;
 	}
 
 	@Override
-	public EditorColumnList createColumnList (Group model) {
+	public EditorColumnList createColumnList (Attribute model) {
 		if (model == null) {
-			model = new Group();
+			model = new Attribute();
 		}
 
 		EditorColumnList columnList = new EditorColumnList();
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
-		columnList.entityTypeProperty().set(EntityType.GROUP);
-		columnList.addRelation(EntityRelation.GROUP_PERSON);
+		columnList.entityTypeProperty().set(EntityType.ATTRIBUTE);
 		columnList.addRelation(EntityRelation.GROUP_ATTRIBUTE);
-		columnList.addRelation(EntityRelation.GROUP_KEYWORD);
-		columnList.addRelation(EntityRelation.GROUP_TAG);
+		columnList.addRelation(EntityRelation.ATTRIBUTE_TAG);
 		EditorColumn column;
 
 		column = new ListOnlyColumn(ResourceManager.getMessage("msg.order"), "order");
@@ -61,8 +59,8 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 		column.setProperty(model.orderProperty());
 		columnList.add(column);
 
-		column = new StringColumn(ResourceManager.getMessage("msg.group.name"), "name");
-		column.setColumnWidth(100);
+		column = new StringColumn(ResourceManager.getMessage("msg.attribute.name"), "name");
+		column.setColumnWidth(240);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());
 		columnList.add(column);

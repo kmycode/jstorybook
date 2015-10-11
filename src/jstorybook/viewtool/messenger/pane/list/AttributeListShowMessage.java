@@ -11,17 +11,13 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.view.pane;
+package jstorybook.viewtool.messenger.pane.list;
 
 /**
- * ペインの種類
+ * 属性のリストを表示するメッセージ
  *
  * @author KMY
  */
-public enum PaneType {
+public class AttributeListShowMessage extends EntityListShowMessage {
 
-	ENTITY_EDITOR,
-	ENTITY_LIST,
-	SCENE_NOVEL,
-	PERSON_USING_CHART,;
 }

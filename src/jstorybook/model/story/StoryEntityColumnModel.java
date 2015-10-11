@@ -15,6 +15,8 @@ package jstorybook.model.story;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import jstorybook.model.column.EditorColumnList;
+import jstorybook.model.entity.columnfactory.AttributeColumnFactory;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.KeywordColumnFactory;
@@ -23,7 +25,6 @@ import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.model.entity.columnfactory.SexColumnFactory;
 import jstorybook.model.entity.columnfactory.TagColumnFactory;
-import jstorybook.model.column.EditorColumnList;
 
 /**
  * 各エンティティのカラムをまとめたモデル
@@ -43,6 +44,8 @@ public class StoryEntityColumnModel {
 	private final ObjectProperty<EditorColumnList> chapterColumnList = new SimpleObjectProperty<>(ChapterColumnFactory.
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> sexColumnList = new SimpleObjectProperty<>(SexColumnFactory.
+			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> attributeColumnList = new SimpleObjectProperty<>(AttributeColumnFactory.
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> keywordColumnList = new SimpleObjectProperty<>(KeywordColumnFactory.
 			getInstance().createColumnList());
@@ -71,6 +74,10 @@ public class StoryEntityColumnModel {
 
 	public ObjectProperty<EditorColumnList> sexColumnListProperty () {
 		return this.sexColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> attributeColumnListProperty () {
+		return this.attributeColumnList;
 	}
 
 	public ObjectProperty<EditorColumnList> keywordColumnListProperty () {
