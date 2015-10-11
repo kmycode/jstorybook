@@ -84,7 +84,7 @@ public class PreferenceSaveSync extends Task<Object> {
 					value = key.getDouble().toString();
 					break;
 				case BOOLEAN:
-					value = "'" + key.getBoolean().toString() + "'";
+					value = "'" + (key.getBoolean() ? "1" : "0") + "'";
 					break;
 				case STRING:
 					value = "'" + key.getString() + "'";

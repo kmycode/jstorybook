@@ -48,15 +48,19 @@ public class ApplicationModel implements IUseMessenger {
 
 	private final DoubleProperty windowWidth = new SimpleDoubleProperty();
 	private final DoubleProperty windowHeight = new SimpleDoubleProperty();
+	private final BooleanProperty windowMax = new SimpleBooleanProperty(false);
 
 	public ApplicationModel () {
 		try {
 			// 設定ファイルの読込
 			this.preferenceFile = new PreferenceFileModel();
 			this.preferenceFile.loadSettingsSync((ev) -> {
-				// 読込終了時
+				// 設定を適用
 				this.messenger.send(new WindowResizeMessage(PreferenceKey.WINDOW_WIDTH.getDouble(), PreferenceKey.WINDOW_HEIGHT.
-															getDouble()));
+															getDouble(), PreferenceKey.WINDOW_MAX.getBoolean()));
+				if (PreferenceKey.STARTUP_OPEN_LAST_FILE.getBoolean() && !PreferenceKey.LAST_OPEN_FILE.getString().isEmpty()) {
+					this.loadStory(PreferenceKey.LAST_OPEN_FILE.getString());
+				}
 			});
 
 		} catch (SQLException | IOException e) {
@@ -84,8 +88,11 @@ public class ApplicationModel implements IUseMessenger {
 			this.isExitable.set(true);
 
 			// 設定データを保存
-			PreferenceKey.WINDOW_WIDTH.setValue(this.windowWidth.getValue());
-			PreferenceKey.WINDOW_HEIGHT.setValue(this.windowHeight.getValue());
+			PreferenceKey.WINDOW_MAX.setValue(this.windowMax.getValue());
+			if (!this.windowMax.get()) {
+				PreferenceKey.WINDOW_WIDTH.setValue(this.windowWidth.getValue());
+				PreferenceKey.WINDOW_HEIGHT.setValue(this.windowHeight.getValue());
+			}
 
 			// 設定ファイルを保存
 			this.preferenceFile.saveSettingsSync();
@@ -113,12 +120,17 @@ public class ApplicationModel implements IUseMessenger {
 		StringProperty fileName = new SimpleStringProperty();
 		this.messenger.send(new OpenFileChooserMessage(fileName));
 		if (fileName.get() != null && !fileName.get().isEmpty()) {
-			CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
-			this.messenger.send(mes);
-			StoryModel storyModel = mes.storyModelProperty().get();
-			if (storyModel != null) {
-				storyModel.fileNameProperty().set(fileName.get());
-			}
+			this.loadStory(fileName.get());
+		}
+	}
+
+	private void loadStory (String fileName) {
+		CurrentStoryModelGetMessage mes = new CurrentStoryModelGetMessage();
+		this.messenger.send(mes);
+		StoryModel storyModel = mes.storyModelProperty().get();
+		if (storyModel != null) {
+			storyModel.fileNameProperty().set(fileName);
+			PreferenceKey.LAST_OPEN_FILE.setValue(fileName);
 		}
 	}
 
@@ -132,6 +144,10 @@ public class ApplicationModel implements IUseMessenger {
 
 	public DoubleProperty windowHeightProperty () {
 		return this.windowHeight;
+	}
+
+	public BooleanProperty windowMaxProperty () {
+		return this.windowMax;
 	}
 
 	@Override

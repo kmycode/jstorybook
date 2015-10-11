@@ -196,9 +196,7 @@ public class MainWindow extends MyStage {
 		// データをバインド
 		this.viewModelList.getProperty("windowWidth").bind(this.widthProperty());
 		this.viewModelList.getProperty("windowHeight").bind(this.heightProperty());
-
-		// テスト
-		this.viewModelList.getProperty("storyFileName").setValue("teststory/test.db");
+		this.viewModelList.getProperty("windowMax").bind(this.maximizedProperty());
 	}
 
 	// メインメニューバーを作成
@@ -785,8 +783,11 @@ public class MainWindow extends MyStage {
 
 	// ウィンドウをリサイズ
 	private void resize (WindowResizeMessage message) {
-		this.setWidth(message.getWidth());
-		this.setHeight(message.getHeight());
+		if (!message.isMax()) {
+			this.setWidth(message.getWidth());
+			this.setHeight(message.getHeight());
+		}
+		this.setMaximized(message.isMax());
 	}
 
 	// -------------------------------------------------------

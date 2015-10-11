@@ -108,6 +108,16 @@ public class PreferenceDialog extends MyStage {
 		isConfirmExit.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isConfirmExit"));
 		mainGrid.getChildren().addAll(label, isConfirmExit);
 
+		// 起動時に最後のファイルを開く
+		label = new Label("");
+		GUIUtil.bindFontStyle(label);
+		CheckBox isStartupOpenLastFile = new CheckBox(ResourceManager.getMessage("msg.preference.startup.open.last.story"));
+		GUIUtil.bindFontStyle(isStartupOpenLastFile);
+		GridPane.setConstraints(label, 0, 5);
+		GridPane.setConstraints(isStartupOpenLastFile, 1, 5);
+		isStartupOpenLastFile.selectedProperty().bindBidirectional(this.viewModelList.getProperty("isStartupOpenLastFile"));
+		mainGrid.getChildren().addAll(label, isStartupOpenLastFile);
+
 		HBox commandBox = new HBox();
 		AnchorPane commandBoxSpacer = new AnchorPane();
 		HBox.setHgrow(commandBoxSpacer, Priority.ALWAYS);
@@ -122,7 +132,7 @@ public class PreferenceDialog extends MyStage {
 		cancelButton.setCancelButton(true);
 		cancelButton.setMinWidth(100);
 		commandBox.getChildren().addAll(commandBoxSpacer, okButton, cancelButton);
-		mainGrid.add(commandBox, 0, 5, 2, 1);
+		mainGrid.add(commandBox, 0, 6, 2, 1);
 
 		root.getChildren().addAll(mainGrid);
 

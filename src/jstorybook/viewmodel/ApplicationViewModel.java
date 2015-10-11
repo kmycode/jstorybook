@@ -30,6 +30,7 @@ public class ApplicationViewModel extends ViewModel {
 		this.applyProperty("isExitable", this.model.isExitableProperty());
 		this.applyProperty("windowWidth", this.model.windowWidthProperty());
 		this.applyProperty("windowHeight", this.model.windowHeightProperty());
+		this.applyProperty("windowMax", this.model.windowMaxProperty());
 	}
 
 	@Override

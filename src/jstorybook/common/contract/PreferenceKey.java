@@ -30,20 +30,26 @@ public enum PreferenceKey {
 	CONFIRM_EXIT("confirm_exit", PreferenceType.BOOLEAN, true),
 	WINDOW_WIDTH("window_width", PreferenceType.DOUBLE, 1100),
 	WINDOW_HEIGHT("window_height", PreferenceType.DOUBLE, 600),
+	WINDOW_MAX("window_max", PreferenceType.BOOLEAN, false),
+	LAST_OPEN_FILE("last_open_file", PreferenceType.STRING, ""),
 	FONT_FAMILY("font_family", PreferenceType.STRING, "Meiryo UI"),
 	FONT_SIZE("font_size", PreferenceType.DOUBLE, 14.0),
 	MENUBAR_USESYSTEM("menubar_usesystem", PreferenceType.BOOLEAN, false),
-	SEARCH_ENTITY_ORIENTATION("search_entity_orientation", PreferenceType.ORIENTATION, Orientation.HORIZONTAL);
+	SEARCH_ENTITY_ORIENTATION("search_entity_orientation", PreferenceType.ORIENTATION, Orientation.HORIZONTAL),
+	STARTUP_OPEN_LAST_FILE("startup_open_last_file", PreferenceType.BOOLEAN, true),;
 
 	public static List<PreferenceKey> getList () {
 		List<PreferenceKey> list = new ArrayList<>();
 		list.add(CONFIRM_EXIT);
 		list.add(WINDOW_WIDTH);
 		list.add(WINDOW_HEIGHT);
+		list.add(WINDOW_MAX);
+		list.add(LAST_OPEN_FILE);
 		list.add(FONT_FAMILY);
 		list.add(FONT_SIZE);
 		list.add(MENUBAR_USESYSTEM);
 		list.add(SEARCH_ENTITY_ORIENTATION);
+		list.add(STARTUP_OPEN_LAST_FILE);
 		return list;
 	}
 

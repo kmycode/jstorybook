@@ -24,10 +24,12 @@ public class WindowResizeMessage extends Message {
 
 	private final double width;
 	private final double height;
+	private final boolean max;
 
-	public WindowResizeMessage (double width, double height) {
+	public WindowResizeMessage (double width, double height, boolean max) {
 		this.width = width;
 		this.height = height;
+		this.max = max;
 	}
 
 	public double getWidth () {
@@ -36,6 +38,10 @@ public class WindowResizeMessage extends Message {
 
 	public double getHeight () {
 		return this.height;
+	}
+
+	public boolean isMax () {
+		return this.max;
 	}
 
 }

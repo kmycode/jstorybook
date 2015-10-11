@@ -38,12 +38,14 @@ public class PreferenceSettingModel implements IUseMessenger {
 	private final BooleanProperty isSearchEntityOrientation = new SimpleBooleanProperty(PreferenceKey.SEARCH_ENTITY_ORIENTATION.
 			getValue() == Orientation.VERTICAL);
 	private final BooleanProperty isConfirmExit = new SimpleBooleanProperty(PreferenceKey.CONFIRM_EXIT.getBoolean());
+	private final BooleanProperty isStartupOpenLastFile = new SimpleBooleanProperty(PreferenceKey.STARTUP_OPEN_LAST_FILE.getBoolean());
 
 	public void save () {
 		try {
 			PreferenceKey.FONT_FAMILY.setValue(this.fontFamily.get());
 			PreferenceKey.MENUBAR_USESYSTEM.setValue(this.isUseSystemMenu.get());
 			PreferenceKey.CONFIRM_EXIT.setValue(this.isConfirmExit.get());
+			PreferenceKey.STARTUP_OPEN_LAST_FILE.setValue(this.isStartupOpenLastFile.get());
 			PreferenceKey.SEARCH_ENTITY_ORIENTATION.setValue(this.isSearchEntityOrientation.get() ? Orientation.VERTICAL
 																	 : Orientation.HORIZONTAL);
 
@@ -75,6 +77,10 @@ public class PreferenceSettingModel implements IUseMessenger {
 
 	public BooleanProperty isConfirmExitProperty () {
 		return this.isConfirmExit;
+	}
+
+	public BooleanProperty isStartupOpenLastFileProperty () {
+		return this.isStartupOpenLastFile;
 	}
 
 	@Override
