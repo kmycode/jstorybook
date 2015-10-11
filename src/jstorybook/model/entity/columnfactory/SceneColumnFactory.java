@@ -70,17 +70,17 @@ public class SceneColumnFactory extends ColumnFactory<Scene> {
 		columnList.add(column);
 
 		column = new DateTimeColumn(ResourceManager.getMessage("msg.scene.starttime"), "starttime");
-		column.setColumnWidth(100);
+		column.setColumnWidth(160);
 		column.setDefaultShow(true);
 		column.setProperty(model.starttimeProperty());
-		column.setCellType(EditorColumn.CellType.DATE);
+		column.setCellType(EditorColumn.CellType.DATETIME);
 		columnList.add(column);
 
 		column = new DateTimeColumn(ResourceManager.getMessage("msg.scene.endtime"), "endtime");
-		column.setColumnWidth(100);
+		column.setColumnWidth(160);
 		column.setDefaultShow(true);
 		column.setProperty(model.endtimeProperty());
-		column.setCellType(EditorColumn.CellType.DATE);
+		column.setCellType(EditorColumn.CellType.DATETIME);
 		columnList.add(column);
 
 		return columnList;

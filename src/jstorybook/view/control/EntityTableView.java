@@ -22,6 +22,7 @@ import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Entity;
 import jstorybook.view.control.tablecell.ColorCell;
 import jstorybook.view.control.tablecell.DateCell;
+import jstorybook.view.control.tablecell.DateTimeCell;
 import jstorybook.view.control.tablecell.EntityCell;
 import jstorybook.view.control.tablecell.NormalCell;
 import jstorybook.view.control.tablecell.SexCell;
@@ -59,6 +60,11 @@ public class EntityTableView<E extends Entity> extends TableView<E> {
 		if (columnData.getCellType() == EditorColumn.CellType.DATE) {
 			column.setCellFactory((arg) -> {
 				return new DateCell();
+			});
+		}
+		else if (columnData.getCellType() == EditorColumn.CellType.DATETIME) {
+			column.setCellFactory((arg) -> {
+				return new DateTimeCell();
 			});
 		}
 		else if (columnData.getCellType() == EditorColumn.CellType.COLOR) {
