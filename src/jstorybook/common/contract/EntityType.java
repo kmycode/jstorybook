@@ -28,6 +28,7 @@ public enum EntityType {
 	CHAPTER("chapter"),
 	SEX("sex"),
 	ATTRIBUTE("attribute"),
+	PERSON_ATTRIBUTE("person_attribute"),
 	TAG("tag"),;
 
 	private final String iconName;

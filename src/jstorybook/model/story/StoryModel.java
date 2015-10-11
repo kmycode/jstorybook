@@ -533,22 +533,6 @@ public class StoryModel implements IUseMessenger {
 		this.scenePlaceEntity.dao.get().setRelatedIdList(sceneId, list, false);
 	}
 
-	public List<Long> getPersonAttributeRelation_Attribute (long attributeId) {
-		return this.personAttributeEntity.dao.get().getRelatedIdList(attributeId, true);
-	}
-
-	public void setPersonAttributeRelation_Attribute (long attributeId, List<Long> list) {
-		this.personAttributeEntity.dao.get().setRelatedIdList(attributeId, list, true);
-	}
-
-	public List<Long> getPersonAttributeRelation_Person (long personId) {
-		return this.personAttributeEntity.dao.get().getRelatedIdList(personId, false);
-	}
-
-	public void setPersonAttributeRelation_Person (long personId, List<Long> list) {
-		this.personAttributeEntity.dao.get().setRelatedIdList(personId, list, false);
-	}
-
 	public List<Long> getGroupAttributeRelation_Attribute (long attributeId) {
 		return this.groupAttributeEntity.dao.get().getRelatedIdList(attributeId, true);
 	}
