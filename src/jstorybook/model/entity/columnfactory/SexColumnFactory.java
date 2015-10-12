@@ -15,12 +15,12 @@ package jstorybook.model.entity.columnfactory;
 
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
-import jstorybook.model.entity.Sex;
 import jstorybook.model.column.ColorColumn;
 import jstorybook.model.column.EditorColumn;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.column.ListOnlyColumn;
 import jstorybook.model.column.StringColumn;
+import jstorybook.model.entity.Sex;
 
 /**
  * 性リストのカラム
@@ -57,7 +57,7 @@ public class SexColumnFactory extends ColumnFactory<Sex> {
 		column.setProperty(model.orderProperty());
 		columnList.add(column);
 
-		column = new StringColumn(ResourceManager.getMessage("msg.chapter.name"), "name");
+		column = new StringColumn(ResourceManager.getMessage("msg.person.sex"), "name");
 		column.setColumnWidth(100);
 		column.setDefaultShow(true);
 		column.setProperty(model.nameProperty());
