@@ -53,11 +53,7 @@ public class StoryFileUpdateModel {
 
 		if (fileVersion < systemFileVersion) {
 			if (fileVersion == 1) {
-				try {
-					this.update1to2(db);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				this.update1to2(db);
 				fileVersion = 2;
 			}
 			db.updateQuery("update setting set intvalue=" + fileVersion + " where key = 'fileversion';");

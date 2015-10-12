@@ -59,6 +59,7 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 
 	public SceneNovelChartPane (SceneNovelChartShowMessage message, Messenger messenger) {
 		super(ResourceManager.getMessage("msg.scenenovel"));
+		this.setGraphic(ResourceManager.getMiniIconNode("scenenovel.png"));
 
 		EditorPaneTitleCompleter completer = new EditorPaneTitleCompleter();
 		completer.setEntityTypeName(ResourceManager.getMessage("msg.scenenovel"));

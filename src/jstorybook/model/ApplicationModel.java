@@ -13,6 +13,7 @@
  */
 package jstorybook.model;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import javafx.beans.property.BooleanProperty;
@@ -58,8 +59,16 @@ public class ApplicationModel implements IUseMessenger {
 				// 設定を適用
 				this.messenger.send(new WindowResizeMessage(PreferenceKey.WINDOW_WIDTH.getDouble(), PreferenceKey.WINDOW_HEIGHT.
 															getDouble(), PreferenceKey.WINDOW_MAX.getBoolean()));
+
+				// 最後のファイルを開く
 				if (PreferenceKey.STARTUP_OPEN_LAST_FILE.getBoolean() && !PreferenceKey.LAST_OPEN_FILE.getString().isEmpty()) {
-					this.loadStory(PreferenceKey.LAST_OPEN_FILE.getString());
+					if (new File(PreferenceKey.LAST_OPEN_FILE.getString()).exists()) {
+						System.out.println(PreferenceKey.LAST_OPEN_FILE.getString());
+						this.loadStory(PreferenceKey.LAST_OPEN_FILE.getString());
+					}
+					else {
+						PreferenceKey.LAST_OPEN_FILE.setValue("");
+					}
 				}
 			});
 
