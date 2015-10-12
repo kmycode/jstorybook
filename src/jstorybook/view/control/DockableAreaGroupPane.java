@@ -333,24 +333,17 @@ public class DockableAreaGroupPane extends SplitPane {
 			}
 		}
 
-		// SplitPaneが全て消えないようにする（全て消したらドッキングする場所がなくなる）
-		if (groupPaneCount == groupPaneDelCount) {
-			Node rem = null;
-			for (Node node : removeNodeList) {
-				if (node instanceof DockableAreaGroupPane) {
-					rem = node;
-					break;
-				}
-			}
-			removeNodeList.remove(rem);
-		}
-
 		if (this.rootParent.getActiveTabPane() == null) {
 			this.rootParent.setActiveTabPane(canUseTabPane);
 		}
 
 		if (this.getParentArea() != null) {
 			this.getParentArea().getItems().removeAll(removeNodeList);
+
+			// 間違って子エリアを消さないように
+			if (this.getParentArea().getItems().indexOf(this.getChildArea()) < 0) {
+				this.getParentArea().getItems().add(this.getChildArea());
+			}
 		}
 		this.getChildArea().getItems().removeAll(removeNodeList);
 	}

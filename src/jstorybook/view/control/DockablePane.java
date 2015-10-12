@@ -106,6 +106,7 @@ public class DockablePane extends AnchorPane {
 		return this.childPane;
 	}
 
+	private int count;
 	public DockableTabPane getActiveTabPane () {
 		return this.activeTabPane;
 	}
