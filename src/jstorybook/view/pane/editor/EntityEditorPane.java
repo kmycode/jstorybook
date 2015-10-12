@@ -86,6 +86,8 @@ import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.KeywordRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.KeywordRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.KeywordRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonAttributeRelationSaveMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonAttributeRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
@@ -135,6 +137,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	protected SceneRelationTab sceneRelationTab;
 	protected ChapterRelationTab chapterRelationTab;
 	protected AttributeRelationTab attributeRelationTab;
+	protected PersonAttributeTab personAttributeTab;
 	protected KeywordRelationTab keywordRelationTab;
 	protected TagRelationTab tagRelationTab;
 
@@ -362,6 +365,17 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			EntityEditorPane.this.renewAttributeRelationTab(mes);
 		});
 
+		// 属性と人物の関連タブを設定
+		this.messenger.apply(PersonAttributeRelationShowMessage.class, this, (ev) -> {
+			PersonAttributeRelationShowMessage mes = (PersonAttributeRelationShowMessage) ev;
+			EntityEditorPane.this.addPersonAttributeTab(mes);
+		});
+		this.messenger.apply(PersonAttributeRelationSaveMessage.class, this, (ev) -> {
+			if (EntityEditorPane.this.personAttributeTab != null) {
+				EntityEditorPane.this.personAttributeTab.save();
+			}
+		});
+
 		// 関連キーワードタブを設定
 		this.messenger.apply(KeywordRelationShowMessage.class, this, (ev) -> {
 			KeywordRelationShowMessage mes = (KeywordRelationShowMessage) ev;
@@ -457,6 +471,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		if (this.attributeRelationTab != null) {
 			this.attributeRelationTab.resetChanged();
 		}
+		if (this.personAttributeTab != null) {
+			this.personAttributeTab.reload();
+		}
 		if (this.keywordRelationTab != null) {
 			this.keywordRelationTab.resetChanged();
 		}
@@ -497,6 +514,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		}
 		if (this.attributeRelationTab != null) {
 			result |= this.attributeRelationTab.changedProperty().get();
+		}
+		if (this.personAttributeTab != null) {
+			result |= this.personAttributeTab.changedProperty().get();
 		}
 		if (this.keywordRelationTab != null) {
 			result |= this.keywordRelationTab.changedProperty().get();
@@ -574,6 +594,13 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 	private void renewAttributeRelationTab (AttributeRelationRenewMessage mes) {
 		this.renewRelationTab(mes, this.attributeRelationTab);
+	}
+
+	private void addPersonAttributeTab (PersonAttributeRelationShowMessage mes) {
+		this.personAttributeTab = new PersonAttributeTab(this.columnList, this.messenger);
+		this.personAttributeTab.changedProperty().addListener((obj) -> this.viewModelList.getProperty("canSave").setValue(this.
+				checkCanSave()));
+		this.tabPane.getTabs().add(this.personAttributeTab);
 	}
 
 	private void addKeywordRelationTab (KeywordRelationShowMessage mes) {

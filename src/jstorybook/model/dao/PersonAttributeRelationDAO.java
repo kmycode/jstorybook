@@ -30,6 +30,16 @@ public class PersonAttributeRelationDAO extends DAO<PersonAttributeRelation> {
 		return "personattribute";
 	}
 
+	public PersonAttributeRelation getModelById (long personId, long groupId, long attributeId) {
+		for (PersonAttributeRelation model : this.modelList.get()) {
+			if (model.personIdProperty().get() == personId && model.groupIdProperty().get() == groupId && model.attributeIdProperty().
+					get() == attributeId) {
+				return model;
+			}
+		}
+		return null;
+	}
+
 	// -------------------------------------------------------
 	// データベースに対する操作
 	@Override

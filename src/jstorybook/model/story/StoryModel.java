@@ -406,6 +406,10 @@ public class StoryModel implements IUseMessenger {
 		return this.attributeEntity.dao.get();
 	}
 
+	public PersonAttributeRelationDAO getPersonAttributeRelationDAO () {
+		return this.personAttributeEntity.dao.get();
+	}
+
 	public KeywordDAO getKeywordDAO () {
 		return this.keywordEntity.dao.get();
 	}

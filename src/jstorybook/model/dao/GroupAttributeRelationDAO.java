@@ -13,6 +13,8 @@
  */
 package jstorybook.model.dao;
 
+import java.util.ArrayList;
+import java.util.List;
 import jstorybook.model.entity.GroupAttributeRelation;
 
 /**
@@ -37,6 +39,16 @@ public class GroupAttributeRelationDAO extends EntityRelationDAO<GroupAttributeR
 		for (GroupAttributeRelation model : this.modelList.get()) {
 			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
 		}
+	}
+
+	public List<Long> getAttributeIdList (long groupId) {
+		List<Long> list = new ArrayList<>();
+		for (GroupAttributeRelation model : this.modelList.get()) {
+			if (model.entity1IdProperty().get() == groupId) {
+				list.add(model.entity2IdProperty().get());
+			}
+		}
+		return list;
 	}
 
 	@Override

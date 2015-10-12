@@ -49,6 +49,8 @@ import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.KeywordRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.KeywordRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.KeywordRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonAttributeRelationSaveMessage;
+import jstorybook.viewtool.messenger.pane.relation.PersonAttributeRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.PersonRelationShowMessage;
@@ -162,6 +164,11 @@ public class EntityEditModel implements IUseMessenger {
 		this.noteProperty().addListener((obj) -> {
 			EntityEditModel.this.isChanged.set(true);
 		});
+			
+		// 登場人物の関連タブを追加
+		if (list.getEntityType() == EntityType.PERSON) {
+			this.messenger.send(new PersonAttributeRelationShowMessage());
+		}
 
 		// ストーリーモデルを取得
 		StoryModel storyModel = this.getStoryModel();
@@ -221,18 +228,6 @@ public class EntityEditModel implements IUseMessenger {
 								this.columnList.get().idProperty().get())));
 					}
 				}
-				/*
-							else if (relation == EntityRelation.PERSON_ATTRIBUTE) {
-					if (list.getEntityType() == EntityType.PERSON) {
-						this.messenger.send(new PersonRelationShowMessage(storyModel.getPersonAttributeRelation_Person(
-								this.columnList.get().idProperty().get())));
-					}
-					else if (list.getEntityType() == EntityType.ATTRIBUTE) {
-						this.messenger.send(new AttributeRelationShowMessage(storyModel.getPersonAttributeRelation_Attribute(
-								this.columnList.get().idProperty().get())));
-					}
-				}
-				 * */
 				else if (relation == EntityRelation.GROUP_ATTRIBUTE) {
 					if (list.getEntityType() == EntityType.GROUP) {
 						this.messenger.send(new AttributeRelationShowMessage(storyModel.getGroupAttributeRelation_Attribute(
@@ -391,12 +386,18 @@ public class EntityEditModel implements IUseMessenger {
 
 	public void apply () {
 
+		StoryModel storyModel = this.getStoryModel();
+		EntityType entityType = this.columnList.get().getEntityType();
+
 		// エンティティそのものの値をコピー
 		this.baseColumnList.get().copyProperty(this.columnList.get());
 
+		// 登場人物と属性の情報を保存
+		if (entityType == EntityType.PERSON) {
+			this.messenger.send(new PersonAttributeRelationSaveMessage());
+		}
+
 		// エンティティ同士の関連を保存
-		StoryModel storyModel = this.getStoryModel();
-		EntityType entityType = this.columnList.get().getEntityType();
 		PersonRelationListGetMessage personRelationListMessage = new PersonRelationListGetMessage();
 		GroupRelationListGetMessage groupRelationListMessage = new GroupRelationListGetMessage();
 		PlaceRelationListGetMessage placeRelationListMessage = new PlaceRelationListGetMessage();

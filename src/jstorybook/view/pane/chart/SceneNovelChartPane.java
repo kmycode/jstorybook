@@ -67,6 +67,7 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 		this.chapterName = message.chapterNameProperty();
 
 		ScrollPane scrollPane = new ScrollPane(this.mainVBox);
+		scrollPane.setPannable(true);
 		this.setContent(scrollPane);
 
 		this.mainVBox.setSpacing(10.0);
@@ -188,6 +189,7 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 
 			// 関連エンティティをリストアップ
 			ScrollPane relateScrollPane = new ScrollPane();
+			relateScrollPane.setPannable(true);
 			VBox relateList = new VBox();
 			for (EntityDrawMessage mes : message.getPlaceList()) {
 				relateList.getChildren().add(this.getRelate(mes, "place.png"));

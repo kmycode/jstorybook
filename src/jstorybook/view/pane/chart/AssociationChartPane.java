@@ -78,6 +78,7 @@ public class AssociationChartPane extends MyPane implements IReloadable {
 		this.canvasArea.setPrefSize(700.0, 500.0);
 
 		ScrollPane mainScrollPane = new ScrollPane(this.canvasArea);
+		mainScrollPane.setPannable(true);
 		this.setContent(mainScrollPane);
 
 		// メッセージを設定

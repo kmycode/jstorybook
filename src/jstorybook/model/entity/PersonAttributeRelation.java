@@ -102,7 +102,7 @@ public class PersonAttributeRelation extends Entity implements Comparable<Entity
 
 	@Override
 	public String toString () {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return "Person:" + this.personId.get() + " Group:" + this.groupId.get() + " Attribute:" + this.attributeId.get();
 	}
 
 }
