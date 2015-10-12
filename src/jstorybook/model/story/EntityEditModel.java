@@ -29,6 +29,7 @@ import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
+import jstorybook.viewtool.messenger.general.FocusMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnDateMessage;
@@ -354,6 +355,9 @@ public class EntityEditModel implements IUseMessenger {
 				}
 			}
 		}
+
+		// フォーカスをあてさせる
+		this.messenger.send(new FocusMessage());
 	}
 
 	private StoryModel getStoryModel () {

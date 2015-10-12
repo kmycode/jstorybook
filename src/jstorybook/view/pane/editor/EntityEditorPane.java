@@ -17,6 +17,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -35,6 +36,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -66,6 +68,7 @@ import jstorybook.viewmodel.pane.EntityEditViewModel;
 import jstorybook.viewtool.messenger.CurrentStoryModelGetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.general.CloseMessage;
+import jstorybook.viewtool.messenger.general.FocusMessage;
 import jstorybook.viewtool.messenger.pane.AllTabReloadMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnColorMessage;
 import jstorybook.viewtool.messenger.pane.column.EditorColumnDateMessage;
@@ -129,6 +132,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	protected final GridPane mainGridPane = new GridPane();
 	protected final TextArea noteArea = new TextArea();
 	private List<WeakReference<Property>> editPropertyList = new ArrayList<>();
+	private Control firstControl;
 
 	// エンティティ関連付けのタブ
 	protected PersonRelationTab personRelationTab;
@@ -297,6 +301,18 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		this.messenger.apply(EditorColumnSexAddMessage.class, this, (ev) -> {
 			EditorColumnSexAddMessage mes = (EditorColumnSexAddMessage) ev;
 			EntityEditorPane.this.addSexEditButton(mes.getId(), mes.getName(), mes.getColor());
+		});
+		// コントロールにフォーカスをあてる
+		this.messenger.apply(FocusMessage.class, this, (ev) -> {
+			if (this.firstControl != null) {
+				Platform.runLater(() -> {
+					if (this.getTabPane() != null) {
+						this.getTabPane().requestFocus();
+					}
+					this.tabPane.requestFocus();
+					this.firstControl.requestFocus();
+				});
+			}
 		});
 
 		// ノートのテキストを設定
@@ -632,6 +648,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 		if (editControl instanceof Control) {
 			((Control) editControl).setMaxWidth(240.0);
+			if (this.mainVboxRow == 0) {
+				this.firstControl = (Control) editControl;
+			}
 		}
 		else if (editControl instanceof Pane) {
 			((Pane) editControl).setMaxWidth(240.0);
@@ -687,6 +706,14 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	private void addColorEdit (String title, Property property) {
 		ColorPicker node = new ColorPicker();
 		node.valueProperty().bindBidirectional(property);
+
+		// BackSpace、Deleteで透明にできる
+		node.setOnKeyReleased((ev) -> {
+			if (ev.getCode() == KeyCode.BACK_SPACE || ev.getCode() == KeyCode.DELETE) {
+				node.valueProperty().set(Color.TRANSPARENT);
+			}
+		});
+
 		this.editPropertyList.add(new WeakReference<>(node.valueProperty()));
 		this.addEditControlRow(title, node);
 	}
