@@ -159,17 +159,17 @@ public class EntityEditModel implements IUseMessenger {
 				EntityEditModel.this.isChanged.set(true);
 			});
 		}
+			
+		// 登場人物の関連タブを追加
+		if (list.getEntityType() == EntityType.PERSON) {
+			this.messenger.send(new PersonAttributeRelationShowMessage());
+		}
 
 		// ノートを設定
 		this.messenger.send(new PropertyNoteSetMessage(this.noteProperty()));
 		this.noteProperty().addListener((obj) -> {
 			EntityEditModel.this.isChanged.set(true);
 		});
-			
-		// 登場人物の関連タブを追加
-		if (list.getEntityType() == EntityType.PERSON) {
-			this.messenger.send(new PersonAttributeRelationShowMessage());
-		}
 
 		// ストーリーモデルを取得
 		StoryModel storyModel = this.getStoryModel();

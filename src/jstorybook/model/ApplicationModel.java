@@ -63,7 +63,6 @@ public class ApplicationModel implements IUseMessenger {
 				// 最後のファイルを開く
 				if (PreferenceKey.STARTUP_OPEN_LAST_FILE.getBoolean() && !PreferenceKey.LAST_OPEN_FILE.getString().isEmpty()) {
 					if (new File(PreferenceKey.LAST_OPEN_FILE.getString()).exists()) {
-						System.out.println(PreferenceKey.LAST_OPEN_FILE.getString());
 						this.loadStory(PreferenceKey.LAST_OPEN_FILE.getString());
 					}
 					else {

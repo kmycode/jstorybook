@@ -19,6 +19,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.Attribute;
 import jstorybook.model.entity.Group;
@@ -53,40 +55,47 @@ public class PersonAttributeModel implements IUseMessenger {
 			long personId = this.columnList.get().idProperty().get();
 			List<Long> groupIdList = this.storyModel.getGroupPersonRelation_Group(personId);
 
-			// 描画
+			// 集団を順番ごとにならべ替え
+			ObservableList<Group> groupList = FXCollections.observableArrayList();
 			for (long groupId : groupIdList) {
-
-				// 集団が存在するか？
 				Group group = this.storyModel.getGroupDAO().getModelById(groupId);
 				if (group != null) {
-
-					// 属性一覧を取得して、メッセージを作る
-					List<Long> attributeIdList = this.storyModel.getGroupAttributeRelation_Attribute(groupId);
-					PersonAttributeColumnGroupAddMessage message = new PersonAttributeColumnGroupAddMessage(group.nameProperty().get());
-
-					for (long attributeId : attributeIdList) {
-						Attribute attribute = this.storyModel.getAttributeDAO().getModelById(attributeId);
-						if (attribute != null) {
-							PersonAttributeRelation relation = this.storyModel.getPersonAttributeRelationDAO().getModelById(personId,
-																															groupId,
-																															attributeId);
-							String value;
-							if (relation != null) {
-								value = relation.noteProperty().get();
-							}
-							else {
-								value = "";
-							}
-
-							AttributeColumn column = new AttributeColumn(personId, groupId, attributeId);
-							this.attributeColumnList.add(column);
-							column.text.set(value);
-							message.addColumn(attribute.nameProperty().get(), column.text, attribute.orderProperty().get());
-						}
-					}
-
-					this.messenger.send(message);
+					groupList.add(group);
 				}
+			}
+			FXCollections.sort(groupList);
+
+			// 描画
+			for (Group group : groupList) {
+
+				long groupId = group.idProperty().get();
+
+				// 属性一覧を取得して、メッセージを作る
+				List<Long> attributeIdList = this.storyModel.getGroupAttributeRelation_Attribute(groupId);
+				PersonAttributeColumnGroupAddMessage message = new PersonAttributeColumnGroupAddMessage(group.nameProperty().get());
+
+				for (long attributeId : attributeIdList) {
+					Attribute attribute = this.storyModel.getAttributeDAO().getModelById(attributeId);
+					if (attribute != null) {
+						PersonAttributeRelation relation = this.storyModel.getPersonAttributeRelationDAO().getModelById(personId,
+																														groupId,
+																														attributeId);
+						String value;
+						if (relation != null) {
+							value = relation.noteProperty().get();
+						}
+						else {
+							value = "";
+						}
+
+						AttributeColumn column = new AttributeColumn(personId, groupId, attributeId);
+						this.attributeColumnList.add(column);
+						column.text.set(value);
+						message.addColumn(attribute.nameProperty().get(), column.text, attribute.orderProperty().get());
+					}
+				}
+
+				this.messenger.send(message);
 			}
 		}
 	}
