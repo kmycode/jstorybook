@@ -87,6 +87,7 @@ public class PersonAttributeTab extends Tab {
 
 	private void addColumnGroup (PersonAttributeColumnGroupAddMessage message) {
 		TitledPane group = new TitledPane();
+		group.setGraphic(ResourceManager.getMiniIconNode("group.png"));
 		group.setText(message.getGroupName());
 		group.setCollapsible(true);
 		group.setAnimated(true);

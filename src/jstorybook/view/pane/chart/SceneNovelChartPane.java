@@ -151,7 +151,8 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 			this.setCollapsible(true);
 			this.setAnimated(true);
 			this.textProperty().bind(message.sceneNameProperty());
-			this.fontProperty().bind(FontManager.getInstance().boldFontProperty());
+			this.fontProperty().bind(FontManager.getInstance().fontProperty());
+			this.setGraphic(ResourceManager.getMiniIconNode("scene.png"));
 
 			VBox vBox = new VBox();
 			vBox.setSpacing(10.0);
@@ -159,9 +160,6 @@ public class SceneNovelChartPane extends MyPane implements IComparablePane, IRel
 			HBox sceneNameHBox = new HBox();
 			sceneNameHBox.setAlignment(Pos.CENTER);
 			vBox.getChildren().add(sceneNameHBox);
-
-			ImageView sceneIcon = ResourceManager.getIconNode("scene.png");
-			sceneNameHBox.getChildren().add(sceneIcon);
 
 			TextField sceneName = new TextField();
 			sceneName.fontProperty().bind(FontManager.getInstance().fontProperty());
