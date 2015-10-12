@@ -13,10 +13,9 @@
  */
 package jstorybook.view.pane.list;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -51,10 +50,10 @@ public abstract class EntityListPane<T extends Entity> extends MyPane implements
 	private final EntityType entityType;
 	private final EntityTableView<T> tableView;
 	private final ContextMenu contextMenu = new ContextMenu();
-	protected final HBox commandButtonBar;
+	private final HBox commandButtonBar;
 	private final ObjectProperty<EditorColumnList> columnList = new SimpleObjectProperty<>();
 	private final ObjectProperty<T> selectedItem = new SimpleObjectProperty<>();
-	private final ObjectProperty<List<T>> selectedItemList = new SimpleObjectProperty<>(new ArrayList<T>());
+	private final ObjectProperty<ObservableList<T>> selectedItemList = new SimpleObjectProperty<>();
 
 	private final Messenger mainMessenger;
 
@@ -104,7 +103,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane implements
 		// ボタン作り
 		Button newButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "New");
 		newButton.setText(ResourceManager.getMessage("msg.new"));
-		newButton.setGraphic(ResourceManager.getIconNode("new.png"));
+		newButton.setGraphic(ResourceManager.getIconNode("create.png"));
 		newButton.setMinSize(100.0, 45.0);
 		Button editButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Edit");
 		editButton.setText(ResourceManager.getMessage("msg.edit"));
@@ -114,7 +113,22 @@ public abstract class EntityListPane<T extends Entity> extends MyPane implements
 		delButton.setText(ResourceManager.getMessage("msg.delete"));
 		delButton.setGraphic(ResourceManager.getIconNode("cancel.png"));
 		delButton.setMinSize(100.0, 45.0);
-		this.commandButtonBar.getChildren().addAll(newButton, editButton, delButton);
+		Button upButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Up",
+													  ResourceManager.getMessage("msg.order.up"));
+		upButton.setGraphic(ResourceManager.getIconNode("up.png"));
+		upButton.setPrefSize(50.0, 45.0);
+		Button downButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Down",
+														ResourceManager.getMessage("msg.order.down"));
+		downButton.setGraphic(ResourceManager.getIconNode("down.png"));
+		downButton.setPrefSize(50.0, 45.0);
+		Button associationButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Association",
+															   ResourceManager.getMessage("msg.association"));
+		associationButton.setGraphic(ResourceManager.getIconNode("association.png"));
+		associationButton.setPrefSize(50.0, 45.0);
+		this.commandButtonBar.getChildren().addAll(newButton, editButton, delButton, upButton, downButton, associationButton);
+
+		// サブクラス独自のボタン
+		this.addCommandButton(this.viewModelList, this.commandButtonBar);
 
 		// テーブルビューを選択した時のイベント
 		this.selectedItem.bind(this.tableView.getSelectionModel().selectedItemProperty());
@@ -150,6 +164,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane implements
 
 		MenuItem viewOnAssociation = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Association");
 		viewOnAssociation.setText(ResourceManager.getMessage("msg.association.view"));
+		viewOnAssociation.setGraphic(ResourceManager.getMiniIconNode("association.png"));
 		this.contextMenu.getItems().addAll(newMenu, editMenu, delMenu, new SeparatorMenuItem(), upMenu, downMenu, resetOrder,
 										   new SeparatorMenuItem(), viewOnAssociation);
 
@@ -163,15 +178,13 @@ public abstract class EntityListPane<T extends Entity> extends MyPane implements
 	protected void addContextMenu (ViewModelList viewModelList, ContextMenu contextMenu) {
 	}
 
+	// ボタンを設定（サブクラス専用）
+	protected void addCommandButton (ViewModelList viewModelList, HBox commandButtonBar) {
+	}
+
 	// ならべ替えのボタン
+	@Deprecated
 	protected void setOrderButton () {
-		Button upButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Up");
-		upButton.setGraphic(ResourceManager.getIconNode("up.png"));
-		upButton.setPrefSize(50.0, 45.0);
-		Button downButton = GUIUtil.createCommandButton(this.viewModelList, this.getEntityTypeName() + "Down");
-		downButton.setGraphic(ResourceManager.getIconNode("down.png"));
-		downButton.setPrefSize(50.0, 45.0);
-		this.commandButtonBar.getChildren().addAll(upButton, downButton);
 	}
 
 	// 何も選択しない

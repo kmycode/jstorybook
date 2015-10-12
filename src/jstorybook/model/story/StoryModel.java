@@ -13,6 +13,7 @@
  */
 package jstorybook.model.story;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import jstorybook.common.contract.DialogResult;
 import jstorybook.common.contract.StorySettingName;
 import jstorybook.common.manager.ResourceManager;
@@ -288,6 +291,13 @@ public class StoryModel implements IUseMessenger {
 
 		// たったこれだけで初期化処理がなされる
 		this.isCreating = true;
+
+		// 新規作成の時、すでにファイルが存在するとSQLiteのJDBCの挙動の関係でエラーが出る
+		File oldFile = new File(createModel.fileNameProperty().get());
+		if (oldFile.exists()) {
+			oldFile.delete();
+		}
+
 		this.storyFileName.set(createModel.fileNameProperty().get());
 
 		// メイン画面の表示をリセット
@@ -795,8 +805,9 @@ public class StoryModel implements IUseMessenger {
 		}
 	}
 
-	private void deleteEntity (List<? extends Entity> selectedList, ColumnFactory columnFactory, DAO dao) {
+	private void deleteEntity (List<? extends Entity> selectedList, ColumnFactory columnFactory, StoryEntityModel em) {
 		if (selectedList != null && selectedList.size() > 0) {
+			DAO dao = (DAO) em.dao.get();
 			DeleteDialogMessage delmes = new DeleteDialogMessage(selectedList.size() <= 1 ? selectedList.get(0).titleProperty().get()
 																		 : ResourceManager.getMessage("msg.confirm.delete.multi",
 																									  selectedList.
@@ -826,16 +837,20 @@ public class StoryModel implements IUseMessenger {
 			List entityList = dao.modelListProperty().get();
 			Collections.sort(entityList);
 			int entityNum = entityList.size();
+			outside:
 			for (ISortableEntity selected : selectedList) {
 				for (int i = 0; i < entityNum; i++) {
 					if (((Entity) entityList.get(i)).idProperty().get() == selected.idProperty().get()) {
 						if (i > 0) {
 							((ISortableEntity) selected).replaceOrder((ISortableEntity) entityList.get(i - 1));
+							Collections.sort(entityList);
+						}
+						else {
+							break outside;
 						}
 					}
 				}
 			}
-			Collections.sort(entityList);
 		}
 	}
 
@@ -844,16 +859,21 @@ public class StoryModel implements IUseMessenger {
 			List entityList = dao.modelListProperty().get();
 			Collections.sort(entityList);
 			int entityNum = entityList.size();
-			for (ISortableEntity selected : selectedList) {
-				for (int i = 0; i < entityNum; i++) {
+			outside:
+			for (int j = selectedList.size() - 1; j >= 0; j--) {
+				ISortableEntity selected = selectedList.get(j);
+				for (int i = entityNum - 1; i >= 0; i--) {
 					if (((Entity) entityList.get(i)).idProperty().get() == selected.idProperty().get()) {
 						if (i < entityNum - 1) {
 							((ISortableEntity) selected).replaceOrder((ISortableEntity) entityList.get(i + 1));
+							Collections.sort(entityList);
+						}
+						else {
+							break outside;
 						}
 					}
 				}
 			}
-			Collections.sort(entityList);
 		}
 	}
 
@@ -876,7 +896,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deletePerson () {
-		this.deleteEntity(this.personEntity.selectedEntityList.get(), PersonColumnFactory.getInstance(), this.personEntity.dao.get());
+		this.deleteEntity(this.personEntity.selectedEntityList.get(), PersonColumnFactory.getInstance(), this.personEntity);
 	}
 
 	public void upPerson () {
@@ -902,7 +922,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteGroup () {
-		this.deleteEntity(this.groupEntity.selectedEntityList.get(), GroupColumnFactory.getInstance(), this.groupEntity.dao.get());
+		this.deleteEntity(this.groupEntity.selectedEntityList.get(), GroupColumnFactory.getInstance(), this.groupEntity);
 	}
 
 	public void upGroup () {
@@ -928,7 +948,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deletePlace () {
-		this.deleteEntity(this.placeEntity.selectedEntityList.get(), PlaceColumnFactory.getInstance(), this.placeEntity.dao.get());
+		this.deleteEntity(this.placeEntity.selectedEntityList.get(), PlaceColumnFactory.getInstance(), this.placeEntity);
 	}
 
 	public void upPlace () {
@@ -954,7 +974,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteScene () {
-		this.deleteEntity(this.sceneEntity.selectedEntityList.get(), SceneColumnFactory.getInstance(), this.sceneEntity.dao.get());
+		this.deleteEntity(this.sceneEntity.selectedEntityList.get(), SceneColumnFactory.getInstance(), this.sceneEntity);
 	}
 
 	public void upScene () {
@@ -980,9 +1000,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteChapter () {
-		this.
-				deleteEntity(this.chapterEntity.selectedEntityList.get(), ChapterColumnFactory.getInstance(), this.chapterEntity.dao.
-							 get());
+		this.deleteEntity(this.chapterEntity.selectedEntityList.get(), ChapterColumnFactory.getInstance(), this.chapterEntity);
 	}
 
 	public void upChapter () {
@@ -998,8 +1016,8 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void sceneNovelEditorChapter () {
-		if (this.chapterEntity.selectedEntityList.get().size() > 0) {
-			long chapterId = this.chapterEntity.selectedEntityList.get().get(0).idProperty().get();
+		for (Chapter chapter : this.chapterEntity.selectedEntityList.get()) {
+			long chapterId = chapter.idProperty().get();
 			this.messenger.send(new SceneNovelChartShowMessage(chapterId, this.chapterEntity.dao.get().getModelById(chapterId).
 															   nameProperty()));
 		}
@@ -1016,9 +1034,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteSex () {
-		this.
-				deleteEntity(this.sexEntity.selectedEntityList.get(), SexColumnFactory.getInstance(), this.sexEntity.dao.
-							 get());
+		this.deleteEntity(this.sexEntity.selectedEntityList.get(), SexColumnFactory.getInstance(), this.sexEntity);
 	}
 
 	public void upSex () {
@@ -1040,8 +1056,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteAttribute () {
-		this.deleteEntity(this.attributeEntity.selectedEntityList.get(), AttributeColumnFactory.getInstance(),
-							 this.attributeEntity.dao.get());
+		this.deleteEntity(this.attributeEntity.selectedEntityList.get(), AttributeColumnFactory.getInstance(),this.attributeEntity);
 	}
 
 	public void upAttribute () {
@@ -1063,9 +1078,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteKeyword () {
-		this.
-				deleteEntity(this.keywordEntity.selectedEntityList.get(), KeywordColumnFactory.getInstance(), this.keywordEntity.dao.
-							 get());
+		this.deleteEntity(this.keywordEntity.selectedEntityList.get(), KeywordColumnFactory.getInstance(), this.keywordEntity);
 	}
 
 	public void upKeyword () {
@@ -1091,9 +1104,7 @@ public class StoryModel implements IUseMessenger {
 	}
 
 	public void deleteTag () {
-		this.
-				deleteEntity(this.tagEntity.selectedEntityList.get(), TagColumnFactory.getInstance(), this.tagEntity.dao.
-							 get());
+		this.deleteEntity(this.tagEntity.selectedEntityList.get(), TagColumnFactory.getInstance(), this.tagEntity);
 	}
 
 	public void upTag () {
@@ -1131,7 +1142,7 @@ public class StoryModel implements IUseMessenger {
 	public class StoryEntityModel<E extends Entity, D> {
 
 		private final ObjectProperty<D> dao = new SimpleObjectProperty<>();
-		private final ObjectProperty<List<E>> selectedEntityList = new SimpleObjectProperty<>(new ArrayList<>());
+		private final ObjectProperty<ObservableList<E>> selectedEntityList = new SimpleObjectProperty<>();
 		private final BooleanProperty canEdit = new SimpleBooleanProperty(false);
 
 		private StoryEntityModel (D dao) {
@@ -1139,9 +1150,19 @@ public class StoryModel implements IUseMessenger {
 
 			// 選択中のエンティティが変更された場合
 			this.selectedEntityList.addListener((obj) -> {
-				List<Entity> entityList = ((ObjectProperty<List<Entity>>) obj).get();
-				this.canEdit.set(entityList != null && entityList.size() > 0);
+				if (this.selectedEntityList.get() != null) {
+					this.selectedEntityList.get().addListener(new ListChangeListener<E>() {
+						public void onChanged (ListChangeListener.Change obj) {
+							StoryEntityModel.this.checkCanEdit();
+						}
+					});
+				}
 			});
+		}
+
+		public void checkCanEdit () {
+			List<E> entityList = this.selectedEntityList.get();
+			this.canEdit.set(StoryModel.this.canEdit.get() && entityList != null && entityList.size() > 0);
 		}
 
 		public ObjectProperty<D> DAOProperty () {
@@ -1149,7 +1170,7 @@ public class StoryModel implements IUseMessenger {
 		}
 
 		// TableViewなどで選択されたエンティティ
-		public ObjectProperty<List<E>> selectedEntityProperty () {
+		public ObjectProperty<ObservableList<E>> selectedEntityProperty () {
 			return this.selectedEntityList;
 		}
 

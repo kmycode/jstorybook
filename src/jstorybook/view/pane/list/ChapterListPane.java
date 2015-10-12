@@ -13,8 +13,10 @@
  */
 package jstorybook.view.pane.list;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.HBox;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.common.util.GUIUtil;
@@ -39,8 +41,19 @@ public class ChapterListPane extends EntityListPane<Chapter> {
 		// シーン一括編集メニューの設定
 		MenuItem editMenu = GUIUtil.createMenuItem(viewModelList, "chapterSceneNovel");
 		editMenu.setText(ResourceManager.getMessage("msg.scenenovel"));
+		editMenu.setGraphic(ResourceManager.getMiniIconNode("scenenovel.png"));
 
 		contextMenu.getItems().addAll(editMenu);
+	}
+
+	@Override
+	protected void addCommandButton (ViewModelList viewModelList, HBox commandButtonBar) {
+
+		Button sceneButton = GUIUtil.createCommandButton(viewModelList, "chapterSceneNovel", ResourceManager.getMessage(
+														 "msg.scenenovel"));
+		sceneButton.setGraphic(ResourceManager.getIconNode("scenenovel.png"));
+		sceneButton.setMinSize(50.0, 45.0);
+		commandButtonBar.getChildren().addAll(sceneButton);
 	}
 
 	@Override

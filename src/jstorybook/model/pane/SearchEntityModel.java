@@ -106,6 +106,9 @@ public class SearchEntityModel implements IUseMessenger {
 				case CHAPTER:
 					dao = storyModel.getChapterDAO();
 					break;
+				case ATTRIBUTE:
+					dao = storyModel.getAttributeDAO();
+					break;
 				case KEYWORD:
 					dao = storyModel.getKeywordDAO();
 					break;

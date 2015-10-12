@@ -94,6 +94,7 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.place"), "place", EntityType.PLACE),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.keyword"), "keyword", EntityType.KEYWORD),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.scene"), "scene", EntityType.SCENE),
+						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.attribute"), null, EntityType.ATTRIBUTE),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.chapter"), "chapter", EntityType.CHAPTER),
 						this.createEntityTypeCheckBox(ResourceManager.getMessage("msg.tag"), "tag", EntityType.TAG));
 		entityTypeListPane.getChildren().add(entityTypeVBox);
@@ -139,8 +140,10 @@ public class SearchEntityPane extends MyPane implements IReloadable {
 			this.entityTypeList.get().sort(null);
 			SearchEntityPane.this.viewModelList.executeCommand("search");
 		});
-		check.setGraphic(ResourceManager.getMiniIconNode(iconName + ".png"));
-		check.setSelected(true);
+		if (iconName != null) {
+			check.setGraphic(ResourceManager.getMiniIconNode(iconName + ".png"));
+			check.setSelected(true);
+		}
 		return check;
 	}
 
