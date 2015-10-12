@@ -145,7 +145,7 @@ public abstract class EntityListPane<T extends Entity> extends MyPane implements
 
 		MenuItem newMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "New");
 		newMenu.setText(ResourceManager.getMessage("msg.new"));
-		newMenu.setGraphic(ResourceManager.getMiniIconNode("new.png"));
+		newMenu.setGraphic(ResourceManager.getMiniIconNode("create.png"));
 		MenuItem editMenu = GUIUtil.createMenuItem(this.viewModelList, this.getEntityTypeName() + "Edit");
 		editMenu.setText(ResourceManager.getMessage("msg.edit"));
 		editMenu.setGraphic(ResourceManager.getMiniIconNode("edit.png"));
