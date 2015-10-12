@@ -11,27 +11,25 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.viewtool.messenger.dialog;
+
+import jstorybook.viewtool.messenger.Message;
 
 /**
- * システムの定数を設定
+ * ストーリーファイルをアップデートしていいか尋ねるメッセージ
  *
  * @author KMY
  */
-public enum SystemKey {
+public class AskStoryFileUpdateShowMessage extends Message {
 
-	SYSTEM_NAME("jStorybook"),
-	SYSTEM_VERSION("6.0.0 alpha2"),
-	FILE_VERSION(2),;
+	private boolean isUpdate;
 
-	private final Object value;
-
-
-	private SystemKey (Object value) {
-		this.value = value;
+	public void setUpdate (boolean value) {
+		this.isUpdate = value;
 	}
 
-	public Object getValue () {
-		return this.value;
+	public boolean isUpdate () {
+		return this.isUpdate;
 	}
+
 }

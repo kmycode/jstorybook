@@ -18,4 +18,3 @@
 ・attributetagテーブルを追加
 ・sceneテーブルに、`text` TEXTの列を追加
 ・personテーブルで、sexの数値を1ずつ増やす
-・personテーブルで、colorにNOT NULLとDEFAULT (0)を追加

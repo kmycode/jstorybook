@@ -40,6 +40,15 @@ public class StoryFileModel {
 		this.isOpen.set(true);
 	}
 
+	public boolean checkUpdate () throws SQLException {
+		// DAOに通す前に、ファイルのバージョンを確認
+		return StoryFileUpdateModel.getInstance().checkUpdate(this);
+	}
+
+	public void update () throws SQLException {
+		StoryFileUpdateModel.getInstance().update(this);
+	}
+
 	public ResultSet executeQuery (String sql) throws SQLException {
 		return this.db.executeQuery(sql);
 	}

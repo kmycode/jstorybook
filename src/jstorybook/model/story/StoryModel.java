@@ -108,6 +108,7 @@ import jstorybook.viewtool.messenger.IUseMessenger;
 import jstorybook.viewtool.messenger.MainWindowClearMessage;
 import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
+import jstorybook.viewtool.messenger.dialog.AskStoryFileUpdateShowMessage;
 import jstorybook.viewtool.messenger.dialog.ProgressDialogShowMessage;
 import jstorybook.viewtool.messenger.exception.StoryFileLoadFailedMessage;
 import jstorybook.viewtool.messenger.general.DeleteDialogMessage;
@@ -212,6 +213,20 @@ public class StoryModel implements IUseMessenger {
 						this.createDAO();
 						this.isCreating = false;
 					}
+
+					// アップデートの必要があるかチェック
+					if (this.storyFile.get().checkUpdate()) {
+						AskStoryFileUpdateShowMessage message = new AskStoryFileUpdateShowMessage();
+						this.messenger.send(message);
+						if (message.isUpdate()) {
+							this.storyFile.get().update();
+						}
+						else {
+							this.storyFileName.set("");
+							return;
+						}
+					}
+
 					this.setDAO();
 
 					this.canEdit.set(true);

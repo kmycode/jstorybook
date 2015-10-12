@@ -83,6 +83,7 @@ import jstorybook.viewtool.messenger.MainWindowResetMessage;
 import jstorybook.viewtool.messenger.Messenger;
 import jstorybook.viewtool.messenger.dialog.AboutDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.AskExitDialogShowMessage;
+import jstorybook.viewtool.messenger.dialog.AskStoryFileUpdateShowMessage;
 import jstorybook.viewtool.messenger.dialog.NewStoryDialogShowMessage;
 import jstorybook.viewtool.messenger.dialog.OpenFileChooserMessage;
 import jstorybook.viewtool.messenger.dialog.PreferenceDialogShowMessage;
@@ -410,6 +411,9 @@ public class MainWindow extends MyStage {
 		});
 		this.messenger.apply(NewStoryDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showNewStoryDialog();
+		});
+		this.messenger.apply(AskStoryFileUpdateShowMessage.class, this, (ev) -> {
+			MainWindow.this.showAskStoryFileUpdateDialog((AskStoryFileUpdateShowMessage) ev);
 		});
 		this.messenger.apply(StorySettingDialogShowMessage.class, this, (ev) -> {
 			MainWindow.this.showStorySettingDialog();
@@ -835,6 +839,13 @@ public class MainWindow extends MyStage {
 	private void showAskExitDialog (AskExitDialogShowMessage message) {
 		if (this.askYesNo(ResourceManager.getMessage("msg.confirm.exit")) == DialogResult.YES) {
 			message.setExitable(true);
+		}
+	}
+
+	// ファイルのアップデート確認
+	private void showAskStoryFileUpdateDialog (AskStoryFileUpdateShowMessage message) {
+		if (this.askYesNo(ResourceManager.getMessage("msg.confirm.storyfile.update")) == DialogResult.YES) {
+			message.setUpdate(true);
 		}
 	}
 
