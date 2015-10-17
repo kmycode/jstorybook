@@ -153,6 +153,7 @@ public class DockablePane extends AnchorPane {
 				((DockableTabPane) node).removeTabPane();
 			}
 		}
+		this.rootGroup.get().removeEmptyTabPane();
 		this.activeTabPane = null;
 	}
 

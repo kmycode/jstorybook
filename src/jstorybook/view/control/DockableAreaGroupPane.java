@@ -290,8 +290,6 @@ public class DockableAreaGroupPane extends SplitPane {
 	public void removeEmptyTabPane () {
 		List<Node> removeNodeList = new ArrayList<>();
 		DockableTabPane canUseTabPane = null;
-		int groupPaneCount = 0;
-		int groupPaneDelCount = 0;
 		for (Node node : this.getItems()) {
 			if (node instanceof DockableTabPane) {
 				DockableTabPane tabPane = (DockableTabPane) node;
@@ -319,10 +317,8 @@ public class DockableAreaGroupPane extends SplitPane {
 					}
 					if (!hit) {
 						removeNodeList.add(groupPane);
-						groupPaneDelCount++;
 					}
 				}
-				groupPaneCount++;
 			}
 		}
 

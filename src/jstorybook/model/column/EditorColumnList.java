@@ -84,7 +84,11 @@ public class EditorColumnList extends ArrayList<EditorColumn> {
 				throw new ArrayIndexOutOfBoundsException();
 			}
 			for (int i = 0; i < this.size(); i++) {
-				this.get(i).getProperty().setValue(from.get(i).getProperty().getValue());
+
+				// 順番番号はコピーしない（新規作成の時、ゼロに戻ってしまうため）
+				if (!from.get(i).getPropertyName().equals("order")) {
+					this.get(i).getProperty().setValue(from.get(i).getProperty().getValue());
+				}
 			}
 			this.note.set(from.note.get());
 

@@ -58,8 +58,8 @@ public class DateControl extends DatePicker {
 						Calendar cal = DateTimeManager.getInstance().stringToDate(text.get());
 						if (cal.equals(converter.calendarProperty().get())) {
 							converter.calendarProperty().set(cal);
-							this.getEditor().setStyle("-fx-text-fill:black");
 						}
+						this.getEditor().setStyle("-fx-text-fill:black");
 					} catch (ParseException e) {
 						// エラーが起きてもともと
 						this.getEditor().setStyle("-fx-text-fill:red");

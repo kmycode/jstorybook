@@ -15,6 +15,7 @@ package jstorybook.model.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import jstorybook.common.contract.SystemKey;
 import jstorybook.common.util.SQLiteUtil;
 import jstorybook.model.entity.StorySetting;
 
@@ -105,7 +106,8 @@ public class StorySettingDAO extends DAO<StorySetting> {
 				"CREATE TABLE setting (key TEXT PRIMARY KEY NOT NULL, value TEXT, intValue INTEGER)");
 		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('storyname','',0);");
 		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('entitycount','',0);");
-		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('fileversion','',1);");
+		this.getStoryFileModel().updateQuery("insert into setting(key,value,intValue) values ('fileversion','',"
+				+ SystemKey.FILE_VERSION.getValue() + ");");
 		this.loadList();
 	}
 
