@@ -302,6 +302,7 @@ public class MainWindow extends MyStage {
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showEventList");
 			menu.setText(ResourceManager.getMessage("msg.event"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("event.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+V"));
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showKeywordList");
@@ -328,6 +329,7 @@ public class MainWindow extends MyStage {
 			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showStorylineList");
 			menu.setText(ResourceManager.getMessage("msg.storyline"));
+			menu.setGraphic(ResourceManager.getMiniIconNode("storyline.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+O"));
 			editMenu.getItems().add(menu);
 
@@ -390,6 +392,9 @@ public class MainWindow extends MyStage {
 			button = GUIUtil.createCommandButton(this.viewModelList, "showPlaceList", ResourceManager.getMessage("msg.place"));
 			button.setGraphic(ResourceManager.getIconNode("place.png"));
 			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showEventList", ResourceManager.getMessage("msg.event"));
+			button.setGraphic(ResourceManager.getIconNode("event.png"));
+			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showKeywordList", ResourceManager.getMessage("msg.keyword"));
 			button.setGraphic(ResourceManager.getIconNode("keyword.png"));
 			buttonList.add(button);
@@ -399,6 +404,9 @@ public class MainWindow extends MyStage {
 			buttonList.add(button);
 			button = GUIUtil.createCommandButton(this.viewModelList, "showChapterList", ResourceManager.getMessage("msg.chapter"));
 			button.setGraphic(ResourceManager.getIconNode("chapter.png"));
+			buttonList.add(button);
+			button = GUIUtil.createCommandButton(this.viewModelList, "showStorylineList", ResourceManager.getMessage("msg.storyline"));
+			button.setGraphic(ResourceManager.getIconNode("storyline.png"));
 			buttonList.add(button);
 			buttonList.add(new Separator());
 			button = GUIUtil.createCommandButton(this.viewModelList, "showTagList", ResourceManager.getMessage("msg.tag"));
@@ -709,6 +717,7 @@ public class MainWindow extends MyStage {
 	// イベントリストタブを追加
 	private void addEventListTab () {
 		EntityListPane tab = new EventListPane(this.messenger);
+		tab.setGraphic(ResourceManager.getMiniIconNode("event.png"));
 		this.addEntityListTab(tab);
 	}
 
@@ -728,6 +737,7 @@ public class MainWindow extends MyStage {
 	// 話の線リストタブを追加
 	private void addStorylineListTab () {
 		EntityListPane tab = new StorylineListPane(this.messenger);
+		tab.setGraphic(ResourceManager.getMiniIconNode("storyline.png"));
 		this.addEntityListTab(tab);
 	}
 
