@@ -62,11 +62,29 @@ public class StoryViewModel extends ViewModel {
 						   modelListProperty());
 		this.applyProperty("sceneSelected", this.storyModel.get().getSceneEntity().selectedEntityProperty());
 
+		this.applyProperty("eventColumnList", this.storyModel.get().entityColumnProperty().get().
+						   eventColumnListProperty());
+		this.applyProperty("eventList", this.storyModel.get().getEventEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("eventSelected", this.storyModel.get().getEventEntity().selectedEntityProperty());
+
 		this.applyProperty("chapterColumnList", this.storyModel.get().entityColumnProperty().get().
 						   chapterColumnListProperty());
 		this.applyProperty("chapterList", this.storyModel.get().getChapterEntity().DAOProperty().get().
 						   modelListProperty());
 		this.applyProperty("chapterSelected", this.storyModel.get().getChapterEntity().selectedEntityProperty());
+
+		this.applyProperty("partColumnList", this.storyModel.get().entityColumnProperty().get().
+						   partColumnListProperty());
+		this.applyProperty("partList", this.storyModel.get().getPartEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("partSelected", this.storyModel.get().getPartEntity().selectedEntityProperty());
+
+		this.applyProperty("storylineColumnList", this.storyModel.get().entityColumnProperty().get().
+						   storylineColumnListProperty());
+		this.applyProperty("storylineList", this.storyModel.get().getStorylineEntity().DAOProperty().get().
+						   modelListProperty());
+		this.applyProperty("storylineSelected", this.storyModel.get().getStorylineEntity().selectedEntityProperty());
 
 		this.applyProperty("sexColumnList", this.storyModel.get().entityColumnProperty().get().
 						   sexColumnListProperty());
@@ -146,6 +164,21 @@ public class StoryViewModel extends ViewModel {
 		this.applyCommand("placeOrderReset", (ev) -> this.storyModel.get().getPlaceDAO().resetOrder(), this.storyModel.get().
 						  canEditProperty());
 
+		this.applyCommand("showEventList", (ev) -> this.applicationModel.showEventList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("eventNew", (ev) -> this.storyModel.get().newEvent(), this.storyModel.get().canEditProperty());
+		this.applyCommand("eventEdit", (ev) -> this.storyModel.get().editEvent(), this.storyModel.get().getEventEntity().
+						  canEditProperty());
+		this.applyCommand("eventDelete", (ev) -> this.storyModel.get().deleteEvent(), this.storyModel.get().getEventEntity().
+						  canEditProperty());
+		this.applyCommand("eventUp", (ev) -> this.storyModel.get().upEvent(), this.storyModel.get().getEventEntity().
+						  canEditProperty());
+		this.applyCommand("eventDown", (ev) -> this.storyModel.get().downEvent(), this.storyModel.get().getEventEntity().
+						  canEditProperty());
+		this.applyCommand("eventAssociation", (ev) -> this.storyModel.get().associationEvent(), this.storyModel.get().getEventEntity().
+						  canEditProperty());
+		this.applyCommand("eventOrderReset", (ev) -> this.storyModel.get().getEventDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
 		this.applyCommand("showSceneList", (ev) -> this.applicationModel.showSceneList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("sceneNew", (ev) -> this.storyModel.get().newScene(), this.storyModel.get().canEditProperty());
 		this.applyCommand("sceneEdit", (ev) -> this.storyModel.get().editScene(), this.storyModel.get().getSceneEntity().
@@ -178,6 +211,39 @@ public class StoryViewModel extends ViewModel {
 						  canEditProperty());
 		this.applyCommand("chapterSceneNovel", (ev) -> this.storyModel.get().sceneNovelEditorChapter(), this.storyModel.get().
 						  getChapterEntity().canEditProperty());
+
+		this.applyCommand("showPartList", (ev) -> this.applicationModel.showPartList(), this.storyModel.get().canEditProperty());
+		this.applyCommand("partNew", (ev) -> this.storyModel.get().newPart(), this.storyModel.get().canEditProperty());
+		this.applyCommand("partEdit", (ev) -> this.storyModel.get().editPart(), this.storyModel.get().getPartEntity().
+						  canEditProperty());
+		this.applyCommand("partDelete", (ev) -> this.storyModel.get().deletePart(), this.storyModel.get().getPartEntity().
+						  canEditProperty());
+		this.applyCommand("partUp", (ev) -> this.storyModel.get().upPart(), this.storyModel.get().getPartEntity().
+						  canEditProperty());
+		this.applyCommand("partDown", (ev) -> this.storyModel.get().downPart(), this.storyModel.get().getPartEntity().
+						  canEditProperty());
+		this.applyCommand("partAssociation", (ev) -> this.storyModel.get().associationPart(), this.storyModel.get().getPartEntity().
+						  canEditProperty());
+		this.applyCommand("partOrderReset", (ev) -> this.storyModel.get().getPartDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
+
+		this.applyCommand("showStorylineList", (ev) -> this.applicationModel.showStorylineList(), this.storyModel.get().
+						  canEditProperty());
+		this.applyCommand("storylineNew", (ev) -> this.storyModel.get().newStoryline(), this.storyModel.get().canEditProperty());
+		this.applyCommand("storylineEdit", (ev) -> this.storyModel.get().editStoryline(), this.storyModel.get().getStorylineEntity().
+						  canEditProperty());
+		this.applyCommand("storylineDelete", (ev) -> this.storyModel.get().deleteStoryline(), this.storyModel.get().
+						  getStorylineEntity().
+						  canEditProperty());
+		this.applyCommand("storylineUp", (ev) -> this.storyModel.get().upStoryline(), this.storyModel.get().getStorylineEntity().
+						  canEditProperty());
+		this.applyCommand("storylineDown", (ev) -> this.storyModel.get().downStoryline(), this.storyModel.get().getStorylineEntity().
+						  canEditProperty());
+		this.applyCommand("storylineAssociation", (ev) -> this.storyModel.get().associationStoryline(), this.storyModel.get().
+						  getStorylineEntity().
+						  canEditProperty());
+		this.applyCommand("storylineOrderReset", (ev) -> this.storyModel.get().getStorylineDAO().resetOrder(), this.storyModel.get().
+						  canEditProperty());
 
 		this.applyCommand("showSexList", (ev) -> this.applicationModel.showSexList(), this.storyModel.get().canEditProperty());
 		this.applyCommand("sexNew", (ev) -> this.storyModel.get().newSex(), this.storyModel.get().canEditProperty());

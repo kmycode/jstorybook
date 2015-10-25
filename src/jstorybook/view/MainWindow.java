@@ -64,12 +64,15 @@ import jstorybook.view.pane.editor.EntityEditorPane;
 import jstorybook.view.pane.list.AttributeListPane;
 import jstorybook.view.pane.list.ChapterListPane;
 import jstorybook.view.pane.list.EntityListPane;
+import jstorybook.view.pane.list.EventListPane;
 import jstorybook.view.pane.list.GroupListPane;
 import jstorybook.view.pane.list.KeywordListPane;
+import jstorybook.view.pane.list.PartListPane;
 import jstorybook.view.pane.list.PersonListPane;
 import jstorybook.view.pane.list.PlaceListPane;
 import jstorybook.view.pane.list.SceneListPane;
 import jstorybook.view.pane.list.SexListPane;
+import jstorybook.view.pane.list.StorylineListPane;
 import jstorybook.view.pane.list.TagListPane;
 import jstorybook.viewmodel.ApplicationViewModel;
 import jstorybook.viewmodel.StoryViewModel;
@@ -103,21 +106,27 @@ import jstorybook.viewtool.messenger.pane.chart.SceneNovelChartShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.AttributeEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.EventEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PartEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SexEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.StorylineEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.TagEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.list.AttributeListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.ChapterListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.EventListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.KeywordListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.PartListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.PersonListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.SceneListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.SexListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.StorylineListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.TagListShowMessage;
 import jstorybook.viewtool.messenger.pane.pane.SearchEntityPaneShowMessage;
 
@@ -291,6 +300,10 @@ public class MainWindow extends MyStage {
 			menu.setGraphic(ResourceManager.getMiniIconNode("place.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+L"));
 			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showEventList");
+			menu.setText(ResourceManager.getMessage("msg.event"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+V"));
+			editMenu.getItems().add(menu);
 			menu = GUIUtil.createMenuItem(this.viewModelList, "showKeywordList");
 			menu.setText(ResourceManager.getMessage("msg.keyword"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("keyword.png"));
@@ -308,6 +321,14 @@ public class MainWindow extends MyStage {
 			menu.setText(ResourceManager.getMessage("msg.chapter"));
 			menu.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
 			menu.setAccelerator(KeyCombination.valueOf("Shift+C"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showPartList");
+			menu.setText(ResourceManager.getMessage("msg.part"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+R"));
+			editMenu.getItems().add(menu);
+			menu = GUIUtil.createMenuItem(this.viewModelList, "showStorylineList");
+			menu.setText(ResourceManager.getMessage("msg.storyline"));
+			menu.setAccelerator(KeyCombination.valueOf("Shift+O"));
 			editMenu.getItems().add(menu);
 
 			editMenu.getItems().add(new SeparatorMenuItem());
@@ -464,11 +485,20 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(PlaceListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPlaceListTab();
 		});
+		this.messenger.apply(EventListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addEventListTab();
+		});
 		this.messenger.apply(SceneListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSceneListTab();
 		});
 		this.messenger.apply(ChapterListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addChapterListTab();
+		});
+		this.messenger.apply(PartListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPartListTab();
+		});
+		this.messenger.apply(StorylineListShowMessage.class, this, (ev) -> {
+			MainWindow.this.addStorylineListTab();
 		});
 		this.messenger.apply(SexListShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSexListTab();
@@ -492,11 +522,20 @@ public class MainWindow extends MyStage {
 		this.messenger.apply(PlaceEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addPlaceEditorTab((PlaceEditorShowMessage) ev);
 		});
+		this.messenger.apply(EventEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addEventEditorTab((EventEditorShowMessage) ev);
+		});
 		this.messenger.apply(SceneEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSceneEditorTab((SceneEditorShowMessage) ev);
 		});
 		this.messenger.apply(ChapterEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addChapterEditorTab((ChapterEditorShowMessage) ev);
+		});
+		this.messenger.apply(PartEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addPartEditorTab((PartEditorShowMessage) ev);
+		});
+		this.messenger.apply(StorylineEditorShowMessage.class, this, (ev) -> {
+			MainWindow.this.addStorylineEditorTab((StorylineEditorShowMessage) ev);
 		});
 		this.messenger.apply(SexEditorShowMessage.class, this, (ev) -> {
 			MainWindow.this.addSexEditorTab((SexEditorShowMessage) ev);
@@ -667,10 +706,28 @@ public class MainWindow extends MyStage {
 		this.addEntityListTab(tab);
 	}
 
+	// イベントリストタブを追加
+	private void addEventListTab () {
+		EntityListPane tab = new EventListPane(this.messenger);
+		this.addEntityListTab(tab);
+	}
+
 	// 章リストタブを追加
 	private void addChapterListTab () {
 		EntityListPane tab = new ChapterListPane(this.messenger);
 		tab.setGraphic(ResourceManager.getMiniIconNode("chapter.png"));
+		this.addEntityListTab(tab);
+	}
+
+	// 編リストタブを追加
+	private void addPartListTab () {
+		EntityListPane tab = new PartListPane(this.messenger);
+		this.addEntityListTab(tab);
+	}
+
+	// 話の線リストタブを追加
+	private void addStorylineListTab () {
+		EntityListPane tab = new StorylineListPane(this.messenger);
 		this.addEntityListTab(tab);
 	}
 
@@ -771,9 +828,24 @@ public class MainWindow extends MyStage {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.scene"));
 	}
 
+	// イベント編集タブ
+	private void addEventEditorTab (EventEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.event"));
+	}
+
 	// 章編集タブ
 	private void addChapterEditorTab (ChapterEditorShowMessage message) {
 		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.chapter"));
+	}
+
+	// 編編集タブ
+	private void addPartEditorTab (PartEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.part"));
+	}
+
+	// 話の線編集タブ
+	private void addStorylineEditorTab (StorylineEditorShowMessage message) {
+		this.addEntityEditorTab(message, ResourceManager.getMessage("msg.edit.storyline"));
 	}
 
 	// 性編集タブ

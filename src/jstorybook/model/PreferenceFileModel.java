@@ -40,7 +40,7 @@ public class PreferenceFileModel implements IUseMessenger {
 
 	private final SQLiteFile db;
 	private final BooleanProperty isOpen = new SimpleBooleanProperty(false);
-	private String dirName = System.getProperty("user.home") + "/.jstorybook";
+	private String dirName = System.getProperty("user.home") + "/.jstorybook-dev";
 	private String fileName = dirName + "/preference.db";
 	private Messenger messenger = Messenger.getInstance();
 

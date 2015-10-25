@@ -19,12 +19,15 @@ import jstorybook.viewtool.messenger.dialog.StorySettingDialogShowMessage;
 import jstorybook.viewtool.messenger.pane.chart.PersonUsingChartShowMessage;
 import jstorybook.viewtool.messenger.pane.list.AttributeListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.ChapterListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.EventListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.GroupListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.KeywordListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.PartListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.PersonListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.PlaceListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.SceneListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.SexListShowMessage;
+import jstorybook.viewtool.messenger.pane.list.StorylineListShowMessage;
 import jstorybook.viewtool.messenger.pane.list.TagListShowMessage;
 import jstorybook.viewtool.messenger.pane.pane.SearchEntityPaneShowMessage;
 
@@ -49,12 +52,24 @@ public class StoryApplicationModel implements IUseMessenger {
 		this.messenger.send(new PlaceListShowMessage());
 	}
 
+	public void showEventList () {
+		this.messenger.send(new EventListShowMessage());
+	}
+
 	public void showSceneList () {
 		this.messenger.send(new SceneListShowMessage());
 	}
 
 	public void showChapterList () {
 		this.messenger.send(new ChapterListShowMessage());
+	}
+
+	public void showPartList () {
+		this.messenger.send(new PartListShowMessage());
+	}
+
+	public void showStorylineList () {
+		this.messenger.send(new StorylineListShowMessage());
 	}
 
 	public void showSexList () {

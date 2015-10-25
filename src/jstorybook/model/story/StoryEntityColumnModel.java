@@ -18,12 +18,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import jstorybook.model.column.EditorColumnList;
 import jstorybook.model.entity.columnfactory.AttributeColumnFactory;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
+import jstorybook.model.entity.columnfactory.EventColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.KeywordColumnFactory;
+import jstorybook.model.entity.columnfactory.PartColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.model.entity.columnfactory.SexColumnFactory;
+import jstorybook.model.entity.columnfactory.StorylineColumnFactory;
 import jstorybook.model.entity.columnfactory.TagColumnFactory;
 
 /**
@@ -39,9 +42,15 @@ public class StoryEntityColumnModel {
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> placeColumnList = new SimpleObjectProperty<>(PlaceColumnFactory.
 			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> eventColumnList = new SimpleObjectProperty<>(EventColumnFactory.
+			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> sceneColumnList = new SimpleObjectProperty<>(SceneColumnFactory.
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> chapterColumnList = new SimpleObjectProperty<>(ChapterColumnFactory.
+			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> partColumnList = new SimpleObjectProperty<>(PartColumnFactory.
+			getInstance().createColumnList());
+	private final ObjectProperty<EditorColumnList> storylineColumnList = new SimpleObjectProperty<>(StorylineColumnFactory.
 			getInstance().createColumnList());
 	private final ObjectProperty<EditorColumnList> sexColumnList = new SimpleObjectProperty<>(SexColumnFactory.
 			getInstance().createColumnList());
@@ -64,12 +73,24 @@ public class StoryEntityColumnModel {
 		return this.placeColumnList;
 	}
 
+	public ObjectProperty<EditorColumnList> partColumnListProperty () {
+		return this.partColumnList;
+	}
+
 	public ObjectProperty<EditorColumnList> sceneColumnListProperty () {
 		return this.sceneColumnList;
 	}
 
 	public ObjectProperty<EditorColumnList> chapterColumnListProperty () {
 		return this.chapterColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> eventColumnListProperty () {
+		return this.eventColumnList;
+	}
+
+	public ObjectProperty<EditorColumnList> storylineColumnListProperty () {
+		return this.storylineColumnList;
 	}
 
 	public ObjectProperty<EditorColumnList> sexColumnListProperty () {

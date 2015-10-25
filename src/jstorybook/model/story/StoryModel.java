@@ -36,6 +36,7 @@ import jstorybook.model.dao.ChapterDAO;
 import jstorybook.model.dao.ChapterSceneRelationDAO;
 import jstorybook.model.dao.ChapterTagRelationDAO;
 import jstorybook.model.dao.DAO;
+import jstorybook.model.dao.EventDAO;
 import jstorybook.model.dao.GroupAttributeRelationDAO;
 import jstorybook.model.dao.GroupDAO;
 import jstorybook.model.dao.GroupKeywordRelationDAO;
@@ -43,6 +44,7 @@ import jstorybook.model.dao.GroupPersonRelationDAO;
 import jstorybook.model.dao.GroupTagRelationDAO;
 import jstorybook.model.dao.KeywordDAO;
 import jstorybook.model.dao.KeywordTagRelationDAO;
+import jstorybook.model.dao.PartDAO;
 import jstorybook.model.dao.PersonAttributeRelationDAO;
 import jstorybook.model.dao.PersonDAO;
 import jstorybook.model.dao.PersonKeywordRelationDAO;
@@ -58,6 +60,7 @@ import jstorybook.model.dao.ScenePlaceRelationDAO;
 import jstorybook.model.dao.SceneTagRelationDAO;
 import jstorybook.model.dao.SexDAO;
 import jstorybook.model.dao.StorySettingDAO;
+import jstorybook.model.dao.StorylineDAO;
 import jstorybook.model.dao.TagDAO;
 import jstorybook.model.dao.TagTagRelationDAO;
 import jstorybook.model.entity.Attribute;
@@ -66,6 +69,7 @@ import jstorybook.model.entity.Chapter;
 import jstorybook.model.entity.ChapterSceneRelation;
 import jstorybook.model.entity.ChapterTagRelation;
 import jstorybook.model.entity.Entity;
+import jstorybook.model.entity.Event;
 import jstorybook.model.entity.Group;
 import jstorybook.model.entity.GroupAttributeRelation;
 import jstorybook.model.entity.GroupKeywordRelation;
@@ -74,6 +78,7 @@ import jstorybook.model.entity.GroupTagRelation;
 import jstorybook.model.entity.ISortableEntity;
 import jstorybook.model.entity.Keyword;
 import jstorybook.model.entity.KeywordTagRelation;
+import jstorybook.model.entity.Part;
 import jstorybook.model.entity.Person;
 import jstorybook.model.entity.PersonAttributeRelation;
 import jstorybook.model.entity.PersonKeywordRelation;
@@ -89,17 +94,21 @@ import jstorybook.model.entity.ScenePlaceRelation;
 import jstorybook.model.entity.SceneTagRelation;
 import jstorybook.model.entity.Sex;
 import jstorybook.model.entity.StorySetting;
+import jstorybook.model.entity.Storyline;
 import jstorybook.model.entity.Tag;
 import jstorybook.model.entity.TagTagRelation;
 import jstorybook.model.entity.columnfactory.AttributeColumnFactory;
 import jstorybook.model.entity.columnfactory.ChapterColumnFactory;
 import jstorybook.model.entity.columnfactory.ColumnFactory;
+import jstorybook.model.entity.columnfactory.EventColumnFactory;
 import jstorybook.model.entity.columnfactory.GroupColumnFactory;
 import jstorybook.model.entity.columnfactory.KeywordColumnFactory;
+import jstorybook.model.entity.columnfactory.PartColumnFactory;
 import jstorybook.model.entity.columnfactory.PersonColumnFactory;
 import jstorybook.model.entity.columnfactory.PlaceColumnFactory;
 import jstorybook.model.entity.columnfactory.SceneColumnFactory;
 import jstorybook.model.entity.columnfactory.SexColumnFactory;
+import jstorybook.model.entity.columnfactory.StorylineColumnFactory;
 import jstorybook.model.entity.columnfactory.TagColumnFactory;
 import jstorybook.model.story.sync.StoryLoadSync;
 import jstorybook.model.story.sync.StorySaveSync;
@@ -119,12 +128,15 @@ import jstorybook.viewtool.messenger.pane.chart.SceneNovelChartShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.AttributeEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.ChapterEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.EntityEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.EventEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.GroupEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.KeywordEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.PartEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PersonEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.PlaceEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SceneEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.SexEditorShowMessage;
+import jstorybook.viewtool.messenger.pane.editor.StorylineEditorShowMessage;
 import jstorybook.viewtool.messenger.pane.editor.TagEditorShowMessage;
 
 /**
@@ -146,8 +158,11 @@ public class StoryModel implements IUseMessenger {
 	private final StoryEntityModel<Person, PersonDAO> personEntity = new StoryEntityModel<>(new PersonDAO());
 	private final StoryEntityModel<Group, GroupDAO> groupEntity = new StoryEntityModel<>(new GroupDAO());
 	private final StoryEntityModel<Place, PlaceDAO> placeEntity = new StoryEntityModel<>(new PlaceDAO());
+	private final StoryEntityModel<Event, EventDAO> eventEntity = new StoryEntityModel<>(new EventDAO());
 	private final StoryEntityModel<Scene, SceneDAO> sceneEntity = new StoryEntityModel<>(new SceneDAO());
 	private final StoryEntityModel<Chapter, ChapterDAO> chapterEntity = new StoryEntityModel<>(new ChapterDAO());
+	private final StoryEntityModel<Part, PartDAO> partEntity = new StoryEntityModel<>(new PartDAO());
+	private final StoryEntityModel<Storyline, StorylineDAO> storylineEntity = new StoryEntityModel<>(new StorylineDAO());
 	private final StoryEntityModel<Sex, SexDAO> sexEntity = new StoryEntityModel<>(new SexDAO());
 	private final StoryEntityModel<Attribute, AttributeDAO> attributeEntity = new StoryEntityModel<>(new AttributeDAO());
 	private final StoryEntityModel<Keyword, KeywordDAO> keywordEntity = new StoryEntityModel<>(new KeywordDAO());
@@ -343,8 +358,11 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.personEntity.dao.get());
 		daoList.add(this.groupEntity.dao.get());
 		daoList.add(this.placeEntity.dao.get());
+		daoList.add(this.eventEntity.dao.get());
 		daoList.add(this.sceneEntity.dao.get());
 		daoList.add(this.chapterEntity.dao.get());
+		daoList.add(this.partEntity.dao.get());
+		daoList.add(this.storylineEntity.dao.get());
 		daoList.add(this.sexEntity.dao.get());
 		daoList.add(this.attributeEntity.dao.get());
 		daoList.add(this.keywordEntity.dao.get());
@@ -415,12 +433,24 @@ public class StoryModel implements IUseMessenger {
 		return this.placeEntity.dao.get();
 	}
 
+	public EventDAO getEventDAO () {
+		return this.eventEntity.dao.get();
+	}
+
 	public SceneDAO getSceneDAO () {
 		return this.sceneEntity.dao.get();
 	}
 
 	public ChapterDAO getChapterDAO () {
 		return this.chapterEntity.dao.get();
+	}
+
+	public PartDAO getPartDAO () {
+		return this.partEntity.dao.get();
+	}
+
+	public StorylineDAO getStorylineDAO () {
+		return this.storylineEntity.dao.get();
 	}
 
 	public SexDAO getSexDAO () {
@@ -468,8 +498,20 @@ public class StoryModel implements IUseMessenger {
 		return this.sceneEntity;
 	}
 
+	public StoryEntityModel<Event, EventDAO> getEventEntity () {
+		return this.eventEntity;
+	}
+
 	public StoryEntityModel<Chapter, ChapterDAO> getChapterEntity () {
 		return this.chapterEntity;
+	}
+
+	public StoryEntityModel<Part, PartDAO> getPartEntity () {
+		return this.partEntity;
+	}
+
+	public StoryEntityModel<Storyline, StorylineDAO> getStorylineEntity () {
+		return this.storylineEntity;
 	}
 
 	public StoryEntityModel<Sex, SexDAO> getSexEntity () {
@@ -978,6 +1020,32 @@ public class StoryModel implements IUseMessenger {
 		this.associationEntity(this.placeEntity.selectedEntityList.get());
 	}
 
+	public void newEvent () {
+		this.newEntity(new Event(), this.eventEntity.dao.get(), EventEditorShowMessage.getInstance(), EventColumnFactory.
+					   getInstance());
+	}
+
+	public void editEvent () {
+		this.editEntity(this.eventEntity.selectedEntityList.get(), EventEditorShowMessage.getInstance(), EventColumnFactory.
+						getInstance());
+	}
+
+	public void deleteEvent () {
+		this.deleteEntity(this.eventEntity.selectedEntityList.get(), EventColumnFactory.getInstance(), this.eventEntity);
+	}
+
+	public void upEvent () {
+		this.upEntity(this.eventEntity.selectedEntityList.get(), this.eventEntity.dao.get());
+	}
+
+	public void downEvent () {
+		this.downEntity(this.eventEntity.selectedEntityList.get(), this.eventEntity.dao.get());
+	}
+
+	public void associationEvent () {
+		this.associationEntity(this.eventEntity.selectedEntityList.get());
+	}
+
 	public void newScene () {
 		this.newEntity(new Scene(), this.sceneEntity.dao.get(), SceneEditorShowMessage.getInstance(), SceneColumnFactory.
 					   getInstance());
@@ -1036,6 +1104,58 @@ public class StoryModel implements IUseMessenger {
 			this.messenger.send(new SceneNovelChartShowMessage(chapterId, this.chapterEntity.dao.get().getModelById(chapterId).
 															   nameProperty()));
 		}
+	}
+
+	public void newPart () {
+		this.newEntity(new Part(), this.partEntity.dao.get(), PartEditorShowMessage.getInstance(), PartColumnFactory.
+					   getInstance());
+	}
+
+	public void editPart () {
+		this.editEntity(this.partEntity.selectedEntityList.get(), PartEditorShowMessage.getInstance(), PartColumnFactory.
+						getInstance());
+	}
+
+	public void deletePart () {
+		this.deleteEntity(this.partEntity.selectedEntityList.get(), PartColumnFactory.getInstance(), this.partEntity);
+	}
+
+	public void upPart () {
+		this.upEntity(this.partEntity.selectedEntityList.get(), this.partEntity.dao.get());
+	}
+
+	public void downPart () {
+		this.downEntity(this.partEntity.selectedEntityList.get(), this.partEntity.dao.get());
+	}
+
+	public void associationPart () {
+		this.associationEntity(this.partEntity.selectedEntityList.get());
+	}
+
+	public void newStoryline () {
+		this.newEntity(new Storyline(), this.storylineEntity.dao.get(), StorylineEditorShowMessage.getInstance(),
+					   StorylineColumnFactory.getInstance());
+	}
+
+	public void editStoryline () {
+		this.editEntity(this.storylineEntity.selectedEntityList.get(), StorylineEditorShowMessage.getInstance(),
+						StorylineColumnFactory.getInstance());
+	}
+
+	public void deleteStoryline () {
+		this.deleteEntity(this.storylineEntity.selectedEntityList.get(), StorylineColumnFactory.getInstance(), this.storylineEntity);
+	}
+
+	public void upStoryline () {
+		this.upEntity(this.storylineEntity.selectedEntityList.get(), this.storylineEntity.dao.get());
+	}
+
+	public void downStoryline () {
+		this.downEntity(this.storylineEntity.selectedEntityList.get(), this.storylineEntity.dao.get());
+	}
+
+	public void associationStoryline () {
+		this.associationEntity(this.storylineEntity.selectedEntityList.get());
 	}
 
 	public void newSex () {
