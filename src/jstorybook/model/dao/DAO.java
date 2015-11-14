@@ -61,6 +61,9 @@ public abstract class DAO<E extends Entity> {
 		if (this.modelList.get() != null) {
 			this.modelList.get().clear();
 		}
+		else {
+			this.modelList.set(FXCollections.observableArrayList());
+		}
 		this.removeIdList.clear();
 		this.lastId = 0;
 		this.lastIdSaved = 0;
