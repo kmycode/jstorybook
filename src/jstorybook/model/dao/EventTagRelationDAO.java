@@ -11,38 +11,31 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.EventTagRelation;
 
 /**
- * エンティティの関連の組み合わせ
+ * イベントのタグのDAO
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class EventTagRelationDAO extends EntityRelationDAO<EventTagRelation> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_ATTRIBUTE,
-	GROUP_ATTRIBUTE,
-	PERSON_EVENT,
-	GROUP_EVENT,
-	PLACE_EVENT,
-	SCENE_EVENT,
-	PERSON_KEYWORD,
-	GROUP_KEYWORD,
-	PLACE_KEYWORD,
-	EVENT_KEYWORD,
-	SCENE_KEYWORD,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	EVENT_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	ATTRIBUTE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
+	@Override
+	protected String getTableName () {
+		return "eventtag";
+	}
+
+	public void readEventDAO (EventDAO dao) {
+		for (EventTagRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected EventTagRelation newEntityRelationInstance () {
+		return new EventTagRelation();
+	}
+
 }

@@ -52,6 +52,7 @@ public class SceneColumnFactory extends ColumnFactory<Scene> {
 		columnList.addRelation(EntityRelation.CHAPTER_SCENE);
 		columnList.addRelation(EntityRelation.SCENE_PERSON);
 		columnList.addRelation(EntityRelation.SCENE_PLACE);
+		columnList.addRelation(EntityRelation.SCENE_EVENT);
 		columnList.addRelation(EntityRelation.SCENE_KEYWORD);
 		columnList.addRelation(EntityRelation.SCENE_TAG);
 		columnList.entityTypeProperty().set(EntityType.SCENE);

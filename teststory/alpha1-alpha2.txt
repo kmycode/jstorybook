@@ -18,3 +18,15 @@
 ・attributetagテーブルを追加
 ・sceneテーブルに、`text` TEXTの列を追加
 ・personテーブルで、sexの数値を1ずつ増やす
+
+□6.0.0 alpha2から6.0.0 alpha3への変更点
+
+・eventテーブルを追加
+・partテーブルを追加
+・storylineテーブルを追加
+・personeventテーブルを追加
+・groupeventテーブルを追加
+・placeeventテーブルを追加
+・sceneeventテーブルを追加
+・eventkeywordテーブルを追加
+・eventtagテーブルを追加

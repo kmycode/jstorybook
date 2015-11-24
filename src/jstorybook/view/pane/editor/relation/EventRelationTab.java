@@ -11,38 +11,23 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.view.pane.editor.relation;
+
+import jstorybook.common.manager.ResourceManager;
+import jstorybook.model.entity.Event;
+import jstorybook.model.entity.columnfactory.EventColumnFactory;
+import jstorybook.viewtool.messenger.Messenger;
 
 /**
- * エンティティの関連の組み合わせ
+ * 関係するキーワードを設定するタブ
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class EventRelationTab extends EntityRelationTab<Event> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_ATTRIBUTE,
-	GROUP_ATTRIBUTE,
-	PERSON_EVENT,
-	GROUP_EVENT,
-	PLACE_EVENT,
-	SCENE_EVENT,
-	PERSON_KEYWORD,
-	GROUP_KEYWORD,
-	PLACE_KEYWORD,
-	EVENT_KEYWORD,
-	SCENE_KEYWORD,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	EVENT_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	ATTRIBUTE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
+	public EventRelationTab (long entityId, Messenger messenger) {
+		super(ResourceManager.getMessage("msg.relation.event"), entityId, messenger);
+		this.tableView.setColumnList(EventColumnFactory.getInstance().createColumnList());
+	}
+
 }

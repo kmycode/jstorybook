@@ -51,6 +51,7 @@ public class GroupColumnFactory extends ColumnFactory<Group> {
 		columnList.entityTypeProperty().set(EntityType.GROUP);
 		columnList.addRelation(EntityRelation.GROUP_PERSON);
 		columnList.addRelation(EntityRelation.GROUP_ATTRIBUTE);
+		columnList.addRelation(EntityRelation.GROUP_EVENT);
 		columnList.addRelation(EntityRelation.GROUP_KEYWORD);
 		columnList.addRelation(EntityRelation.GROUP_TAG);
 		EditorColumn column;

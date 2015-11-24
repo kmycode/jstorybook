@@ -11,38 +11,37 @@
  * あなたがこのプログラムを再配布するときは、GPLライセンスに同意しなければいけません。
  *  <http://www.gnu.org/licenses/>.
  */
-package jstorybook.common.contract;
+package jstorybook.model.dao;
+
+import jstorybook.model.entity.EventKeywordRelation;
 
 /**
- * エンティティの関連の組み合わせ
+ * イベントとキーワードの関係のDAO
  *
  * @author KMY
  */
-public enum EntityRelation {
+public class EventKeywordRelationDAO extends EntityRelationDAO<EventKeywordRelation> {
 
-	PERSON_PERSON,
-	GROUP_PERSON,
-	CHAPTER_SCENE,
-	SCENE_PERSON,
-	SCENE_PLACE,
-	PERSON_ATTRIBUTE,
-	GROUP_ATTRIBUTE,
-	PERSON_EVENT,
-	GROUP_EVENT,
-	PLACE_EVENT,
-	SCENE_EVENT,
-	PERSON_KEYWORD,
-	GROUP_KEYWORD,
-	PLACE_KEYWORD,
-	EVENT_KEYWORD,
-	SCENE_KEYWORD,
-	PERSON_TAG,
-	GROUP_TAG,
-	PLACE_TAG,
-	EVENT_TAG,
-	CHAPTER_TAG,
-	SCENE_TAG,
-	ATTRIBUTE_TAG,
-	KEYWORD_TAG,
-	TAG_TAG,;
+	@Override
+	protected String getTableName () {
+		return "eventkeyword";
+	}
+
+	public void readGroupDAO (EventDAO dao) {
+		for (EventKeywordRelation model : this.modelList.get()) {
+			model.entity1Property().set(dao.getModelById(model.entity1IdProperty().get()));
+		}
+	}
+
+	public void readKeywordDAO (KeywordDAO dao) {
+		for (EventKeywordRelation model : this.modelList.get()) {
+			model.entity2Property().set(dao.getModelById(model.entity2IdProperty().get()));
+		}
+	}
+
+	@Override
+	protected EventKeywordRelation newEntityRelationInstance () {
+		return new EventKeywordRelation();
+	}
+
 }

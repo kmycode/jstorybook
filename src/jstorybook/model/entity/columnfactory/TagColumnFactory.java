@@ -52,6 +52,7 @@ public class TagColumnFactory extends ColumnFactory<Tag> {
 		columnList.addRelation(EntityRelation.PERSON_TAG);
 		columnList.addRelation(EntityRelation.GROUP_TAG);
 		columnList.addRelation(EntityRelation.PLACE_TAG);
+		columnList.addRelation(EntityRelation.EVENT_TAG);
 		columnList.addRelation(EntityRelation.KEYWORD_TAG);
 		columnList.addRelation(EntityRelation.SCENE_TAG);
 		columnList.addRelation(EntityRelation.CHAPTER_TAG);

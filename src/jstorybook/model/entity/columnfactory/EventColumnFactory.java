@@ -13,6 +13,7 @@
  */
 package jstorybook.model.entity.columnfactory;
 
+import jstorybook.common.contract.EntityRelation;
 import jstorybook.common.contract.EntityType;
 import jstorybook.common.manager.ResourceManager;
 import jstorybook.model.column.DateTimeColumn;
@@ -48,6 +49,12 @@ public class EventColumnFactory extends ColumnFactory<Event> {
 		columnList.titleProperty().bind(model.titleProperty());
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
+		columnList.addRelation(EntityRelation.PERSON_EVENT);
+		columnList.addRelation(EntityRelation.GROUP_EVENT);
+		columnList.addRelation(EntityRelation.PLACE_EVENT);
+		columnList.addRelation(EntityRelation.SCENE_EVENT);
+		columnList.addRelation(EntityRelation.EVENT_KEYWORD);
+		columnList.addRelation(EntityRelation.EVENT_TAG);
 		columnList.entityTypeProperty().set(EntityType.EVENT);
 		EditorColumn column;
 

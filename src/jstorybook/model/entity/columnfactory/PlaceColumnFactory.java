@@ -49,6 +49,7 @@ public class PlaceColumnFactory extends ColumnFactory<Place> {
 		columnList.idProperty().bindBidirectional(model.idProperty());
 		columnList.noteProperty().bindBidirectional(model.noteProperty());
 		columnList.addRelation(EntityRelation.SCENE_PLACE);
+		columnList.addRelation(EntityRelation.PLACE_EVENT);
 		columnList.addRelation(EntityRelation.PLACE_KEYWORD);
 		columnList.addRelation(EntityRelation.PLACE_TAG);
 		columnList.entityTypeProperty().set(EntityType.PLACE);

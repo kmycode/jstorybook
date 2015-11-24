@@ -51,6 +51,7 @@ public class KeywordColumnFactory extends ColumnFactory<Keyword> {
 		columnList.addRelation(EntityRelation.PERSON_KEYWORD);
 		columnList.addRelation(EntityRelation.GROUP_KEYWORD);
 		columnList.addRelation(EntityRelation.PLACE_KEYWORD);
+		columnList.addRelation(EntityRelation.EVENT_KEYWORD);
 		columnList.addRelation(EntityRelation.SCENE_KEYWORD);
 		columnList.addRelation(EntityRelation.KEYWORD_TAG);
 		columnList.entityTypeProperty().set(EntityType.KEYWORD);

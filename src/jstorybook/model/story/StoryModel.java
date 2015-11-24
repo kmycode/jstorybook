@@ -37,8 +37,11 @@ import jstorybook.model.dao.ChapterSceneRelationDAO;
 import jstorybook.model.dao.ChapterTagRelationDAO;
 import jstorybook.model.dao.DAO;
 import jstorybook.model.dao.EventDAO;
+import jstorybook.model.dao.EventKeywordRelationDAO;
+import jstorybook.model.dao.EventTagRelationDAO;
 import jstorybook.model.dao.GroupAttributeRelationDAO;
 import jstorybook.model.dao.GroupDAO;
+import jstorybook.model.dao.GroupEventRelationDAO;
 import jstorybook.model.dao.GroupKeywordRelationDAO;
 import jstorybook.model.dao.GroupPersonRelationDAO;
 import jstorybook.model.dao.GroupTagRelationDAO;
@@ -47,13 +50,16 @@ import jstorybook.model.dao.KeywordTagRelationDAO;
 import jstorybook.model.dao.PartDAO;
 import jstorybook.model.dao.PersonAttributeRelationDAO;
 import jstorybook.model.dao.PersonDAO;
+import jstorybook.model.dao.PersonEventRelationDAO;
 import jstorybook.model.dao.PersonKeywordRelationDAO;
 import jstorybook.model.dao.PersonPersonRelationDAO;
 import jstorybook.model.dao.PersonTagRelationDAO;
 import jstorybook.model.dao.PlaceDAO;
+import jstorybook.model.dao.PlaceEventRelationDAO;
 import jstorybook.model.dao.PlaceKeywordRelationDAO;
 import jstorybook.model.dao.PlaceTagRelationDAO;
 import jstorybook.model.dao.SceneDAO;
+import jstorybook.model.dao.SceneEventRelationDAO;
 import jstorybook.model.dao.SceneKeywordRelationDAO;
 import jstorybook.model.dao.ScenePersonRelationDAO;
 import jstorybook.model.dao.ScenePlaceRelationDAO;
@@ -70,8 +76,11 @@ import jstorybook.model.entity.ChapterSceneRelation;
 import jstorybook.model.entity.ChapterTagRelation;
 import jstorybook.model.entity.Entity;
 import jstorybook.model.entity.Event;
+import jstorybook.model.entity.EventKeywordRelation;
+import jstorybook.model.entity.EventTagRelation;
 import jstorybook.model.entity.Group;
 import jstorybook.model.entity.GroupAttributeRelation;
+import jstorybook.model.entity.GroupEventRelation;
 import jstorybook.model.entity.GroupKeywordRelation;
 import jstorybook.model.entity.GroupPersonRelation;
 import jstorybook.model.entity.GroupTagRelation;
@@ -81,13 +90,16 @@ import jstorybook.model.entity.KeywordTagRelation;
 import jstorybook.model.entity.Part;
 import jstorybook.model.entity.Person;
 import jstorybook.model.entity.PersonAttributeRelation;
+import jstorybook.model.entity.PersonEventRelation;
 import jstorybook.model.entity.PersonKeywordRelation;
 import jstorybook.model.entity.PersonPersonRelation;
 import jstorybook.model.entity.PersonTagRelation;
 import jstorybook.model.entity.Place;
+import jstorybook.model.entity.PlaceEventRelation;
 import jstorybook.model.entity.PlaceKeywordRelation;
 import jstorybook.model.entity.PlaceTagRelation;
 import jstorybook.model.entity.Scene;
+import jstorybook.model.entity.SceneEventRelation;
 import jstorybook.model.entity.SceneKeywordRelation;
 import jstorybook.model.entity.ScenePersonRelation;
 import jstorybook.model.entity.ScenePlaceRelation;
@@ -181,12 +193,22 @@ public class StoryModel implements IUseMessenger {
 			new PersonAttributeRelationDAO());
 	private final StoryEntityModel<GroupAttributeRelation, GroupAttributeRelationDAO> groupAttributeEntity = new StoryEntityModel<>(
 			new GroupAttributeRelationDAO());
+	private final StoryEntityModel<PersonEventRelation, PersonEventRelationDAO> personEventEntity = new StoryEntityModel<>(
+			new PersonEventRelationDAO());
+	private final StoryEntityModel<GroupEventRelation, GroupEventRelationDAO> groupEventEntity = new StoryEntityModel<>(
+			new GroupEventRelationDAO());
+	private final StoryEntityModel<PlaceEventRelation, PlaceEventRelationDAO> placeEventEntity = new StoryEntityModel<>(
+			new PlaceEventRelationDAO());
+	private final StoryEntityModel<SceneEventRelation, SceneEventRelationDAO> sceneEventEntity = new StoryEntityModel<>(
+			new SceneEventRelationDAO());
 	private final StoryEntityModel<PersonKeywordRelation, PersonKeywordRelationDAO> personKeywordEntity = new StoryEntityModel<>(
 			new PersonKeywordRelationDAO());
 	private final StoryEntityModel<GroupKeywordRelation, GroupKeywordRelationDAO> groupKeywordEntity = new StoryEntityModel<>(
 			new GroupKeywordRelationDAO());
 	private final StoryEntityModel<PlaceKeywordRelation, PlaceKeywordRelationDAO> placeKeywordEntity = new StoryEntityModel<>(
 			new PlaceKeywordRelationDAO());
+	private final StoryEntityModel<EventKeywordRelation, EventKeywordRelationDAO> eventKeywordEntity = new StoryEntityModel<>(
+			new EventKeywordRelationDAO());
 	private final StoryEntityModel<SceneKeywordRelation, SceneKeywordRelationDAO> sceneKeywordEntity = new StoryEntityModel<>(
 			new SceneKeywordRelationDAO());
 	private final StoryEntityModel<PersonTagRelation, PersonTagRelationDAO> personTagEntity = new StoryEntityModel<>(
@@ -195,6 +217,8 @@ public class StoryModel implements IUseMessenger {
 			new GroupTagRelationDAO());
 	private final StoryEntityModel<PlaceTagRelation, PlaceTagRelationDAO> placeTagEntity = new StoryEntityModel<>(
 			new PlaceTagRelationDAO());
+	private final StoryEntityModel<EventTagRelation, EventTagRelationDAO> eventTagEntity = new StoryEntityModel<>(
+			new EventTagRelationDAO());
 	private final StoryEntityModel<SceneTagRelation, SceneTagRelationDAO> sceneTagEntity = new StoryEntityModel<>(
 			new SceneTagRelationDAO());
 	private final StoryEntityModel<ChapterTagRelation, ChapterTagRelationDAO> chapterTagEntity = new StoryEntityModel<>(
@@ -374,13 +398,19 @@ public class StoryModel implements IUseMessenger {
 		daoList.add(this.scenePlaceEntity.dao.get());
 		daoList.add(this.personAttributeEntity.dao.get());
 		daoList.add(this.groupAttributeEntity.dao.get());
+		daoList.add(this.personEventEntity.dao.get());
+		daoList.add(this.groupEventEntity.dao.get());
+		daoList.add(this.placeEventEntity.dao.get());
+		daoList.add(this.sceneEventEntity.dao.get());
 		daoList.add(this.personKeywordEntity.dao.get());
 		daoList.add(this.groupKeywordEntity.dao.get());
 		daoList.add(this.placeKeywordEntity.dao.get());
+		daoList.add(this.eventKeywordEntity.dao.get());
 		daoList.add(this.sceneKeywordEntity.dao.get());
 		daoList.add(this.personTagEntity.dao.get());
 		daoList.add(this.groupTagEntity.dao.get());
 		daoList.add(this.placeTagEntity.dao.get());
+		daoList.add(this.eventTagEntity.dao.get());
 		daoList.add(this.sceneTagEntity.dao.get());
 		daoList.add(this.chapterTagEntity.dao.get());
 		daoList.add(this.attributeTagEntity.dao.get());
@@ -620,6 +650,70 @@ public class StoryModel implements IUseMessenger {
 		this.groupAttributeEntity.dao.get().setRelatedIdList(groupId, list, false);
 	}
 
+	public List<Long> getPersonEventRelation_Event (long eventId) {
+		return this.personEventEntity.dao.get().getRelatedIdList(eventId, true);
+	}
+
+	public void setPersonEventRelation_Event (long eventId, List<Long> list) {
+		this.personEventEntity.dao.get().setRelatedIdList(eventId, list, true);
+	}
+
+	public List<Long> getPersonEventRelation_Person (long personId) {
+		return this.personEventEntity.dao.get().getRelatedIdList(personId, false);
+	}
+
+	public void setPersonEventRelation_Person (long personId, List<Long> list) {
+		this.personEventEntity.dao.get().setRelatedIdList(personId, list, false);
+	}
+
+	public List<Long> getGroupEventRelation_Event (long eventId) {
+		return this.groupEventEntity.dao.get().getRelatedIdList(eventId, true);
+	}
+
+	public void setGroupEventRelation_Event (long eventId, List<Long> list) {
+		this.groupEventEntity.dao.get().setRelatedIdList(eventId, list, true);
+	}
+
+	public List<Long> getGroupEventRelation_Group (long groupId) {
+		return this.groupEventEntity.dao.get().getRelatedIdList(groupId, false);
+	}
+
+	public void setGroupEventRelation_Group (long groupId, List<Long> list) {
+		this.groupEventEntity.dao.get().setRelatedIdList(groupId, list, false);
+	}
+
+	public List<Long> getPlaceEventRelation_Event (long eventId) {
+		return this.placeEventEntity.dao.get().getRelatedIdList(eventId, true);
+	}
+
+	public void setPlaceEventRelation_Event (long eventId, List<Long> list) {
+		this.placeEventEntity.dao.get().setRelatedIdList(eventId, list, true);
+	}
+
+	public List<Long> getPlaceEventRelation_Place (long placeId) {
+		return this.placeEventEntity.dao.get().getRelatedIdList(placeId, false);
+	}
+
+	public void setPlaceEventRelation_Place (long placeId, List<Long> list) {
+		this.placeEventEntity.dao.get().setRelatedIdList(placeId, list, false);
+	}
+
+	public List<Long> getSceneEventRelation_Event (long eventId) {
+		return this.sceneEventEntity.dao.get().getRelatedIdList(eventId, true);
+	}
+
+	public void setSceneEventRelation_Event (long eventId, List<Long> list) {
+		this.sceneEventEntity.dao.get().setRelatedIdList(eventId, list, true);
+	}
+
+	public List<Long> getSceneEventRelation_Scene (long sceneId) {
+		return this.sceneEventEntity.dao.get().getRelatedIdList(sceneId, false);
+	}
+
+	public void setSceneEventRelation_Scene (long sceneId, List<Long> list) {
+		this.sceneEventEntity.dao.get().setRelatedIdList(sceneId, list, false);
+	}
+
 	public List<Long> getPersonKeywordRelation_Keyword (long keywordId) {
 		return this.personKeywordEntity.dao.get().getRelatedIdList(keywordId, true);
 	}
@@ -666,6 +760,22 @@ public class StoryModel implements IUseMessenger {
 
 	public void setPlaceKeywordRelation_Place (long placeId, List<Long> list) {
 		this.placeKeywordEntity.dao.get().setRelatedIdList(placeId, list, false);
+	}
+
+	public List<Long> getEventKeywordRelation_Keyword (long keywordId) {
+		return this.eventKeywordEntity.dao.get().getRelatedIdList(keywordId, true);
+	}
+
+	public void setEventKeywordRelation_Keyword (long keywordId, List<Long> list) {
+		this.eventKeywordEntity.dao.get().setRelatedIdList(keywordId, list, true);
+	}
+
+	public List<Long> getEventKeywordRelation_Event (long eventId) {
+		return this.eventKeywordEntity.dao.get().getRelatedIdList(eventId, false);
+	}
+
+	public void setEventKeywordRelation_Event (long eventId, List<Long> list) {
+		this.eventKeywordEntity.dao.get().setRelatedIdList(eventId, list, false);
 	}
 
 	public List<Long> getSceneKeywordRelation_Keyword (long keywordId) {
@@ -730,6 +840,22 @@ public class StoryModel implements IUseMessenger {
 
 	public void setPlaceTagRelation_Place (long placeId, List<Long> list) {
 		this.placeTagEntity.dao.get().setRelatedIdList(placeId, list, false);
+	}
+
+	public List<Long> getEventTagRelation_Tag (long tagId) {
+		return this.eventTagEntity.dao.get().getRelatedIdList(tagId, true);
+	}
+
+	public void setEventTagRelation_Tag (long tagId, List<Long> list) {
+		this.eventTagEntity.dao.get().setRelatedIdList(tagId, list, true);
+	}
+
+	public List<Long> getEventTagRelation_Event (long eventId) {
+		return this.eventTagEntity.dao.get().getRelatedIdList(eventId, false);
+	}
+
+	public void setEventTagRelation_Event (long eventId, List<Long> list) {
+		this.eventTagEntity.dao.get().setRelatedIdList(eventId, list, false);
 	}
 
 	public List<Long> getSceneTagRelation_Tag (long tagId) {
@@ -817,6 +943,9 @@ public class StoryModel implements IUseMessenger {
 			break;
 		case PLACE:
 			tagIdList = this.getPlaceTagRelation_Place(tagId);
+			break;
+		case EVENT:
+			tagIdList = this.getEventTagRelation_Event(tagId);
 			break;
 		case SCENE:
 			tagIdList = this.getSceneTagRelation_Scene(tagId);

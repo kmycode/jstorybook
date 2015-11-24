@@ -905,7 +905,7 @@
         <condition property="preloader-available">
             <and>
                 <isset property="javafx.preloader.enabled"/>
-                <equals arg1="${javafx.preloader.enabled}" arg2="true"/>
+                <equals arg1="${javafx.preloader.enabled}" arg2="false"/>
                 <isset property="javafx.preloader.class"/>
                 <not><equals arg1="${javafx.preloader.class}" arg2=""/></not>
                 <isset property="javafx.preloader.jar.filename"/>

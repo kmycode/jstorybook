@@ -57,6 +57,7 @@ import jstorybook.view.pane.MyPane;
 import jstorybook.view.pane.editor.relation.AttributeRelationTab;
 import jstorybook.view.pane.editor.relation.ChapterRelationTab;
 import jstorybook.view.pane.editor.relation.EntityRelationTab;
+import jstorybook.view.pane.editor.relation.EventRelationTab;
 import jstorybook.view.pane.editor.relation.GroupRelationTab;
 import jstorybook.view.pane.editor.relation.KeywordRelationTab;
 import jstorybook.view.pane.editor.relation.PersonRelationTab;
@@ -83,6 +84,9 @@ import jstorybook.viewtool.messenger.pane.relation.AttributeRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.ChapterRelationShowMessage;
+import jstorybook.viewtool.messenger.pane.relation.EventRelationListGetMessage;
+import jstorybook.viewtool.messenger.pane.relation.EventRelationRenewMessage;
+import jstorybook.viewtool.messenger.pane.relation.EventRelationShowMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationListGetMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationRenewMessage;
 import jstorybook.viewtool.messenger.pane.relation.GroupRelationShowMessage;
@@ -138,6 +142,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 	protected PersonRelationTab personRelationTab;
 	protected GroupRelationTab groupRelationTab;
 	protected PlaceRelationTab placeRelationTab;
+	protected EventRelationTab eventRelationTab;
 	protected SceneRelationTab sceneRelationTab;
 	protected ChapterRelationTab chapterRelationTab;
 	protected AttributeRelationTab attributeRelationTab;
@@ -351,6 +356,16 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 			EntityEditorPane.this.renewPlaceRelationTab(mes);
 		});
 
+		// 関連イベントタブを設定
+		this.messenger.apply(EventRelationShowMessage.class, this, (ev) -> {
+			EventRelationShowMessage mes = (EventRelationShowMessage) ev;
+			EntityEditorPane.this.addEventRelationTab(mes);
+		});
+		this.messenger.apply(EventRelationRenewMessage.class, this, (ev) -> {
+			EventRelationRenewMessage mes = (EventRelationRenewMessage) ev;
+			EntityEditorPane.this.renewEventRelationTab(mes);
+		});
+
 		// 関連シーンタブを設定
 		this.messenger.apply(SceneRelationShowMessage.class, this, (ev) -> {
 			SceneRelationShowMessage mes = (SceneRelationShowMessage) ev;
@@ -428,6 +443,11 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 				((PlaceRelationListGetMessage) ev).setRelationList(this.placeRelationTab.getSelectedIdList());
 			}
 		});
+		this.messenger.apply(EventRelationListGetMessage.class, this, (ev) -> {
+			if (this.eventRelationTab != null) {
+				((EventRelationListGetMessage) ev).setRelationList(this.eventRelationTab.getSelectedIdList());
+			}
+		});
 		this.messenger.apply(SceneRelationListGetMessage.class, this, (ev) -> {
 			if (this.sceneRelationTab != null) {
 				((SceneRelationListGetMessage) ev).setRelationList(this.sceneRelationTab.getSelectedIdList());
@@ -460,6 +480,7 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		this.viewModelList.storeMessenger(this.messenger);
 	}
 
+	@Override
 	public void close () {
 		((DockableTabPane) this.getTabPane()).removeTab(this);
 	}
@@ -477,6 +498,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		}
 		if (this.placeRelationTab != null) {
 			this.placeRelationTab.resetChanged();
+		}
+		if (this.eventRelationTab != null) {
+			this.eventRelationTab.resetChanged();
 		}
 		if (this.sceneRelationTab != null) {
 			this.sceneRelationTab.resetChanged();
@@ -521,6 +545,9 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 		}
 		if (this.placeRelationTab != null) {
 			result |= this.placeRelationTab.changedProperty().get();
+		}
+		if (this.eventRelationTab != null) {
+			result |= this.eventRelationTab.changedProperty().get();
 		}
 		if (this.sceneRelationTab != null) {
 			result |= this.sceneRelationTab.changedProperty().get();
@@ -582,6 +609,15 @@ public class EntityEditorPane extends MyPane implements IReloadable {
 
 	private void renewPlaceRelationTab (PlaceRelationRenewMessage mes) {
 		this.renewRelationTab(mes, this.placeRelationTab);
+	}
+
+	private void addEventRelationTab (EventRelationShowMessage mes) {
+		this.eventRelationTab = new EventRelationTab(this.columnList.get().idProperty().get(), this.mainMessenger);
+		this.addRelationTab(mes, this.eventRelationTab, "eventList");
+	}
+
+	private void renewEventRelationTab (EventRelationRenewMessage mes) {
+		this.renewRelationTab(mes, this.eventRelationTab);
 	}
 
 	private void addSceneRelationTab (SceneRelationShowMessage mes) {

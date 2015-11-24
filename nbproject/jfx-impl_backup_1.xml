@@ -902,6 +902,7 @@
                 <not><equals arg1="${run.jvmargs}" arg2=""/></not>
             </and>
         </condition>
+		<!--
         <condition property="preloader-available">
             <and>
                 <isset property="javafx.preloader.enabled"/>
@@ -912,6 +913,7 @@
                 <not><equals arg1="${javafx.preloader.jar.filename}" arg2=""/></not>
             </and>
         </condition>
+		-->
         <condition property="app-with-preloader">
             <and>
                 <istrue value="${preloader-available}"/>
