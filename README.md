@@ -6,6 +6,10 @@ jStorybookとは、小説や漫画のストーリー作成を支援するソフ�
 プロット（場合によっては小説の本文）まで記述することができます。<br>
 ![スクリーンショット](https://raw.githubusercontent.com/kmycode/jstorybook/develop/image/image.png)
 
+###後継
+jStorybookの後継として、StoryCanvasを開発中です。<br>
+https://github.com/kmycode/storycanvas
+
 ##とりあえずダウンロード
 * [jStorybookのバイナリをダウンロード](https://github.com/kmycode/jstorybook/releases)
 
